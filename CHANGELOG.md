@@ -1,3 +1,8 @@
 ## 0.0.1
 
-* TODO: Describe initial release.
+* Upload Initial release.
+
+## 0.0.2 
+
+* Update some bugs
+* Update a dependency to the latest release..

@@ -1,7 +1,6 @@
 # Quick start
 
 ---
-<img src="https://storage.zego.im/sdk-doc/Pics/ZegoUIKit/Flutter/live/host.gif" width="250"/> <img src="https://storage.zego.im/sdk-doc/Pics/ZegoUIKit/Flutter/live/audience.gif" width="250"/>
 
 ## Add ZegoUIKitPrebuiltLiveStreaming as dependencies
 
