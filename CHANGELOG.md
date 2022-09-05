@@ -18,3 +18,8 @@
 ## 0.0.6
 
 * Update readme
+
+## 0.0.7
+
+* Update readme
+* Update ZegoUIKitPrebuiltLiveStreamingConfig
