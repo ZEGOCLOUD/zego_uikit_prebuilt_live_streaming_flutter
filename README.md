@@ -10,7 +10,7 @@
 dependencies:
   flutter:
     sdk: flutter
-  zego_uikit_prebuilt_live_streaming: ^0.0.1 # Add this line
+  zego_uikit_prebuilt_live_streaming: ^0.0.6 # Add this line
 ```
 
 2. Execute the command as shown below under your project's root folder to install all dependencies
@@ -39,7 +39,7 @@ Widget build(BuildContext context) {
    return SafeArea(
       child: ZegoUIKitPrebuiltLiveStreaming(
          appID: /*Your App ID*/,
-         appSign: kIsWeb ? '' : /*Your App Sign*/,
+         appSign: /*Your App Sign*/,
          userID: user_id, // userID should only contain numbers, English characters and  '_'
          userName: 'user_name',
          liveName: 'live_name',
@@ -48,13 +48,15 @@ Widget build(BuildContext context) {
             turnOnCameraWhenJoining: isHost,
             turnOnMicrophoneWhenJoining: isHost,
             useSpeakerWhenJoining: !isHost,
-            menuBarButtons: isHost
-                    ? [
-               ZegoLiveMenuBarButtonName.toggleCameraButton,
-               ZegoLiveMenuBarButtonName.toggleMicrophoneButton,
-               ZegoLiveMenuBarButtonName.switchCameraFacingButton,
-            ]
-                    : const [],
+            bottomMenuBarConfig: ZegoBottomMenuBarConfig(
+               buttons: isHost
+                       ? [
+                  ZegoLiveMenuBarButtonName.toggleCameraButton,
+                  ZegoLiveMenuBarButtonName.toggleMicrophoneButton,
+                  ZegoLiveMenuBarButtonName.switchCameraButton,
+               ]
+                       : const [],
+            ),
             useEndLiveStreamingButton: isHost,
          ),
       ),

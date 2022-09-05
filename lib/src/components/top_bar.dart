@@ -70,12 +70,12 @@ class _ZegoTopBarState extends State<ZegoTopBar> {
   }
 
   Future<bool> onCloseConfirming(context) async {
-    return await widget.config.onEndOrLiveStreamingConfirming!(context);
+    return await widget.config.onEndOrLeaveLiveStreamingConfirming!(context);
   }
 
   void onClosePress() {
-    if (widget.config.onEndOrLiveStreaming != null) {
-      widget.config.onEndOrLiveStreaming!.call();
+    if (widget.config.onEndOrLeaveLiveStreaming != null) {
+      widget.config.onEndOrLeaveLiveStreaming!.call();
     } else {
       Navigator.of(context).pop();
     }
@@ -95,7 +95,8 @@ class _ZegoTopBarState extends State<ZegoTopBar> {
                   user: ZegoUIKit().getLocalUser(),
                   avatarSize: Size(56.r, 56.r),
                   showSoundLevel: false,
-                  avatarBuilder: widget.config.avatarBuilder,
+                  avatarBuilder:
+                      widget.config.audioVideoViewConfig.avatarBuilder,
                 ),
                 SizedBox(width: 12.r),
                 Text(

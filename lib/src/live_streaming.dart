@@ -101,7 +101,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
 
   @override
   Widget build(BuildContext context) {
-    widget.config.onEndOrLiveStreamingConfirming ??=
+    widget.config.onEndOrLeaveLiveStreamingConfirming ??=
         onEndOrLiveStreamingConfirming;
     return ScreenUtilInit(
       designSize: const Size(750, 1334),
@@ -112,7 +112,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
           body: WillPopScope(
             onWillPop: () async {
               return await widget
-                  .config.onEndOrLiveStreamingConfirming!(context);
+                  .config.onEndOrLeaveLiveStreamingConfirming!(context);
             },
             child: clickListener(
               child: Stack(
@@ -141,7 +141,8 @@ class _ZegoUIKitPrebuiltLiveStreamingState
           // await ZegoUIKit().startEffectsEnv();
 
           ZegoUIKit()
-            ..updateVideoViewMode(config.useVideoViewAspectFill)
+            ..updateVideoViewMode(
+                config.audioVideoViewConfig.useVideoViewAspectFill)
             ..turnCameraOn(config.turnOnCameraWhenJoining)
             ..turnMicrophoneOn(config.turnOnMicrophoneWhenJoining)
             // ..enableBeauty(true)
@@ -157,7 +158,8 @@ class _ZegoUIKitPrebuiltLiveStreamingState
           // await ZegoUIKit().startEffectsEnv();
 
           ZegoUIKit()
-            ..updateVideoViewMode(config.useVideoViewAspectFill)
+            ..updateVideoViewMode(
+                config.audioVideoViewConfig.useVideoViewAspectFill)
             // ..enableBeauty(true)
             ..turnCameraOn(config.turnOnCameraWhenJoining)
             ..turnMicrophoneOn(config.turnOnMicrophoneWhenJoining)
@@ -173,8 +175,8 @@ class _ZegoUIKitPrebuiltLiveStreamingState
   }
 
   void correctConfigValue() {
-    if (widget.config.menuBarButtonsMaxCount > 5) {
-      widget.config.menuBarButtonsMaxCount = 5;
+    if (widget.config.bottomMenuBarConfig.maxCount > 5) {
+      widget.config.bottomMenuBarConfig.maxCount = 5;
       debugPrint('menu bar buttons limited count\'s value  is exceeding the '
           'maximum limit');
     }
@@ -216,7 +218,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     //     builder: (context, zegoLayoutMode, _) {
     //       var layout = ZegoLayout.pictureInPicture(
     //         isSmallViewDraggable: false,
-    //         showSelfViewWithVideoOnly: true,
+    //         showMyViewWithVideoOnly: true,
     //         smallViewPosition: ZegoViewPosition.bottomRight,
     //         showSelfInLargeView: widget.config.turnOnCameraWhenJoining ||
     //             widget.config.turnOnMicrophoneWhenJoining, // host?
@@ -289,7 +291,8 @@ class _ZegoUIKitPrebuiltLiveStreamingState
       BuildContext context, Size size, ZegoUIKitUser? user, Map extraInfo) {
     return Stack(
       children: [
-        widget.config.foregroundBuilder?.call(context, size, user, extraInfo) ??
+        widget.config.audioVideoViewConfig.foregroundBuilder
+                ?.call(context, size, user, extraInfo) ??
             Container(color: Colors.transparent),
       ],
     );
@@ -305,14 +308,16 @@ class _ZegoUIKitPrebuiltLiveStreamingState
             color: isSmallView
                 ? const Color(0xff333437)
                 : const Color(0xff4A4B4D)),
-        widget.config.backgroundBuilder?.call(context, size, user, extraInfo) ??
+        widget.config.audioVideoViewConfig.backgroundBuilder
+                ?.call(context, size, user, extraInfo) ??
             Container(color: Colors.transparent),
         ZegoAvatar(
           avatarSize: isSmallView ? Size(110.r, 110.r) : Size(258.r, 258.r),
           user: user,
-          showAvatar: widget.config.showAvatarInAudioMode,
-          showSoundLevel: widget.config.showSoundWavesInAudioMode,
-          avatarBuilder: widget.config.avatarBuilder,
+          showAvatar: widget.config.audioVideoViewConfig.showAvatarInAudioMode,
+          showSoundLevel:
+              widget.config.audioVideoViewConfig.showSoundWavesInAudioMode,
+          avatarBuilder: widget.config.audioVideoViewConfig.avatarBuilder,
           soundLevelSize: size,
         ),
       ],

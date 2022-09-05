@@ -9,29 +9,20 @@ import 'live_streaming_defines.dart';
 
 class ZegoUIKitPrebuiltLiveStreamingConfig {
   ZegoUIKitPrebuiltLiveStreamingConfig({
-    this.useEndLiveStreamingButton = true,
     this.turnOnCameraWhenJoining = true,
     this.turnOnMicrophoneWhenJoining = true,
     this.useSpeakerWhenJoining = true,
-    this.useVideoViewAspectFill = true,
-    this.showSoundWavesInAudioMode = true,
-    this.foregroundBuilder,
-    this.backgroundBuilder,
-    this.showAvatarInAudioMode = true,
-    this.avatarBuilder,
+    ZegoAudioVideoViewConfig? audioVideoViewConfig,
+    ZegoBottomMenuBarConfig? bottomMenuBarConfig,
     this.showInRoomMessageButton = true,
-    this.menuBarButtons = const [
-      ZegoLiveMenuBarButtonName.toggleCameraButton,
-      ZegoLiveMenuBarButtonName.toggleMicrophoneButton,
-      ZegoLiveMenuBarButtonName.switchCameraFacingButton,
-    ],
-    this.menuBarButtonsMaxCount = 5,
-    this.menuBarExtendButtons = const [],
     this.confirmDialogInfo,
-    this.onEndOrLiveStreamingConfirming,
-    this.onEndOrLiveStreaming,
+    this.onEndOrLeaveLiveStreamingConfirming,
+    this.onEndOrLeaveLiveStreaming,
     this.onLiveStreamingBeEnd,
-  });
+    this.useEndLiveStreamingButton = true,
+  })  : audioVideoViewConfig =
+            audioVideoViewConfig ?? ZegoAudioVideoViewConfig(),
+        bottomMenuBarConfig = bottomMenuBarConfig ?? ZegoBottomMenuBarConfig();
 
   /// whether to enable the camera by default, the default value is true
   bool turnOnCameraWhenJoining;
@@ -42,6 +33,37 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   /// whether to use the speaker by default, the default value is true;
   bool useSpeakerWhenJoining;
 
+  /// configs about audio video view
+  ZegoAudioVideoViewConfig audioVideoViewConfig;
+
+  /// configs about bottom menu bar
+  ZegoBottomMenuBarConfig bottomMenuBarConfig;
+
+  ///
+  bool showInRoomMessageButton;
+
+  /// alert dialog information of end/leave
+  /// if confirm info is not null, APP will pop alert dialog when you hang up
+  LiveStreamingConfirmDialogInfo? confirmDialogInfo;
+
+  /// if true, top right close button will be end up Live; or will leave
+  bool useEndLiveStreamingButton;
+
+  /// It is often used to customize the process before exiting the live interface.
+  /// The liveback will triggered when user click hang up button or use system's return,
+  /// If you need to handle custom logic, you can set this liveback to handle (such as showAlertDialog to let user determine).
+  /// if you return true in the liveback, prebuilt page will quit and return to your previous page, otherwise will ignore.
+  Future<bool> Function(BuildContext context)?
+      onEndOrLeaveLiveStreamingConfirming;
+
+  /// customize handling after end/leave live streaming
+  VoidCallback? onEndOrLeaveLiveStreaming;
+
+  /// customize handling after be end live streaming
+  VoidCallback? onLiveStreamingBeEnd;
+}
+
+class ZegoAudioVideoViewConfig {
   /// video view mode
   /// if set to true, video view will proportional zoom fills the entire View and may be partially cut
   /// if set to false, video view proportional scaling up, there may be black borders
@@ -92,39 +114,38 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   ///
   AudioVideoViewAvatarBuilder? avatarBuilder;
 
+  ZegoAudioVideoViewConfig({
+    this.foregroundBuilder,
+    this.backgroundBuilder,
+    this.avatarBuilder,
+    this.showAvatarInAudioMode = true,
+    this.showSoundWavesInAudioMode = true,
+    this.useVideoViewAspectFill = true,
+  });
+}
+
+class ZegoBottomMenuBarConfig {
   /// these buttons will displayed on the menu bar, order by the list
-  List<ZegoLiveMenuBarButtonName> menuBarButtons;
+  List<ZegoLiveMenuBarButtonName> buttons;
 
   /// limited item count display on menu bar,
   /// if this count is exceeded, More button is displayed
-  int menuBarButtonsMaxCount;
-
-  ///
-  bool showInRoomMessageButton;
-
-  ///
-  bool useEndLiveStreamingButton;
+  int maxCount;
 
   /// these buttons will sequentially added to menu bar,
   /// and auto added extra buttons to the pop-up menu
-  /// when the limit [menuBarButtonsMaxCount] is exceeded
-  List<Widget> menuBarExtendButtons;
+  /// when the limit [maxCount] is exceeded
+  List<Widget> extendButtons;
 
-  /// alert dialog information of end/leave
-  /// if confirm info is not null, APP will pop alert dialog when you hang up
-  LiveStreamingConfirmDialogInfo? confirmDialogInfo;
-
-  /// It is often used to customize the process before exiting the live interface.
-  /// The liveback will triggered when user click hang up button or use system's return,
-  /// If you need to handle custom logic, you can set this liveback to handle (such as showAlertDialog to let user determine).
-  /// if you return true in the liveback, prebuilt page will quit and return to your previous page, otherwise will ignore.
-  Future<bool> Function(BuildContext context)? onEndOrLiveStreamingConfirming;
-
-  /// customize handling after end/leave live streaming
-  VoidCallback? onEndOrLiveStreaming;
-
-  /// customize handling after be end live streaming
-  VoidCallback? onLiveStreamingBeEnd;
+  ZegoBottomMenuBarConfig({
+    this.buttons = const [
+      ZegoLiveMenuBarButtonName.toggleCameraButton,
+      ZegoLiveMenuBarButtonName.toggleMicrophoneButton,
+      ZegoLiveMenuBarButtonName.switchCameraButton,
+    ],
+    this.maxCount = 5,
+    this.extendButtons = const [],
+  });
 }
 
 class LiveStreamingConfirmDialogInfo {

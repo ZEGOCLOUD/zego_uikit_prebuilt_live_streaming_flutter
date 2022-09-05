@@ -1,9 +1,8 @@
-
 /// prefab button on menu bar
 enum ZegoLiveMenuBarButtonName {
   toggleMicrophoneButton,
   toggleCameraButton,
-  switchCameraFacingButton,
+  switchCameraButton,
   switchAudioOutputButton,
   leaveButton,
   endButton,

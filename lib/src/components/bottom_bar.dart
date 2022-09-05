@@ -76,17 +76,17 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
   List<Widget> getDisplayButtons(BuildContext context) {
     List<Widget> buttonList = [
       ...getDefaultButtons(context),
-      ...widget.config.menuBarExtendButtons
+      ...widget.config.bottomMenuBarConfig.extendButtons
     ];
 
     List<Widget> displayButtonList = [];
-    if (buttonList.length > widget.config.menuBarButtonsMaxCount) {
+    if (buttonList.length > widget.config.bottomMenuBarConfig.maxCount) {
       /// the list count exceeds the limit, so divided into two parts,
       /// one part display in the Menu bar, the other part display in the menu with more buttons
       displayButtonList =
-          buttonList.sublist(0, widget.config.menuBarButtonsMaxCount - 1);
+          buttonList.sublist(0, widget.config.bottomMenuBarConfig.maxCount - 1);
 
-      buttonList.removeRange(0, widget.config.menuBarButtonsMaxCount - 1);
+      buttonList.removeRange(0, widget.config.bottomMenuBarConfig.maxCount - 1);
       displayButtonList.add(
         buttonWrapper(
           child: ZegoMoreButton(menuButtonList: buttonList),
@@ -114,11 +114,11 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
   }
 
   List<Widget> getDefaultButtons(BuildContext context) {
-    if (widget.config.menuBarButtons.isEmpty) {
+    if (widget.config.bottomMenuBarConfig.buttons.isEmpty) {
       return [];
     }
 
-    return widget.config.menuBarButtons
+    return widget.config.bottomMenuBarConfig.buttons
         .map((type) => buttonWrapper(
               child: generateDefaultButtonsByEnum(context, type),
             ))
@@ -140,17 +140,18 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
         return ZegoToggleCameraButton(
           defaultOn: widget.config.turnOnCameraWhenJoining,
         );
-      case ZegoLiveMenuBarButtonName.switchCameraFacingButton:
-        return const ZegoSwitchCameraFacingButton();
+      case ZegoLiveMenuBarButtonName.switchCameraButton:
+        return const ZegoSwitchCameraButton();
       case ZegoLiveMenuBarButtonName.leaveButton:
       case ZegoLiveMenuBarButtonName.endButton:
         Future<bool> onCloseConfirming(context) async {
-          return await widget.config.onEndOrLiveStreamingConfirming!(context);
+          return await widget
+              .config.onEndOrLeaveLiveStreamingConfirming!(context);
         }
 
         void onClosePress() {
-          if (widget.config.onEndOrLiveStreaming != null) {
-            widget.config.onEndOrLiveStreaming!.call();
+          if (widget.config.onEndOrLeaveLiveStreaming != null) {
+            widget.config.onEndOrLeaveLiveStreaming!.call();
           } else {
             Navigator.of(context).pop();
           }

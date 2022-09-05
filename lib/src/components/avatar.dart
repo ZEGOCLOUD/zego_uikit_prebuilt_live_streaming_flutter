@@ -34,9 +34,8 @@ class ZegoAvatar extends StatelessWidget {
       return Container(color: Colors.transparent);
     }
 
-    var centralAvatar =
-        avatarBuilder?.call(context, avatarSize, user, {}) ??
-            circleName(context, avatarSize, user);
+    var centralAvatar = avatarBuilder?.call(context, avatarSize, user, {}) ??
+        circleName(context, avatarSize, user);
 
     return Center(
       child: SizedBox.fromSize(

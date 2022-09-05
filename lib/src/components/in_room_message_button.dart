@@ -15,7 +15,8 @@ class ZegoInRoomMessageButton extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<ZegoInRoomMessageButton> createState() => _ZegoInRoomMessageButtonState();
+  State<ZegoInRoomMessageButton> createState() =>
+      _ZegoInRoomMessageButtonState();
 }
 
 class _ZegoInRoomMessageButtonState extends State<ZegoInRoomMessageButton> {
@@ -26,7 +27,8 @@ class _ZegoInRoomMessageButtonState extends State<ZegoInRoomMessageButton> {
         Navigator.of(context).push(ZegoInRoomMessageInputBoard());
       },
       icon: ButtonIcon(
-        icon: PrebuiltLiveStreamingImage.asset(PrebuiltLiveStreamingIconUrls.iconMessage),
+        icon: PrebuiltLiveStreamingImage.asset(
+            PrebuiltLiveStreamingIconUrls.iconMessage),
         backgroundColor: zegoLiveButtonBackgroundColor,
       ),
       iconSize: zegoLiveButtonIconSize,
