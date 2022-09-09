@@ -12,7 +12,7 @@ final String localUserID = Random().nextInt(10000).toString();
 
 /// Users who use the same liveName can in the same live streaming.
 /// (ZegoUIKitPrebuiltLiveStreaming supports 1 host Live for now)
-const String liveName = "live_name";
+const String liveID = "live_id";
 
 void main() {
   runApp(const MyApp());
@@ -50,7 +50,7 @@ class HomePage extends StatelessWidget {
               style: buttonStyle,
               child: const Text('Start a live'),
               onPressed: () =>
-                  jumpToLivePage(context, liveName: liveName, isHost: true),
+                  jumpToLivePage(context, liveID: liveID, isHost: true),
             ),
             const SizedBox(height: 60),
             // click floatingActionButton to navigate to LivePage
@@ -58,7 +58,7 @@ class HomePage extends StatelessWidget {
               style: buttonStyle,
               child: const Text('Watch a live'),
               onPressed: () =>
-                  jumpToLivePage(context, liveName: liveName, isHost: false),
+                  jumpToLivePage(context, liveID: liveID, isHost: false),
             ),
           ],
         ),
@@ -67,12 +67,12 @@ class HomePage extends StatelessWidget {
   }
 
   jumpToLivePage(BuildContext context,
-      {required String liveName, required bool isHost}) {
+      {required String liveID, required bool isHost}) {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) {
-          return LivePage(liveName: liveName, isHost: isHost);
+          return LivePage(liveID: liveID, isHost: isHost);
         },
       ),
     );
@@ -81,12 +81,12 @@ class HomePage extends StatelessWidget {
 
 // integrate code :
 class LivePage extends StatelessWidget {
-  final String liveName;
+  final String liveID;
   final bool isHost;
 
   const LivePage({
     Key? key,
-    required this.liveName,
+    required this.liveID,
     this.isHost = false,
   }) : super(key: key);
 
@@ -98,23 +98,10 @@ class LivePage extends StatelessWidget {
         appSign: /*input your AppSign*/,
         userID: localUserID,
         userName: 'user_$localUserID',
-        liveName: liveName,
-        config: ZegoUIKitPrebuiltLiveStreamingConfig(
-          // true if you are the host, false if you are a audience
-          turnOnCameraWhenJoining: isHost,
-          turnOnMicrophoneWhenJoining: isHost,
-          useSpeakerWhenJoining: !isHost,
-          bottomMenuBarConfig: ZegoBottomMenuBarConfig(
-            buttons: isHost
-                ? [
-                    ZegoLiveMenuBarButtonName.toggleCameraButton,
-                    ZegoLiveMenuBarButtonName.toggleMicrophoneButton,
-                    ZegoLiveMenuBarButtonName.switchCameraButton,
-                  ]
-                : const [],
-          ),
-          useEndLiveStreamingButton: isHost,
-        ),
+        liveID: liveID,
+          config: isHost
+              ? ZegoUIKitPrebuiltLiveStreamingConfig.host()
+              : ZegoUIKitPrebuiltLiveStreamingConfig.audience(),
       ),
     );
   }

@@ -8,7 +8,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
-import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_defines.dart';
 import 'defines.dart';
@@ -33,7 +32,7 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
   Widget build(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(color: Colors.transparent),
-      height: widget.buttonSize.height,
+      height: 124.r,
       child: Stack(
         children: [
           widget.config.showInRoomMessageButton
@@ -144,40 +143,24 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
         return const ZegoSwitchCameraButton();
       case ZegoLiveMenuBarButtonName.leaveButton:
       case ZegoLiveMenuBarButtonName.endButton:
-        Future<bool> onCloseConfirming(context) async {
-          return await widget
-              .config.onEndOrLeaveLiveStreamingConfirming!(context);
-        }
-
-        void onClosePress() {
-          if (widget.config.onEndOrLeaveLiveStreaming != null) {
-            widget.config.onEndOrLeaveLiveStreaming!.call();
-          } else {
-            Navigator.of(context).pop();
-          }
-        }
-
-        var buttonSize = Size(96.r, 96.r);
-        var iconSize = Size(56.r, 56.r);
-        var defaultIcon = ButtonIcon(
-          icon: const Icon(Icons.close, color: Colors.white),
-          backgroundColor: zegoLiveButtonBackgroundColor,
+        return ZegoLeaveButton(
+          buttonSize: Size(96.r, 96.r),
+          iconSize: Size(56.r, 56.r),
+          icon: ButtonIcon(
+            icon: const Icon(Icons.close, color: Colors.white),
+            backgroundColor: zegoLiveButtonBackgroundColor,
+          ),
+          onLeaveConfirmation: (context) async {
+            return await widget.config.onLeaveLiveStreamingConfirming!(context);
+          },
+          onPress: () async {
+            if (widget.config.onLeaveLiveStreaming != null) {
+              widget.config.onLeaveLiveStreaming!.call();
+            } else {
+              Navigator.of(context).pop();
+            }
+          },
         );
-        return type == ZegoLiveMenuBarButtonName.endButton
-            ? ZegoEndButton(
-                buttonSize: buttonSize,
-                iconSize: iconSize,
-                icon: defaultIcon,
-                onEndConfirmation: onCloseConfirming,
-                onPress: onClosePress,
-              )
-            : ZegoLeaveButton(
-                buttonSize: buttonSize,
-                iconSize: iconSize,
-                icon: defaultIcon,
-                onLeaveConfirmation: onCloseConfirming,
-                onPress: onClosePress,
-              );
     }
   }
 }

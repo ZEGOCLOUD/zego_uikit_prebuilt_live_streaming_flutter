@@ -8,6 +8,36 @@ import 'package:zego_uikit/zego_uikit.dart';
 import 'live_streaming_defines.dart';
 
 class ZegoUIKitPrebuiltLiveStreamingConfig {
+  ZegoUIKitPrebuiltLiveStreamingConfig.host()
+      : turnOnCameraWhenJoining = true,
+        turnOnMicrophoneWhenJoining = true,
+        useSpeakerWhenJoining = true,
+        showInRoomMessageButton = true,
+        audioVideoViewConfig = ZegoAudioVideoViewConfig(
+          showSoundWavesInAudioMode: true,
+        ),
+        bottomMenuBarConfig = ZegoBottomMenuBarConfig(
+          buttons: const [
+            ZegoLiveMenuBarButtonName.toggleCameraButton,
+            ZegoLiveMenuBarButtonName.toggleMicrophoneButton,
+            ZegoLiveMenuBarButtonName.switchCameraButton,
+          ],
+          maxCount: 5,
+        );
+
+  ZegoUIKitPrebuiltLiveStreamingConfig.audience()
+      : turnOnCameraWhenJoining = false,
+        turnOnMicrophoneWhenJoining = false,
+        useSpeakerWhenJoining = true,
+        showInRoomMessageButton = true,
+        audioVideoViewConfig = ZegoAudioVideoViewConfig(
+          showSoundWavesInAudioMode: true,
+        ),
+        bottomMenuBarConfig = ZegoBottomMenuBarConfig(
+          buttons: const [],
+          maxCount: 5,
+        );
+
   ZegoUIKitPrebuiltLiveStreamingConfig({
     this.turnOnCameraWhenJoining = true,
     this.turnOnMicrophoneWhenJoining = true,
@@ -16,10 +46,8 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
     ZegoBottomMenuBarConfig? bottomMenuBarConfig,
     this.showInRoomMessageButton = true,
     this.confirmDialogInfo,
-    this.onEndOrLeaveLiveStreamingConfirming,
-    this.onEndOrLeaveLiveStreaming,
-    this.onLiveStreamingBeEnd,
-    this.useEndLiveStreamingButton = true,
+    this.onLeaveLiveStreamingConfirming,
+    this.onLeaveLiveStreaming,
   })  : audioVideoViewConfig =
             audioVideoViewConfig ?? ZegoAudioVideoViewConfig(),
         bottomMenuBarConfig = bottomMenuBarConfig ?? ZegoBottomMenuBarConfig();
@@ -42,25 +70,18 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   ///
   bool showInRoomMessageButton;
 
-  /// alert dialog information of end/leave
+  /// alert dialog information of leave
   /// if confirm info is not null, APP will pop alert dialog when you hang up
   LiveStreamingConfirmDialogInfo? confirmDialogInfo;
-
-  /// if true, top right close button will be end up Live; or will leave
-  bool useEndLiveStreamingButton;
 
   /// It is often used to customize the process before exiting the live interface.
   /// The liveback will triggered when user click hang up button or use system's return,
   /// If you need to handle custom logic, you can set this liveback to handle (such as showAlertDialog to let user determine).
   /// if you return true in the liveback, prebuilt page will quit and return to your previous page, otherwise will ignore.
-  Future<bool> Function(BuildContext context)?
-      onEndOrLeaveLiveStreamingConfirming;
+  Future<bool> Function(BuildContext context)? onLeaveLiveStreamingConfirming;
 
-  /// customize handling after end/leave live streaming
-  VoidCallback? onEndOrLeaveLiveStreaming;
-
-  /// customize handling after be end live streaming
-  VoidCallback? onLiveStreamingBeEnd;
+  /// customize handling after leave live streaming
+  VoidCallback? onLeaveLiveStreaming;
 }
 
 class ZegoAudioVideoViewConfig {
@@ -138,11 +159,7 @@ class ZegoBottomMenuBarConfig {
   List<Widget> extendButtons;
 
   ZegoBottomMenuBarConfig({
-    this.buttons = const [
-      ZegoLiveMenuBarButtonName.toggleCameraButton,
-      ZegoLiveMenuBarButtonName.toggleMicrophoneButton,
-      ZegoLiveMenuBarButtonName.switchCameraButton,
-    ],
+    this.buttons = const [],
     this.maxCount = 5,
     this.extendButtons = const [],
   });

@@ -23,3 +23,11 @@
 
 * Update readme
 * Update ZegoUIKitPrebuiltLiveStreamingConfig
+
+## 0.0.8
+
+* Update a dependency to the latest release..
+
+## 0.0.9
+
+* Update some bugs

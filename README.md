@@ -1,36 +1,37 @@
 # Quick start
 
----
+- - -
+## Integrate the SDK
 
-## Add ZegoUIKitPrebuiltLiveStreaming as dependencies
+### Add ZegoUIKitPrebuiltLiveStreaming as dependencies
 
-1. Edit your project's pubspec.yaml and add local project dependencies
-
-```yaml
-dependencies:
-  flutter:
-    sdk: flutter
-  zego_uikit_prebuilt_live_streaming: ^0.0.6 # Add this line
-```
-
-2. Execute the command as shown below under your project's root folder to install all dependencies
-
-```
-flutter pub get
-```
-
-## Import SDK
-
-Now in your Dart code, you can import prebuilt.
+Run the following code in your project root directory:
 
 ```dart
-import 'package:zego_uikit_prebuilt_live_streaming/zego_uikit_prebuilt_live_streaming.dart';
+flutter pub get zego_uikit_prebuilt_live_streaming
 ```
 
-## Integrate the live streaming
+This will add a line like this to your project's `pubspec.yaml` file (and Flutter will automatic run an implicit `flutter pub get`):
 
-> You can get the AppID and AppSign from [ZEGOCLOUD&#39;s Console](https://console.zegocloud.com).
-> Users who use the same liveName can in the same live streaming. (ZegoUIKitPrebuiltLiveStreaming supports 1 host Live for now)
+```dart
+dependencies:
+  zego_uikit_prebuilt_live_streaming: ^1.0.0 # Add this line
+```
+
+### Import the SDK
+
+Now in your Dart code, import the prebuilt Video Call Kit SDK.
+
+```dart
+import 'package:zego_uikit_prebuilt_live_streaming/zego_uikit_prebuilt_live_streaming';
+```
+
+
+## Integrate the live streaming
+> You can get the AppID and AppSign from [ZEGOCLOUD's Console](https://console.zegocloud.com).
+
+> Users who use the same liveID can in the same live streaming. (ZegoUIKitPrebuiltLiveStreaming supports 1 host Live for now)
+
 > you can customize UI by config properties
 
 ```dart
@@ -42,23 +43,10 @@ Widget build(BuildContext context) {
          appSign: /*Your App Sign*/,
          userID: user_id, // userID should only contain numbers, English characters and  '_'
          userName: 'user_name',
-         liveName: 'live_name',
-         config: ZegoUIKitPrebuiltLiveStreamingConfig(
-            // set config properties based on roles, UI will drive by properties
-            turnOnCameraWhenJoining: isHost,
-            turnOnMicrophoneWhenJoining: isHost,
-            useSpeakerWhenJoining: !isHost,
-            bottomMenuBarConfig: ZegoBottomMenuBarConfig(
-               buttons: isHost
-                       ? [
-                  ZegoLiveMenuBarButtonName.toggleCameraButton,
-                  ZegoLiveMenuBarButtonName.toggleMicrophoneButton,
-                  ZegoLiveMenuBarButtonName.switchCameraButton,
-               ]
-                       : const [],
-            ),
-            useEndLiveStreamingButton: isHost,
-         ),
+         liveID: 'live_id',
+         config: isHost
+                 ? ZegoUIKitPrebuiltLiveStreamingConfig.host()
+                 : ZegoUIKitPrebuiltLiveStreamingConfig.audience(),
       ),
    );
 }
@@ -111,3 +99,12 @@ Now you can simply click the "Run" or "Debug" button to build and run your App o
 ## Related guide
 
 [Custom prebuilt UI](!ZEGOUIKIT_Custom_prebuilt_UI)
+
+## Resources
+
+<div class="md-grid-list-box">
+  <a href="https://github.com/ZEGOCLOUD/zego_uikit_prebuilt_call_example_flutter/tree/master/live_streaming" class="md-grid-item" target="_blank">
+    <div class="grid-title">Sample code</div>
+    <div class="grid-desc">Click here to get the complete sample code.</div>
+  </a>
+</div>

@@ -30,7 +30,8 @@ class _ZegoTopBarState extends State<ZegoTopBar> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          avatar(),
+          // avatar(),
+          const Expanded(child: SizedBox()),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -46,39 +47,24 @@ class _ZegoTopBarState extends State<ZegoTopBar> {
   }
 
   Widget closeButton() {
-    var buttonSize = Size(52.r, 52.r);
-    var iconSize = Size(24.r, 24.r);
-    var defaultIcon = ButtonIcon(
-      icon: const Icon(Icons.close, color: Colors.white),
-      backgroundColor: zegoLiveButtonBackgroundColor,
+    return ZegoLeaveButton(
+      buttonSize: Size(52.r, 52.r),
+      iconSize: Size(24.r, 24.r),
+      icon: ButtonIcon(
+        icon: const Icon(Icons.close, color: Colors.white),
+        backgroundColor: zegoLiveButtonBackgroundColor,
+      ),
+      onLeaveConfirmation: (context) async {
+        return await widget.config.onLeaveLiveStreamingConfirming!(context);
+      },
+      onPress: () async {
+        if (widget.config.onLeaveLiveStreaming != null) {
+          widget.config.onLeaveLiveStreaming!.call();
+        } else {
+          Navigator.of(context).pop();
+        }
+      },
     );
-    return widget.config.useEndLiveStreamingButton
-        ? ZegoEndButton(
-            buttonSize: buttonSize,
-            iconSize: iconSize,
-            icon: defaultIcon,
-            onEndConfirmation: onCloseConfirming,
-            onPress: onClosePress,
-          )
-        : ZegoLeaveButton(
-            buttonSize: buttonSize,
-            iconSize: iconSize,
-            icon: defaultIcon,
-            onLeaveConfirmation: onCloseConfirming,
-            onPress: onClosePress,
-          );
-  }
-
-  Future<bool> onCloseConfirming(context) async {
-    return await widget.config.onEndOrLeaveLiveStreamingConfirming!(context);
-  }
-
-  void onClosePress() {
-    if (widget.config.onEndOrLeaveLiveStreaming != null) {
-      widget.config.onEndOrLeaveLiveStreaming!.call();
-    } else {
-      Navigator.of(context).pop();
-    }
   }
 
   Widget avatar() {

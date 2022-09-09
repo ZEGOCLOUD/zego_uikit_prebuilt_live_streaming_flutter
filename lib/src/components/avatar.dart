@@ -39,7 +39,7 @@ class ZegoAvatar extends StatelessWidget {
 
     return Center(
       child: SizedBox.fromSize(
-        size: soundLevelSize ?? avatarSize,
+        size: showSoundLevel ? soundLevelSize : avatarSize,
         child: showSoundLevel
             ? ZegoRippleAvatar(
                 minRadius: math.min(avatarSize.width, avatarSize.height) / 2,

@@ -28,7 +28,7 @@ class _ZegoInRoomMessageButtonState extends State<ZegoInRoomMessageButton> {
       },
       icon: ButtonIcon(
         icon: PrebuiltLiveStreamingImage.asset(
-            PrebuiltLiveStreamingIconUrls.iconMessage),
+            PrebuiltLiveStreamingIconUrls.message),
         backgroundColor: zegoLiveButtonBackgroundColor,
       ),
       iconSize: zegoLiveButtonIconSize,

@@ -15,7 +15,7 @@ import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'components/components.dart';
-import 'internal/internal.dart';
+import 'internal/icon_defines.dart';
 import 'live_streaming_config.dart';
 
 class ZegoUIKitPrebuiltLiveStreaming extends StatefulWidget {
@@ -25,7 +25,7 @@ class ZegoUIKitPrebuiltLiveStreaming extends StatefulWidget {
     required this.appSign,
     required this.userID,
     required this.userName,
-    required this.liveName,
+    required this.liveID,
     required this.config,
     this.tokenServerUrl = '',
   }) : super(key: key);
@@ -56,7 +56,7 @@ class ZegoUIKitPrebuiltLiveStreaming extends StatefulWidget {
 
   /// You can customize the liveName arbitrarily,
   /// just need to know: users who use the same liveName can talk with each other.
-  final String liveName;
+  final String liveID;
 
   final ZegoUIKitPrebuiltLiveStreamingConfig config;
 
@@ -68,9 +68,8 @@ class ZegoUIKitPrebuiltLiveStreaming extends StatefulWidget {
 class _ZegoUIKitPrebuiltLiveStreamingState
     extends State<ZegoUIKitPrebuiltLiveStreaming>
     with SingleTickerProviderStateMixin {
-  // var layoutModeNotifier =ValueNotifier<ZegoLayoutMode>(ZegoLayoutMode.pictureInPicture);
-
-  StreamSubscription<dynamic>? roomEndStreamSubscription;
+  StreamSubscription<dynamic>? userListSubscription;
+  var hostNotifier = ValueNotifier<ZegoUIKitUser?>(null);
 
   @override
   void initState() {
@@ -82,17 +81,28 @@ class _ZegoUIKitPrebuiltLiveStreamingState
       log("ZegoUIKit version: $version");
     });
 
-    initUIKIt();
+    userListSubscription =
+        ZegoUIKit().getUserListStream().listen(onUserListUpdated);
 
-    roomEndStreamSubscription =
-        ZegoUIKit().getLeaveRoomRequiredStream().listen(onLeaveRoomRequired);
+    initUIKIt();
+  }
+
+  void onUserListUpdated(List<ZegoUIKitUser> users) {
+    if (hostNotifier.value == null) {
+      return;
+    }
+
+    if (users
+        .where((user) => user.id == hostNotifier.value!.id)
+        .toList()
+        .isEmpty) {
+      hostNotifier.value = null;
+    }
   }
 
   @override
   void dispose() async {
     super.dispose();
-
-    roomEndStreamSubscription?.cancel();
 
     await ZegoUIKit().leaveRoom();
     // await ZegoUIKit().stopEffectsEnv();
@@ -101,29 +111,33 @@ class _ZegoUIKitPrebuiltLiveStreamingState
 
   @override
   Widget build(BuildContext context) {
-    widget.config.onEndOrLeaveLiveStreamingConfirming ??=
+    widget.config.onLeaveLiveStreamingConfirming ??=
         onEndOrLiveStreamingConfirming;
+
     return ScreenUtilInit(
       designSize: const Size(750, 1334),
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {
+        var page = clickListener(
+          child: Stack(
+            children: [
+              background(),
+              backgroundTips(),
+              audioVideoContainer(),
+              topBar(),
+              bottomBar(),
+              messageList(),
+            ],
+          ),
+        );
         return Scaffold(
           body: WillPopScope(
             onWillPop: () async {
               return await widget
-                  .config.onEndOrLeaveLiveStreamingConfirming!(context);
+                  .config.onLeaveLiveStreamingConfirming!(context);
             },
-            child: clickListener(
-              child: Stack(
-                children: [
-                  audioVideoContainer(),
-                  topBar(),
-                  bottomBar(),
-                  messageList(),
-                ],
-              ),
-            ),
+            child: page,
           ),
         );
       },
@@ -146,7 +160,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
             ..turnCameraOn(config.turnOnCameraWhenJoining)
             ..turnMicrophoneOn(config.turnOnMicrophoneWhenJoining)
             // ..enableBeauty(true)
-            ..joinRoom(widget.liveName);
+            ..joinRoom(widget.liveID);
         });
       });
     } else {
@@ -167,7 +181,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
 
           getToken(widget.userID).then((token) {
             assert(token.isNotEmpty);
-            ZegoUIKit().joinRoom(widget.liveName, token: token);
+            ZegoUIKit().joinRoom(widget.liveID, token: token);
           });
         });
       });
@@ -199,37 +213,70 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     );
   }
 
-  Widget audioVideoContainer() {
-    return StreamBuilder<List<ZegoUIKitUser>>(
-      stream: ZegoUIKit().getAudioVideoListStream(),
-      builder: (context, snapshot) {
-        List<ZegoUIKitUser> userList = snapshot.data ?? [];
-
-        return ZegoAudioVideoView(
-          user: userList.isEmpty ? ZegoUIKitUser.empty() : userList.first,
-          backgroundBuilder: audioVideoViewBackground,
-          foregroundBuilder: audioVideoViewForeground,
-        );
-      },
+  Widget backgroundTips() {
+    return Center(
+      child: Text(
+        "No host is currently online",
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontSize: 32.r,
+          fontWeight: FontWeight.w400,
+          color: Colors.white,
+        ),
+      ),
     );
+  }
 
-    // return ValueListenableBuilder<ZegoLayoutMode>(
-    //     valueListenable: layoutModeNotifier,
-    //     builder: (context, zegoLayoutMode, _) {
-    //       var layout = ZegoLayout.pictureInPicture(
-    //         isSmallViewDraggable: false,
-    //         showMyViewWithVideoOnly: true,
-    //         smallViewPosition: ZegoViewPosition.bottomRight,
-    //         showSelfInLargeView: widget.config.turnOnCameraWhenJoining ||
-    //             widget.config.turnOnMicrophoneWhenJoining, // host?
-    //       );
-    //
-    //       return ZegoAudioVideoContainer(
-    //         layout: layout,
-    //         backgroundBuilder: audioVideoViewBackground,
-    //         foregroundBuilder: audioVideoViewForeground,
-    //       );
-    //     });
+  Widget background() {
+    return Positioned(
+      top: 0,
+      left: 0,
+      child: Container(
+        width: 750.w,
+        height: 1334.h,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: PrebuiltLiveStreamingImage.assetImage(
+                PrebuiltLiveStreamingIconUrls.background),
+            fit: BoxFit.cover,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget audioVideoContainer() {
+    return Positioned(
+      top: 0,
+      left: 0,
+      child: SizedBox(
+        width: 750.w,
+        height: 1334.h,
+        child: StreamBuilder<List<ZegoUIKitUser>>(
+          stream: ZegoUIKit().getAudioVideoListStream(),
+          builder: (context, snapshot) {
+            List<ZegoUIKitUser> userList = snapshot.data ?? [];
+            if (userList.isNotEmpty) {
+              hostNotifier.value = userList.first;
+            }
+
+            return ValueListenableBuilder<ZegoUIKitUser?>(
+                valueListenable: hostNotifier,
+                builder: (context, host, _) {
+                  if (host == null) {
+                    return Container();
+                  }
+
+                  return ZegoAudioVideoView(
+                    user: host,
+                    backgroundBuilder: audioVideoViewBackground,
+                    foregroundBuilder: audioVideoViewForeground,
+                  );
+                });
+          },
+        ),
+      ),
+    );
   }
 
   /// Get your token from tokenServer
@@ -334,10 +381,8 @@ class _ZegoUIKitPrebuiltLiveStreamingState
   }
 
   Widget bottomBar() {
-    return Positioned(
-      left: 0,
-      right: 0,
-      bottom: 32.r,
+    return Align(
+      alignment: Alignment.bottomCenter,
       child: ZegoBottomBar(
         buttonSize: zegoLiveButtonSize,
         config: widget.config,
@@ -354,39 +399,5 @@ class _ZegoUIKitPrebuiltLiveStreamingState
         child: const ZegoInRoomMessageView(),
       ),
     );
-  }
-
-  void onLeaveRoomRequired(ZegoUIKitUser fromUser) {
-    if (null != widget.config.onLiveStreamingBeEnd) {
-      widget.config.onLiveStreamingBeEnd!.call();
-    } else {
-      showAlertDialog(
-              context,
-              "Attention",
-              "The Live is over",
-              [
-                ElevatedButton(
-                  child: Text(
-                    "Close",
-                    style: TextStyle(
-                        fontSize: 26.r, color: const Color(0xff0055FF)),
-                  ),
-                  onPressed: () {
-                    //  pop this dialog
-                    Navigator.of(context).pop();
-                  },
-                  // style: ElevatedButton.styleFrom(primary: Colors.white),
-                  style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all<Color>(Colors.white),
-                  ),
-                ),
-              ],
-              actionsAlignment: MainAxisAlignment.spaceEvenly)
-          .then((value) {
-        //  to previous page
-        Navigator.of(context).pop();
-      });
-    }
   }
 }
