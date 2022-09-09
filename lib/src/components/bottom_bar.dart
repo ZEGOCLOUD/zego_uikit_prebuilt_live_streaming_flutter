@@ -142,7 +142,6 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
       case ZegoLiveMenuBarButtonName.switchCameraButton:
         return const ZegoSwitchCameraButton();
       case ZegoLiveMenuBarButtonName.leaveButton:
-      case ZegoLiveMenuBarButtonName.endButton:
         return ZegoLeaveButton(
           buttonSize: Size(96.r, 96.r),
           iconSize: Size(56.r, 56.r),
@@ -151,7 +150,8 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
             backgroundColor: zegoLiveButtonBackgroundColor,
           ),
           onLeaveConfirmation: (context) async {
-            return await widget.config.onLeaveLiveStreamingConfirming!(context);
+            return await widget
+                .config.onLeaveLiveStreamingConfirmation!(context);
           },
           onPress: () async {
             if (widget.config.onLeaveLiveStreaming != null) {

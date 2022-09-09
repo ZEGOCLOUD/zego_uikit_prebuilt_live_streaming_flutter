@@ -55,7 +55,7 @@ class _ZegoTopBarState extends State<ZegoTopBar> {
         backgroundColor: zegoLiveButtonBackgroundColor,
       ),
       onLeaveConfirmation: (context) async {
-        return await widget.config.onLeaveLiveStreamingConfirming!(context);
+        return await widget.config.onLeaveLiveStreamingConfirmation!(context);
       },
       onPress: () async {
         if (widget.config.onLeaveLiveStreaming != null) {

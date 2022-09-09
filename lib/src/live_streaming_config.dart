@@ -46,7 +46,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
     ZegoBottomMenuBarConfig? bottomMenuBarConfig,
     this.showInRoomMessageButton = true,
     this.confirmDialogInfo,
-    this.onLeaveLiveStreamingConfirming,
+    this.onLeaveLiveStreamingConfirmation,
     this.onLeaveLiveStreaming,
   })  : audioVideoViewConfig =
             audioVideoViewConfig ?? ZegoAudioVideoViewConfig(),
@@ -78,7 +78,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   /// The liveback will triggered when user click hang up button or use system's return,
   /// If you need to handle custom logic, you can set this liveback to handle (such as showAlertDialog to let user determine).
   /// if you return true in the liveback, prebuilt page will quit and return to your previous page, otherwise will ignore.
-  Future<bool> Function(BuildContext context)? onLeaveLiveStreamingConfirming;
+  Future<bool> Function(BuildContext context)? onLeaveLiveStreamingConfirmation;
 
   /// customize handling after leave live streaming
   VoidCallback? onLeaveLiveStreaming;

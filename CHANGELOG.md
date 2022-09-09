@@ -31,3 +31,7 @@
 ## 0.0.9
 
 * Update some bugs
+
+## 1.0.0
+
+* Congratulations!

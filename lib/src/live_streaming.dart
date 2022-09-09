@@ -87,22 +87,11 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     initUIKIt();
   }
 
-  void onUserListUpdated(List<ZegoUIKitUser> users) {
-    if (hostNotifier.value == null) {
-      return;
-    }
-
-    if (users
-        .where((user) => user.id == hostNotifier.value!.id)
-        .toList()
-        .isEmpty) {
-      hostNotifier.value = null;
-    }
-  }
-
   @override
   void dispose() async {
     super.dispose();
+
+    userListSubscription?.cancel();
 
     await ZegoUIKit().leaveRoom();
     // await ZegoUIKit().stopEffectsEnv();
@@ -111,7 +100,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
 
   @override
   Widget build(BuildContext context) {
-    widget.config.onLeaveLiveStreamingConfirming ??=
+    widget.config.onLeaveLiveStreamingConfirmation ??=
         onEndOrLiveStreamingConfirming;
 
     return ScreenUtilInit(
@@ -135,7 +124,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
           body: WillPopScope(
             onWillPop: () async {
               return await widget
-                  .config.onLeaveLiveStreamingConfirming!(context);
+                  .config.onLeaveLiveStreamingConfirmation!(context);
             },
             child: page,
           ),
@@ -399,5 +388,18 @@ class _ZegoUIKitPrebuiltLiveStreamingState
         child: const ZegoInRoomMessageView(),
       ),
     );
+  }
+
+  void onUserListUpdated(List<ZegoUIKitUser> users) {
+    if (hostNotifier.value == null) {
+      return;
+    }
+
+    if (users
+        .where((user) => user.id == hostNotifier.value!.id)
+        .toList()
+        .isEmpty) {
+      hostNotifier.value = null;
+    }
   }
 }
