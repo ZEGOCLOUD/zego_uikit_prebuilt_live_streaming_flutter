@@ -10,8 +10,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/zego_uikit_prebuilt_live_stre
 /// Note that the userID needs to be globally unique,
 final String localUserID = Random().nextInt(10000).toString();
 
-/// Users who use the same liveName can in the same live streaming.
-/// (ZegoUIKitPrebuiltLiveStreaming supports 1 host Live for now)
+/// Users who use the same liveID can join the same live streaming.
 const String liveID = "live_id";
 
 void main() {
@@ -45,7 +44,7 @@ class HomePage extends StatelessWidget {
           children: [
             const Text('Please test with two or more devices'),
             const SizedBox(height: 60),
-            // click floatingActionButton to navigate to LivePage
+            // click me to navigate to LivePage
             ElevatedButton(
               style: buttonStyle,
               child: const Text('Start a live'),
@@ -53,7 +52,7 @@ class HomePage extends StatelessWidget {
                   jumpToLivePage(context, liveID: liveID, isHost: true),
             ),
             const SizedBox(height: 60),
-            // click floatingActionButton to navigate to LivePage
+            // click me to navigate to LivePage
             ElevatedButton(
               style: buttonStyle,
               child: const Text('Watch a live'),
@@ -71,9 +70,7 @@ class HomePage extends StatelessWidget {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) {
-          return LivePage(liveID: liveID, isHost: isHost);
-        },
+        builder: (context) => LivePage(liveID: liveID, isHost: isHost),
       ),
     );
   }
@@ -99,9 +96,9 @@ class LivePage extends StatelessWidget {
         userID: localUserID,
         userName: 'user_$localUserID',
         liveID: liveID,
-          config: isHost
-              ? ZegoUIKitPrebuiltLiveStreamingConfig.host()
-              : ZegoUIKitPrebuiltLiveStreamingConfig.audience(),
+        config: isHost
+            ? ZegoUIKitPrebuiltLiveStreamingConfig.host()
+            : ZegoUIKitPrebuiltLiveStreamingConfig.audience(),
       ),
     );
   }
