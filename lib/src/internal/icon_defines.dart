@@ -12,6 +12,6 @@ class PrebuiltLiveStreamingImage {
 }
 
 class PrebuiltLiveStreamingIconUrls {
-  static const String message = 'assets/icons/chat.png';
+  static const String im = 'assets/icons/im.png';
   static const String background = 'assets/icons/bg.png';
 }

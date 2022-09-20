@@ -24,10 +24,10 @@ dev_dependencies:
 flutter:
   assets:
     - assets/icons/bg.png
-    - assets/icons/chat.png
+    - assets/icons/im.png
 
     - assets/icons/2.0x/bg.png
-    - assets/icons/2.0x/chat.png
+    - assets/icons/2.0x/im.png
 
     - assets/icons/3.0x/bg.png
-    - assets/icons/3.0x/chat.png
+    - assets/icons/3.0x/im.png

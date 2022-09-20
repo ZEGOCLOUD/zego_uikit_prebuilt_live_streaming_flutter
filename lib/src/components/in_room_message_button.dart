@@ -27,8 +27,8 @@ class _ZegoInRoomMessageButtonState extends State<ZegoInRoomMessageButton> {
         Navigator.of(context).push(ZegoInRoomMessageInputBoard());
       },
       icon: ButtonIcon(
-        icon: PrebuiltLiveStreamingImage.asset(
-            PrebuiltLiveStreamingIconUrls.message),
+        icon:
+            PrebuiltLiveStreamingImage.asset(PrebuiltLiveStreamingIconUrls.im),
         backgroundColor: zegoLiveButtonBackgroundColor,
       ),
       iconSize: zegoLiveButtonIconSize,

@@ -13,7 +13,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         turnOnMicrophoneWhenJoining = true,
         useSpeakerWhenJoining = true,
         showInRoomMessageButton = true,
-        audioVideoViewConfig = ZegoAudioVideoViewConfig(
+        audioVideoViewConfig = ZegoPrebuiltAudioVideoViewConfig(
           showSoundWavesInAudioMode: true,
         ),
         bottomMenuBarConfig = ZegoBottomMenuBarConfig(
@@ -30,7 +30,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         turnOnMicrophoneWhenJoining = false,
         useSpeakerWhenJoining = true,
         showInRoomMessageButton = true,
-        audioVideoViewConfig = ZegoAudioVideoViewConfig(
+        audioVideoViewConfig = ZegoPrebuiltAudioVideoViewConfig(
           showSoundWavesInAudioMode: true,
         ),
         bottomMenuBarConfig = ZegoBottomMenuBarConfig(
@@ -42,14 +42,14 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
     this.turnOnCameraWhenJoining = true,
     this.turnOnMicrophoneWhenJoining = true,
     this.useSpeakerWhenJoining = true,
-    ZegoAudioVideoViewConfig? audioVideoViewConfig,
+    ZegoPrebuiltAudioVideoViewConfig? audioVideoViewConfig,
     ZegoBottomMenuBarConfig? bottomMenuBarConfig,
     this.showInRoomMessageButton = true,
     this.confirmDialogInfo,
     this.onLeaveLiveStreamingConfirmation,
     this.onLeaveLiveStreaming,
   })  : audioVideoViewConfig =
-            audioVideoViewConfig ?? ZegoAudioVideoViewConfig(),
+            audioVideoViewConfig ?? ZegoPrebuiltAudioVideoViewConfig(),
         bottomMenuBarConfig = bottomMenuBarConfig ?? ZegoBottomMenuBarConfig();
 
   /// whether to enable the camera by default, the default value is true
@@ -62,7 +62,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   bool useSpeakerWhenJoining;
 
   /// configs about audio video view
-  ZegoAudioVideoViewConfig audioVideoViewConfig;
+  ZegoPrebuiltAudioVideoViewConfig audioVideoViewConfig;
 
   /// configs about bottom menu bar
   ZegoBottomMenuBarConfig bottomMenuBarConfig;
@@ -84,7 +84,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   VoidCallback? onLeaveLiveStreaming;
 }
 
-class ZegoAudioVideoViewConfig {
+class ZegoPrebuiltAudioVideoViewConfig {
   /// video view mode
   /// if set to true, video view will proportional zoom fills the entire View and may be partially cut
   /// if set to false, video view proportional scaling up, there may be black borders
@@ -135,7 +135,7 @@ class ZegoAudioVideoViewConfig {
   ///
   AudioVideoViewAvatarBuilder? avatarBuilder;
 
-  ZegoAudioVideoViewConfig({
+  ZegoPrebuiltAudioVideoViewConfig({
     this.foregroundBuilder,
     this.backgroundBuilder,
     this.avatarBuilder,

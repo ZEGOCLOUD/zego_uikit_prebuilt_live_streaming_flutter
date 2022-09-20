@@ -1,4 +1,4 @@
-package com.zegocloud.zego_uikit_example
+package com.zegocloud.uikit.flutter.example.live_streaming
 
 import io.flutter.embedding.android.FlutterActivity
 
