@@ -35,3 +35,7 @@
 ## 1.0.0
 
 * Congratulations!
+
+## 1.0.1
+
+* update a dependency to the latest release..

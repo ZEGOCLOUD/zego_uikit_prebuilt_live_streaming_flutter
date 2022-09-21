@@ -353,7 +353,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
           showAvatar: widget.config.audioVideoViewConfig.showAvatarInAudioMode,
           showSoundLevel:
               widget.config.audioVideoViewConfig.showSoundWavesInAudioMode,
-          avatarBuilder: widget.config.audioVideoViewConfig.avatarBuilder,
+          avatarBuilder: widget.config.avatarBuilder,
           soundLevelSize: size,
         ),
       ],
@@ -385,7 +385,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
       bottom: 124.r,
       child: ConstrainedBox(
         constraints: BoxConstraints.loose(Size(540.r, 400.r)),
-        child: const ZegoInRoomMessageView(),
+        child: const ZegoInRoomLiveCommentingView(),
       ),
     );
   }

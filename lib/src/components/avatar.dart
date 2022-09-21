@@ -7,15 +7,12 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
 
-typedef AudioVideoViewAvatarBuilder = Widget Function(
-    BuildContext context, Size size, ZegoUIKitUser? user, Map extraInfo);
-
 class ZegoAvatar extends StatelessWidget {
   final Size avatarSize;
   final ZegoUIKitUser? user;
   final bool showAvatar;
   final bool showSoundLevel;
-  final AudioVideoViewAvatarBuilder? avatarBuilder;
+  final AvatarBuilder? avatarBuilder;
   final Size? soundLevelSize;
 
   const ZegoAvatar({

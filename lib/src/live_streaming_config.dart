@@ -48,6 +48,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
     this.confirmDialogInfo,
     this.onLeaveLiveStreamingConfirmation,
     this.onLeaveLiveStreaming,
+    this.avatarBuilder,
   })  : audioVideoViewConfig =
             audioVideoViewConfig ?? ZegoPrebuiltAudioVideoViewConfig(),
         bottomMenuBarConfig = bottomMenuBarConfig ?? ZegoBottomMenuBarConfig();
@@ -82,27 +83,6 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
 
   /// customize handling after leave live streaming
   VoidCallback? onLeaveLiveStreaming;
-}
-
-class ZegoPrebuiltAudioVideoViewConfig {
-  /// video view mode
-  /// if set to true, video view will proportional zoom fills the entire View and may be partially cut
-  /// if set to false, video view proportional scaling up, there may be black borders
-  bool useVideoViewAspectFill;
-
-  /// hide avatar of audio video view if set false
-  bool showAvatarInAudioMode;
-
-  /// hide sound level of audio video view if set false
-  bool showSoundWavesInAudioMode;
-
-  /// customize your foreground of audio video view, which is the top widget of stack
-  /// <br><img src="https://doc.oa.zego.im/Pics/ZegoUIKit/Flutter/_default_avatar_nowave.jpg" width="5%">
-  /// you can return any widget, then we will put it on top of audio video view
-  AudioVideoViewForegroundBuilder? foregroundBuilder;
-
-  /// customize your background of audio video view, which is the bottom widget of stack
-  AudioVideoViewBackgroundBuilder? backgroundBuilder;
 
   /// customize your user's avatar, default we use userID's first character as avatar
   /// User avatars are generally stored in your server, ZegoUIkitPrebuiltLive does not know each user's avatar, so by default, ZegoUIkitPrebuiltLive will use the first letter of the user name to draw the default user avatar, as shown in the following figure,
@@ -133,12 +113,32 @@ class ZegoPrebuiltAudioVideoViewConfig {
   ///
   /// ```
   ///
-  AudioVideoViewAvatarBuilder? avatarBuilder;
+  AvatarBuilder? avatarBuilder;
+}
+
+class ZegoPrebuiltAudioVideoViewConfig {
+  /// video view mode
+  /// if set to true, video view will proportional zoom fills the entire View and may be partially cut
+  /// if set to false, video view proportional scaling up, there may be black borders
+  bool useVideoViewAspectFill;
+
+  /// hide avatar of audio video view if set false
+  bool showAvatarInAudioMode;
+
+  /// hide sound level of audio video view if set false
+  bool showSoundWavesInAudioMode;
+
+  /// customize your foreground of audio video view, which is the top widget of stack
+  /// <br><img src="https://doc.oa.zego.im/Pics/ZegoUIKit/Flutter/_default_avatar_nowave.jpg" width="5%">
+  /// you can return any widget, then we will put it on top of audio video view
+  AudioVideoViewForegroundBuilder? foregroundBuilder;
+
+  /// customize your background of audio video view, which is the bottom widget of stack
+  AudioVideoViewBackgroundBuilder? backgroundBuilder;
 
   ZegoPrebuiltAudioVideoViewConfig({
     this.foregroundBuilder,
     this.backgroundBuilder,
-    this.avatarBuilder,
     this.showAvatarInAudioMode = true,
     this.showSoundWavesInAudioMode = true,
     this.useVideoViewAspectFill = true,

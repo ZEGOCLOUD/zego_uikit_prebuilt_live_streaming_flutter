@@ -81,8 +81,7 @@ class _ZegoTopBarState extends State<ZegoTopBar> {
                   user: ZegoUIKit().getLocalUser(),
                   avatarSize: Size(56.r, 56.r),
                   showSoundLevel: false,
-                  avatarBuilder:
-                      widget.config.audioVideoViewConfig.avatarBuilder,
+                  avatarBuilder: widget.config.avatarBuilder,
                 ),
                 SizedBox(width: 12.r),
                 Text(
