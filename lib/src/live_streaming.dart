@@ -17,6 +17,7 @@ import 'package:zego_uikit/zego_uikit.dart';
 import 'components/components.dart';
 import 'internal/icon_defines.dart';
 import 'live_streaming_config.dart';
+import 'live_streaming_defines.dart';
 
 class ZegoUIKitPrebuiltLiveStreaming extends StatefulWidget {
   const ZegoUIKitPrebuiltLiveStreaming({
@@ -135,20 +136,24 @@ class _ZegoUIKitPrebuiltLiveStreamingState
 
   void initUIKIt() {
     ZegoUIKitPrebuiltLiveStreamingConfig config = widget.config;
+    var useBeautyEffect = false;
+
     if (!kIsWeb) {
       assert(widget.appSign.isNotEmpty);
       ZegoUIKit().login(widget.userID, widget.userName).then((value) {
         ZegoUIKit()
             .init(appID: widget.appID, appSign: widget.appSign)
             .then((value) async {
-          // await ZegoUIKit().startEffectsEnv();
+          if (useBeautyEffect) {
+            await ZegoUIKit().startEffectsEnv();
+            ZegoUIKit().enableBeauty(true);
+          }
 
           ZegoUIKit()
             ..updateVideoViewMode(
                 config.audioVideoViewConfig.useVideoViewAspectFill)
             ..turnCameraOn(config.turnOnCameraWhenJoining)
             ..turnMicrophoneOn(config.turnOnMicrophoneWhenJoining)
-            // ..enableBeauty(true)
             ..joinRoom(widget.liveID);
         });
       });
@@ -158,12 +163,14 @@ class _ZegoUIKitPrebuiltLiveStreamingState
         ZegoUIKit()
             .init(appID: widget.appID, tokenServerUrl: widget.tokenServerUrl)
             .then((value) async {
-          // await ZegoUIKit().startEffectsEnv();
+          if (useBeautyEffect) {
+            await ZegoUIKit().startEffectsEnv();
+            ZegoUIKit().enableBeauty(true);
+          }
 
           ZegoUIKit()
             ..updateVideoViewMode(
                 config.audioVideoViewConfig.useVideoViewAspectFill)
-            // ..enableBeauty(true)
             ..turnCameraOn(config.turnOnCameraWhenJoining)
             ..turnMicrophoneOn(config.turnOnMicrophoneWhenJoining)
             ..setAudioOutputToSpeaker(config.useSpeakerWhenJoining);

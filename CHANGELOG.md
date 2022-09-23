@@ -4,33 +4,33 @@
 
 ## 0.0.2 
 
-* Update some bugs
-* Update a dependency to the latest release..
+* fix some bugs
+* update a dependency to the latest release..
 
 ## 0.0.4
 
-* Update some bugs
+* fix some bugs
 
 ## 0.0.5
 
-* Update config
+* update config
 
 ## 0.0.6
 
-* Update readme
+* update readme
 
 ## 0.0.7
 
-* Update readme
-* Update ZegoUIKitPrebuiltLiveStreamingConfig
+* update readme
+* update ZegoUIKitPrebuiltLiveStreamingConfig
 
 ## 0.0.8
 
-* Update a dependency to the latest release..
+* update a dependency to the latest release..
 
 ## 0.0.9
 
-* Update some bugs
+* fix some bugs
 
 ## 1.0.0
 
@@ -39,3 +39,7 @@
 ## 1.0.1
 
 * update a dependency to the latest release..
+
+## 1.0.2
+
+* fix some bugs

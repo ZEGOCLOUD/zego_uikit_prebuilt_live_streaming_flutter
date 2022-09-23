@@ -19,11 +19,12 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         bottomMenuBarConfig = ZegoBottomMenuBarConfig(
           buttons: const [
             ZegoLiveMenuBarButtonName.toggleCameraButton,
-            ZegoLiveMenuBarButtonName.toggleMicrophoneButton,
             ZegoLiveMenuBarButtonName.switchCameraButton,
+            ZegoLiveMenuBarButtonName.toggleMicrophoneButton,
           ],
           maxCount: 5,
-        );
+        ),
+        effectConfig = ZegoEffectConfig();
 
   ZegoUIKitPrebuiltLiveStreamingConfig.audience()
       : turnOnCameraWhenJoining = false,
@@ -36,7 +37,8 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         bottomMenuBarConfig = ZegoBottomMenuBarConfig(
           buttons: const [],
           maxCount: 5,
-        );
+        ),
+        effectConfig = ZegoEffectConfig.none();
 
   ZegoUIKitPrebuiltLiveStreamingConfig({
     this.turnOnCameraWhenJoining = true,
@@ -44,6 +46,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
     this.useSpeakerWhenJoining = true,
     ZegoPrebuiltAudioVideoViewConfig? audioVideoViewConfig,
     ZegoBottomMenuBarConfig? bottomMenuBarConfig,
+    ZegoEffectConfig? effectConfig,
     this.showInRoomMessageButton = true,
     this.confirmDialogInfo,
     this.onLeaveLiveStreamingConfirmation,
@@ -51,7 +54,8 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
     this.avatarBuilder,
   })  : audioVideoViewConfig =
             audioVideoViewConfig ?? ZegoPrebuiltAudioVideoViewConfig(),
-        bottomMenuBarConfig = bottomMenuBarConfig ?? ZegoBottomMenuBarConfig();
+        bottomMenuBarConfig = bottomMenuBarConfig ?? ZegoBottomMenuBarConfig(),
+        effectConfig = effectConfig ?? ZegoEffectConfig();
 
   /// whether to enable the camera by default, the default value is true
   bool turnOnCameraWhenJoining;
@@ -68,7 +72,13 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   /// configs about bottom menu bar
   ZegoBottomMenuBarConfig bottomMenuBarConfig;
 
-  ///
+  /// support :
+  /// 1. beauty effect
+  /// 2. voice change
+  /// 3. reverb
+  ZegoEffectConfig effectConfig;
+
+  /// support message if set true
   bool showInRoomMessageButton;
 
   /// alert dialog information of leave
@@ -163,6 +173,61 @@ class ZegoBottomMenuBarConfig {
     this.maxCount = 5,
     this.extendButtons = const [],
   });
+}
+
+class ZegoEffectConfig {
+  List<BeautyEffectType> beautyEffects;
+  List<VoiceChangerType> voiceChangeEffect;
+  List<ReverbType> reverbEffect;
+
+  ZegoEffectConfig({
+    this.beautyEffects = const [
+      BeautyEffectType.whiten,
+      BeautyEffectType.rosy,
+      BeautyEffectType.smooth,
+      BeautyEffectType.sharpen,
+    ],
+    this.voiceChangeEffect = const [
+      VoiceChangerType.lolita,
+      VoiceChangerType.uncle,
+      VoiceChangerType.robot,
+      VoiceChangerType.empty,
+      VoiceChangerType.boy,
+      VoiceChangerType.female,
+      VoiceChangerType.male,
+      VoiceChangerType.foreigner,
+      VoiceChangerType.optimus,
+      VoiceChangerType.aunt,
+      VoiceChangerType.majorC,
+      VoiceChangerType.minorA,
+      VoiceChangerType.harmonicMinor,
+    ],
+    this.reverbEffect = const [
+      ReverbType.ktv,
+      ReverbType.hall,
+      ReverbType.concert,
+      ReverbType.rock,
+      ReverbType.softRoom,
+      ReverbType.largeRoom,
+      ReverbType.valley,
+      ReverbType.recordingStudio,
+      ReverbType.basement,
+      ReverbType.popular,
+      ReverbType.gramophone,
+    ],
+  });
+
+  ZegoEffectConfig.none({
+    this.beautyEffects = const [],
+    this.voiceChangeEffect = const [],
+    this.reverbEffect = const [],
+  });
+
+  bool get isSupportBeauty => beautyEffects.isNotEmpty;
+
+  bool get isSupportVoiceChange => voiceChangeEffect.isNotEmpty;
+
+  bool get isSupportReverb => reverbEffect.isNotEmpty;
 }
 
 class LiveStreamingConfirmDialogInfo {

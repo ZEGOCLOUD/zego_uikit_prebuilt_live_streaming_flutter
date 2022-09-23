@@ -14,4 +14,9 @@ class PrebuiltLiveStreamingImage {
 class PrebuiltLiveStreamingIconUrls {
   static const String im = 'assets/icons/im.png';
   static const String background = 'assets/icons/bg.png';
+  static const String back = 'assets/icons/back.png';
+  static const String toolbarSoundEffect = 'assets/icons/toolbar_sound.png';
+  static const String toolbarBeautyEffect = 'assets/icons/toolbar_beauty.png';
+
+  static const String effectReset = "assets/icons/effect_reset.png";
 }

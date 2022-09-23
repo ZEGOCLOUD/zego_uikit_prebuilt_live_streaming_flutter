@@ -11,6 +11,8 @@ import 'package:zego_uikit/zego_uikit.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_defines.dart';
 import 'defines.dart';
+import 'effects/beauty_effect_button.dart';
+import 'effects/sound_effect_button.dart';
 import 'in_room_message_button.dart';
 
 class ZegoBottomBar extends StatefulWidget {
@@ -36,11 +38,16 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
       child: Stack(
         children: [
           widget.config.showInRoomMessageButton
-              ? Row(
-                  children: [
-                    zegoLiveButtonPadding,
-                    const ZegoInRoomMessageButton(),
-                  ],
+              ? SizedBox(
+                  height: 124.r,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      zegoLiveButtonPadding,
+                      const ZegoInRoomMessageButton(),
+                    ],
+                  ),
                 )
               : const SizedBox(),
           rightToolbar(context),
@@ -51,7 +58,7 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
 
   Widget rightToolbar(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(left: 100.0.r),
+      margin: EdgeInsets.only(left: 120.0.r),
       child: CustomScrollView(
         scrollDirection: Axis.horizontal,
         slivers: [
@@ -126,25 +133,36 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
 
   Widget generateDefaultButtonsByEnum(
       BuildContext context, ZegoLiveMenuBarButtonName type) {
+    var buttonSize = Size(96.r, 96.r);
+    var iconSize = Size(56.r, 56.r);
     switch (type) {
       case ZegoLiveMenuBarButtonName.toggleMicrophoneButton:
         return ZegoToggleMicrophoneButton(
+          buttonSize: buttonSize,
+          iconSize: iconSize,
           defaultOn: widget.config.turnOnMicrophoneWhenJoining,
         );
       case ZegoLiveMenuBarButtonName.switchAudioOutputButton:
         return ZegoSwitchAudioOutputButton(
+          buttonSize: buttonSize,
+          iconSize: iconSize,
           defaultUseSpeaker: widget.config.useSpeakerWhenJoining,
         );
       case ZegoLiveMenuBarButtonName.toggleCameraButton:
         return ZegoToggleCameraButton(
+          buttonSize: buttonSize,
+          iconSize: iconSize,
           defaultOn: widget.config.turnOnCameraWhenJoining,
         );
       case ZegoLiveMenuBarButtonName.switchCameraButton:
-        return const ZegoSwitchCameraButton();
+        return ZegoSwitchCameraButton(
+          buttonSize: buttonSize,
+          iconSize: iconSize,
+        );
       case ZegoLiveMenuBarButtonName.leaveButton:
         return ZegoLeaveButton(
-          buttonSize: Size(96.r, 96.r),
-          iconSize: Size(56.r, 56.r),
+          buttonSize: buttonSize,
+          iconSize: iconSize,
           icon: ButtonIcon(
             icon: const Icon(Icons.close, color: Colors.white),
             backgroundColor: zegoLiveButtonBackgroundColor,

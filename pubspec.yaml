@@ -1,6 +1,6 @@
 name: zego_uikit_prebuilt_live_streaming
 description: PrebuiltLiveStreaming is a full-featured live streaming kit that provides ready-made video streaming, live text chat, face beautification, and supports unlimited viewers.
-version: 1.0.1
+version: 1.0.2
 homepage: https://www.zegocloud.com/
 repository: https://github.com/ZEGOCLOUD/zego_uikit_prebuilt_live_streaming_flutter
 
@@ -13,7 +13,7 @@ dependencies:
     sdk: flutter
   http: ^0.13.4
   flutter_screenutil: ^5.5.3+2
-  zego_uikit: ^1.3.0
+  zego_uikit: ^1.3.1
 
 dev_dependencies:
   flutter_test:
@@ -24,10 +24,160 @@ dev_dependencies:
 flutter:
   assets:
     - assets/icons/bg.png
+    - assets/icons/back.png
     - assets/icons/im.png
+    - assets/icons/toolbar_sound.png
+    - assets/icons/toolbar_beauty.png
+    - assets/icons/effect_reset.png
+    - assets/icons/face_beauty_rosy.png
+    - assets/icons/face_beauty_sharpen.png
+    - assets/icons/face_beauty_smooth.png
+    - assets/icons/face_beauty_whiten.png
+
+    - assets/icons/reverb_preset_basement.png
+    - assets/icons/reverb_preset_concert.png
+    - assets/icons/reverb_preset_gramophone.png
+    - assets/icons/reverb_preset_hall.png
+    - assets/icons/reverb_preset_ktv.png
+    - assets/icons/reverb_preset_largeRoom.png
+    - assets/icons/reverb_preset_none.png
+    - assets/icons/reverb_preset_popular.png
+    - assets/icons/reverb_preset_recordingStudio.png
+    - assets/icons/reverb_preset_rock.png
+    - assets/icons/reverb_preset_softRoom.png
+    - assets/icons/reverb_preset_valley.png
+
+    - assets/icons/voice_changer_aunt.png
+    - assets/icons/voice_changer_aunt_selected.png
+    - assets/icons/voice_changer_boy.png
+    - assets/icons/voice_changer_boy_selected.png
+    - assets/icons/voice_changer_empty.png
+    - assets/icons/voice_changer_empty_selected.png
+    - assets/icons/voice_changer_female.png
+    - assets/icons/voice_changer_female_selected.png
+    - assets/icons/voice_changer_foreigner_selected.png
+    - assets/icons/voice_changer_foreigner.png
+    - assets/icons/voice_changer_harmonicMinor.png
+    - assets/icons/voice_changer_harmonicMinor_selected.png
+    - assets/icons/voice_changer_lolita.png
+    - assets/icons/voice_changer_lolita_selected.png
+    - assets/icons/voice_changer_majorC.png
+    - assets/icons/voice_changer_majorC_selected.png
+    - assets/icons/voice_changer_male.png
+    - assets/icons/voice_changer_male_selected.png
+    - assets/icons/voice_changer_minorA.png
+    - assets/icons/voice_changer_minorA_selected.png
+    - assets/icons/voice_changer_none.png
+    - assets/icons/voice_changer_none_selected.png
+    - assets/icons/voice_changer_optimus.png
+    - assets/icons/voice_changer_optimus_selected.png
+    - assets/icons/voice_changer_robot.png
+    - assets/icons/voice_changer_robot_selected.png
+    - assets/icons/voice_changer_uncle.png
+    - assets/icons/voice_changer_uncle_selected.png
 
     - assets/icons/2.0x/bg.png
+    - assets/icons/2.0x/back.png
     - assets/icons/2.0x/im.png
+    - assets/icons/2.0x/toolbar_sound.png
+    - assets/icons/2.0x/toolbar_beauty.png
+    - assets/icons/2.0x/effect_reset.png
+    - assets/icons/2.0x/face_beauty_rosy.png
+    - assets/icons/2.0x/face_beauty_sharpen.png
+    - assets/icons/2.0x/face_beauty_smooth.png
+    - assets/icons/2.0x/face_beauty_whiten.png
+
+    - assets/icons/2.0x/reverb_preset_basement.png
+    - assets/icons/2.0x/reverb_preset_concert.png
+    - assets/icons/2.0x/reverb_preset_gramophone.png
+    - assets/icons/2.0x/reverb_preset_hall.png
+    - assets/icons/2.0x/reverb_preset_ktv.png
+    - assets/icons/2.0x/reverb_preset_largeRoom.png
+    - assets/icons/2.0x/reverb_preset_none.png
+    - assets/icons/2.0x/reverb_preset_popular.png
+    - assets/icons/2.0x/reverb_preset_recordingStudio.png
+    - assets/icons/2.0x/reverb_preset_rock.png
+    - assets/icons/2.0x/reverb_preset_softRoom.png
+    - assets/icons/2.0x/reverb_preset_valley.png
+
+    - assets/icons/2.0x/voice_changer_aunt.png
+    - assets/icons/2.0x/voice_changer_aunt_selected.png
+    - assets/icons/2.0x/voice_changer_boy.png
+    - assets/icons/2.0x/voice_changer_boy_selected.png
+    - assets/icons/2.0x/voice_changer_empty.png
+    - assets/icons/2.0x/voice_changer_empty_selected.png
+    - assets/icons/2.0x/voice_changer_female.png
+    - assets/icons/2.0x/voice_changer_female_selected.png
+    - assets/icons/2.0x/voice_changer_foreigner_selected.png
+    - assets/icons/2.0x/voice_changer_foreigner.png
+    - assets/icons/2.0x/voice_changer_harmonicMinor.png
+    - assets/icons/2.0x/voice_changer_harmonicMinor_selected.png
+    - assets/icons/2.0x/voice_changer_lolita.png
+    - assets/icons/2.0x/voice_changer_lolita_selected.png
+    - assets/icons/2.0x/voice_changer_majorC.png
+    - assets/icons/2.0x/voice_changer_majorC_selected.png
+    - assets/icons/2.0x/voice_changer_male.png
+    - assets/icons/2.0x/voice_changer_male_selected.png
+    - assets/icons/2.0x/voice_changer_minorA.png
+    - assets/icons/2.0x/voice_changer_minorA_selected.png
+    - assets/icons/2.0x/voice_changer_none.png
+    - assets/icons/2.0x/voice_changer_none_selected.png
+    - assets/icons/2.0x/voice_changer_optimus.png
+    - assets/icons/2.0x/voice_changer_optimus_selected.png
+    - assets/icons/2.0x/voice_changer_robot.png
+    - assets/icons/2.0x/voice_changer_robot_selected.png
+    - assets/icons/2.0x/voice_changer_uncle.png
+    - assets/icons/2.0x/voice_changer_uncle_selected.png
 
     - assets/icons/3.0x/bg.png
+    - assets/icons/3.0x/back.png
     - assets/icons/3.0x/im.png
+    - assets/icons/3.0x/toolbar_sound.png
+    - assets/icons/3.0x/toolbar_beauty.png
+    - assets/icons/3.0x/effect_reset.png
+    - assets/icons/3.0x/face_beauty_rosy.png
+    - assets/icons/3.0x/face_beauty_sharpen.png
+    - assets/icons/3.0x/face_beauty_smooth.png
+    - assets/icons/3.0x/face_beauty_whiten.png
+
+    - assets/icons/3.0x/reverb_preset_basement.png
+    - assets/icons/3.0x/reverb_preset_concert.png
+    - assets/icons/3.0x/reverb_preset_gramophone.png
+    - assets/icons/3.0x/reverb_preset_hall.png
+    - assets/icons/3.0x/reverb_preset_ktv.png
+    - assets/icons/3.0x/reverb_preset_largeRoom.png
+    - assets/icons/3.0x/reverb_preset_none.png
+    - assets/icons/3.0x/reverb_preset_popular.png
+    - assets/icons/3.0x/reverb_preset_recordingStudio.png
+    - assets/icons/3.0x/reverb_preset_rock.png
+    - assets/icons/3.0x/reverb_preset_softRoom.png
+    - assets/icons/3.0x/reverb_preset_valley.png
+
+    - assets/icons/3.0x/voice_changer_aunt.png
+    - assets/icons/3.0x/voice_changer_aunt_selected.png
+    - assets/icons/3.0x/voice_changer_boy.png
+    - assets/icons/3.0x/voice_changer_boy_selected.png
+    - assets/icons/3.0x/voice_changer_empty.png
+    - assets/icons/3.0x/voice_changer_empty_selected.png
+    - assets/icons/3.0x/voice_changer_female.png
+    - assets/icons/3.0x/voice_changer_female_selected.png
+    - assets/icons/3.0x/voice_changer_foreigner_selected.png
+    - assets/icons/3.0x/voice_changer_foreigner.png
+    - assets/icons/3.0x/voice_changer_harmonicMinor.png
+    - assets/icons/3.0x/voice_changer_harmonicMinor_selected.png
+    - assets/icons/3.0x/voice_changer_lolita.png
+    - assets/icons/3.0x/voice_changer_lolita_selected.png
+    - assets/icons/3.0x/voice_changer_majorC.png
+    - assets/icons/3.0x/voice_changer_majorC_selected.png
+    - assets/icons/3.0x/voice_changer_male.png
+    - assets/icons/3.0x/voice_changer_male_selected.png
+    - assets/icons/3.0x/voice_changer_minorA.png
+    - assets/icons/3.0x/voice_changer_minorA_selected.png
+    - assets/icons/3.0x/voice_changer_none.png
+    - assets/icons/3.0x/voice_changer_none_selected.png
+    - assets/icons/3.0x/voice_changer_optimus.png
+    - assets/icons/3.0x/voice_changer_optimus_selected.png
+    - assets/icons/3.0x/voice_changer_robot.png
+    - assets/icons/3.0x/voice_changer_robot_selected.png
+    - assets/icons/3.0x/voice_changer_uncle.png
+    - assets/icons/3.0x/voice_changer_uncle_selected.png
