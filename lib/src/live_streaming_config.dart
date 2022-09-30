@@ -18,12 +18,15 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         ),
         bottomMenuBarConfig = ZegoBottomMenuBarConfig(
           buttons: const [
-            ZegoLiveMenuBarButtonName.toggleCameraButton,
+            ZegoLiveMenuBarButtonName.beautyEffectButton,
+            ZegoLiveMenuBarButtonName.soundEffectButton,
             ZegoLiveMenuBarButtonName.switchCameraButton,
+            ZegoLiveMenuBarButtonName.toggleCameraButton,
             ZegoLiveMenuBarButtonName.toggleMicrophoneButton,
           ],
           maxCount: 5,
         ),
+        memberListConfig = ZegoMemberListConfig(),
         effectConfig = ZegoEffectConfig();
 
   ZegoUIKitPrebuiltLiveStreamingConfig.audience()
@@ -38,6 +41,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
           buttons: const [],
           maxCount: 5,
         ),
+        memberListConfig = ZegoMemberListConfig(),
         effectConfig = ZegoEffectConfig.none();
 
   ZegoUIKitPrebuiltLiveStreamingConfig({
@@ -46,6 +50,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
     this.useSpeakerWhenJoining = true,
     ZegoPrebuiltAudioVideoViewConfig? audioVideoViewConfig,
     ZegoBottomMenuBarConfig? bottomMenuBarConfig,
+    ZegoMemberListConfig? memberListConfig,
     ZegoEffectConfig? effectConfig,
     this.showInRoomMessageButton = true,
     this.confirmDialogInfo,
@@ -55,6 +60,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   })  : audioVideoViewConfig =
             audioVideoViewConfig ?? ZegoPrebuiltAudioVideoViewConfig(),
         bottomMenuBarConfig = bottomMenuBarConfig ?? ZegoBottomMenuBarConfig(),
+        memberListConfig = memberListConfig ?? ZegoMemberListConfig(),
         effectConfig = effectConfig ?? ZegoEffectConfig();
 
   /// whether to enable the camera by default, the default value is true
@@ -72,10 +78,13 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   /// configs about bottom menu bar
   ZegoBottomMenuBarConfig bottomMenuBarConfig;
 
+  /// configs about bottom member list
+  ZegoMemberListConfig memberListConfig;
+
   /// support :
-  /// 1. beauty effect
-  /// 2. voice change
-  /// 3. reverb
+  /// 1. Face beautification
+  /// 2. Voice changing
+  /// 3. Reverb
   ZegoEffectConfig effectConfig;
 
   /// support message if set true
@@ -172,6 +181,23 @@ class ZegoBottomMenuBarConfig {
     this.buttons = const [],
     this.maxCount = 5,
     this.extendButtons = const [],
+  });
+}
+
+class ZegoMemberListConfig {
+  /// show microphone state or not
+  bool showMicrophoneState;
+
+  /// show camera state or not
+  bool showCameraState;
+
+  /// customize your item view of member list
+  MemberListItemBuilder? itemBuilder;
+
+  ZegoMemberListConfig({
+    this.showMicrophoneState = true,
+    this.showCameraState = true,
+    this.itemBuilder,
   });
 }
 

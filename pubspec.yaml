@@ -13,7 +13,7 @@ dependencies:
     sdk: flutter
   http: ^0.13.4
   flutter_screenutil: ^5.5.3+2
-  zego_uikit: ^1.3.1
+  zego_uikit: ^1.3.2
 
 dev_dependencies:
   flutter_test:
@@ -25,9 +25,14 @@ flutter:
   assets:
     - assets/icons/bg.png
     - assets/icons/back.png
-    - assets/icons/im.png
+    - assets/icons/toolbar_im.png
     - assets/icons/toolbar_sound.png
     - assets/icons/toolbar_beauty.png
+    - assets/icons/toolbar_camera_normal.png
+    - assets/icons/toolbar_camera_off.png
+    - assets/icons/toolbar_flip_camera.png
+    - assets/icons/toolbar_mic_normal.png
+    - assets/icons/toolbar_mic_off.png
     - assets/icons/effect_reset.png
     - assets/icons/face_beauty_rosy.png
     - assets/icons/face_beauty_sharpen.png
@@ -78,9 +83,14 @@ flutter:
 
     - assets/icons/2.0x/bg.png
     - assets/icons/2.0x/back.png
-    - assets/icons/2.0x/im.png
+    - assets/icons/2.0x/toolbar_im.png
     - assets/icons/2.0x/toolbar_sound.png
     - assets/icons/2.0x/toolbar_beauty.png
+    - assets/icons/2.0x/toolbar_camera_normal.png
+    - assets/icons/2.0x/toolbar_camera_off.png
+    - assets/icons/2.0x/toolbar_flip_camera.png
+    - assets/icons/2.0x/toolbar_mic_normal.png
+    - assets/icons/2.0x/toolbar_mic_off.png
     - assets/icons/2.0x/effect_reset.png
     - assets/icons/2.0x/face_beauty_rosy.png
     - assets/icons/2.0x/face_beauty_sharpen.png
@@ -131,9 +141,14 @@ flutter:
 
     - assets/icons/3.0x/bg.png
     - assets/icons/3.0x/back.png
-    - assets/icons/3.0x/im.png
+    - assets/icons/3.0x/toolbar_im.png
     - assets/icons/3.0x/toolbar_sound.png
     - assets/icons/3.0x/toolbar_beauty.png
+    - assets/icons/3.0x/toolbar_camera_normal.png
+    - assets/icons/3.0x/toolbar_camera_off.png
+    - assets/icons/3.0x/toolbar_flip_camera.png
+    - assets/icons/3.0x/toolbar_mic_normal.png
+    - assets/icons/3.0x/toolbar_mic_off.png
     - assets/icons/3.0x/effect_reset.png
     - assets/icons/3.0x/face_beauty_rosy.png
     - assets/icons/3.0x/face_beauty_sharpen.png

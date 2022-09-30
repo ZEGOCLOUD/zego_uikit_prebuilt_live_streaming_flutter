@@ -34,6 +34,9 @@ class ZegoSoundEffectButton extends StatefulWidget {
 }
 
 class _ZegoSoundEffectButtonState extends State<ZegoSoundEffectButton> {
+  var voiceChangerSelectedIDNotifier = ValueNotifier<String>("");
+  var reverbSelectedIDNotifier = ValueNotifier<String>("");
+
   @override
   Widget build(BuildContext context) {
     Size containerSize = widget.buttonSize ?? Size(96.r, 96.r);
@@ -43,7 +46,9 @@ class _ZegoSoundEffectButtonState extends State<ZegoSoundEffectButton> {
         showSoundEffectSheet(
           context,
           voiceChangeEffect: widget.voiceChangeEffect,
+          voiceChangerSelectedIDNotifier: voiceChangerSelectedIDNotifier,
           reverbEffect: widget.reverbEffect,
+          reverbSelectedIDNotifier: reverbSelectedIDNotifier,
         );
       },
       child: Container(

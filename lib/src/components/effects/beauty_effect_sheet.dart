@@ -22,8 +22,16 @@ class ZegoBeautyEffectSheet extends StatefulWidget {
   State<ZegoBeautyEffectSheet> createState() => _ZegoBeautyEffectSheetState();
 }
 
+get _besHeaderHeight => 98.r;
+get _besSliderHeight => 32.r;
+get _besSliderPadding => 43.r;
+get _besSheetTotalHeight => 317.r;
+get _besLineToSheetPadding => 36.r;
+get _besLineHeight => 1.r;
+
 class _ZegoBeautyEffectSheetState extends State<ZegoBeautyEffectSheet> {
   late ZegoEffectGridModel beauty;
+  var selectedIDNotifier = ValueNotifier<String>("");
   var selectedEffectTypeNotifier =
       ValueNotifier<BeautyEffectType>(BeautyEffectType.none);
 
@@ -35,7 +43,7 @@ class _ZegoBeautyEffectSheetState extends State<ZegoBeautyEffectSheet> {
     beautyEffects.removeWhere((effect) => effect == BeautyEffectType.none);
     beauty = ZegoEffectGridModel(
       title: "",
-      defaultSelectedIndex: -1,
+      selectedID: selectedIDNotifier,
       items: beautyEffects
           .map(
             (effect) => ZegoEffectGridItem<BeautyEffectType>(
@@ -57,45 +65,54 @@ class _ZegoBeautyEffectSheetState extends State<ZegoBeautyEffectSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: ((context, constraints) {
-      return Column(
-        children: [
-          ValueListenableBuilder<BeautyEffectType>(
-            valueListenable: selectedEffectTypeNotifier,
-            builder: (context, effectType, child) {
-              if (BeautyEffectType.none == effectType) {
-                return Container(height: 32.h + 43.r);
-              }
+    return Column(
+      children: [
+        ValueListenableBuilder<BeautyEffectType>(
+          valueListenable: selectedEffectTypeNotifier,
+          builder: (context, effectType, child) {
+            if (BeautyEffectType.none == effectType) {
+              return Container(height: _besSliderHeight + _besSliderPadding);
+            }
 
-              return Column(
-                children: [
-                  slider(height: 32.h),
-                  BeautyEffectType.none == selectedEffectTypeNotifier.value
-                      ? Container()
-                      : SizedBox(height: 43.r),
-                ],
-              );
-            },
-          ),
-          sheet(
-            height: constraints.maxHeight - (32.h + 43.r),
-            child: Column(
+            return Column(
               children: [
-                header(),
-                Container(height: 1.r, color: Colors.white),
-                SizedBox(height: 36.r),
-                ZegoEffectGrid(
-                  model: beauty,
-                  isSpaceEvenly: true,
-                  withBorderColor: true,
-                  buttonSize: Size(150.r, 133.r),
-                ),
+                slider(height: _besSliderHeight),
+                BeautyEffectType.none == selectedEffectTypeNotifier.value
+                    ? Container()
+                    : SizedBox(height: _besSliderPadding),
               ],
-            ),
-          )
-        ],
-      );
-    }));
+            );
+          },
+        ),
+        sheet(
+          height: _besSheetTotalHeight,
+          child: Column(
+            children: [
+              header(height: _besHeaderHeight),
+              Container(height: _besLineHeight, color: Colors.white),
+              SizedBox(height: _besLineToSheetPadding),
+              SizedBox(
+                height: _besSheetTotalHeight -
+                    _besHeaderHeight -
+                    _besLineHeight -
+                    _besLineToSheetPadding -
+                    (2 * 5.r),
+                child: ListView(
+                  children: [
+                    ZegoEffectGrid(
+                      model: beauty,
+                      isSpaceEvenly: true,
+                      withBorderColor: true,
+                      buttonSize: Size(150.r, 133.r),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        )
+      ],
+    );
   }
 
   Widget slider({required double height}) {
@@ -128,9 +145,9 @@ class _ZegoBeautyEffectSheetState extends State<ZegoBeautyEffectSheet> {
   Widget sheet({required Widget child, required double height}) {
     return Container(
       height: height,
-      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+      padding: EdgeInsets.symmetric(vertical: 5.r, horizontal: 10.r),
       decoration: BoxDecoration(
-        color: const Color(0xff242736).withOpacity(0.95),
+        color: ZegoUIKitDefaultTheme.viewBackgroundColor,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(32.0.r),
           topRight: Radius.circular(32.0.r),
@@ -140,9 +157,9 @@ class _ZegoBeautyEffectSheetState extends State<ZegoBeautyEffectSheet> {
     );
   }
 
-  Widget header() {
+  Widget header({required double height}) {
     return SizedBox(
-      height: 98.h,
+      height: height,
       child: Row(
         children: [
           GestureDetector(
@@ -158,7 +175,7 @@ class _ZegoBeautyEffectSheetState extends State<ZegoBeautyEffectSheet> {
           ),
           SizedBox(width: 10.r),
           Text(
-            "Beauty Effect",
+            "Face beautification",
             style: TextStyle(
               fontSize: 36.0.r,
               color: const Color(0xffffffff),
@@ -167,10 +184,10 @@ class _ZegoBeautyEffectSheetState extends State<ZegoBeautyEffectSheet> {
           ),
           Expanded(child: Container()),
           ZegoBeautyEffectResetButton(
-            buttonSize: Size(98.h, 98.h),
+            buttonSize: Size(_besHeaderHeight, _besHeaderHeight),
             iconSize: Size(38.r, 38.r),
             onPressed: () {
-              beauty.clearSelected();
+              beauty.selectedID.value = "";
 
               selectedEffectTypeNotifier.value = BeautyEffectType.none;
 
@@ -183,19 +200,22 @@ class _ZegoBeautyEffectSheetState extends State<ZegoBeautyEffectSheet> {
   }
 }
 
-void showBeautyEffectSheet(BuildContext context,
-    {required List<BeautyEffectType> beautyEffects}) {
+void showBeautyEffectSheet(
+  BuildContext context, {
+  required List<BeautyEffectType> beautyEffects,
+}) {
   showModalBottomSheet(
     context: context,
+    barrierColor: ZegoUIKitDefaultTheme.viewBarrierColor,
     backgroundColor: Colors.transparent,
     isDismissible: true,
     isScrollControlled: true,
     builder: (BuildContext context) {
-      return FractionallySizedBox(
-        heightFactor: 0.6,
-        child: AnimatedPadding(
-          padding: MediaQuery.of(context).viewInsets,
-          duration: const Duration(milliseconds: 50),
+      return AnimatedPadding(
+        padding: MediaQuery.of(context).viewInsets,
+        duration: const Duration(milliseconds: 50),
+        child: SizedBox(
+          height: _besSheetTotalHeight + (_besSliderHeight + _besSliderPadding),
           child: ZegoBeautyEffectSheet(beautyEffects: beautyEffects),
         ),
       );

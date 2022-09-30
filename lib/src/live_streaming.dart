@@ -79,7 +79,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     correctConfigValue();
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
-      log("ZegoUIKit version: $version");
+      log("version: zego_uikit_prebuilt_live_streaming:1.0.3; $version");
     });
 
     userListSubscription =
@@ -102,47 +102,52 @@ class _ZegoUIKitPrebuiltLiveStreamingState
   @override
   Widget build(BuildContext context) {
     widget.config.onLeaveLiveStreamingConfirmation ??=
-        onEndOrLiveStreamingConfirming;
+        onLeaveLiveStreamingConfirmation;
 
-    return ScreenUtilInit(
-      designSize: const Size(750, 1334),
-      minTextAdapt: true,
-      splitScreenMode: true,
-      builder: (context, child) {
-        var page = clickListener(
-          child: Stack(
-            children: [
-              background(),
-              backgroundTips(),
-              audioVideoContainer(),
-              topBar(),
-              bottomBar(),
-              messageList(),
-            ],
-          ),
-        );
-        return Scaffold(
-          body: WillPopScope(
-            onWillPop: () async {
-              return await widget
-                  .config.onLeaveLiveStreamingConfirmation!(context);
-            },
-            child: page,
-          ),
-        );
-      },
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: WillPopScope(
+        onWillPop: () async {
+          return await widget.config.onLeaveLiveStreamingConfirmation!(context);
+        },
+        child: ScreenUtilInit(
+          designSize: const Size(750, 1334),
+          minTextAdapt: true,
+          splitScreenMode: true,
+          builder: (context, child) {
+            return clickListener(
+              child: LayoutBuilder(builder: (context, constraints) {
+                return Stack(
+                  children: [
+                    background(constraints.maxHeight),
+                    backgroundTips(),
+                    audioVideoContainer(constraints.maxHeight),
+                    topBar(),
+                    bottomBar(),
+                    messageList(),
+                  ],
+                );
+              }),
+            );
+          },
+        ),
+      ),
     );
   }
 
   void initUIKIt() {
     ZegoUIKitPrebuiltLiveStreamingConfig config = widget.config;
-    var useBeautyEffect = false;
+    var useBeautyEffect = config.bottomMenuBarConfig.buttons
+        .contains(ZegoLiveMenuBarButtonName.beautyEffectButton);
 
     if (!kIsWeb) {
       assert(widget.appSign.isNotEmpty);
       ZegoUIKit().login(widget.userID, widget.userName).then((value) {
         ZegoUIKit()
-            .init(appID: widget.appID, appSign: widget.appSign)
+            .init(
+                appID: widget.appID,
+                appSign: widget.appSign,
+                scenario: ZegoScenario.Live)
             .then((value) async {
           if (useBeautyEffect) {
             await ZegoUIKit().startEffectsEnv();
@@ -223,13 +228,13 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     );
   }
 
-  Widget background() {
+  Widget background(double height) {
     return Positioned(
       top: 0,
       left: 0,
       child: Container(
         width: 750.w,
-        height: 1334.h,
+        height: height,
         decoration: BoxDecoration(
           image: DecorationImage(
             image: PrebuiltLiveStreamingImage.assetImage(
@@ -241,13 +246,13 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     );
   }
 
-  Widget audioVideoContainer() {
+  Widget audioVideoContainer(double height) {
     return Positioned(
       top: 0,
       left: 0,
       child: SizedBox(
         width: 750.w,
-        height: 1334.h,
+        height: height,
         child: StreamBuilder<List<ZegoUIKitUser>>(
           stream: ZegoUIKit().getAudioVideoListStream(),
           builder: (context, snapshot) {
@@ -287,7 +292,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     }
   }
 
-  Future<bool> onEndOrLiveStreamingConfirming(BuildContext context) async {
+  Future<bool> onLeaveLiveStreamingConfirmation(BuildContext context) async {
     if (widget.config.confirmDialogInfo == null) {
       return true;
     }

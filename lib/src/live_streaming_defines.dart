@@ -5,4 +5,6 @@ enum ZegoLiveMenuBarButtonName {
   switchCameraButton,
   switchAudioOutputButton,
   leaveButton,
+  beautyEffectButton,
+  soundEffectButton,
 }

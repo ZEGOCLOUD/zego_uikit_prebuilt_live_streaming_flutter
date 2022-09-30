@@ -13,7 +13,8 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_defines.da
 import 'defines.dart';
 import 'effects/beauty_effect_button.dart';
 import 'effects/sound_effect_button.dart';
-import 'in_room_message_button.dart';
+import 'message/in_room_message_button.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
 
 class ZegoBottomBar extends StatefulWidget {
   final ZegoUIKitPrebuiltLiveStreamingConfig config;
@@ -140,6 +141,16 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
         return ZegoToggleMicrophoneButton(
           buttonSize: buttonSize,
           iconSize: iconSize,
+          normalIcon: ButtonIcon(
+            icon: PrebuiltLiveStreamingImage.asset(
+                PrebuiltLiveStreamingIconUrls.toolbarMicNormal),
+            backgroundColor: Colors.transparent,
+          ),
+          offIcon: ButtonIcon(
+            icon: PrebuiltLiveStreamingImage.asset(
+                PrebuiltLiveStreamingIconUrls.toolbarMicOff),
+            backgroundColor: Colors.transparent,
+          ),
           defaultOn: widget.config.turnOnMicrophoneWhenJoining,
         );
       case ZegoLiveMenuBarButtonName.switchAudioOutputButton:
@@ -152,12 +163,27 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
         return ZegoToggleCameraButton(
           buttonSize: buttonSize,
           iconSize: iconSize,
+          normalIcon: ButtonIcon(
+            icon: PrebuiltLiveStreamingImage.asset(
+                PrebuiltLiveStreamingIconUrls.toolbarCameraNormal),
+            backgroundColor: Colors.transparent,
+          ),
+          offIcon: ButtonIcon(
+            icon: PrebuiltLiveStreamingImage.asset(
+                PrebuiltLiveStreamingIconUrls.toolbarCameraOff),
+            backgroundColor: Colors.transparent,
+          ),
           defaultOn: widget.config.turnOnCameraWhenJoining,
         );
       case ZegoLiveMenuBarButtonName.switchCameraButton:
         return ZegoSwitchCameraButton(
           buttonSize: buttonSize,
           iconSize: iconSize,
+          icon: ButtonIcon(
+            icon: PrebuiltLiveStreamingImage.asset(
+                PrebuiltLiveStreamingIconUrls.toolbarFlipCamera),
+            backgroundColor: Colors.transparent,
+          ),
         );
       case ZegoLiveMenuBarButtonName.leaveButton:
         return ZegoLeaveButton(
@@ -165,7 +191,7 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
           iconSize: iconSize,
           icon: ButtonIcon(
             icon: const Icon(Icons.close, color: Colors.white),
-            backgroundColor: zegoLiveButtonBackgroundColor,
+            backgroundColor: ZegoUIKitDefaultTheme.buttonBackgroundColor,
           ),
           onLeaveConfirmation: (context) async {
             return await widget
@@ -178,6 +204,19 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
               Navigator.of(context).pop();
             }
           },
+        );
+      case ZegoLiveMenuBarButtonName.beautyEffectButton:
+        return ZegoBeautyEffectButton(
+          beautyEffects: widget.config.effectConfig.beautyEffects,
+          buttonSize: buttonSize,
+          iconSize: iconSize,
+        );
+      case ZegoLiveMenuBarButtonName.soundEffectButton:
+        return ZegoSoundEffectButton(
+          voiceChangeEffect: widget.config.effectConfig.voiceChangeEffect,
+          reverbEffect: widget.config.effectConfig.reverbEffect,
+          buttonSize: buttonSize,
+          iconSize: iconSize,
         );
     }
   }

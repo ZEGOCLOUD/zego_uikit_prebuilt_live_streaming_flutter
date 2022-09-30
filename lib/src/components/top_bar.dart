@@ -52,7 +52,7 @@ class _ZegoTopBarState extends State<ZegoTopBar> {
       iconSize: Size(24.r, 24.r),
       icon: ButtonIcon(
         icon: const Icon(Icons.close, color: Colors.white),
-        backgroundColor: zegoLiveButtonBackgroundColor,
+        backgroundColor: ZegoUIKitDefaultTheme.buttonBackgroundColor,
       ),
       onLeaveConfirmation: (context) async {
         return await widget.config.onLeaveLiveStreamingConfirmation!(context);
@@ -96,7 +96,7 @@ class _ZegoTopBarState extends State<ZegoTopBar> {
               ],
             ),
             decoration: BoxDecoration(
-              color: zegoLiveButtonBackgroundColor,
+              color: ZegoUIKitDefaultTheme.buttonBackgroundColor,
               borderRadius: BorderRadius.circular(68.r),
             ),
           ),

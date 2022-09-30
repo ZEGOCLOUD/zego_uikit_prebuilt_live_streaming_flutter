@@ -1,6 +1,3 @@
-// Dart imports:
-import 'dart:math';
-
 // Flutter imports:
 import 'package:flutter/material.dart';
 
@@ -30,27 +27,14 @@ class ZegoEffectGridItem<T> {
 class ZegoEffectGridModel {
   String title;
 
-  int defaultSelectedIndex;
-  Map<String, bool> itemsSelected = {};
+  ValueNotifier<String> selectedID;
   List<ZegoEffectGridItem> items = [];
 
   ZegoEffectGridModel({
     required this.title,
     required this.items,
-    this.defaultSelectedIndex = 0,
-  }) {
-    for (var item in items) {
-      itemsSelected[item.id] = false;
-    }
-
-    if (items.length > defaultSelectedIndex && defaultSelectedIndex >= 0) {
-      itemsSelected[items.elementAt(defaultSelectedIndex).id] = true;
-    }
-  }
-
-  void clearSelected() {
-    itemsSelected.updateAll((key, value) => value = false);
-  }
+    required this.selectedID,
+  });
 }
 
 class ZegoEffectGrid extends StatefulWidget {
@@ -168,8 +152,7 @@ class _ZegoEffectGridState extends State<ZegoEffectGrid> {
   Widget gridItem(ZegoEffectGridItem item, Size buttonSize) {
     return ZegoTextIconButton(
       onPressed: () {
-        widget.model.clearSelected();
-        widget.model.itemsSelected[item.id] = true;
+        widget.model.selectedID.value = item.id;
         item.onPressed.call();
 
         setState(() {}); //  todo
@@ -177,17 +160,17 @@ class _ZegoEffectGridState extends State<ZegoEffectGrid> {
       buttonSize: buttonSize,
       iconSize: widget.iconSize ?? Size(72.r, 72.r),
       iconTextSpacing: 12.r,
-      icon: widget.model.itemsSelected[item.id]!
+      icon: item.id == widget.model.selectedID.value
           ? (item.selectIcon ?? item.icon)
           : item.icon,
       iconBorderColor: widget.withBorderColor
-          ? (widget.model.itemsSelected[item.id]!
+          ? (item.id == widget.model.selectedID.value
               ? const Color(0xffA653FF)
               : Colors.transparent)
           : Colors.transparent,
       text: item.iconText,
       textStyle: TextStyle(
-        color: widget.model.itemsSelected[item.id]!
+        color: item.id == widget.model.selectedID.value
             ? const Color(0xffA653FF)
             : const Color(0xffCCCCCC),
         fontSize: 24.r,
