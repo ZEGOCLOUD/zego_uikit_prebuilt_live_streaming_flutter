@@ -1,10 +1,25 @@
 /// prefab button on menu bar
-enum ZegoLiveMenuBarButtonName {
+enum ZegoMenuBarButtonName {
   toggleMicrophoneButton,
   toggleCameraButton,
   switchCameraButton,
   switchAudioOutputButton,
   leaveButton,
+  coHostControlButton,
   beautyEffectButton,
   soundEffectButton,
+}
+
+class ZegoDialogInfo {
+  final String title;
+  final String message;
+  String cancelButtonName;
+  String confirmButtonName;
+
+  ZegoDialogInfo({
+    required this.title,
+    required this.message,
+    this.cancelButtonName = "Cancel",
+    this.confirmButtonName = "OK",
+  });
 }

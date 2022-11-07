@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
+// Project imports:
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/defines.dart';
+
 class ZegoEffectGridItem<T> {
   String id;
   T effectType;
@@ -60,6 +63,11 @@ class ZegoEffectGrid extends StatefulWidget {
 }
 
 class _ZegoEffectGridState extends State<ZegoEffectGrid> {
+  TextStyle get gridItemTextStyle => TextStyle(
+        fontSize: 24.r,
+        fontWeight: FontWeight.w500,
+      );
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -116,16 +124,18 @@ class _ZegoEffectGridState extends State<ZegoEffectGrid> {
             children: widget.model.items
                 .map((item) {
                   var buttonSize = widget.buttonSize ?? Size(88.r, 133.r);
-                  var bestButtonWidth = _getItemTextSize(item.iconText).width;
-                  if (bestButtonWidth > buttonSize.width) {
-                    buttonSize = Size(bestButtonWidth, buttonSize.height);
-                  }
+                  var bestButtonWidth =
+                      getTextSize(item.iconText, gridItemTextStyle).width;
+                  buttonSize = Size(
+                    bestButtonWidth + 20.r,
+                    buttonSize.height,
+                  );
                   return gridItem(item, buttonSize);
                 })
                 .map((item) => Row(
                       children: [
                         item,
-                        Container(width: widget.itemSpacing ?? 48.r)
+                        Container(width: widget.itemSpacing ?? 40.r)
                       ],
                     ))
                 .toList(),
@@ -133,20 +143,6 @@ class _ZegoEffectGridState extends State<ZegoEffectGrid> {
         ),
       ],
     );
-  }
-
-  Size _getItemTextSize(String text) {
-    final style = TextStyle(
-      fontSize: 24.r,
-      fontWeight: FontWeight.w500,
-    );
-
-    final TextPainter textPainter = TextPainter(
-        text: TextSpan(text: text, style: style),
-        maxLines: 1,
-        textDirection: TextDirection.ltr)
-      ..layout(minWidth: 0, maxWidth: double.infinity);
-    return textPainter.size;
   }
 
   Widget gridItem(ZegoEffectGridItem item, Size buttonSize) {
@@ -176,6 +172,7 @@ class _ZegoEffectGridState extends State<ZegoEffectGrid> {
         fontSize: 24.r,
         fontWeight: FontWeight.w500,
       ),
+      softWrap: false,
     );
   }
 }

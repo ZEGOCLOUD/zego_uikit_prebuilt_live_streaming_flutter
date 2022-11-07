@@ -15,7 +15,7 @@ This will add a line like this to your project's `pubspec.yaml` file (and Flutte
 
 ```dart
 dependencies:
-  zego_uikit_prebuilt_live_streaming: ^1.0.3 # Add this line
+  zego_uikit_prebuilt_live_streaming: ^1.2.0 # Add this line
 ```
 
 ### Import the SDK
@@ -79,17 +79,53 @@ Widget build(BuildContext context) {
    ```
 <img src="https://storage.zego.im/sdk-doc/Pics/ZegoUIKit/Flutter/live/permission_android.png" width=800>
 
-#### iOS
+#### iOS:
 
-Need add app permissions, open ·your_project/ios/Runner/Info.plist·, add the following code inside the "dict" tag:
+1. Add app permissions.
+
+a. open the `your_project/ios/Podfile` file, and add the following to the `post_install do |installer|` part:
 
 ```plist
-<key>NSCameraUsageDescription</key>
-<string>We require camera access to connect to a live</string>
-<key>NSMicrophoneUsageDescription</key>
-<string>We require microphone access to connect to a live</string>
+    # Start of the permission_handler configuration
+    target.build_configurations.each do |config|
+      config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= [
+        '$(inherited)',
+        'PERMISSION_CAMERA=1',
+        'PERMISSION_MICROPHONE=1',
+      ]
+    end
+    # End of the permission_handler configuration
 ```
+
+<img src="https://storage.zego.im/sdk-doc/Pics/ZegoUIKit/Flutter/live/permission_podfile.png" width=800>
+
+b. open the `your_project/ios/Runner/Info.plist` file, and add the following to the `dict` part:
+
+```plist
+    <key>NSCameraUsageDescription</key>
+    <string>We require camera access to connect to a live</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>We require microphone access to connect to a live</string>
+```
+
 <img src="https://storage.zego.im/sdk-doc/Pics/ZegoUIKit/Flutter/live/permission_ios.png" width=800>
+
+#### Turn off some classes's confusion
+
+To prevent the ZEGO SDK public class names from being obfuscated, please complete the following steps:
+
+1. Create `proguard-rules.pro` file under [your_project > android > app] with content as show below:
+```
+-keep class **.zego.** { *; }
+```
+
+2. Add the following config code to the release part of the `your_project/android/app/build.gradle` file.
+```
+proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+```
+
+![image](https://storage.zego.im/sdk-doc/Pics/ZegoUIKit/Flutter/android_class_confusion.png)
+
 
 ### 2. Build & Run
 
@@ -103,7 +139,7 @@ Now you can simply click the "Run" or "Debug" button to build and run your App o
 ## Resources
 
 <div class="md-grid-list-box">
-  <a href="https://github.com/ZEGOCLOUD/zego_uikit_prebuilt_call_example_flutter/tree/master/live_streaming" class="md-grid-item" target="_blank">
+  <a href="https://github.com/ZEGOCLOUD/zego_uikit_prebuilt_live_streaming_example_flutter" class="md-grid-item" target="_blank">
     <div class="grid-title">Sample code</div>
     <div class="grid-desc">Click here to get the complete sample code.</div>
   </a>

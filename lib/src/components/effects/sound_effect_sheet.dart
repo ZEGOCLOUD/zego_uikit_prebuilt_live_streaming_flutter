@@ -126,7 +126,7 @@ class _ZegoSoundEffectSheetState extends State<ZegoSoundEffectSheet> {
                         effect.name +
                         "_selected.png"),
               ),
-              iconText: effect.name,
+              iconText: effect.text,
               onPressed: () {
                 ZegoUIKit().setVoiceChangerType(effect.key);
               },
@@ -161,7 +161,7 @@ class _ZegoSoundEffectSheetState extends State<ZegoSoundEffectSheet> {
                 icon: PrebuiltLiveStreamingImage.asset(
                     "assets/icons/reverb_preset_" + effect.name + ".png"),
               ),
-              iconText: effect.name,
+              iconText: effect.text,
               onPressed: () {
                 ZegoUIKit().setReverbType(effect.key);
               },

@@ -5,13 +5,11 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:zego_uikit_signaling_plugin/zego_uikit_signaling_plugin.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/zego_uikit_prebuilt_live_streaming.dart';
 
 /// Note that the userID needs to be globally unique,
 final String localUserID = Random().nextInt(10000).toString();
-
-/// Users who use the same liveID can join the same live streaming.
-const String liveID = "live_id";
 
 void main() {
   runApp(const MyApp());
@@ -22,12 +20,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(title: 'Flutter Demo', home: HomePage());
+    return MaterialApp(title: 'Flutter Demo', home: HomePage());
   }
 }
 
 class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key: key);
+  HomePage({Key? key}) : super(key: key);
+
+  /// Users who use the same liveID can join the same live streaming.
+  final liveTextCtrl =
+      TextEditingController(text: Random().nextInt(10000).toString());
 
   @override
   Widget build(BuildContext context) {
@@ -37,27 +39,38 @@ class HomePage extends StatelessWidget {
     );
 
     return Scaffold(
-      appBar: AppBar(title: const Text("your project")),
-      body: Center(
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Text('User ID:$localUserID'),
             const Text('Please test with two or more devices'),
-            const SizedBox(height: 60),
+            TextFormField(
+              controller: liveTextCtrl,
+              decoration: const InputDecoration(labelText: "join a live by id"),
+            ),
+            const SizedBox(height: 20),
             // click me to navigate to LivePage
             ElevatedButton(
               style: buttonStyle,
               child: const Text('Start a live'),
-              onPressed: () =>
-                  jumpToLivePage(context, liveID: liveID, isHost: true),
+              onPressed: () => jumpToLivePage(
+                context,
+                liveID: liveTextCtrl.text,
+                isHost: true,
+              ),
             ),
-            const SizedBox(height: 60),
+            const SizedBox(height: 20),
             // click me to navigate to LivePage
             ElevatedButton(
               style: buttonStyle,
               child: const Text('Watch a live'),
-              onPressed: () =>
-                  jumpToLivePage(context, liveID: liveID, isHost: false),
+              onPressed: () => jumpToLivePage(
+                context,
+                liveID: liveTextCtrl.text,
+                isHost: false,
+              ),
             ),
           ],
         ),

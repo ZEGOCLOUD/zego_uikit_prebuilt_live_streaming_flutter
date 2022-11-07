@@ -1,5 +1,4 @@
 // Dart imports:
-import 'dart:async';
 import 'dart:convert';
 import 'dart:core';
 import 'dart:developer';
@@ -9,15 +8,20 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:http/http.dart' as http;
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
-import 'components/components.dart';
-import 'internal/icon_defines.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/dialogs.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/live_page.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/permissions.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/preview_page.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/toast.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/connect/host_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/connect/live_status_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/connect/plugins.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_defines.dart';
 import 'live_streaming_config.dart';
-import 'live_streaming_defines.dart';
 
 class ZegoUIKitPrebuiltLiveStreaming extends StatefulWidget {
   const ZegoUIKitPrebuiltLiveStreaming({
@@ -41,11 +45,11 @@ class ZegoUIKitPrebuiltLiveStreaming extends StatefulWidget {
   /// tokenServerUrl is only for web.
   /// If you have to support Web and Android, iOS, then you can use it like this
   /// ```
-  ///   ZegoUIKitPrebuiltLiveConfig(
+  ///   ZegoUIKitPrebuiltLiveStreaming(
   ///     appID: appID,
+  ///     appSign: kIsWeb ? '' : appSign,
   ///     userID: userID,
   ///     userName: userName,
-  ///     appSign: kIsWeb ? '' : appSign,
   ///     tokenServerUrl: kIsWeb ? tokenServerUrl：'',
   ///   );
   /// ```
@@ -67,217 +71,191 @@ class ZegoUIKitPrebuiltLiveStreaming extends StatefulWidget {
 }
 
 class _ZegoUIKitPrebuiltLiveStreamingState
-    extends State<ZegoUIKitPrebuiltLiveStreaming>
-    with SingleTickerProviderStateMixin {
-  StreamSubscription<dynamic>? userListSubscription;
-  var hostNotifier = ValueNotifier<ZegoUIKitUser?>(null);
+    extends State<ZegoUIKitPrebuiltLiveStreaming> with WidgetsBindingObserver {
+  var startedByLocalNotifier = ValueNotifier<bool>(false);
+  late final ZegoLiveHostManager hostManager;
+  late final ZegoLiveStatusManager liveStatusManager;
+  ZegoPrebuiltPlugins? plugins;
 
   @override
   void initState() {
     super.initState();
 
-    correctConfigValue();
+    WidgetsBinding.instance.addObserver(this);
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
-      log("version: zego_uikit_prebuilt_live_streaming:1.0.3; $version");
+      log("version: zego_uikit_prebuilt_live_streaming:1.0.4; $version");
     });
 
-    userListSubscription =
-        ZegoUIKit().getUserListStream().listen(onUserListUpdated);
+    hostManager = ZegoLiveHostManager(config: widget.config);
+    liveStatusManager = ZegoLiveStatusManager(
+      hostManager: hostManager,
+      config: widget.config,
+    );
 
-    initUIKIt();
+    if (widget.config.plugins.isNotEmpty) {
+      plugins = ZegoPrebuiltPlugins(
+        appID: widget.appID,
+        appSign: widget.appSign,
+        userID: widget.userID,
+        userName: widget.userName,
+        plugins: widget.config.plugins,
+      );
+    }
+    plugins?.init();
+
+    initToast();
+    initContext();
   }
 
   @override
   void dispose() async {
     super.dispose();
 
-    userListSubscription?.cancel();
+    WidgetsBinding.instance?.removeObserver(this);
 
-    await ZegoUIKit().leaveRoom();
-    // await ZegoUIKit().stopEffectsEnv();
-    // await ZegoUIKit().uninit();
+    plugins?.uninit();
+
+    hostManager.uninit();
+    liveStatusManager.uninit();
+
+    uninitContext();
+  }
+
+  @override
+  void didUpdateWidget(ZegoUIKitPrebuiltLiveStreaming oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    plugins?.onUserInfoUpdate(widget.userID, widget.userName);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+
+    debugPrint("[live streaming] didChangeAppLifecycleState $state");
+
+    switch (state) {
+      case AppLifecycleState.resumed:
+        plugins?.reconnectIfDisconnected();
+        break;
+      case AppLifecycleState.inactive:
+      case AppLifecycleState.paused:
+      case AppLifecycleState.detached:
+        break;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    widget.config.onLeaveLiveStreamingConfirmation ??=
-        onLeaveLiveStreamingConfirmation;
+    widget.config.onLeaveConfirmation ??= onLeaveConfirmation;
 
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: WillPopScope(
-        onWillPop: () async {
-          return await widget.config.onLeaveLiveStreamingConfirmation!(context);
-        },
-        child: ScreenUtilInit(
-          designSize: const Size(750, 1334),
-          minTextAdapt: true,
-          splitScreenMode: true,
-          builder: (context, child) {
-            return clickListener(
-              child: LayoutBuilder(builder: (context, constraints) {
-                return Stack(
-                  children: [
-                    background(constraints.maxHeight),
-                    backgroundTips(),
-                    audioVideoContainer(constraints.maxHeight),
-                    topBar(),
-                    bottomBar(),
-                    messageList(),
-                  ],
-                );
-              }),
-            );
-          },
-        ),
-      ),
-    );
+    return hostManager.isHost
+        ? ValueListenableBuilder<ZegoUIKitUser?>(
+            valueListenable: hostManager.notifier,
+            builder: (context, host, _) {
+              /// local is host, but host updated
+              if (hostManager.isHost) {
+                return ValueListenableBuilder<bool>(
+                    valueListenable: startedByLocalNotifier,
+                    builder: (context, isStartedByLocal, _) {
+                      return isStartedByLocal ? livePage() : previewPage();
+                    });
+              } else {
+                return livePage();
+              }
+            })
+        : livePage();
   }
 
-  void initUIKIt() {
-    ZegoUIKitPrebuiltLiveStreamingConfig config = widget.config;
-    var useBeautyEffect = config.bottomMenuBarConfig.buttons
-        .contains(ZegoLiveMenuBarButtonName.beautyEffectButton);
+  Future<void> initPermissions() async {
+    bool isCameraGranted = true;
+    bool isMicrophoneGranted = true;
+    if (widget.config.turnOnCameraWhenJoining) {
+      isCameraGranted = await requestPermission(Permission.camera);
+    }
+    if (widget.config.turnOnMicrophoneWhenJoining) {
+      isMicrophoneGranted = await requestPermission(Permission.microphone);
+    }
 
+    if (!isCameraGranted) {
+      await showAppSettingsDialog(
+        context,
+        widget.config.translationText.cameraPermissionSettingDialogInfo,
+      );
+    }
+    if (!isMicrophoneGranted) {
+      await showAppSettingsDialog(
+        context,
+        widget.config.translationText.microphonePermissionSettingDialogInfo,
+      );
+    }
+  }
+
+  void initContext() {
     if (!kIsWeb) {
       assert(widget.appSign.isNotEmpty);
-      ZegoUIKit().login(widget.userID, widget.userName).then((value) {
-        ZegoUIKit()
-            .init(
+      initPermissions().then((value) {
+        ZegoUIKit().login(widget.userID, widget.userName).then((value) {
+          ZegoUIKit()
+              .init(
                 appID: widget.appID,
                 appSign: widget.appSign,
-                scenario: ZegoScenario.Live)
-            .then((value) async {
-          if (useBeautyEffect) {
-            await ZegoUIKit().startEffectsEnv();
-            ZegoUIKit().enableBeauty(true);
-          }
-
-          ZegoUIKit()
-            ..updateVideoViewMode(
-                config.audioVideoViewConfig.useVideoViewAspectFill)
-            ..turnCameraOn(config.turnOnCameraWhenJoining)
-            ..turnMicrophoneOn(config.turnOnMicrophoneWhenJoining)
-            ..joinRoom(widget.liveID);
+                scenario: ZegoScenario.Live,
+              )
+              .then(onContextInit);
         });
       });
     } else {
       assert(widget.tokenServerUrl.isNotEmpty);
       ZegoUIKit().login(widget.userID, widget.userName).then((value) {
         ZegoUIKit()
-            .init(appID: widget.appID, tokenServerUrl: widget.tokenServerUrl)
-            .then((value) async {
-          if (useBeautyEffect) {
-            await ZegoUIKit().startEffectsEnv();
-            ZegoUIKit().enableBeauty(true);
-          }
+            .init(
+              appID: widget.appID,
+              tokenServerUrl: widget.tokenServerUrl,
+              scenario: ZegoScenario.Live,
+            )
+            .then(onContextInit);
+      });
+    }
+  }
 
-          ZegoUIKit()
-            ..updateVideoViewMode(
-                config.audioVideoViewConfig.useVideoViewAspectFill)
-            ..turnCameraOn(config.turnOnCameraWhenJoining)
-            ..turnMicrophoneOn(config.turnOnMicrophoneWhenJoining)
-            ..setAudioOutputToSpeaker(config.useSpeakerWhenJoining);
+  void onContextInit(_) {
+    var useBeautyEffect = widget.config.bottomMenuBarConfig.buttons
+        .contains(ZegoMenuBarButtonName.beautyEffectButton);
 
-          getToken(widget.userID).then((token) {
-            assert(token.isNotEmpty);
-            ZegoUIKit().joinRoom(widget.liveID, token: token);
-          });
+    if (useBeautyEffect) {
+      ZegoUIKit()
+          .startEffectsEnv()
+          .then((value) => ZegoUIKit().enableBeauty(true));
+    }
+
+    ZegoUIKit()
+      ..useFrontFacingCamera(true)
+      ..updateVideoViewMode(
+          widget.config.audioVideoViewConfig.useVideoViewAspectFill)
+      ..setVideoMirrorMode(true)
+      ..turnCameraOn(widget.config.turnOnMicrophoneWhenJoining)
+      ..turnMicrophoneOn(widget.config.turnOnMicrophoneWhenJoining)
+      ..setAudioOutputToSpeaker(widget.config.useSpeakerWhenJoining);
+
+    if (!kIsWeb) {
+      ZegoUIKit().joinRoom(widget.liveID).then((result) async {
+        await onRoomLogin(result);
+      });
+    } else {
+      getToken(widget.userID).then((token) {
+        assert(token.isNotEmpty);
+        ZegoUIKit().joinRoom(widget.liveID, token: token).then((result) async {
+          await onRoomLogin(result);
         });
       });
     }
   }
 
-  void correctConfigValue() {
-    if (widget.config.bottomMenuBarConfig.maxCount > 5) {
-      widget.config.bottomMenuBarConfig.maxCount = 5;
-      debugPrint('menu bar buttons limited count\'s value  is exceeding the '
-          'maximum limit');
-    }
-  }
-
-  Widget clickListener({required Widget child}) {
-    return GestureDetector(
-      onTap: () {
-        /// listen only click event in empty space
-      },
-      child: Listener(
-        ///  listen for all click events in current view, include the click
-        ///  receivers(such as button...), but only listen
-        onPointerDown: (e) {},
-        child: AbsorbPointer(
-          absorbing: false,
-          child: child,
-        ),
-      ),
-    );
-  }
-
-  Widget backgroundTips() {
-    return Center(
-      child: Text(
-        "No host is currently online",
-        textAlign: TextAlign.center,
-        style: TextStyle(
-          fontSize: 32.r,
-          fontWeight: FontWeight.w400,
-          color: Colors.white,
-        ),
-      ),
-    );
-  }
-
-  Widget background(double height) {
-    return Positioned(
-      top: 0,
-      left: 0,
-      child: Container(
-        width: 750.w,
-        height: height,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: PrebuiltLiveStreamingImage.assetImage(
-                PrebuiltLiveStreamingIconUrls.background),
-            fit: BoxFit.cover,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget audioVideoContainer(double height) {
-    return Positioned(
-      top: 0,
-      left: 0,
-      child: SizedBox(
-        width: 750.w,
-        height: height,
-        child: StreamBuilder<List<ZegoUIKitUser>>(
-          stream: ZegoUIKit().getAudioVideoListStream(),
-          builder: (context, snapshot) {
-            List<ZegoUIKitUser> userList = snapshot.data ?? [];
-            if (userList.isNotEmpty) {
-              hostNotifier.value = userList.first;
-            }
-
-            return ValueListenableBuilder<ZegoUIKitUser?>(
-                valueListenable: hostNotifier,
-                builder: (context, host, _) {
-                  if (host == null) {
-                    return Container();
-                  }
-
-                  return ZegoAudioVideoView(
-                    user: host,
-                    backgroundBuilder: audioVideoViewBackground,
-                    foregroundBuilder: audioVideoViewForeground,
-                  );
-                });
-          },
-        ),
-      ),
-    );
+  Future<void> onRoomLogin(ZegoRoomLoginResult result) async {
+    await hostManager.init();
+    await liveStatusManager.init();
   }
 
   /// Get your token from tokenServer
@@ -292,126 +270,76 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     }
   }
 
-  Future<bool> onLeaveLiveStreamingConfirmation(BuildContext context) async {
+  void uninitContext() async {
+    // var useBeautyEffect = widget.config.bottomMenuBarConfig.buttons
+    //     .contains(ZegoMenuBarButtonName.beautyEffectButton);
+    // if (useBeautyEffect) {
+    //   await ZegoUIKit().stopEffectsEnv();
+    // }
+    //
+    // await ZegoUIKit().uninit();
+
+    await ZegoUIKit().resetSoundEffect();
+    await ZegoUIKit().resetBeautyEffect();
+
+    await ZegoUIKit().leaveRoom();
+  }
+
+  void initToast() {
+    ZegoToast.instance.init(contextQuery: () {
+      return context;
+    });
+  }
+
+  Future<bool> onLeaveConfirmation(BuildContext context) async {
     if (widget.config.confirmDialogInfo == null) {
       return true;
     }
 
-    return await showAlertDialog(
-      context,
-      widget.config.confirmDialogInfo!.title,
-      widget.config.confirmDialogInfo!.message,
-      [
-        ElevatedButton(
-          child: Text(
-            widget.config.confirmDialogInfo!.cancelButtonName,
-            style: TextStyle(fontSize: 26.r, color: const Color(0xff0055FF)),
-          ),
-          onPressed: () {
-            //  pop this dialog
-            Navigator.of(context).pop(false);
-          },
-          // style: ElevatedButton.styleFrom(primary: Colors.white),
-          style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
-          ),
-        ),
-        ElevatedButton(
-          child: Text(
-            widget.config.confirmDialogInfo!.confirmButtonName,
-            style: TextStyle(fontSize: 26.r, color: Colors.white),
-          ),
-          onPressed: () {
-            //  pop this dialog
-            Navigator.of(context).pop(true);
-          },
-          style: ButtonStyle(
-            backgroundColor:
-                MaterialStateProperty.all<Color>(const Color(0xff0055FF)),
-          ),
-        ),
-      ],
-      actionsAlignment: MainAxisAlignment.spaceEvenly,
+    return await showLiveDialog(
+      context: context,
+      title: widget.config.confirmDialogInfo!.title,
+      content: widget.config.confirmDialogInfo!.message,
+      leftButtonText: widget.config.confirmDialogInfo!.cancelButtonName,
+      leftButtonCallback: () {
+        //  pop this dialog
+        Navigator.of(context).pop(false);
+      },
+      rightButtonText: widget.config.confirmDialogInfo!.confirmButtonName,
+      rightButtonCallback: () {
+        //  pop this dialog
+        Navigator.of(context).pop(true);
+      },
     );
   }
 
-  Widget audioVideoViewForeground(
-      BuildContext context, Size size, ZegoUIKitUser? user, Map extraInfo) {
-    return Stack(
-      children: [
-        widget.config.audioVideoViewConfig.foregroundBuilder
-                ?.call(context, size, user, extraInfo) ??
-            Container(color: Colors.transparent),
-      ],
+  Widget previewPage() {
+    return ZegoPreviewPage(
+      appID: widget.appID,
+      appSign: widget.appSign,
+      userID: widget.userID,
+      userName: widget.userName,
+      liveID: widget.liveID,
+      config: widget.config,
+      tokenServerUrl: widget.tokenServerUrl,
+      startedNotifier: startedByLocalNotifier,
+      hostManager: hostManager,
+      translationText: widget.config.translationText,
     );
   }
 
-  Widget audioVideoViewBackground(
-      BuildContext context, Size size, ZegoUIKitUser? user, Map extraInfo) {
-    var screenSize = MediaQuery.of(context).size;
-    var isSmallView = (screenSize.width - size.width).abs() > 1;
-    return Stack(
-      children: [
-        Container(
-            color: isSmallView
-                ? const Color(0xff333437)
-                : const Color(0xff4A4B4D)),
-        widget.config.audioVideoViewConfig.backgroundBuilder
-                ?.call(context, size, user, extraInfo) ??
-            Container(color: Colors.transparent),
-        ZegoAvatar(
-          avatarSize: isSmallView ? Size(110.r, 110.r) : Size(258.r, 258.r),
-          user: user,
-          showAvatar: widget.config.audioVideoViewConfig.showAvatarInAudioMode,
-          showSoundLevel:
-              widget.config.audioVideoViewConfig.showSoundWavesInAudioMode,
-          avatarBuilder: widget.config.avatarBuilder,
-          soundLevelSize: size,
-        ),
-      ],
+  Widget livePage() {
+    return ZegoLivePage(
+      appID: widget.appID,
+      appSign: widget.appSign,
+      userID: widget.userID,
+      userName: widget.userName,
+      liveID: widget.liveID,
+      config: widget.config,
+      tokenServerUrl: widget.tokenServerUrl,
+      hostManager: hostManager,
+      liveStatusManager: liveStatusManager,
+      plugins: plugins,
     );
-  }
-
-  Widget topBar() {
-    return Positioned(
-      left: 0,
-      right: 0,
-      top: 64.r,
-      child: ZegoTopBar(config: widget.config),
-    );
-  }
-
-  Widget bottomBar() {
-    return Align(
-      alignment: Alignment.bottomCenter,
-      child: ZegoBottomBar(
-        buttonSize: zegoLiveButtonSize,
-        config: widget.config,
-      ),
-    );
-  }
-
-  Widget messageList() {
-    return Positioned(
-      left: 32.r,
-      bottom: 124.r,
-      child: ConstrainedBox(
-        constraints: BoxConstraints.loose(Size(540.r, 400.r)),
-        child: const ZegoInRoomLiveCommentingView(),
-      ),
-    );
-  }
-
-  void onUserListUpdated(List<ZegoUIKitUser> users) {
-    if (hostNotifier.value == null) {
-      return;
-    }
-
-    if (users
-        .where((user) => user.id == hostNotifier.value!.id)
-        .toList()
-        .isEmpty) {
-      hostNotifier.value = null;
-    }
   }
 }

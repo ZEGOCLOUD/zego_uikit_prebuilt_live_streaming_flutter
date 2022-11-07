@@ -2,7 +2,7 @@
 
 * Upload Initial release.
 
-## 0.0.2 
+## 0.0.2
 
 * fix some bugs
 * update a dependency to the latest release..
@@ -43,3 +43,11 @@
 ## 1.0.2
 
 * fix some bugs
+
+## 1.0.2
+
+* fix some bugs
+
+## 1.2.0
+
+* support live streaming with co-host

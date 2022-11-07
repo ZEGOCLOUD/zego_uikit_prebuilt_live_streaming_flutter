@@ -8,22 +8,41 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/defines.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/connect/co_host_control_button.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/connect/connect_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/connect/defines.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/connect/host_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_defines.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_translation.dart';
 import 'defines.dart';
 import 'effects/beauty_effect_button.dart';
 import 'effects/sound_effect_button.dart';
+import 'leave_button.dart';
 import 'message/in_room_message_button.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
 
 class ZegoBottomBar extends StatefulWidget {
   final ZegoUIKitPrebuiltLiveStreamingConfig config;
   final Size buttonSize;
 
+  final ZegoLiveHostManager hostManager;
+  final ValueNotifier<bool> hostUpdateEnabledNotifier;
+
+  final ValueNotifier<LiveStatus> liveStatusNotifier;
+  final ZegoLiveConnectManager connectManager;
+  final ZegoTranslationText translationText;
+
   const ZegoBottomBar({
     Key? key,
     required this.config,
     required this.buttonSize,
+    required this.hostManager,
+    required this.hostUpdateEnabledNotifier,
+    required this.liveStatusNotifier,
+    required this.connectManager,
+    required this.translationText,
   }) : super(key: key);
 
   @override
@@ -31,6 +50,22 @@ class ZegoBottomBar extends StatefulWidget {
 }
 
 class _ZegoBottomBarState extends State<ZegoBottomBar> {
+  List<ZegoMenuBarButtonName> buttons = [];
+  List<Widget> extendButtons = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    buttons = widget.config.bottomMenuBarConfig.buttons;
+    extendButtons = widget.config.bottomMenuBarConfig.extendButtons;
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -51,7 +86,33 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
                   ),
                 )
               : const SizedBox(),
-          rightToolbar(context),
+          widget.hostManager.isHost
+              ? rightToolbar(context)
+              : ValueListenableBuilder(
+                  valueListenable:
+                      widget.connectManager.audienceLocalConnectStateNotifier,
+                  builder: (context, connectState, _) {
+                    if (widget.config.plugins.isEmpty) {
+                      return rightToolbar(context);
+                    }
+
+                    if (ConnectState.connecting == connectState) {
+                      return rightToolbar(context);
+                    }
+
+                    var isCoHost = ConnectState.connected == connectState;
+                    buttons = widget
+                            .config.bottomMenuBarConfig.requestUpdateButtons
+                            ?.call(isCoHost) ??
+                        buttons;
+                    extendButtons = widget.config.bottomMenuBarConfig
+                            .requestUpdateExtendButtons
+                            ?.call(isCoHost) ??
+                        extendButtons;
+
+                    return rightToolbar(context);
+                  },
+                ),
         ],
       ),
     );
@@ -81,10 +142,7 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
   }
 
   List<Widget> getDisplayButtons(BuildContext context) {
-    List<Widget> buttonList = [
-      ...getDefaultButtons(context),
-      ...widget.config.bottomMenuBarConfig.extendButtons
-    ];
+    List<Widget> buttonList = [...getDefaultButtons(context), ...extendButtons];
 
     List<Widget> displayButtonList = [];
     if (buttonList.length > widget.config.bottomMenuBarConfig.maxCount) {
@@ -112,32 +170,61 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
     return displayButtonsWithSpacing;
   }
 
-  Widget buttonWrapper({required Widget child}) {
+  Widget buttonWrapper({required Widget child, ZegoMenuBarButtonName? type}) {
+    var buttonSize = widget.buttonSize;
+    switch (type) {
+      case ZegoMenuBarButtonName.coHostControlButton:
+        switch (widget.connectManager.audienceLocalConnectStateNotifier.value) {
+          case ConnectState.idle:
+            buttonSize = Size(330.r, 72.r);
+            break;
+          case ConnectState.connecting:
+            buttonSize = Size(330.r, 72.r);
+            break;
+          case ConnectState.connected:
+            buttonSize = Size(168.r, 72.r);
+            break;
+        }
+        break;
+      default:
+        break;
+    }
+
     return SizedBox(
-      width: widget.buttonSize.width,
-      height: widget.buttonSize.height,
+      width: buttonSize.width,
+      height: buttonSize.height,
       child: child,
     );
   }
 
   List<Widget> getDefaultButtons(BuildContext context) {
-    if (widget.config.bottomMenuBarConfig.buttons.isEmpty) {
+    if (buttons.isEmpty) {
       return [];
     }
 
-    return widget.config.bottomMenuBarConfig.buttons
+    return buttons
         .map((type) => buttonWrapper(
               child: generateDefaultButtonsByEnum(context, type),
+              type: type,
             ))
         .toList();
   }
 
   Widget generateDefaultButtonsByEnum(
-      BuildContext context, ZegoLiveMenuBarButtonName type) {
-    var buttonSize = Size(96.r, 96.r);
-    var iconSize = Size(56.r, 56.r);
+      BuildContext context, ZegoMenuBarButtonName type) {
+    var cameraDefaultOn = widget.config.turnOnCameraWhenJoining;
+    var microphoneDefaultOn = widget.config.turnOnMicrophoneWhenJoining;
+    if (widget.config.plugins.isNotEmpty &&
+        ConnectState.connected ==
+            widget.connectManager.audienceLocalConnectStateNotifier.value) {
+      cameraDefaultOn = true;
+      microphoneDefaultOn = true;
+    }
+
+    var buttonSize = zegoLiveButtonSize;
+    var iconSize = zegoLiveButtonIconSize;
     switch (type) {
-      case ZegoLiveMenuBarButtonName.toggleMicrophoneButton:
+      case ZegoMenuBarButtonName.toggleMicrophoneButton:
         return ZegoToggleMicrophoneButton(
           buttonSize: buttonSize,
           iconSize: iconSize,
@@ -151,15 +238,15 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
                 PrebuiltLiveStreamingIconUrls.toolbarMicOff),
             backgroundColor: Colors.transparent,
           ),
-          defaultOn: widget.config.turnOnMicrophoneWhenJoining,
+          defaultOn: microphoneDefaultOn,
         );
-      case ZegoLiveMenuBarButtonName.switchAudioOutputButton:
+      case ZegoMenuBarButtonName.switchAudioOutputButton:
         return ZegoSwitchAudioOutputButton(
           buttonSize: buttonSize,
           iconSize: iconSize,
           defaultUseSpeaker: widget.config.useSpeakerWhenJoining,
         );
-      case ZegoLiveMenuBarButtonName.toggleCameraButton:
+      case ZegoMenuBarButtonName.toggleCameraButton:
         return ZegoToggleCameraButton(
           buttonSize: buttonSize,
           iconSize: iconSize,
@@ -173,9 +260,9 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
                 PrebuiltLiveStreamingIconUrls.toolbarCameraOff),
             backgroundColor: Colors.transparent,
           ),
-          defaultOn: widget.config.turnOnCameraWhenJoining,
+          defaultOn: cameraDefaultOn,
         );
-      case ZegoLiveMenuBarButtonName.switchCameraButton:
+      case ZegoMenuBarButtonName.switchCameraButton:
         return ZegoSwitchCameraButton(
           buttonSize: buttonSize,
           iconSize: iconSize,
@@ -184,39 +271,41 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
                 PrebuiltLiveStreamingIconUrls.toolbarFlipCamera),
             backgroundColor: Colors.transparent,
           ),
+          defaultUseFrontFacingCamera: ZegoUIKit()
+              .getUseFrontFacingCameraStateNotifier(
+                  ZegoUIKit().getLocalUser().id)
+              .value,
         );
-      case ZegoLiveMenuBarButtonName.leaveButton:
-        return ZegoLeaveButton(
+      case ZegoMenuBarButtonName.leaveButton:
+        return ZegoLeaveStreamingButton(
           buttonSize: buttonSize,
           iconSize: iconSize,
           icon: ButtonIcon(
             icon: const Icon(Icons.close, color: Colors.white),
             backgroundColor: ZegoUIKitDefaultTheme.buttonBackgroundColor,
           ),
-          onLeaveConfirmation: (context) async {
-            return await widget
-                .config.onLeaveLiveStreamingConfirmation!(context);
-          },
-          onPress: () async {
-            if (widget.config.onLeaveLiveStreaming != null) {
-              widget.config.onLeaveLiveStreaming!.call();
-            } else {
-              Navigator.of(context).pop();
-            }
-          },
+          config: widget.config,
+          hostManager: widget.hostManager,
+          hostUpdateEnabledNotifier: widget.hostUpdateEnabledNotifier,
         );
-      case ZegoLiveMenuBarButtonName.beautyEffectButton:
+      case ZegoMenuBarButtonName.beautyEffectButton:
         return ZegoBeautyEffectButton(
           beautyEffects: widget.config.effectConfig.beautyEffects,
           buttonSize: buttonSize,
           iconSize: iconSize,
         );
-      case ZegoLiveMenuBarButtonName.soundEffectButton:
+      case ZegoMenuBarButtonName.soundEffectButton:
         return ZegoSoundEffectButton(
           voiceChangeEffect: widget.config.effectConfig.voiceChangeEffect,
           reverbEffect: widget.config.effectConfig.reverbEffect,
           buttonSize: buttonSize,
           iconSize: iconSize,
+        );
+      case ZegoMenuBarButtonName.coHostControlButton:
+        return ZegoCoHostControlButton(
+          hostManager: widget.hostManager,
+          connectManager: widget.connectManager,
+          translationText: widget.translationText,
         );
     }
   }

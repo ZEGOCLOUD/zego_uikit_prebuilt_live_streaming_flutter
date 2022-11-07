@@ -12,7 +12,7 @@ class ZegoAvatar extends StatelessWidget {
   final ZegoUIKitUser? user;
   final bool showAvatar;
   final bool showSoundLevel;
-  final AvatarBuilder? avatarBuilder;
+  final ZegoAvatarBuilder? avatarBuilder;
   final Size? soundLevelSize;
 
   const ZegoAvatar({

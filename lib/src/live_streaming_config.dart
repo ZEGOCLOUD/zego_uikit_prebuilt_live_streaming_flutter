@@ -6,10 +6,13 @@ import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'live_streaming_defines.dart';
+import 'live_streaming_translation.dart';
 
 class ZegoUIKitPrebuiltLiveStreamingConfig {
-  ZegoUIKitPrebuiltLiveStreamingConfig.host()
-      : turnOnCameraWhenJoining = true,
+  ZegoUIKitPrebuiltLiveStreamingConfig.host({List<IZegoUIKitPlugin>? plugins})
+      : isHost = true,
+        plugins = plugins ?? [],
+        turnOnCameraWhenJoining = true,
         turnOnMicrophoneWhenJoining = true,
         useSpeakerWhenJoining = true,
         showInRoomMessageButton = true,
@@ -18,19 +21,30 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         ),
         bottomMenuBarConfig = ZegoBottomMenuBarConfig(
           buttons: const [
-            ZegoLiveMenuBarButtonName.beautyEffectButton,
-            ZegoLiveMenuBarButtonName.soundEffectButton,
-            ZegoLiveMenuBarButtonName.switchCameraButton,
-            ZegoLiveMenuBarButtonName.toggleCameraButton,
-            ZegoLiveMenuBarButtonName.toggleMicrophoneButton,
+            ZegoMenuBarButtonName.beautyEffectButton,
+            ZegoMenuBarButtonName.soundEffectButton,
+            ZegoMenuBarButtonName.toggleCameraButton,
+            ZegoMenuBarButtonName.toggleMicrophoneButton,
+            ZegoMenuBarButtonName.switchCameraButton,
           ],
           maxCount: 5,
         ),
         memberListConfig = ZegoMemberListConfig(),
-        effectConfig = ZegoEffectConfig();
+        inRoomMessageViewConfig = ZegoInRoomMessageViewConfig(),
+        effectConfig = ZegoEffectConfig(),
+        translationText = ZegoTranslationText(),
+        confirmDialogInfo = ZegoDialogInfo(
+          title: "Stop the live",
+          message: "Are you sure to stop the live?",
+          cancelButtonName: "Cancel",
+          confirmButtonName: "Stop it",
+        );
 
-  ZegoUIKitPrebuiltLiveStreamingConfig.audience()
-      : turnOnCameraWhenJoining = false,
+  ZegoUIKitPrebuiltLiveStreamingConfig.audience(
+      {List<IZegoUIKitPlugin>? plugins})
+      : isHost = false,
+        plugins = plugins ?? [],
+        turnOnCameraWhenJoining = false,
         turnOnMicrophoneWhenJoining = false,
         useSpeakerWhenJoining = true,
         showInRoomMessageButton = true,
@@ -38,11 +52,29 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
           showSoundWavesInAudioMode: true,
         ),
         bottomMenuBarConfig = ZegoBottomMenuBarConfig(
-          buttons: const [],
+          buttons: plugins?.isEmpty ?? true
+              ? []
+              : const [ZegoMenuBarButtonName.coHostControlButton],
           maxCount: 5,
+          requestUpdateButtons: (bool isCoHost) {
+            return isCoHost
+                ? [
+                    ZegoMenuBarButtonName.switchCameraButton,
+                    ZegoMenuBarButtonName.toggleCameraButton,
+                    ZegoMenuBarButtonName.toggleMicrophoneButton,
+                    ZegoMenuBarButtonName.coHostControlButton,
+                    ZegoMenuBarButtonName.beautyEffectButton,
+                    ZegoMenuBarButtonName.soundEffectButton,
+                  ]
+                : [
+                    ZegoMenuBarButtonName.coHostControlButton,
+                  ];
+          },
         ),
         memberListConfig = ZegoMemberListConfig(),
-        effectConfig = ZegoEffectConfig.none();
+        inRoomMessageViewConfig = ZegoInRoomMessageViewConfig(),
+        effectConfig = ZegoEffectConfig(),
+        translationText = ZegoTranslationText();
 
   ZegoUIKitPrebuiltLiveStreamingConfig({
     this.turnOnCameraWhenJoining = true,
@@ -51,17 +83,28 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
     ZegoPrebuiltAudioVideoViewConfig? audioVideoViewConfig,
     ZegoBottomMenuBarConfig? bottomMenuBarConfig,
     ZegoMemberListConfig? memberListConfig,
+    ZegoInRoomMessageViewConfig? messageConfig,
     ZegoEffectConfig? effectConfig,
     this.showInRoomMessageButton = true,
     this.confirmDialogInfo,
-    this.onLeaveLiveStreamingConfirmation,
+    this.onLeaveConfirmation,
     this.onLeaveLiveStreaming,
+    this.onLiveStreamingEnded,
     this.avatarBuilder,
+    ZegoTranslationText? translationText,
   })  : audioVideoViewConfig =
             audioVideoViewConfig ?? ZegoPrebuiltAudioVideoViewConfig(),
         bottomMenuBarConfig = bottomMenuBarConfig ?? ZegoBottomMenuBarConfig(),
         memberListConfig = memberListConfig ?? ZegoMemberListConfig(),
-        effectConfig = effectConfig ?? ZegoEffectConfig();
+        inRoomMessageViewConfig =
+            messageConfig ?? ZegoInRoomMessageViewConfig(),
+        effectConfig = effectConfig ?? ZegoEffectConfig(),
+        translationText = translationText ?? ZegoTranslationText();
+
+  /// specify if a host or audience
+  bool isHost = false;
+
+  List<IZegoUIKitPlugin> plugins = [];
 
   /// whether to enable the camera by default, the default value is true
   bool turnOnCameraWhenJoining;
@@ -78,8 +121,11 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   /// configs about bottom menu bar
   ZegoBottomMenuBarConfig bottomMenuBarConfig;
 
-  /// configs about bottom member list
+  /// configs about member list
   ZegoMemberListConfig memberListConfig;
+
+  /// configs about message view
+  ZegoInRoomMessageViewConfig inRoomMessageViewConfig;
 
   /// support :
   /// 1. Face beautification
@@ -92,19 +138,24 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
 
   /// alert dialog information of leave
   /// if confirm info is not null, APP will pop alert dialog when you hang up
-  LiveStreamingConfirmDialogInfo? confirmDialogInfo;
+  ZegoDialogInfo? confirmDialogInfo;
 
   /// It is often used to customize the process before exiting the live interface.
   /// The liveback will triggered when user click hang up button or use system's return,
   /// If you need to handle custom logic, you can set this liveback to handle (such as showAlertDialog to let user determine).
   /// if you return true in the liveback, prebuilt page will quit and return to your previous page, otherwise will ignore.
-  Future<bool> Function(BuildContext context)? onLeaveLiveStreamingConfirmation;
+  Future<bool> Function(BuildContext context)? onLeaveConfirmation;
 
   /// customize handling after leave live streaming
   VoidCallback? onLeaveLiveStreaming;
 
+  /// customize handling after end live streaming
+  VoidCallback? onLiveStreamingEnded;
+
+  ZegoTranslationText translationText;
+
   /// customize your user's avatar, default we use userID's first character as avatar
-  /// User avatars are generally stored in your server, ZegoUIkitPrebuiltLive does not know each user's avatar, so by default, ZegoUIkitPrebuiltLive will use the first letter of the user name to draw the default user avatar, as shown in the following figure,
+  /// User avatars are generally stored in your server, ZegoUIKitPrebuiltLiveStreaming does not know each user's avatar, so by default, ZegoUIKitPrebuiltLiveStreaming will use the first letter of the user name to draw the default user avatar, as shown in the following figure,
   ///
   /// |When the user is not speaking|When the user is speaking|
   /// |--|--|
@@ -132,7 +183,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   ///
   /// ```
   ///
-  AvatarBuilder? avatarBuilder;
+  ZegoAvatarBuilder? avatarBuilder;
 }
 
 class ZegoPrebuiltAudioVideoViewConfig {
@@ -150,10 +201,10 @@ class ZegoPrebuiltAudioVideoViewConfig {
   /// customize your foreground of audio video view, which is the top widget of stack
   /// <br><img src="https://doc.oa.zego.im/Pics/ZegoUIKit/Flutter/_default_avatar_nowave.jpg" width="5%">
   /// you can return any widget, then we will put it on top of audio video view
-  AudioVideoViewForegroundBuilder? foregroundBuilder;
+  ZegoAudioVideoViewForegroundBuilder? foregroundBuilder;
 
   /// customize your background of audio video view, which is the bottom widget of stack
-  AudioVideoViewBackgroundBuilder? backgroundBuilder;
+  ZegoAudioVideoViewBackgroundBuilder? backgroundBuilder;
 
   ZegoPrebuiltAudioVideoViewConfig({
     this.foregroundBuilder,
@@ -166,21 +217,35 @@ class ZegoPrebuiltAudioVideoViewConfig {
 
 class ZegoBottomMenuBarConfig {
   /// these buttons will displayed on the menu bar, order by the list
-  List<ZegoLiveMenuBarButtonName> buttons;
+  List<ZegoMenuBarButtonName> buttons;
 
-  /// limited item count display on menu bar,
-  /// if this count is exceeded, More button is displayed
-  int maxCount;
+  /// triggered when the viewer switches between the audience and coHost
+  /// you needs to return a list of button names.
+  /// the default behavior is as follows:
+  /// isCoHost is true: [switchCameraButton, toggleCameraButton, toggleMicrophoneButton, coHostControlButton]
+  /// isCoHost is false: [coHostControlButton]
+  List<ZegoMenuBarButtonName> Function(bool isCoHost)? requestUpdateButtons;
 
   /// these buttons will sequentially added to menu bar,
   /// and auto added extra buttons to the pop-up menu
   /// when the limit [maxCount] is exceeded
   List<Widget> extendButtons;
 
+  /// triggered when the viewer switches between the audience and coHost
+  /// you needs to return a list of widget.
+  /// the default behavior is: []
+  List<Widget> Function(bool isCoHost)? requestUpdateExtendButtons;
+
+  /// limited item count display on menu bar,
+  /// if this count is exceeded, More button is displayed
+  int maxCount;
+
   ZegoBottomMenuBarConfig({
     this.buttons = const [],
-    this.maxCount = 5,
+    this.requestUpdateButtons,
     this.extendButtons = const [],
+    this.requestUpdateExtendButtons,
+    this.maxCount = 5,
   });
 }
 
@@ -192,11 +257,20 @@ class ZegoMemberListConfig {
   bool showCameraState;
 
   /// customize your item view of member list
-  MemberListItemBuilder? itemBuilder;
+  ZegoMemberListItemBuilder? itemBuilder;
 
   ZegoMemberListConfig({
     this.showMicrophoneState = true,
     this.showCameraState = true,
+    this.itemBuilder,
+  });
+}
+
+class ZegoInRoomMessageViewConfig {
+  /// customize your item view of message list
+  ZegoInRoomMessageItemBuilder? itemBuilder;
+
+  ZegoInRoomMessageViewConfig({
     this.itemBuilder,
   });
 }
@@ -214,18 +288,17 @@ class ZegoEffectConfig {
       BeautyEffectType.sharpen,
     ],
     this.voiceChangeEffect = const [
-      VoiceChangerType.lolita,
-      VoiceChangerType.uncle,
+      VoiceChangerType.littleGirl,
+      VoiceChangerType.deep,
       VoiceChangerType.robot,
-      VoiceChangerType.empty,
-      VoiceChangerType.boy,
+      VoiceChangerType.ethereal,
+      VoiceChangerType.littleBoy,
       VoiceChangerType.female,
       VoiceChangerType.male,
-      VoiceChangerType.foreigner,
-      VoiceChangerType.optimus,
-      VoiceChangerType.aunt,
-      VoiceChangerType.majorC,
-      VoiceChangerType.minorA,
+      VoiceChangerType.optimusPrime,
+      VoiceChangerType.crystalClear,
+      VoiceChangerType.cMajor,
+      VoiceChangerType.aMajor,
       VoiceChangerType.harmonicMinor,
     ],
     this.reverbEffect = const [
@@ -233,7 +306,7 @@ class ZegoEffectConfig {
       ReverbType.hall,
       ReverbType.concert,
       ReverbType.rock,
-      ReverbType.softRoom,
+      ReverbType.smallRoom,
       ReverbType.largeRoom,
       ReverbType.valley,
       ReverbType.recordingStudio,
@@ -254,18 +327,4 @@ class ZegoEffectConfig {
   bool get isSupportVoiceChange => voiceChangeEffect.isNotEmpty;
 
   bool get isSupportReverb => reverbEffect.isNotEmpty;
-}
-
-class LiveStreamingConfirmDialogInfo {
-  String title;
-  String message;
-  String cancelButtonName;
-  String confirmButtonName;
-
-  LiveStreamingConfirmDialogInfo({
-    this.title = "End to confirm",
-    this.message = "Do you want to end?",
-    this.cancelButtonName = "Cancel",
-    this.confirmButtonName = "Confirm",
-  });
 }
