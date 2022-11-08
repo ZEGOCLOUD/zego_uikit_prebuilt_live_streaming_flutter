@@ -51,3 +51,7 @@
 ## 1.2.0
 
 * support live streaming with co-host
+
+* fix some bugs
+
+## 1.2.1

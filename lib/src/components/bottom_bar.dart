@@ -17,7 +17,6 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_translation.dart';
-import 'defines.dart';
 import 'effects/beauty_effect_button.dart';
 import 'effects/sound_effect_button.dart';
 import 'leave_button.dart';
