@@ -8,11 +8,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
-import 'package:zego_uikit_prebuilt_live_streaming/src/components/defines.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/components/toast.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_translation.dart';
 import 'defines.dart';
+import 'toast.dart';
 
 class ZegoPopUpSheetMenu extends StatefulWidget {
   const ZegoPopUpSheetMenu({

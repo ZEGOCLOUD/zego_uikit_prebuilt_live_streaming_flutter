@@ -17,7 +17,7 @@ class ZegoLiveHostManager {
   final ZegoUIKitPrebuiltLiveStreamingConfig config;
 
   ZegoLiveHostManager({required this.config}) {
-    configIsHost = config.isHost;
+    configIsHost = ZegoLiveStreamingRole.host == config.role;
 
     subscriptions
       ..add(
@@ -158,7 +158,8 @@ class ZegoLiveHostManager {
     if (hostUpdateEnabledNotifier.value) {
       debugPrint("[host mgr] host updated, ${host?.toString()}");
       if (notifier.value?.id != host?.id) {
-        if (config.isHost && host?.id != ZegoUIKit().getLocalUser().id) {
+        if (ZegoLiveStreamingRole.host == config.role &&
+            host?.id != ZegoUIKit().getLocalUser().id) {
           configIsHost = false;
         }
 

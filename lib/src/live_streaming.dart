@@ -84,7 +84,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     WidgetsBinding.instance.addObserver(this);
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
-      log("version: zego_uikit_prebuilt_live_streaming:1.2.1; $version");
+      log("version: zego_uikit_prebuilt_live_streaming:1.2.2; $version");
     });
 
     hostManager = ZegoLiveHostManager(config: widget.config);
@@ -111,7 +111,6 @@ class _ZegoUIKitPrebuiltLiveStreamingState
   @override
   void dispose() async {
     super.dispose();
-
     WidgetsBinding.instance?.removeObserver(this);
 
     plugins?.uninit();
@@ -221,8 +220,10 @@ class _ZegoUIKitPrebuiltLiveStreamingState
   }
 
   void onContextInit(_) {
-    var useBeautyEffect = widget.config.bottomMenuBarConfig.buttons
-        .contains(ZegoMenuBarButtonName.beautyEffectButton);
+    var useBeautyEffect = widget.config.bottomMenuBarConfig.hostButtons
+            .contains(ZegoMenuBarButtonName.beautyEffectButton) ||
+        widget.config.bottomMenuBarConfig.coHostButtons
+            .contains(ZegoMenuBarButtonName.beautyEffectButton);
 
     if (useBeautyEffect) {
       ZegoUIKit()
@@ -235,7 +236,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
       ..updateVideoViewMode(
           widget.config.audioVideoViewConfig.useVideoViewAspectFill)
       ..setVideoMirrorMode(true)
-      ..turnCameraOn(widget.config.turnOnMicrophoneWhenJoining)
+      ..turnCameraOn(widget.config.turnOnCameraWhenJoining)
       ..turnMicrophoneOn(widget.config.turnOnMicrophoneWhenJoining)
       ..setAudioOutputToSpeaker(widget.config.useSpeakerWhenJoining);
 
@@ -276,13 +277,13 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     // if (useBeautyEffect) {
     //   await ZegoUIKit().stopEffectsEnv();
     // }
-    //
-    // await ZegoUIKit().uninit();
 
     await ZegoUIKit().resetSoundEffect();
     await ZegoUIKit().resetBeautyEffect();
 
     await ZegoUIKit().leaveRoom();
+
+    // await ZegoUIKit().uninit();
   }
 
   void initToast() {

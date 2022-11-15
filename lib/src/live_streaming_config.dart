@@ -8,9 +8,15 @@ import 'package:zego_uikit/zego_uikit.dart';
 import 'live_streaming_defines.dart';
 import 'live_streaming_translation.dart';
 
+enum ZegoLiveStreamingRole {
+  host,
+  coHost,
+  audience,
+}
+
 class ZegoUIKitPrebuiltLiveStreamingConfig {
   ZegoUIKitPrebuiltLiveStreamingConfig.host({List<IZegoUIKitPlugin>? plugins})
-      : isHost = true,
+      : role = ZegoLiveStreamingRole.host,
         plugins = plugins ?? [],
         turnOnCameraWhenJoining = true,
         turnOnMicrophoneWhenJoining = true,
@@ -20,14 +26,9 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
           showSoundWavesInAudioMode: true,
         ),
         bottomMenuBarConfig = ZegoBottomMenuBarConfig(
-          buttons: const [
-            ZegoMenuBarButtonName.beautyEffectButton,
-            ZegoMenuBarButtonName.soundEffectButton,
-            ZegoMenuBarButtonName.toggleCameraButton,
-            ZegoMenuBarButtonName.toggleMicrophoneButton,
-            ZegoMenuBarButtonName.switchCameraButton,
-          ],
-          maxCount: 5,
+          audienceButtons: plugins?.isEmpty ?? true
+              ? []
+              : const [ZegoMenuBarButtonName.coHostControlButton],
         ),
         memberListConfig = ZegoMemberListConfig(),
         inRoomMessageViewConfig = ZegoInRoomMessageViewConfig(),
@@ -42,7 +43,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
 
   ZegoUIKitPrebuiltLiveStreamingConfig.audience(
       {List<IZegoUIKitPlugin>? plugins})
-      : isHost = false,
+      : role = ZegoLiveStreamingRole.audience,
         plugins = plugins ?? [],
         turnOnCameraWhenJoining = false,
         turnOnMicrophoneWhenJoining = false,
@@ -52,24 +53,9 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
           showSoundWavesInAudioMode: true,
         ),
         bottomMenuBarConfig = ZegoBottomMenuBarConfig(
-          buttons: plugins?.isEmpty ?? true
+          audienceButtons: plugins?.isEmpty ?? true
               ? []
               : const [ZegoMenuBarButtonName.coHostControlButton],
-          maxCount: 5,
-          requestUpdateButtons: (bool isCoHost) {
-            return isCoHost
-                ? [
-                    ZegoMenuBarButtonName.switchCameraButton,
-                    ZegoMenuBarButtonName.toggleCameraButton,
-                    ZegoMenuBarButtonName.toggleMicrophoneButton,
-                    ZegoMenuBarButtonName.coHostControlButton,
-                    ZegoMenuBarButtonName.beautyEffectButton,
-                    ZegoMenuBarButtonName.soundEffectButton,
-                  ]
-                : [
-                    ZegoMenuBarButtonName.coHostControlButton,
-                  ];
-          },
         ),
         memberListConfig = ZegoMemberListConfig(),
         inRoomMessageViewConfig = ZegoInRoomMessageViewConfig(),
@@ -101,8 +87,8 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         effectConfig = effectConfig ?? ZegoEffectConfig(),
         translationText = translationText ?? ZegoTranslationText();
 
-  /// specify if a host or audience
-  bool isHost = false;
+  /// specify if a host or co-host, audience
+  ZegoLiveStreamingRole role = ZegoLiveStreamingRole.audience;
 
   List<IZegoUIKitPlugin> plugins = [];
 
@@ -217,34 +203,41 @@ class ZegoPrebuiltAudioVideoViewConfig {
 
 class ZegoBottomMenuBarConfig {
   /// these buttons will displayed on the menu bar, order by the list
-  List<ZegoMenuBarButtonName> buttons;
-
-  /// triggered when the viewer switches between the audience and coHost
-  /// you needs to return a list of button names.
-  /// the default behavior is as follows:
-  /// isCoHost is true: [switchCameraButton, toggleCameraButton, toggleMicrophoneButton, coHostControlButton]
-  /// isCoHost is false: [coHostControlButton]
-  List<ZegoMenuBarButtonName> Function(bool isCoHost)? requestUpdateButtons;
+  List<ZegoMenuBarButtonName> hostButtons = [];
+  List<ZegoMenuBarButtonName> coHostButtons = [];
+  List<ZegoMenuBarButtonName> audienceButtons = [];
 
   /// these buttons will sequentially added to menu bar,
   /// and auto added extra buttons to the pop-up menu
   /// when the limit [maxCount] is exceeded
-  List<Widget> extendButtons;
-
-  /// triggered when the viewer switches between the audience and coHost
-  /// you needs to return a list of widget.
-  /// the default behavior is: []
-  List<Widget> Function(bool isCoHost)? requestUpdateExtendButtons;
+  List<Widget> hostExtendButtons = [];
+  List<Widget> coHostExtendButtons = [];
+  List<Widget> audienceExtendButtons = [];
 
   /// limited item count display on menu bar,
   /// if this count is exceeded, More button is displayed
   int maxCount;
 
   ZegoBottomMenuBarConfig({
-    this.buttons = const [],
-    this.requestUpdateButtons,
-    this.extendButtons = const [],
-    this.requestUpdateExtendButtons,
+    this.hostButtons = const [
+      ZegoMenuBarButtonName.beautyEffectButton,
+      ZegoMenuBarButtonName.soundEffectButton,
+      ZegoMenuBarButtonName.toggleCameraButton,
+      ZegoMenuBarButtonName.toggleMicrophoneButton,
+      ZegoMenuBarButtonName.switchCameraButton,
+    ],
+    this.coHostButtons = const [
+      ZegoMenuBarButtonName.switchCameraButton,
+      ZegoMenuBarButtonName.toggleCameraButton,
+      ZegoMenuBarButtonName.toggleMicrophoneButton,
+      ZegoMenuBarButtonName.coHostControlButton,
+      ZegoMenuBarButtonName.beautyEffectButton,
+      ZegoMenuBarButtonName.soundEffectButton,
+    ],
+    this.audienceButtons = const [],
+    this.hostExtendButtons = const [],
+    this.coHostExtendButtons = const [],
+    this.audienceExtendButtons = const [],
     this.maxCount = 5,
   });
 }

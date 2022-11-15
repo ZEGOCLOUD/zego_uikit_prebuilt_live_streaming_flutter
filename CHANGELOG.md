@@ -52,6 +52,10 @@
 
 * support live streaming with co-host
 
-* fix some bugs
-
 ## 1.2.1
+
+* update a dependency to the latest release..
+
+## 1.2.2
+
+* fix some bugs

@@ -50,7 +50,7 @@ class ZegoLiveConnectManager {
   List<StreamSubscription<dynamic>?> subscriptions = [];
 
   void init() {
-    if (config.isHost &&
+    if (ZegoLiveStreamingRole.host == config.role &&
         hostManager.notifier.value != null &&
         hostManager.notifier.value!.id != ZegoUIKit().getLocalUser().id) {
       debugPrint("[connect mgr] switch local to be co-host");
@@ -73,22 +73,22 @@ class ZegoLiveConnectManager {
   void listenStream() {
     if (config.plugins.isNotEmpty) {
       subscriptions
-        ..add(ZegoUIKitInvitationService()
+        ..add(ZegoUIKitSignalingPluginImp.shared
             .getInvitationReceivedStream()
             .listen(onInvitationReceived))
-        ..add(ZegoUIKitInvitationService()
+        ..add(ZegoUIKitSignalingPluginImp.shared
             .getInvitationAcceptedStream()
             .listen(onInvitationAccepted))
-        ..add(ZegoUIKitInvitationService()
+        ..add(ZegoUIKitSignalingPluginImp.shared
             .getInvitationCanceledStream()
             .listen(onInvitationCanceled))
-        ..add(ZegoUIKitInvitationService()
+        ..add(ZegoUIKitSignalingPluginImp.shared
             .getInvitationRefusedStream()
             .listen(onInvitationRefused))
-        ..add(ZegoUIKitInvitationService()
+        ..add(ZegoUIKitSignalingPluginImp.shared
             .getInvitationTimeoutStream()
             .listen(onInvitationTimeout))
-        ..add(ZegoUIKitInvitationService()
+        ..add(ZegoUIKitSignalingPluginImp.shared
             .getInvitationResponseTimeoutStream()
             .listen(onInvitationResponseTimeout));
     }
@@ -97,7 +97,7 @@ class ZegoLiveConnectManager {
   Future<bool> kickCoHost(ZegoUIKitUser coHost) async {
     debugPrint("[connect manager] kick-out co-host ${coHost.toString()}");
 
-    return await ZegoUIKitInvitationService()
+    return await ZegoUIKitSignalingPluginImp.shared
         .sendInvitation(
       ZegoUIKit().getLocalUser().name,
       [coHost.id],
@@ -122,7 +122,7 @@ class ZegoLiveConnectManager {
 
     audienceIDsOfInvitingConnect.add(invitee.id);
 
-    await ZegoUIKitInvitationService()
+    await ZegoUIKitSignalingPluginImp.shared
         .sendInvitation(
       ZegoUIKit().getLocalUser().name,
       [invitee.id],
@@ -198,7 +198,7 @@ class ZegoLiveConnectManager {
         isInviteToJoinCoHostDlgVisible = false;
 
         if (LiveStatus.living == liveStatusNotifier.value) {
-          ZegoUIKitInvitationService()
+          ZegoUIKitSignalingPluginImp.shared
               .refuseInvitation(host.id, '')
               .then((result) {
             debugPrint(
@@ -216,7 +216,7 @@ class ZegoLiveConnectManager {
 
         debugPrint("[connect mgr] accept co-host invite");
         if (LiveStatus.living == liveStatusNotifier.value) {
-          ZegoUIKitInvitationService()
+          ZegoUIKitSignalingPluginImp.shared
               .acceptInvitation(host.id, '')
               .then((result) {
             debugPrint(

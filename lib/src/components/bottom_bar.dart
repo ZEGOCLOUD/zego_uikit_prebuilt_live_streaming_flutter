@@ -56,8 +56,7 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
   void initState() {
     super.initState();
 
-    buttons = widget.config.bottomMenuBarConfig.buttons;
-    extendButtons = widget.config.bottomMenuBarConfig.extendButtons;
+    updateButtonsByRole();
   }
 
   @override
@@ -99,15 +98,7 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
                       return rightToolbar(context);
                     }
 
-                    var isCoHost = ConnectState.connected == connectState;
-                    buttons = widget
-                            .config.bottomMenuBarConfig.requestUpdateButtons
-                            ?.call(isCoHost) ??
-                        buttons;
-                    extendButtons = widget.config.bottomMenuBarConfig
-                            .requestUpdateExtendButtons
-                            ?.call(isCoHost) ??
-                        extendButtons;
+                    updateButtonsByRole();
 
                     return rightToolbar(context);
                   },
@@ -115,6 +106,24 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
         ],
       ),
     );
+  }
+
+  void updateButtonsByRole() {
+    if (widget.hostManager.isHost) {
+      buttons = widget.config.bottomMenuBarConfig.hostButtons;
+      extendButtons = widget.config.bottomMenuBarConfig.hostExtendButtons;
+    } else {
+      var connectState =
+          widget.connectManager.audienceLocalConnectStateNotifier.value;
+      var isCoHost = ConnectState.connected == connectState;
+
+      buttons = isCoHost
+          ? widget.config.bottomMenuBarConfig.coHostButtons
+          : widget.config.bottomMenuBarConfig.audienceButtons;
+      extendButtons = isCoHost
+          ? widget.config.bottomMenuBarConfig.coHostExtendButtons
+          : widget.config.bottomMenuBarConfig.audienceExtendButtons;
+    }
   }
 
   Widget rightToolbar(BuildContext context) {

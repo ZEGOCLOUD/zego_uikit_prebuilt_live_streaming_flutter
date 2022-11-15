@@ -257,7 +257,7 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
             text: widget.translationText.disagreeButton,
             backgroundColor: const Color(0xffA7A6B7),
             onPressed: () {
-              ZegoUIKitInvitationService()
+              ZegoUIKitSignalingPluginImp.shared
                   .refuseInvitation(user.id, '')
                   .then((result) {
                 debugPrint(
@@ -278,7 +278,7 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
               end: Alignment.bottomRight,
             ),
             onPressed: () {
-              ZegoUIKitInvitationService()
+              ZegoUIKitSignalingPluginImp.shared
                   .acceptInvitation(user.id, '')
                   .then((result) {
                 debugPrint(
