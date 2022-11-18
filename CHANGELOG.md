@@ -64,3 +64,7 @@
 
 * fix some bugs
 * update a dependency to the latest release
+
+## 1.2.4
+
+* fix some bugs

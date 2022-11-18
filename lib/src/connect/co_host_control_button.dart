@@ -132,6 +132,7 @@ class _ZegoCoHostControlButtonState extends State<ZegoCoHostControlButton> {
   Widget endCoHostButton() {
     return ZegoTextIconButton(
       icon: buttonIcon,
+      buttonRadius: 72.r / 2,
       buttonSize: Size(168.r, 72.r),
       iconSize: Size(48.r, 48.r),
       iconTextSpacing: 12.r,
