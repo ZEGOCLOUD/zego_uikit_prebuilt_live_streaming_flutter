@@ -5,7 +5,7 @@
 ## 0.0.2
 
 * fix some bugs
-* update a dependency to the latest release..
+* update a dependency to the latest release
 
 ## 0.0.4
 
@@ -26,7 +26,7 @@
 
 ## 0.0.8
 
-* update a dependency to the latest release..
+* update a dependency to the latest release
 
 ## 0.0.9
 
@@ -38,7 +38,7 @@
 
 ## 1.0.1
 
-* update a dependency to the latest release..
+* update a dependency to the latest release
 
 ## 1.0.2
 
@@ -54,8 +54,13 @@
 
 ## 1.2.1
 
-* update a dependency to the latest release..
+* update a dependency to the latest release
 
 ## 1.2.2
 
 * fix some bugs
+
+## 1.2.3
+
+* fix some bugs
+* update a dependency to the latest release

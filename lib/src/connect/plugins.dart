@@ -82,16 +82,16 @@ class ZegoPrebuiltPlugins {
   }
 
   void onInvitationConnectionState(Map params) {
-    debugPrint("[live invitation] onInvitationConnectionState, param: $params");
+    debugPrint("[plugin] onInvitationConnectionState, param: $params");
 
     pluginConnectionState = PluginConnectionState.values[params['state']!];
 
     debugPrint(
-        "[live invitation] onInvitationConnectionState, state: $pluginConnectionState");
+        "[plugin] onInvitationConnectionState, state: $pluginConnectionState");
   }
 
   void onNetworkModeChanged(ZegoNetworkMode networkMode) {
-    debugPrint("[live invitation] onNetworkModeChanged $networkMode, "
+    debugPrint("[plugin] onNetworkModeChanged $networkMode, "
         "network state: $networkState");
 
     switch (networkMode) {
@@ -115,9 +115,9 @@ class ZegoPrebuiltPlugins {
 
   void reconnectIfDisconnected() {
     debugPrint(
-        "[live invitation] reconnectIfDisconnected, state:$pluginConnectionState");
+        "[plugin] reconnectIfDisconnected, state:$pluginConnectionState");
     if (pluginConnectionState == PluginConnectionState.disconnected) {
-      debugPrint("[live invitation] reconnect, id:$userID, name:$userName");
+      debugPrint("[plugin] reconnect, id:$userID, name:$userName");
       ZegoUIKitSignalingPluginImp.shared.logout().then((value) {
         ZegoUIKitSignalingPluginImp.shared.login(userID, userName);
       });

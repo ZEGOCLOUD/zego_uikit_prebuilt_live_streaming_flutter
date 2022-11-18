@@ -1,6 +1,3 @@
-// Dart imports:
-import 'dart:math' as math;
-
 // Flutter imports:
 import 'package:flutter/material.dart';
 
@@ -44,8 +41,7 @@ class _ZegoBeautyEffectButtonState extends State<ZegoBeautyEffectButton> {
         height: containerSize.height,
         decoration: BoxDecoration(
           color: widget.icon?.backgroundColor ?? Colors.transparent,
-          borderRadius: BorderRadius.all(Radius.circular(
-              math.min(containerSize.width, containerSize.height) / 2)),
+          shape: BoxShape.circle,
         ),
         child: SizedBox.fromSize(
           size: sizeBoxSize,
