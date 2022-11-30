@@ -73,22 +73,28 @@ class ZegoLiveConnectManager {
   void listenStream() {
     if (config.plugins.isNotEmpty) {
       subscriptions
-        ..add(ZegoUIKitSignalingPluginImp.shared
+        ..add(ZegoUIKit()
+            .getSignalingPlugin()
             .getInvitationReceivedStream()
             .listen(onInvitationReceived))
-        ..add(ZegoUIKitSignalingPluginImp.shared
+        ..add(ZegoUIKit()
+            .getSignalingPlugin()
             .getInvitationAcceptedStream()
             .listen(onInvitationAccepted))
-        ..add(ZegoUIKitSignalingPluginImp.shared
+        ..add(ZegoUIKit()
+            .getSignalingPlugin()
             .getInvitationCanceledStream()
             .listen(onInvitationCanceled))
-        ..add(ZegoUIKitSignalingPluginImp.shared
+        ..add(ZegoUIKit()
+            .getSignalingPlugin()
             .getInvitationRefusedStream()
             .listen(onInvitationRefused))
-        ..add(ZegoUIKitSignalingPluginImp.shared
+        ..add(ZegoUIKit()
+            .getSignalingPlugin()
             .getInvitationTimeoutStream()
             .listen(onInvitationTimeout))
-        ..add(ZegoUIKitSignalingPluginImp.shared
+        ..add(ZegoUIKit()
+            .getSignalingPlugin()
             .getInvitationResponseTimeoutStream()
             .listen(onInvitationResponseTimeout));
     }
@@ -97,14 +103,15 @@ class ZegoLiveConnectManager {
   Future<bool> kickCoHost(ZegoUIKitUser coHost) async {
     debugPrint("[connect manager] kick-out co-host ${coHost.toString()}");
 
-    return await ZegoUIKitSignalingPluginImp.shared
+    return await ZegoUIKit()
+        .getSignalingPlugin()
         .sendInvitation(
-      ZegoUIKit().getLocalUser().name,
-      [coHost.id],
-      60,
-      ZegoInvitationType.removeFromCoHost.value,
-      "",
-    )
+          ZegoUIKit().getLocalUser().name,
+          [coHost.id],
+          60,
+          ZegoInvitationType.removeFromCoHost.value,
+          "",
+        )
         .then((result) {
       debugPrint(
           "[connect manager] kick co-host ${coHost.id} ${coHost.name}, code:${result.code}, message:${result.message}, error invitees:${result.result as List<String>}");
@@ -122,14 +129,15 @@ class ZegoLiveConnectManager {
 
     audienceIDsOfInvitingConnect.add(invitee.id);
 
-    await ZegoUIKitSignalingPluginImp.shared
+    await ZegoUIKit()
+        .getSignalingPlugin()
         .sendInvitation(
-      ZegoUIKit().getLocalUser().name,
-      [invitee.id],
-      60,
-      ZegoInvitationType.inviteToJoinCoHost.value,
-      '',
-    )
+          ZegoUIKit().getLocalUser().name,
+          [invitee.id],
+          60,
+          ZegoInvitationType.inviteToJoinCoHost.value,
+          '',
+        )
         .then((result) {
       if (result.code.isNotEmpty) {
         audienceIDsOfInvitingConnect.remove(invitee.id);
@@ -198,7 +206,8 @@ class ZegoLiveConnectManager {
         isInviteToJoinCoHostDlgVisible = false;
 
         if (LiveStatus.living == liveStatusNotifier.value) {
-          ZegoUIKitSignalingPluginImp.shared
+          ZegoUIKit()
+              .getSignalingPlugin()
               .refuseInvitation(host.id, '')
               .then((result) {
             debugPrint(
@@ -216,7 +225,8 @@ class ZegoLiveConnectManager {
 
         debugPrint("[connect mgr] accept co-host invite");
         if (LiveStatus.living == liveStatusNotifier.value) {
-          ZegoUIKitSignalingPluginImp.shared
+          ZegoUIKit()
+              .getSignalingPlugin()
               .acceptInvitation(host.id, '')
               .then((result) {
             debugPrint(

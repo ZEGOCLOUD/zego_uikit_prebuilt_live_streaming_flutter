@@ -222,9 +222,9 @@ class ZegoBottomMenuBarConfig {
     this.hostButtons = const [
       ZegoMenuBarButtonName.beautyEffectButton,
       ZegoMenuBarButtonName.soundEffectButton,
+      ZegoMenuBarButtonName.switchCameraButton,
       ZegoMenuBarButtonName.toggleCameraButton,
       ZegoMenuBarButtonName.toggleMicrophoneButton,
-      ZegoMenuBarButtonName.switchCameraButton,
     ],
     this.coHostButtons = const [
       ZegoMenuBarButtonName.switchCameraButton,

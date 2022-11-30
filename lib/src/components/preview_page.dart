@@ -13,7 +13,6 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/connect/host_manager.dart
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_translation.dart';
-import 'avatar.dart';
 import 'effects/beauty_effect_button.dart';
 import 'permissions.dart';
 
@@ -93,6 +92,13 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
                     ),
                     foregroundBuilder: audioVideoViewForeground,
                     backgroundBuilder: audioVideoViewBackground,
+                    avatarConfig: ZegoAvatarConfig(
+                      showInAudioMode: widget
+                          .config.audioVideoViewConfig.showAvatarInAudioMode,
+                      showSoundWavesInAudioMode: widget.config
+                          .audioVideoViewConfig.showSoundWavesInAudioMode,
+                      builder: widget.config.avatarBuilder,
+                    ),
                   ),
                   topBar(),
                   bottomBar(),
@@ -251,15 +257,6 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
         widget.config.audioVideoViewConfig.backgroundBuilder
                 ?.call(context, size, user, extraInfo) ??
             Container(color: Colors.transparent),
-        ZegoAvatar(
-          avatarSize: isSmallView ? Size(110.r, 110.r) : Size(258.r, 258.r),
-          user: user,
-          showAvatar: widget.config.audioVideoViewConfig.showAvatarInAudioMode,
-          showSoundLevel:
-              widget.config.audioVideoViewConfig.showSoundWavesInAudioMode,
-          avatarBuilder: widget.config.avatarBuilder,
-          soundLevelSize: size,
-        ),
       ],
     );
   }

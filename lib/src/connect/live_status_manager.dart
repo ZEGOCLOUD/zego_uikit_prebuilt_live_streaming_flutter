@@ -26,7 +26,7 @@ class ZegoLiveStatusManager {
     subscriptions.add(
         ZegoUIKit().getRoomPropertiesStream().listen(onRoomPropertiesUpdated));
 
-    if (isAudience) {
+    if (!hostManager.isHost) {
       ZegoUIKit().stopPlayAllAudioVideo();
     }
   }

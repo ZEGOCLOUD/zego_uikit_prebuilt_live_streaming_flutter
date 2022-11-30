@@ -16,7 +16,6 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/connect/plugins.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
 import 'audio_video_view_foreground.dart';
-import 'avatar.dart';
 import 'bottom_bar.dart';
 import 'defines.dart';
 import 'message/in_room_live_commenting_view.dart';
@@ -234,6 +233,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
     var audioVideoContainerLayout = ZegoLayout.pictureInPicture(
       smallViewPosition: ZegoViewPosition.bottomRight,
       switchLargeOrSmallViewByClick: false,
+      isSmallViewDraggable: false,
       smallViewSize: Size(139.5.w, 248.0.h),
       smallViewMargin: EdgeInsets.only(
         left: 24.r,
@@ -251,6 +251,13 @@ class ZegoLivePageState extends State<ZegoLivePage>
         foregroundBuilder: audioVideoViewForeground,
         backgroundBuilder: audioVideoViewBackground,
         sortAudioVideo: audioVideoViewSorter,
+        avatarConfig: ZegoAvatarConfig(
+          showInAudioMode:
+              widget.config.audioVideoViewConfig.showAvatarInAudioMode,
+          showSoundWavesInAudioMode:
+              widget.config.audioVideoViewConfig.showSoundWavesInAudioMode,
+          builder: widget.config.avatarBuilder,
+        ),
       );
     } else if (LiveStatus.living != widget.liveStatusManager.notifier.value &&
         null != widget.hostManager.notifier.value) {
@@ -273,6 +280,13 @@ class ZegoLivePageState extends State<ZegoLivePage>
                     backgroundBuilder: audioVideoViewBackground,
                     foregroundBuilder: audioVideoViewForeground,
                     sortAudioVideo: audioVideoViewSorter,
+                    avatarConfig: ZegoAvatarConfig(
+                      showInAudioMode: widget
+                          .config.audioVideoViewConfig.showAvatarInAudioMode,
+                      showSoundWavesInAudioMode: widget.config
+                          .audioVideoViewConfig.showSoundWavesInAudioMode,
+                      builder: widget.config.avatarBuilder,
+                    ),
                   );
                 });
           });
@@ -356,15 +370,6 @@ class ZegoLivePageState extends State<ZegoLivePage>
         widget.config.audioVideoViewConfig.backgroundBuilder
                 ?.call(context, size, user, extraInfo) ??
             Container(color: Colors.transparent),
-        ZegoAvatar(
-          avatarSize: isSmallView ? Size(110.r, 110.r) : Size(258.r, 258.r),
-          user: user,
-          showAvatar: widget.config.audioVideoViewConfig.showAvatarInAudioMode,
-          showSoundLevel:
-              widget.config.audioVideoViewConfig.showSoundWavesInAudioMode,
-          avatarBuilder: widget.config.avatarBuilder,
-          soundLevelSize: size,
-        ),
       ],
     );
   }
@@ -406,7 +411,9 @@ class ZegoLivePageState extends State<ZegoLivePage>
       bottom: 124.r,
       child: ConstrainedBox(
         constraints: BoxConstraints.loose(Size(540.r, 400.r)),
-        child: const ZegoInRoomLiveCommentingView(),
+        child: ZegoInRoomLiveCommentingView(
+          itemBuilder: widget.config.inRoomMessageViewConfig.itemBuilder,
+        ),
       ),
     );
   }
