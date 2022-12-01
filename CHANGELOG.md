@@ -77,3 +77,7 @@
 ## 1.2.6
 
 * fix some bugs
+
+## 1.2.7
+
+* update a dependency to the latest release
