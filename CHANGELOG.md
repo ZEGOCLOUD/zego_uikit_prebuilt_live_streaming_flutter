@@ -73,3 +73,7 @@
 
 * fix some bugs
 * update a dependency to the latest release
+
+## 1.2.6
+
+* fix some bugs
