@@ -1,5 +1,10 @@
 # Quick start
 
+
+| Host | Audience |
+| --- | --- |
+|![host](https://storage.zego.im/sdk-doc//Pics/ZegoUIKit/Flutter/live/host_3.gif)|![audience](https://storage.zego.im/sdk-doc//Pics/ZegoUIKit/Flutter/live/audience_3.gif)|
+
 - - -
 ## Integrate the SDK
 
