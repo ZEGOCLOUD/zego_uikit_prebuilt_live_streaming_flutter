@@ -81,7 +81,6 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
                   ZegoAudioVideoContainer(
                     layout: ZegoLayout.pictureInPicture(
                       smallViewPosition: ZegoViewPosition.bottomRight,
-                      switchLargeOrSmallViewByClick: false,
                       smallViewSize: Size(139.5.w, 248.0.h),
                       smallViewMargin: EdgeInsets.only(
                         left: 24.r,
