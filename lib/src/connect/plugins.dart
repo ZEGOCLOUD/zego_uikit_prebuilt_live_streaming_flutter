@@ -49,8 +49,8 @@ class ZegoPrebuiltPlugins {
 
     subscriptions.add(ZegoUIKit()
         .getSignalingPlugin()
-        .getInvitationConnectionStateStream()
-        .listen(onInvitationConnectionState));
+        .getConnectionStateStream()
+        .listen(onConnectionState));
 
     subscriptions
         .add(ZegoUIKit().getNetworkModeStream().listen(onNetworkModeChanged));
@@ -82,7 +82,7 @@ class ZegoPrebuiltPlugins {
     await ZegoUIKit().getSignalingPlugin().login(userID, userName);
   }
 
-  void onInvitationConnectionState(Map params) {
+  void onConnectionState(Map params) {
     debugPrint("[plugin] onInvitationConnectionState, param: $params");
 
     pluginConnectionState = PluginConnectionState.values[params['state']!];

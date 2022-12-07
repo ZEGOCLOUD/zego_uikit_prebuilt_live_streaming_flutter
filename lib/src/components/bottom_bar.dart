@@ -71,7 +71,7 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
       height: 124.r,
       child: Stack(
         children: [
-          widget.config.showInRoomMessageButton
+          widget.config.bottomMenuBarConfig.showInRoomMessageButton
               ? SizedBox(
                   height: 124.r,
                   child: Row(

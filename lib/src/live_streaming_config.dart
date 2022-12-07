@@ -21,7 +21,6 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         turnOnCameraWhenJoining = true,
         turnOnMicrophoneWhenJoining = true,
         useSpeakerWhenJoining = true,
-        showInRoomMessageButton = true,
         audioVideoViewConfig = ZegoPrebuiltAudioVideoViewConfig(
           showSoundWavesInAudioMode: true,
         ),
@@ -48,7 +47,6 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         turnOnCameraWhenJoining = false,
         turnOnMicrophoneWhenJoining = false,
         useSpeakerWhenJoining = true,
-        showInRoomMessageButton = true,
         audioVideoViewConfig = ZegoPrebuiltAudioVideoViewConfig(
           showSoundWavesInAudioMode: true,
         ),
@@ -71,7 +69,6 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
     ZegoMemberListConfig? memberListConfig,
     ZegoInRoomMessageViewConfig? messageConfig,
     ZegoEffectConfig? effectConfig,
-    this.showInRoomMessageButton = true,
     this.confirmDialogInfo,
     this.onLeaveConfirmation,
     this.onLeaveLiveStreaming,
@@ -118,9 +115,6 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   /// 2. Voice changing
   /// 3. Reverb
   ZegoEffectConfig effectConfig;
-
-  /// support message if set true
-  bool showInRoomMessageButton;
 
   /// alert dialog information of leave
   /// if confirm info is not null, APP will pop alert dialog when you hang up
@@ -202,6 +196,9 @@ class ZegoPrebuiltAudioVideoViewConfig {
 }
 
 class ZegoBottomMenuBarConfig {
+  /// support message if set true
+  bool showInRoomMessageButton;
+
   /// these buttons will displayed on the menu bar, order by the list
   List<ZegoMenuBarButtonName> hostButtons = [];
   List<ZegoMenuBarButtonName> coHostButtons = [];
@@ -219,6 +216,7 @@ class ZegoBottomMenuBarConfig {
   int maxCount;
 
   ZegoBottomMenuBarConfig({
+    this.showInRoomMessageButton = true,
     this.hostButtons = const [
       ZegoMenuBarButtonName.beautyEffectButton,
       ZegoMenuBarButtonName.soundEffectButton,

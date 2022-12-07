@@ -84,7 +84,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     WidgetsBinding.instance.addObserver(this);
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
-      log("version: zego_uikit_prebuilt_live_streaming: 1.2.8; $version");
+      log("version: zego_uikit_prebuilt_live_streaming: 1.2.9; $version");
     });
 
     hostManager = ZegoLiveHostManager(config: widget.config);

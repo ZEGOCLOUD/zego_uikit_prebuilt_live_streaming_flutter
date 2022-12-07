@@ -85,3 +85,8 @@
 ## 1.2.8
 
 * fix some bugs
+
+## 1.2.9
+
+* fix some bugs
+* update a dependency to the latest release
