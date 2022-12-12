@@ -79,7 +79,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/zego_uikit_prebuilt_live_stre
 ## Using the Live Streaming Kit
 
 
-- Go to [ZEGOCLOUD Admin Console\|_blank](https://console.zegocloud.com/), get the `appID` and `appSign` of your project.
+- Go to [ZEGOCLOUD Admin Console](https://console.zegocloud.com/), get the `appID` and `appSign` of your project.
 - Specify the `userID` and `userName` for connecting the Live Streaming Kit service. 
 - `liveID` represents the live streaming you want to start or watch (only supports single-host live streaming for now). 
 
@@ -230,7 +230,11 @@ Click to get the complete [sample code](https://github.com/ZEGOCLOUD/zego_uikit_
 
 ## Prerequisites
 
-@@@ZIM_BasicPrerequisites@@@
+- Go to [ZEGOCLOUD Admin Console](https://console.zegocloud.com), and do the following:
+  - Create a project, get the **AppID** and **AppSign**.
+  - Activate the **In-app Chat** service (as shown in the following figure).
+![ActivateZIMinConsole2.png](https://storage.zego.im/sdk-doc/Pics/InappChat/ActivateZIMinConsole2.png)
+
 
 ## Integrate the SDK
 
