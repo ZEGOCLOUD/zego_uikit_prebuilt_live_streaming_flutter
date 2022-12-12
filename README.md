@@ -25,7 +25,7 @@
 
 Live Streaming Kit helps you to **integrate within the shortest possible time**, and it includes the business logic with the UI, allowing you to **customize features accordingly**.
 
-To finest-grained build a live stream app, you may try our [Live Streaming SDK\|_blank](http://doc.oa.zego.im/!Low_Latency_Live-Overview/Overview) to make full customization.
+To finest-grained build a live stream app, you may try our [Live Streaming SDK](https://docs.zegocloud.com/article/14313) to make full customization.
 
 
 
@@ -43,10 +43,10 @@ To finest-grained build a live stream app, you may try our [Live Streaming SDK\|
 ## Recommended resources
 
 
-* I want to get started to implement [a basic live stream](http://doc.oa.zego.im/!Quickstart_basic) swiftly
+* I want to get started to implement [a basic live stream](https://docs.zegocloud.com/article/14846) swiftly
 * I want to get the [Sample Code](https://github.com/ZEGOCLOUD/zego_uikit_prebuilt_live_streaming_example_flutter)
-* I want to get started to implement [a live stream with co-hosting](http://doc.oa.zego.im/!LiveStreamingKit-Quickstart_cohosting)
-* To [configure prebuilt UI](http://doc.oa.zego.im/!Customize_prebuilt_UI) for a custom experience
+* I want to get started to implement [a live stream with co-hosting](https://docs.zegocloud.com/article/14882)
+* To [configure prebuilt UI](https://docs.zegocloud.com/article/14878) for a custom experience
 
 
 - - -
@@ -209,11 +209,11 @@ b. open the `your_project/ios/Runner/Info.plist` file, and add the following to 
 ##  Run & Test
 
 Now you can simply click the **Run** or **Debug** button to run and test your App on the device.
-![run_flutter_project.jpg](http://doc.oa.zego.im/Pics/ZegoUIKit/Flutter/run_flutter_project.jpg)
+![run_flutter_project.jpg](https://storage.zego.im/sdk-doc/Pics/ZegoUIKit/Flutter/run_flutter_project.jpg)
 
 ## Related guide
 
-[Custom prebuilt UI](!Customize_prebuilt_UI)
+[Custom prebuilt UI](https://docs.zegocloud.com/article/14878)
 
 ## Resources
 
@@ -401,7 +401,7 @@ Now you can simply click the **Run** or **Debug** button to run and test your Ap
 
 ## Related guide
 
-[Custom prebuilt UI](!Customize_prebuilt_UI)
+[Custom prebuilt UI](https://docs.zegocloud.com/article/14878)
 
 ## Resources
 
