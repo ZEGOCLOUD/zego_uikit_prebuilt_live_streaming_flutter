@@ -90,3 +90,12 @@
 
 * fix some bugs
 * update a dependency to the latest release
+
+## 1.3.0
+
+* support disable chat
+* support mark as large-room
+* support 'sendInRoomCommand',
+* support kick-out user
+* support open/close remote user's microphone or camera
+* support CDN video stream

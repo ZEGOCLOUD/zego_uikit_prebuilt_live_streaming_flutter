@@ -19,6 +19,9 @@ class PrebuiltLiveStreamingImage {
 
 class PrebuiltLiveStreamingIconUrls {
   static const String im = 'assets/icons/toolbar_im.png';
+  static const String imDisabled = 'assets/icons/toolbar_im_disabled.png';
+  static const String enableIM = 'assets/icons/toolbar_enable_chat.png';
+  static const String disableIM = 'assets/icons/toolbar_disable_chat.png';
   static const String background = 'assets/icons/bg.png';
   static const String back = 'assets/icons/back.png';
   static const String pageBack = 'assets/icons/page_back.png';

@@ -236,6 +236,7 @@ Click to get the complete [sample code](https://github.com/ZEGOCLOUD/zego_uikit_
 ![ActivateZIMinConsole2.png](https://storage.zego.im/sdk-doc/Pics/InappChat/ActivateZIMinConsole2.png)
 
 
+
 ## Integrate the SDK
 
 ### Add ZegoUIKitPrebuiltLiveStreaming as dependencies

@@ -23,6 +23,7 @@ Size getTextSize(String text, TextStyle textStyle) {
 enum PopupItemValue {
   inviteConnect,
   kickCoHost,
+  kickOutAttendance,
   cancel,
 }
 

@@ -2,6 +2,7 @@
 import 'dart:core';
 
 // Flutter imports:
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -31,7 +32,7 @@ class ZegoToast {
   show(String message, {Color? backgroundColor}) {
     styled_toast.showToast(
       message,
-      duration: const Duration(seconds: 2),
+      duration: const Duration(seconds: 3),
       context: contextQuery?.call(),
       position: styled_toast.StyledToastPosition.top,
       textStyle: textStyle,
@@ -42,8 +43,12 @@ class ZegoToast {
   }
 }
 
-showToast(String message) {
-  ZegoToast.instance.show(message);
+showToast(String message) {}
+
+showDebugToast(String message) {
+  if (kDebugMode) {
+    ZegoToast.instance.show(message);
+  }
 }
 
 showSuccess(String message) {

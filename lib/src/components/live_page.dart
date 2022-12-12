@@ -1,4 +1,5 @@
 // Dart imports:
+import 'dart:async';
 import 'dart:core';
 
 // Flutter imports:
@@ -60,6 +61,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
     with SingleTickerProviderStateMixin {
   /// had sort the host be first
   bool audioVideoContainerHostHadSorted = false;
+  List<StreamSubscription<dynamic>?> subscriptions = [];
 
   late final ZegoLiveConnectManager connectManager;
 
@@ -90,6 +92,14 @@ class ZegoLivePageState extends State<ZegoLivePage>
     widget.hostManager.notifier.addListener(onHostManagerUpdated);
     widget.liveStatusManager.notifier.addListener(onLiveStatusUpdated);
 
+    subscriptions
+      ..add(ZegoUIKit()
+          .getTurnOnYourCameraRequestStream()
+          .listen(onTurnOnYourCameraRequest))
+      ..add(ZegoUIKit()
+          .getTurnOnYourMicrophoneRequestStream()
+          .listen(onTurnOnYourMicrophoneRequest));
+
     connectManager.init();
     if (widget.hostManager.isHost) {
       ZegoUIKit().updateRoomProperty(
@@ -103,6 +113,10 @@ class ZegoLivePageState extends State<ZegoLivePage>
     super.dispose();
 
     widget.liveStatusManager.notifier.removeListener(onLiveStatusUpdated);
+
+    for (var subscription in subscriptions) {
+      subscription?.cancel();
+    }
 
     connectManager.uninit();
   }
@@ -442,6 +456,32 @@ class ZegoLivePageState extends State<ZegoLivePage>
           widget.config.onLiveStreamingEnded!.call();
         }
       }
+    }
+  }
+
+  void onTurnOnYourCameraRequest(String fromUserID) async {
+    debugPrint("[live page] onTurnOnYourCameraRequest, fromUserID:$fromUserID");
+
+    var canTurnOnCameraByOther =
+        await widget.config.onTurnOnYourCameraConfirmation?.call(context) ??
+            false;
+    debugPrint("[live page] canTurnOnCameraByOther:$canTurnOnCameraByOther");
+    if (canTurnOnCameraByOther) {
+      ZegoUIKit().turnCameraOn(true);
+    }
+  }
+
+  void onTurnOnYourMicrophoneRequest(String fromUserID) async {
+    debugPrint(
+        "[live page] onTurnOnYourMicrophoneRequest, fromUserID:$fromUserID");
+
+    var canTurnOnMicrophoneByOther =
+        await widget.config.onTurnOnYourMicrophoneConfirmation?.call(context) ??
+            false;
+    debugPrint(
+        "[live page] canTurnOnMicrophoneByOther:$canTurnOnMicrophoneByOther");
+    if (canTurnOnMicrophoneByOther) {
+      ZegoUIKit().turnMicrophoneOn(true);
     }
   }
 }

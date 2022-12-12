@@ -8,7 +8,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
-import 'package:zego_uikit_prebuilt_live_streaming/src/components/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/co_host_control_button.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/defines.dart';
@@ -17,9 +16,11 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_translation.dart';
+import 'defines.dart';
 import 'effects/beauty_effect_button.dart';
 import 'effects/sound_effect_button.dart';
 import 'leave_button.dart';
+import 'message/disable_chat_button.dart';
 import 'message/in_room_message_button.dart';
 
 class ZegoBottomBar extends StatefulWidget {
@@ -79,7 +80,7 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       zegoLiveButtonPadding,
-                      const ZegoInRoomMessageButton(),
+                      ZegoInRoomMessageButton(hostManager: widget.hostManager),
                     ],
                   ),
                 )
@@ -314,6 +315,11 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
           hostManager: widget.hostManager,
           connectManager: widget.connectManager,
           translationText: widget.translationText,
+        );
+      case ZegoMenuBarButtonName.enableChatButton:
+        return ZegoDisableChatButton(
+          buttonSize: buttonSize,
+          iconSize: iconSize,
         );
     }
   }

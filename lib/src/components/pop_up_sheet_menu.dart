@@ -85,6 +85,11 @@ class _ZegoPopUpSheetMenuState extends State<ZegoPopUpSheetMenu> {
               widget.connectManager.inviteAudienceConnect(widget.targetUser);
             }
             break;
+          case PopupItemValue.kickOutAttendance:
+            ZegoUIKit().kickOutUser([widget.targetUser.id]).then((result) {
+              debugPrint("[kick out] result:$result");
+            });
+            break;
           default:
             break;
         }

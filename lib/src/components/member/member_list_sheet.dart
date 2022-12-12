@@ -318,6 +318,13 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
               .replaceFirst(widget.translationText.param_1, user.name)));
     }
 
+    if (user.id != widget.hostManager.notifier.value?.id) {
+      popupItems.add(PopupItem(
+          PopupItemValue.kickOutAttendance,
+          widget.translationText.kickOutUserMenuDialogButton
+              .replaceFirst(widget.translationText.param_1, user.name)));
+    }
+
     if (popupItems.isEmpty) {
       return Container();
     }

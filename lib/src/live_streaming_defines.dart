@@ -8,6 +8,7 @@ enum ZegoMenuBarButtonName {
   coHostControlButton,
   beautyEffectButton,
   soundEffectButton,
+  enableChatButton,
 }
 
 class ZegoDialogInfo {

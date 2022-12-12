@@ -1,4 +1,5 @@
 // Dart imports:
+import 'dart:async';
 import 'dart:convert';
 import 'dart:core';
 import 'dart:developer';
@@ -72,6 +73,8 @@ class ZegoUIKitPrebuiltLiveStreaming extends StatefulWidget {
 
 class _ZegoUIKitPrebuiltLiveStreamingState
     extends State<ZegoUIKitPrebuiltLiveStreaming> with WidgetsBindingObserver {
+  List<StreamSubscription<dynamic>?> subscriptions = [];
+
   var startedByLocalNotifier = ValueNotifier<bool>(false);
   late final ZegoLiveHostManager hostManager;
   late final ZegoLiveStatusManager liveStatusManager;
@@ -84,7 +87,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     WidgetsBinding.instance.addObserver(this);
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
-      log("version: zego_uikit_prebuilt_live_streaming: 1.2.9; $version");
+      log("version: zego_uikit_prebuilt_live_streaming: 1.3.0; $version");
     });
 
     hostManager = ZegoLiveHostManager(config: widget.config);
@@ -99,10 +102,13 @@ class _ZegoUIKitPrebuiltLiveStreamingState
         appSign: widget.appSign,
         userID: widget.userID,
         userName: widget.userName,
+        roomID: widget.liveID,
         plugins: widget.config.plugins,
       );
     }
     plugins?.init();
+
+    subscriptions.add(ZegoUIKit().getKickOutStream().listen(onKickOut));
 
     initToast();
     initContext();
@@ -119,6 +125,10 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     liveStatusManager.uninit();
 
     uninitContext();
+
+    for (var subscription in subscriptions) {
+      subscription?.cancel();
+    }
   }
 
   @override
@@ -136,7 +146,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
 
     switch (state) {
       case AppLifecycleState.resumed:
-        plugins?.reconnectIfDisconnected();
+        plugins?.tryReLogin();
         break;
       case AppLifecycleState.inactive:
       case AppLifecycleState.paused:
@@ -241,7 +251,12 @@ class _ZegoUIKitPrebuiltLiveStreamingState
       ..setAudioOutputToSpeaker(widget.config.useSpeakerWhenJoining);
 
     if (!kIsWeb) {
-      ZegoUIKit().joinRoom(widget.liveID).then((result) async {
+      ZegoUIKit()
+          .joinRoom(
+        widget.liveID,
+        markAsLargeRoom: widget.config.markAsLargeRoom,
+      )
+          .then((result) async {
         await onRoomLogin(result);
       });
     } else {
@@ -312,6 +327,17 @@ class _ZegoUIKitPrebuiltLiveStreamingState
         Navigator.of(context).pop(true);
       },
     );
+  }
+
+  void onKickOut(String fromUserID) {
+    debugPrint("[live streaming] kick out by $fromUserID");
+
+    if (null != widget.config.onKickOut) {
+      widget.config.onKickOut!.call(fromUserID);
+    } else {
+      //  pop this dialog
+      Navigator.of(context).pop(true);
+    }
   }
 
   Widget previewPage() {
