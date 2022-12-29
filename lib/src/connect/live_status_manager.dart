@@ -25,10 +25,6 @@ class ZegoLiveStatusManager {
   }) {
     subscriptions.add(
         ZegoUIKit().getRoomPropertiesStream().listen(onRoomPropertiesUpdated));
-
-    if (!hostManager.isHost) {
-      ZegoUIKit().stopPlayAllAudioVideo();
-    }
   }
 
   /// internal variables
@@ -40,6 +36,10 @@ class ZegoLiveStatusManager {
 
   Future<void> init() async {
     debugPrint("[live status mgr] init");
+
+    if (!hostManager.isHost) {
+      ZegoUIKit().stopPlayAllAudioVideo();
+    }
 
     if (hostManager.isHost) {
       debugPrint(

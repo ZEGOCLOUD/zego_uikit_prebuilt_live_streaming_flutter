@@ -146,9 +146,18 @@ class ZegoLivePageState extends State<ZegoLivePage>
                               children: [
                                 background(constraints.maxHeight),
                                 backgroundTips(),
-                                audioVideoContainer(
-                                  host,
-                                  constraints.maxHeight,
+                                StreamBuilder<List<ZegoUIKitUser>>(
+                                  stream:
+                                      ZegoUIKit().getScreenSharingListStream(),
+                                  builder: (context, snapshot) {
+                                    var screenSharingUsers =
+                                        snapshot.data ?? [];
+                                    return audioVideoContainer(
+                                      host,
+                                      constraints.maxHeight,
+                                      screenSharingUsers.isNotEmpty,
+                                    );
+                                  },
                                 ),
                                 topBar(),
                                 bottomBar(),
@@ -224,7 +233,11 @@ class ZegoLivePageState extends State<ZegoLivePage>
     );
   }
 
-  Widget audioVideoContainer(ZegoUIKitUser? host, double maxHeight) {
+  Widget audioVideoContainer(
+    ZegoUIKitUser? host,
+    double maxHeight,
+    bool withScreenSharing,
+  ) {
     return host != null
         ? ValueListenableBuilder<bool>(
             valueListenable: ZegoUIKit()
@@ -237,24 +250,29 @@ class ZegoLivePageState extends State<ZegoLivePage>
                     if (!isCameraEnabled && !isMicrophoneEnabled) {
                       audioVideoContainerHostHadSorted = false;
                     }
-                    return audioVideoWidget(maxHeight);
+                    return audioVideoWidget(maxHeight, withScreenSharing);
                   });
             })
-        : audioVideoWidget(maxHeight);
+        : audioVideoWidget(maxHeight, withScreenSharing);
   }
 
-  Widget audioVideoWidget(double height) {
-    var audioVideoContainerLayout = ZegoLayout.pictureInPicture(
-      smallViewPosition: ZegoViewPosition.bottomRight,
-      isSmallViewDraggable: false,
-      smallViewSize: Size(139.5.w, 248.0.h),
-      smallViewMargin: EdgeInsets.only(
-        left: 24.r,
-        top: 144.r,
-        right: 24.r,
-        bottom: 144.r,
-      ),
-    );
+  Widget audioVideoWidget(
+    double height,
+    bool withScreenSharing,
+  ) {
+    var audioVideoContainerLayout = withScreenSharing
+        ? ZegoLayout.gallery()
+        : ZegoLayout.pictureInPicture(
+            smallViewPosition: ZegoViewPosition.bottomRight,
+            isSmallViewDraggable: false,
+            smallViewSize: Size(139.5.w, 248.0.h),
+            smallViewMargin: EdgeInsets.only(
+              left: 24.r,
+              top: 144.r,
+              right: 24.r,
+              bottom: 144.r,
+            ),
+          );
 
     Widget children = Container();
 
@@ -344,6 +362,12 @@ class ZegoLivePageState extends State<ZegoLivePage>
 
   Widget audioVideoViewForeground(
       BuildContext context, Size size, ZegoUIKitUser? user, Map extraInfo) {
+    if (extraInfo[ZegoViewBuilderMapExtraInfoKey.isScreenSharingView.name]
+            as bool? ??
+        false) {
+      return Container();
+    }
+
     return Stack(
       children: [
         widget.config.audioVideoViewConfig.foregroundBuilder
@@ -462,11 +486,12 @@ class ZegoLivePageState extends State<ZegoLivePage>
   void onTurnOnYourCameraRequest(String fromUserID) async {
     debugPrint("[live page] onTurnOnYourCameraRequest, fromUserID:$fromUserID");
 
-    var canTurnOnCameraByOther =
-        await widget.config.onTurnOnYourCameraConfirmation?.call(context) ??
+    var canCameraTurnOnByOthers =
+        await widget.config.onCameraTurnOnByOthersConfirmation?.call(context) ??
             false;
-    debugPrint("[live page] canTurnOnCameraByOther:$canTurnOnCameraByOther");
-    if (canTurnOnCameraByOther) {
+    debugPrint(
+        "[live page] canMicrophoneTurnOnByOthers:$canCameraTurnOnByOthers");
+    if (canCameraTurnOnByOthers) {
       ZegoUIKit().turnCameraOn(true);
     }
   }
@@ -475,12 +500,13 @@ class ZegoLivePageState extends State<ZegoLivePage>
     debugPrint(
         "[live page] onTurnOnYourMicrophoneRequest, fromUserID:$fromUserID");
 
-    var canTurnOnMicrophoneByOther =
-        await widget.config.onTurnOnYourMicrophoneConfirmation?.call(context) ??
-            false;
+    var canMicrophoneTurnOnByOthers = await widget
+            .config.onMicrophoneTurnOnByOthersConfirmation
+            ?.call(context) ??
+        false;
     debugPrint(
-        "[live page] canTurnOnMicrophoneByOther:$canTurnOnMicrophoneByOther");
-    if (canTurnOnMicrophoneByOther) {
+        "[live page] canMicrophoneTurnOnByOthers:$canMicrophoneTurnOnByOthers");
+    if (canMicrophoneTurnOnByOthers) {
       ZegoUIKit().turnMicrophoneOn(true);
     }
   }

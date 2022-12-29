@@ -99,3 +99,19 @@
 * support kick-out user
 * support open/close remote user's microphone or camera
 * support CDN video stream
+
+## 1.3.1
+
+* fix some bugs
+
+## 1.3.2
+
+* update a dependency to the latest release
+
+## 1.4.0
+
+* support view screen sharing stream of web
+
+## 1.4.1
+
+* support custom start live button

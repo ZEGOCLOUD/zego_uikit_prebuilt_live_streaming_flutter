@@ -321,7 +321,7 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
     if (user.id != widget.hostManager.notifier.value?.id) {
       popupItems.add(PopupItem(
           PopupItemValue.kickOutAttendance,
-          widget.translationText.kickOutUserMenuDialogButton
+          widget.translationText.removeUserMenuDialogButton
               .replaceFirst(widget.translationText.param_1, user.name)));
     }
 

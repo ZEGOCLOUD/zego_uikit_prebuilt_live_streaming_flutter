@@ -75,6 +75,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
     this.onLeaveLiveStreaming,
     this.onLiveStreamingEnded,
     this.avatarBuilder,
+    this.startLiveButtonBuilder,
     ZegoTranslationText? translationText,
   })  : audioVideoViewConfig =
             audioVideoViewConfig ?? ZegoPrebuiltAudioVideoViewConfig(),
@@ -127,8 +128,8 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   /// if you return true in the liveback, prebuilt page will quit and return to your previous page, otherwise will ignore.
   Future<bool> Function(BuildContext context)? onLeaveConfirmation;
 
-  /// customize handling on kicked out
-  Future<void> Function(String)? onKickOut;
+  /// customize handling me removed from room
+  Future<void> Function(String)? onMeRemovedFromRoom;
 
   /// customize handling after leave live streaming
   VoidCallback? onLeaveLiveStreaming;
@@ -169,6 +170,21 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   ///
   ZegoAvatarBuilder? avatarBuilder;
 
+  /// customize your start call button
+  /// you MUST call startLive function on your custom button
+  ///
+  /// ..startLiveButtonBuilder =
+  ///   (BuildContext context, VoidCallback startLive) {
+  ///     return ElevatedButton(
+  ///       onPressed: () {
+  ///         //  do whatever you want
+  ///         startLive();  //  MUST call this function to skip to target page!!!
+  ///       },
+  ///       child: Text("START"),
+  ///     );
+  ///   }
+  ZegoStartLiveButtonBuilder? startLiveButtonBuilder;
+
   ///  mark is large room or not
   ///  sendInRoomCommand will sending to everyone in the room if true
   ///  that mean [toUserIDs] of [sendInRoomCommand] function is disabled if true
@@ -176,12 +192,13 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
 
   /// if return true, will directly open the camera when received onTurnOnYourCameraRequest
   /// default is false
-  Future<bool> Function(BuildContext context)? onTurnOnYourCameraConfirmation;
+  Future<bool> Function(BuildContext context)?
+      onCameraTurnOnByOthersConfirmation;
 
   /// if return true, will directly open the camera when received onTurnOnYourMicrophoneRequest
   /// default is false
   Future<bool> Function(BuildContext context)?
-      onTurnOnYourMicrophoneConfirmation;
+      onMicrophoneTurnOnByOthersConfirmation;
 }
 
 class ZegoPrebuiltAudioVideoViewConfig {

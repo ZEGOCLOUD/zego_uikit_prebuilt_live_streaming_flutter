@@ -87,7 +87,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     WidgetsBinding.instance.addObserver(this);
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
-      log("version: zego_uikit_prebuilt_live_streaming: 1.3.0; $version");
+      log("version: zego_uikit_prebuilt_live_streaming: 1.4.1; $version");
     });
 
     hostManager = ZegoLiveHostManager(config: widget.config);
@@ -108,7 +108,8 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     }
     plugins?.init();
 
-    subscriptions.add(ZegoUIKit().getKickOutStream().listen(onKickOut));
+    subscriptions.add(
+        ZegoUIKit().getMeRemovedFromRoomStream().listen(onMeRemovedFromRoom));
 
     initToast();
     initContext();
@@ -210,7 +211,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
               .init(
                 appID: widget.appID,
                 appSign: widget.appSign,
-                scenario: ZegoScenario.Live,
+                scenario: ZegoScenario.Broadcast,
               )
               .then(onContextInit);
         });
@@ -222,7 +223,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
             .init(
               appID: widget.appID,
               tokenServerUrl: widget.tokenServerUrl,
-              scenario: ZegoScenario.Live,
+              scenario: ZegoScenario.Broadcast,
             )
             .then(onContextInit);
       });
@@ -329,11 +330,11 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     );
   }
 
-  void onKickOut(String fromUserID) {
-    debugPrint("[live streaming] kick out by $fromUserID");
+  void onMeRemovedFromRoom(String fromUserID) {
+    debugPrint("[live streaming] local user removed by $fromUserID");
 
-    if (null != widget.config.onKickOut) {
-      widget.config.onKickOut!.call(fromUserID);
+    if (null != widget.config.onMeRemovedFromRoom) {
+      widget.config.onMeRemovedFromRoom!.call(fromUserID);
     } else {
       //  pop this dialog
       Navigator.of(context).pop(true);

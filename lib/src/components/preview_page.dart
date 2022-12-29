@@ -197,39 +197,48 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
   }
 
   Widget startButton() {
-    return GestureDetector(
-      onTap: () async {
-        checkPermissions(
-          context: context,
-          isShowDialog: true,
-          translationText: widget.translationText,
-        ).then((value) {
-          widget.startedNotifier.value = true;
-        });
-      },
-      child: Container(
-        width: 300.r,
-        height: 88.r,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular((44.r)),
-            gradient: const LinearGradient(
-              colors: [Color(0xffA754FF), Color(0xff510DF1)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            )),
-        child: Align(
-          alignment: Alignment.center,
-          child: Text(
-            widget.translationText.startLiveStreamingButton,
-            style: TextStyle(
-              fontSize: 32.r,
-              fontWeight: FontWeight.w600,
-              color: Colors.white,
+    return widget.config.startLiveButtonBuilder?.call(context, () async {
+          checkPermissions(
+            context: context,
+            isShowDialog: true,
+            translationText: widget.translationText,
+          ).then((value) {
+            widget.startedNotifier.value = true;
+          });
+        }) ??
+        GestureDetector(
+          onTap: () async {
+            checkPermissions(
+              context: context,
+              isShowDialog: true,
+              translationText: widget.translationText,
+            ).then((value) {
+              widget.startedNotifier.value = true;
+            });
+          },
+          child: Container(
+            width: 300.r,
+            height: 88.r,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular((44.r)),
+                gradient: const LinearGradient(
+                  colors: [Color(0xffA754FF), Color(0xff510DF1)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                )),
+            child: Align(
+              alignment: Alignment.center,
+              child: Text(
+                widget.translationText.startLiveStreamingButton,
+                style: TextStyle(
+                  fontSize: 32.r,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
+              ),
             ),
           ),
-        ),
-      ),
-    );
+        );
   }
 
   Widget audioVideoViewForeground(

@@ -34,25 +34,31 @@ class _ZegoDisableChatButtonState extends State<ZegoDisableChatButton> {
 
   @override
   Widget build(BuildContext context) {
+    Size containerSize = widget.buttonSize ?? Size(96.r, 96.r);
+    Size sizeBoxSize = widget.iconSize ?? Size(56.r, 56.r);
+
     isChatEnabled = ZegoUIKit()
             .getRoomProperties()
             .containsKey(disableChatRoomPropertyKey)
         ? toBoolean(
             ZegoUIKit().getRoomProperties()[disableChatRoomPropertyKey]!.value)
-        : false;
+        : true;
 
-    return ZegoTextIconButton(
-      onPressed: () {
+    var icon = ButtonIcon(
+      icon: PrebuiltLiveStreamingImage.asset(isChatEnabled
+          ? PrebuiltLiveStreamingIconUrls.enableIM
+          : PrebuiltLiveStreamingIconUrls.disableIM),
+    );
+
+    return GestureDetector(
+      onTap: () async {
         if (isUpdatingRoomProperty) {
           debugPrint(
               "[disable chat button] room property update is not finish");
           return;
         }
 
-        setState(() {
-          isChatEnabled = !isChatEnabled;
-        });
-
+        isChatEnabled = !isChatEnabled;
         isUpdatingRoomProperty = true;
         ZegoUIKit()
             .updateRoomProperty(
@@ -60,14 +66,21 @@ class _ZegoDisableChatButtonState extends State<ZegoDisableChatButton> {
             .then((value) {
           isUpdatingRoomProperty = false;
         });
+
+        setState(() {});
       },
-      icon: ButtonIcon(
-        icon: PrebuiltLiveStreamingImage.asset(isChatEnabled
-            ? PrebuiltLiveStreamingIconUrls.disableIM
-            : PrebuiltLiveStreamingIconUrls.enableIM),
+      child: Container(
+        width: containerSize.width,
+        height: containerSize.height,
+        decoration: BoxDecoration(
+          color: icon.backgroundColor ?? Colors.transparent,
+          shape: BoxShape.circle,
+        ),
+        child: SizedBox.fromSize(
+          size: sizeBoxSize,
+          child: icon.icon,
+        ),
       ),
-      iconSize: widget.iconSize ?? Size(72.r, 72.r),
-      buttonSize: widget.buttonSize ?? Size(96.r, 96.r),
     );
   }
 

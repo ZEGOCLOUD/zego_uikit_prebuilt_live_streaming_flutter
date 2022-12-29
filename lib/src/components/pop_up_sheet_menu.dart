@@ -86,7 +86,7 @@ class _ZegoPopUpSheetMenuState extends State<ZegoPopUpSheetMenu> {
             }
             break;
           case PopupItemValue.kickOutAttendance:
-            ZegoUIKit().kickOutUser([widget.targetUser.id]).then((result) {
+            ZegoUIKit().removeUser([widget.targetUser.id]).then((result) {
               debugPrint("[kick out] result:$result");
             });
             break;

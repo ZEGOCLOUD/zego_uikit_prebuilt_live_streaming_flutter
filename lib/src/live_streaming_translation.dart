@@ -14,7 +14,7 @@ class ZegoTranslationText {
   String removeCoHostButton;
   String cancelMenuDialogButton;
   String inviteCoHostButton;
-  String kickOutUserMenuDialogButton;
+  String removeUserMenuDialogButton;
 
   String noHostOnline;
   String memberListTitle;
@@ -41,7 +41,7 @@ class ZegoTranslationText {
     String? removeCoHostButton,
     String? cancelMenuDialogButton,
     String? inviteCoHostButton,
-    String? kickOutUserMenuDialogButton,
+    String? removeUserMenuDialogButton,
     String? noHostOnline,
     String? memberListTitle,
     String? sendRequestCoHostToast,
@@ -64,8 +64,8 @@ class ZegoTranslationText {
             cancelRequestCoHostButton ?? "Cancel the application",
         removeCoHostButton = removeCoHostButton ?? "Remove the co-host",
         inviteCoHostButton = inviteCoHostButton ?? "Invite %0 to co-host",
-        kickOutUserMenuDialogButton =
-            kickOutUserMenuDialogButton ?? "kick %0 out of the room",
+        removeUserMenuDialogButton =
+            removeUserMenuDialogButton ?? "remove %0 from the room",
         cancelMenuDialogButton = cancelMenuDialogButton ?? "Cancel",
         noHostOnline = noHostOnline ?? "No host is online.",
         memberListTitle = memberListTitle ?? "Attendance",
