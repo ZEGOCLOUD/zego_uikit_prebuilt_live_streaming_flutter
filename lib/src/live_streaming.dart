@@ -251,7 +251,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
       ..useFrontFacingCamera(true)
       ..updateVideoViewMode(
           widget.config.audioVideoViewConfig.useVideoViewAspectFill)
-      ..setVideoMirrorMode(true)
+      ..enableVideoMirroring(widget.config.audioVideoViewConfig.isVideoMirror)
       ..turnCameraOn(widget.config.turnOnCameraWhenJoining)
       ..turnMicrophoneOn(widget.config.turnOnMicrophoneWhenJoining)
       ..setAudioOutputToSpeaker(widget.config.useSpeakerWhenJoining);

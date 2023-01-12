@@ -221,6 +221,9 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
 }
 
 class ZegoPrebuiltAudioVideoViewConfig {
+  /// set video is mirror or not
+  bool isVideoMirror;
+
   /// video view mode
   /// if set to true, video view will proportional zoom fills the entire View and may be partially cut
   /// if set to false, video view proportional scaling up, there may be black borders
@@ -241,6 +244,7 @@ class ZegoPrebuiltAudioVideoViewConfig {
   ZegoAudioVideoViewBackgroundBuilder? backgroundBuilder;
 
   ZegoPrebuiltAudioVideoViewConfig({
+    this.isVideoMirror = true,
     this.foregroundBuilder,
     this.backgroundBuilder,
     this.showAvatarInAudioMode = true,
