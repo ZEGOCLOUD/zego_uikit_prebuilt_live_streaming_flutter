@@ -7,9 +7,7 @@
 
 | Host | Audience |
 | --- | --- |
-|![host_3.gif](images/host_3.gif)|![audience_3](images/audience_3.gif)|
-
-
+|![host_3.gif](https://storage.zego.im/sdk-doc/Pics/ZegoUIKit/Flutter/live/host_3.gif)|![audience_3](https://storage.zego.im/sdk-doc/Pics/ZegoUIKit/Flutter/live/audience_3.gif)|
 
 ## When do you need the Live Streaming Kit
 

@@ -119,3 +119,10 @@
 ## 1.4.2
 
 * support custom background
+
+## 1.4.3
+
+* fix bugs
+* update resources
+* support sdk log
+* update a dependency to the latest release
