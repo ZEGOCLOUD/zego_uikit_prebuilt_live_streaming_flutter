@@ -41,33 +41,54 @@ class ZegoLiveHostManager {
           ZegoUIKit().getLocalUser().id == notifier.value!.id);
 
   Future<void> init() async {
-    debugPrint("[host mgr] init");
+    ZegoLoggerService.logInfo(
+      "init",
+      tag: "live streaming",
+      subTag: "host manager",
+    );
 
     if (configIsHost) {
-      debugPrint(
-          "[host mgr] local user ${ZegoUIKit().getLocalUser().toString()} is host in config");
+      ZegoLoggerService.logInfo(
+        "local user ${ZegoUIKit().getLocalUser().toString()} is host in config",
+        tag: "live streaming",
+        subTag: "host manager",
+      );
       if (notifier.value != null &&
           notifier.value!.id != ZegoUIKit().getLocalUser().id) {
         /// host is exist
-        debugPrint(
-            "[host mgr] host is exist:${notifier.value!.id} ${notifier.value!.name}");
+        ZegoLoggerService.logInfo(
+          "host is exist:${notifier.value!.id} ${notifier.value!.name}",
+          tag: "live streaming",
+          subTag: "host manager",
+        );
       } else {
         localHostPropertyUpdateTime = DateTime.now().millisecondsSinceEpoch;
-        debugPrint(
-            "[host mgr] set room property to notify, timestamp:$localHostPropertyUpdateTime");
+        ZegoLoggerService.logInfo(
+          "set room property to notify, timestamp:$localHostPropertyUpdateTime",
+          tag: "live streaming",
+          subTag: "host manager",
+        );
         updateHostValue(ZegoUIKit().getLocalUser());
-        await ZegoUIKit().updateRoomProperty(
+        await ZegoUIKit().setRoomProperty(
             RoomPropertyKey.host.text, ZegoUIKit().getLocalUser().id);
       }
     }
   }
 
   void uninit() {
-    debugPrint("[host mgr] uninit");
+    ZegoLoggerService.logInfo(
+      "uninit",
+      tag: "live streaming",
+      subTag: "host manager",
+    );
 
     if (isHost) {
-      debugPrint("[host mgr] host uninit host property");
-      ZegoUIKit().updateRoomProperty(RoomPropertyKey.host.text, "");
+      ZegoLoggerService.logInfo(
+        "host uninit host property",
+        tag: "live streaming",
+        subTag: "host manager",
+      );
+      ZegoUIKit().setRoomProperty(RoomPropertyKey.host.text, "");
     }
 
     hostUpdateEnabledNotifier.value = true;
@@ -81,11 +102,19 @@ class ZegoLiveHostManager {
 
   void onUserListUpdated(List<ZegoUIKitUser> users) {
     if (pendingUserID.isNotEmpty) {
-      debugPrint("[host mgr] exist pending host $pendingUserID");
+      ZegoLoggerService.logInfo(
+        "exist pending host $pendingUserID",
+        tag: "live streaming",
+        subTag: "host manager",
+      );
 
       var host = ZegoUIKit().getUser(pendingUserID);
       if (host != null && !host.isEmpty()) {
-        debugPrint("[host mgr] host updated, ${host.toString()}");
+        ZegoLoggerService.logInfo(
+          "host updated, ${host.toString()}",
+          tag: "live streaming",
+          subTag: "host manager",
+        );
         updateHostValue(host);
         pendingUserID = "";
       }
@@ -94,13 +123,20 @@ class ZegoLiveHostManager {
 
   void onRoomPropertiesUpdated(Map<String, RoomProperty> updatedProperties) {
     if (!updatedProperties.containsKey(RoomPropertyKey.host.text)) {
-      debugPrint("[host mgr] update properties not contain host");
+      ZegoLoggerService.logInfo(
+        "update properties not contain host",
+        tag: "live streaming",
+        subTag: "host manager",
+      );
       return;
     }
 
     var roomProperties = ZegoUIKit().getRoomProperties();
-    debugPrint(
-        "[host mgr] onRoomPropertiesUpdated roomProperties:$roomProperties");
+    ZegoLoggerService.logInfo(
+      "onRoomPropertiesUpdated roomProperties:$roomProperties",
+      tag: "live streaming",
+      subTag: "host manager",
+    );
 
     /// host exist
     var hostIDProperty = roomProperties[RoomPropertyKey.host.text]!;
@@ -110,10 +146,13 @@ class ZegoLiveHostManager {
 
     if (hostIDProperty.updateTime < localHostPropertyUpdateTime) {
       /// local property(config set in init) is newer than current room property (sdk)
-      debugPrint(
-          "[host mgr] host property update time is older than local setting time, "
-          "property timestamp:${hostIDProperty.updateTime}, "
-          "local timestamp:$localHostPropertyUpdateTime");
+      ZegoLoggerService.logInfo(
+        "host property update time is older than local setting time, "
+        "property timestamp:${hostIDProperty.updateTime}, "
+        "local timestamp:$localHostPropertyUpdateTime",
+        tag: "live streaming",
+        subTag: "host manager",
+      );
       return;
     }
 
@@ -121,21 +160,36 @@ class ZegoLiveHostManager {
       /// host gone or null
       var localHostReceived = notifier.value != null &&
           ZegoUIKit().getLocalUser().id == notifier.value!.id;
-      debugPrint("[host mgr] host key is not exist, host is gone or null, "
-          "local host had received: $localHostReceived");
+      ZegoLoggerService.logInfo(
+        "host key is not exist, host is gone or null, "
+        "local host had received: $localHostReceived",
+        tag: "live streaming",
+        subTag: "host manager",
+      );
       if (localHostReceived) {
-        debugPrint("[host mgr] sync host property");
-        ZegoUIKit().updateRoomProperty(
+        ZegoLoggerService.logInfo(
+          "sync host property",
+          tag: "live streaming",
+          subTag: "host manager",
+        );
+        ZegoUIKit().setRoomProperty(
             RoomPropertyKey.host.text, ZegoUIKit().getLocalUser().id);
       } else {
         updateHostValue(null);
       }
     } else if (notifier.value?.id != hostIDProperty.value) {
-      debugPrint("[host mgr] update host to be: ${hostIDProperty.toString()}");
+      ZegoLoggerService.logInfo(
+        "update host to be: ${hostIDProperty.toString()}",
+        tag: "live streaming",
+        subTag: "host manager",
+      );
       var host = ZegoUIKit().getUser(hostIDProperty.value);
       if ((host == null || host.isEmpty()) && hostIDProperty.value.isNotEmpty) {
-        debugPrint(
-            "[host mgr] $hostIDProperty user is not exist, host will be wait update util user list update");
+        ZegoLoggerService.logInfo(
+          "$hostIDProperty user is not exist, host will be wait update util user list update",
+          tag: "live streaming",
+          subTag: "host manager",
+        );
         pendingUserID = hostIDProperty.value;
       } else {
         if (host?.id != notifier.value?.id &&
@@ -156,7 +210,11 @@ class ZegoLiveHostManager {
 
   void updateHostValue(ZegoUIKitUser? host) {
     if (hostUpdateEnabledNotifier.value) {
-      debugPrint("[host mgr] host updated, ${host?.toString()}");
+      ZegoLoggerService.logInfo(
+        "host updated, ${host?.toString()}",
+        tag: "live streaming",
+        subTag: "host manager",
+      );
       if (notifier.value?.id != host?.id) {
         if (ZegoLiveStreamingRole.host == config.role &&
             host?.id != ZegoUIKit().getLocalUser().id) {
@@ -167,7 +225,11 @@ class ZegoLiveHostManager {
       }
     } else {
       /// in host ready to end, host should not update, otherwise host condition will failed
-      debugPrint("[host mgr] host update disabled, ${host?.toString()}");
+      ZegoLoggerService.logInfo(
+        "host update disabled, ${host?.toString()}",
+        tag: "live streaming",
+        subTag: "host manager",
+      );
     }
   }
 }

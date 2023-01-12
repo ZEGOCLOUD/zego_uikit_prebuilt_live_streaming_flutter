@@ -21,6 +21,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         turnOnCameraWhenJoining = true,
         turnOnMicrophoneWhenJoining = true,
         useSpeakerWhenJoining = true,
+        markAsLargeRoom = false,
         audioVideoViewConfig = ZegoPrebuiltAudioVideoViewConfig(
           showSoundWavesInAudioMode: true,
         ),
@@ -48,6 +49,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         turnOnCameraWhenJoining = false,
         turnOnMicrophoneWhenJoining = false,
         useSpeakerWhenJoining = true,
+        markAsLargeRoom = false,
         audioVideoViewConfig = ZegoPrebuiltAudioVideoViewConfig(
           showSoundWavesInAudioMode: true,
         ),
@@ -65,6 +67,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
     this.turnOnCameraWhenJoining = true,
     this.turnOnMicrophoneWhenJoining = true,
     this.useSpeakerWhenJoining = true,
+    this.markAsLargeRoom = false,
     ZegoPrebuiltAudioVideoViewConfig? audioVideoViewConfig,
     ZegoBottomMenuBarConfig? bottomMenuBarConfig,
     ZegoMemberListConfig? memberListConfig,
@@ -76,6 +79,9 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
     this.onLiveStreamingEnded,
     this.avatarBuilder,
     this.startLiveButtonBuilder,
+    this.onCameraTurnOnByOthersConfirmation,
+    this.onMicrophoneTurnOnByOthersConfirmation,
+    this.background,
     ZegoTranslationText? translationText,
   })  : audioVideoViewConfig =
             audioVideoViewConfig ?? ZegoPrebuiltAudioVideoViewConfig(),
@@ -188,7 +194,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   ///  mark is large room or not
   ///  sendInRoomCommand will sending to everyone in the room if true
   ///  that mean [toUserIDs] of [sendInRoomCommand] function is disabled if true
-  bool markAsLargeRoom = false;
+  bool markAsLargeRoom;
 
   /// if return true, will directly open the camera when received onTurnOnYourCameraRequest
   /// default is false
@@ -199,6 +205,19 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   /// default is false
   Future<bool> Function(BuildContext context)?
       onMicrophoneTurnOnByOthersConfirmation;
+
+  /// you can customize any background you wanted
+  /// ```dart
+  ///
+  ///  // eg:
+  /// ..background = Container(
+  ///     decoration: const BoxDecoration(
+  ///       image: DecorationImage(
+  ///         fit: BoxFit.fitHeight,
+  ///         image: ,
+  ///       )));
+  /// ```
+  Widget? background;
 }
 
 class ZegoPrebuiltAudioVideoViewConfig {

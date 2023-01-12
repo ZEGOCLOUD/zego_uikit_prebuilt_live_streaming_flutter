@@ -90,12 +90,20 @@ class _ZegoInRoomMessageButtonState extends State<ZegoInRoomMessageButton> {
       return;
     }
 
-    debugPrint("[message button] chat enabled property changed to "
-        "${updatedProperties[disableChatRoomPropertyKey]!.value}");
+    ZegoLoggerService.logInfo(
+      "chat enabled property changed to "
+      "${updatedProperties[disableChatRoomPropertyKey]!.value}",
+      tag: "live streaming",
+      subTag: "message button",
+    );
     chatEnableNotifier.value =
         toBoolean(updatedProperties[disableChatRoomPropertyKey]!.value);
     if (!chatEnableNotifier.value && isMessageInputting) {
-      debugPrint("[message button] message inputting, close it");
+      ZegoLoggerService.logInfo(
+        "message inputting, close it",
+        tag: "live streaming",
+        subTag: "message button",
+      );
       Navigator.of(context).pop();
     }
   }

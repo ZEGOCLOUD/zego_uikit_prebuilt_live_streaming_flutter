@@ -29,6 +29,7 @@ class ZegoPreviewPage extends StatefulWidget {
     required this.hostManager,
     required this.startedNotifier,
     required this.translationText,
+    required this.liveStreamingPageReady,
     this.tokenServerUrl = '',
   }) : super(key: key);
 
@@ -46,6 +47,8 @@ class ZegoPreviewPage extends StatefulWidget {
   final ZegoLiveHostManager hostManager;
   final ValueNotifier<bool> startedNotifier;
   final ZegoTranslationText translationText;
+
+  final ValueNotifier<bool> liveStreamingPageReady;
 
   @override
   State<ZegoPreviewPage> createState() => _ZegoPreviewPageState();
@@ -203,6 +206,15 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
             isShowDialog: true,
             translationText: widget.translationText,
           ).then((value) {
+            if (!widget.liveStreamingPageReady.value) {
+              ZegoLoggerService.logInfo(
+                "live streaming page is waiting room login",
+                tag: "live streaming",
+                subTag: "preview page",
+              );
+              return;
+            }
+
             widget.startedNotifier.value = true;
           });
         }) ??
@@ -213,6 +225,15 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
               isShowDialog: true,
               translationText: widget.translationText,
             ).then((value) {
+              if (!widget.liveStreamingPageReady.value) {
+                ZegoLoggerService.logInfo(
+                  "live streaming page is waiting room login",
+                  tag: "live streaming",
+                  subTag: "preview page",
+                );
+                return;
+              }
+
               widget.startedNotifier.value = true;
             });
           },

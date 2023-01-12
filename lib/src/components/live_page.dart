@@ -102,7 +102,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
 
     connectManager.init();
     if (widget.hostManager.isHost) {
-      ZegoUIKit().updateRoomProperty(
+      ZegoUIKit().setRoomProperty(
           RoomPropertyKey.liveStatus.text, LiveStatus.living.index.toString());
     }
     correctConfigValue();
@@ -177,8 +177,11 @@ class ZegoLivePageState extends State<ZegoLivePage>
   void correctConfigValue() {
     if (widget.config.bottomMenuBarConfig.maxCount > 5) {
       widget.config.bottomMenuBarConfig.maxCount = 5;
-      debugPrint('menu bar buttons limited count\'s value  is exceeding the '
-          'maximum limit');
+      ZegoLoggerService.logInfo(
+        'menu bar buttons limited count\'s value  is exceeding the maximum limit',
+        tag: "live streaming",
+        subTag: "live page",
+      );
     }
   }
 
@@ -456,13 +459,19 @@ class ZegoLivePageState extends State<ZegoLivePage>
   }
 
   void onHostManagerUpdated() {
-    debugPrint(
-        "live page, host mgr updated, ${widget.hostManager.notifier.value}");
+    ZegoLoggerService.logInfo(
+      "live page, host mgr updated, ${widget.hostManager.notifier.value}",
+      tag: "live streaming",
+      subTag: "live page",
+    );
   }
 
   void onLiveStatusUpdated() {
-    debugPrint(
-        "live page, live status mgr updated, ${widget.liveStatusManager.notifier.value}");
+    ZegoLoggerService.logInfo(
+      "live page, live status mgr updated, ${widget.liveStatusManager.notifier.value}",
+      tag: "live streaming",
+      subTag: "live page",
+    );
 
     if (LiveStatus.ended == widget.liveStatusManager.notifier.value) {
       /// host changed
@@ -470,9 +479,13 @@ class ZegoLivePageState extends State<ZegoLivePage>
     }
 
     if (!widget.hostManager.isHost) {
-      debugPrint("audience, live streaming end by host, "
-          "host: ${widget.hostManager.notifier.value}, "
-          "live status: ${widget.liveStatusManager.notifier.value}, ");
+      ZegoLoggerService.logInfo(
+        "audience, live streaming end by host, "
+        "host: ${widget.hostManager.notifier.value}, "
+        "live status: ${widget.liveStatusManager.notifier.value}",
+        tag: "live streaming",
+        subTag: "live page",
+      );
 
       if (widget.hostManager.notifier.value != null &&
           LiveStatus.ended == widget.liveStatusManager.notifier.value) {
@@ -484,28 +497,41 @@ class ZegoLivePageState extends State<ZegoLivePage>
   }
 
   void onTurnOnYourCameraRequest(String fromUserID) async {
-    debugPrint("[live page] onTurnOnYourCameraRequest, fromUserID:$fromUserID");
+    ZegoLoggerService.logInfo(
+      "onTurnOnYourCameraRequest, fromUserID:$fromUserID",
+      tag: "live streaming",
+      subTag: "live page",
+    );
 
     var canCameraTurnOnByOthers =
         await widget.config.onCameraTurnOnByOthersConfirmation?.call(context) ??
             false;
-    debugPrint(
-        "[live page] canMicrophoneTurnOnByOthers:$canCameraTurnOnByOthers");
+    ZegoLoggerService.logInfo(
+      "canMicrophoneTurnOnByOthers:$canCameraTurnOnByOthers",
+      tag: "live streaming",
+      subTag: "live page",
+    );
     if (canCameraTurnOnByOthers) {
       ZegoUIKit().turnCameraOn(true);
     }
   }
 
   void onTurnOnYourMicrophoneRequest(String fromUserID) async {
-    debugPrint(
-        "[live page] onTurnOnYourMicrophoneRequest, fromUserID:$fromUserID");
+    ZegoLoggerService.logInfo(
+      "onTurnOnYourMicrophoneRequest, fromUserID:$fromUserID",
+      tag: "live streaming",
+      subTag: "live page",
+    );
 
     var canMicrophoneTurnOnByOthers = await widget
             .config.onMicrophoneTurnOnByOthersConfirmation
             ?.call(context) ??
         false;
-    debugPrint(
-        "[live page] canMicrophoneTurnOnByOthers:$canMicrophoneTurnOnByOthers");
+    ZegoLoggerService.logInfo(
+      "canMicrophoneTurnOnByOthers:$canMicrophoneTurnOnByOthers",
+      tag: "live streaming",
+      subTag: "live page",
+    );
     if (canMicrophoneTurnOnByOthers) {
       ZegoUIKit().turnMicrophoneOn(true);
     }

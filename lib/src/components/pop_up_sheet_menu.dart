@@ -66,7 +66,11 @@ class _ZegoPopUpSheetMenuState extends State<ZegoPopUpSheetMenu> {
   Widget popUpItemWidget(int index, PopupItem popupItem) {
     return GestureDetector(
       onTap: () {
-        debugPrint("[pop-up sheet] click ${popupItem.text}");
+        ZegoLoggerService.logInfo(
+          "[pop-up sheet] click ${popupItem.text}",
+          tag: "live streaming",
+          subTag: "pop-up sheet",
+        );
 
         switch (popupItem.value) {
           case PopupItemValue.kickCoHost:
@@ -86,8 +90,13 @@ class _ZegoPopUpSheetMenuState extends State<ZegoPopUpSheetMenu> {
             }
             break;
           case PopupItemValue.kickOutAttendance:
-            ZegoUIKit().removeUser([widget.targetUser.id]).then((result) {
-              debugPrint("[kick out] result:$result");
+            ZegoUIKit()
+                .removeUserFromRoom([widget.targetUser.id]).then((result) {
+              ZegoLoggerService.logInfo(
+                "kick out result:$result",
+                tag: "live streaming",
+                subTag: "pop-up sheet",
+              );
             });
             break;
           default:

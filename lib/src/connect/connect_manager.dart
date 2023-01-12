@@ -53,7 +53,11 @@ class ZegoLiveConnectManager {
     if (ZegoLiveStreamingRole.host == config.role &&
         hostManager.notifier.value != null &&
         hostManager.notifier.value!.id != ZegoUIKit().getLocalUser().id) {
-      debugPrint("[connect mgr] switch local to be co-host");
+      ZegoLoggerService.logInfo(
+        "switch local to be co-host",
+        tag: "live streaming",
+        subTag: "connect manager",
+      );
       updateAudienceConnectState(ConnectState.idle);
     }
   }
@@ -101,7 +105,11 @@ class ZegoLiveConnectManager {
   }
 
   Future<bool> kickCoHost(ZegoUIKitUser coHost) async {
-    debugPrint("[connect manager] kick-out co-host ${coHost.toString()}");
+    ZegoLoggerService.logInfo(
+      "kick-out co-host ${coHost.toString()}",
+      tag: "live streaming",
+      subTag: "connect manager",
+    );
 
     return await ZegoUIKit()
         .getSignalingPlugin()
@@ -113,17 +121,28 @@ class ZegoLiveConnectManager {
           "",
         )
         .then((result) {
-      debugPrint(
-          "[connect manager] kick co-host ${coHost.id} ${coHost.name}, code:${result.code}, message:${result.message}, error invitees:${result.result as List<String>}");
+      ZegoLoggerService.logInfo(
+        "kick co-host ${coHost.id} ${coHost.name}, code:${result.code}, message:${result.message}, error invitees:${result.result as List<String>}",
+        tag: "live streaming",
+        subTag: "connect manager",
+      );
       return result.code.isEmpty;
     });
   }
 
   void inviteAudienceConnect(ZegoUIKitUser invitee) async {
-    debugPrint("invite audience connect, ${invitee.id} ${invitee.name}");
+    ZegoLoggerService.logInfo(
+      "invite audience connect, ${invitee.id} ${invitee.name}",
+      tag: "live streaming",
+      subTag: "connect manager",
+    );
 
     if (audienceIDsOfInvitingConnect.contains(invitee.id)) {
-      debugPrint("audience is int connect inviting");
+      ZegoLoggerService.logInfo(
+        "audience is int connect inviting",
+        tag: "live streaming",
+        subTag: "connect manager",
+      );
       return;
     }
 
@@ -148,7 +167,11 @@ class ZegoLiveConnectManager {
   }
 
   void audienceEndConnect() {
-    debugPrint("[connect manager] audience end connect");
+    ZegoLoggerService.logInfo(
+      "audience end connect",
+      tag: "live streaming",
+      subTag: "connect manager",
+    );
 
     updateAudienceConnectState(ConnectState.idle);
   }
@@ -161,8 +184,11 @@ class ZegoLiveConnectManager {
     var invitationType =
         ZegoInvitationTypeExtension.mapValue[type] as ZegoInvitationType;
 
-    debugPrint(
-        "[connect mgr] on invitation received, data:${inviter.toString()}, $type($invitationType) $data");
+    ZegoLoggerService.logInfo(
+      "on invitation received, data:${inviter.toString()}, $type($invitationType) $data",
+      tag: "live streaming",
+      subTag: "connect manager",
+    );
 
     if (hostManager.isHost) {
       if (ZegoInvitationType.requestCoHost == invitationType) {
@@ -185,12 +211,20 @@ class ZegoLiveConnectManager {
 
   void onAudienceReceivedCoHostInvitation(ZegoUIKitUser host) {
     if (isInviteToJoinCoHostDlgVisible) {
-      debugPrint("invite to join co-host dialog is visibile");
+      ZegoLoggerService.logInfo(
+        "invite to join co-host dialog is visibile",
+        tag: "live streaming",
+        subTag: "connect manager",
+      );
       return;
     }
 
     if (isCoHost(ZegoUIKit().getLocalUser())) {
-      debugPrint("[connect mgr] audience is co-host now");
+      ZegoLoggerService.logInfo(
+        "audience is co-host now",
+        tag: "live streaming",
+        subTag: "connect manager",
+      );
       return;
     }
 
@@ -210,11 +244,18 @@ class ZegoLiveConnectManager {
               .getSignalingPlugin()
               .refuseInvitation(host.id, '')
               .then((result) {
-            debugPrint(
-                "[connect mgr] refuse co-host invite, code:${result.code}, message:${result.message}");
+            ZegoLoggerService.logInfo(
+              "refuse co-host invite, code:${result.code}, message:${result.message}",
+              tag: "live streaming",
+              subTag: "connect manager",
+            );
           });
         } else {
-          debugPrint("[connect mgr] refuse co-host invite, not living now");
+          ZegoLoggerService.logInfo(
+            "refuse co-host invite, not living now",
+            tag: "live streaming",
+            subTag: "connect manager",
+          );
         }
 
         Navigator.of(contextQuery()).pop();
@@ -223,14 +264,21 @@ class ZegoLiveConnectManager {
       rightButtonCallback: () {
         isInviteToJoinCoHostDlgVisible = false;
 
-        debugPrint("[connect mgr] accept co-host invite");
+        ZegoLoggerService.logInfo(
+          "accept co-host invite",
+          tag: "live streaming",
+          subTag: "connect manager",
+        );
         if (LiveStatus.living == liveStatusNotifier.value) {
           ZegoUIKit()
               .getSignalingPlugin()
               .acceptInvitation(host.id, '')
               .then((result) {
-            debugPrint(
-                "[connect mgr] accept co-host invite, code:${result.code}, message:${result.message}");
+            ZegoLoggerService.logInfo(
+              "accept co-host invite, code:${result.code}, message:${result.message}",
+              tag: "live streaming",
+              subTag: "connect manager",
+            );
 
             if (result.code.isNotEmpty) {
               showError("${result.code} ${result.message}");
@@ -246,7 +294,11 @@ class ZegoLiveConnectManager {
             });
           });
         } else {
-          debugPrint("[connect mgr] accept co-host invite, not living now");
+          ZegoLoggerService.logInfo(
+            "accept co-host invite, not living now",
+            tag: "live streaming",
+            subTag: "connect manager",
+          );
         }
 
         Navigator.of(contextQuery()).pop();
@@ -258,8 +310,11 @@ class ZegoLiveConnectManager {
     ZegoUIKitUser invitee = params['invitee']!;
     String data = params['data']!; // extended field
 
-    debugPrint(
-        "[connect mgr] on invitation accepted, invitee:${invitee.toString()}, data:$data");
+    ZegoLoggerService.logInfo(
+      "on invitation accepted, invitee:${invitee.toString()}, data:$data",
+      tag: "live streaming",
+      subTag: "connect manager",
+    );
 
     if (hostManager.isHost) {
       audienceIDsOfInvitingConnect.remove(invitee.id);
@@ -281,8 +336,11 @@ class ZegoLiveConnectManager {
     ZegoUIKitUser inviter = params['inviter']!;
     String data = params['data']!; // extended field
 
-    debugPrint(
-        "[connect mgr] on invitation canceled, data:${inviter.toString()}, $data");
+    ZegoLoggerService.logInfo(
+      "on invitation canceled, data:${inviter.toString()}, $data",
+      tag: "live streaming",
+      subTag: "connect manager",
+    );
 
     if (hostManager.isHost) {
       requestCoHostUsersNotifier.value =
@@ -297,8 +355,11 @@ class ZegoLiveConnectManager {
     ZegoUIKitUser invitee = params['invitee']!;
     String data = params['data']!; // extended field
 
-    debugPrint(
-        "[connect mgr] on invitation refused, data: $data, invitee:${invitee.toString()}");
+    ZegoLoggerService.logInfo(
+      "on invitation refused, data: $data, invitee:${invitee.toString()}",
+      tag: "live streaming",
+      subTag: "connect manager",
+    );
 
     if (hostManager.isHost) {
       audienceIDsOfInvitingConnect.remove(invitee.id);
@@ -316,8 +377,11 @@ class ZegoLiveConnectManager {
     ZegoUIKitUser inviter = params['inviter']!;
     String data = params['data']!; // extended field
 
-    debugPrint(
-        "[connect mgr] on invitation timeout, data:${inviter.toString()}, $data");
+    ZegoLoggerService.logInfo(
+      "on invitation timeout, data:${inviter.toString()}, $data",
+      tag: "live streaming",
+      subTag: "connect manager",
+    );
 
     if (hostManager.isHost) {
       requestCoHostUsersNotifier.value =
@@ -336,8 +400,11 @@ class ZegoLiveConnectManager {
     List<ZegoUIKitUser> invitees = params['invitees']!;
     String data = params['data']!; // extended field
 
-    debugPrint(
-        "[connect mgr] on invitation response timeout, data: $data, invitees:${invitees.map((e) => e.toString())}");
+    ZegoLoggerService.logInfo(
+      "on invitation response timeout, data: $data, invitees:${invitees.map((e) => e.toString())}",
+      tag: "live streaming",
+      subTag: "connect manager",
+    );
 
     if (hostManager.isHost) {
       for (var invitee in invitees) {
@@ -356,7 +423,11 @@ class ZegoLiveConnectManager {
 
   void coHostRequestToEnd() {
     if (isEndCoHostDialogVisible) {
-      debugPrint("end host dialog is visible");
+      ZegoLoggerService.logInfo(
+        "end host dialog is visible",
+        tag: "live streaming",
+        subTag: "connect manager",
+      );
       return;
     }
 
@@ -384,11 +455,19 @@ class ZegoLiveConnectManager {
 
   void updateAudienceConnectState(ConnectState state) {
     if (state == audienceLocalConnectStateNotifier.value) {
-      debugPrint("[connect mgr] audience connect state is same: $state");
+      ZegoLoggerService.logInfo(
+        "audience connect state is same: $state",
+        tag: "live streaming",
+        subTag: "connect manager",
+      );
       return;
     }
 
-    debugPrint("[connect mgr] update audience connect state: $state");
+    ZegoLoggerService.logInfo(
+      "update audience connect state: $state",
+      tag: "live streaming",
+      subTag: "connect manager",
+    );
 
     switch (state) {
       case ConnectState.idle:

@@ -35,29 +35,44 @@ class ZegoLiveStatusManager {
       !hostManager.isHost && !isCoHost(ZegoUIKit().getLocalUser());
 
   Future<void> init() async {
-    debugPrint("[live status mgr] init");
+    ZegoLoggerService.logInfo(
+      "init",
+      tag: "live streaming",
+      subTag: "live status manager",
+    );
 
     if (!hostManager.isHost) {
       ZegoUIKit().stopPlayAllAudioVideo();
     }
 
     if (hostManager.isHost) {
-      debugPrint(
-          "[live status mgr] host init live status to end and start play all audio video");
+      ZegoLoggerService.logInfo(
+        "host init live status to end and start play all audio video",
+        tag: "live streaming",
+        subTag: "live status manager",
+      );
       ZegoUIKit().startPlayAllAudioVideo();
-      await ZegoUIKit().updateRoomProperty(
+      await ZegoUIKit().setRoomProperty(
           RoomPropertyKey.liveStatus.text, LiveStatus.ended.index.toString());
     }
   }
 
   void uninit() {
-    debugPrint("[live status mgr] uninit");
+    ZegoLoggerService.logInfo(
+      "uninit",
+      tag: "live streaming",
+      subTag: "live status manager",
+    );
 
     if (hostManager.isHost) {
-      debugPrint("[live status mgr] host uninit live status property to end");
+      ZegoLoggerService.logInfo(
+        "host uninit live status property to end",
+        tag: "live streaming",
+        subTag: "live status manager",
+      );
 
       /// un-normal leave by leave button
-      ZegoUIKit().updateRoomProperty(
+      ZegoUIKit().setRoomProperty(
           RoomPropertyKey.liveStatus.text, LiveStatus.ended.index.toString());
     }
 
@@ -74,19 +89,29 @@ class ZegoLiveStatusManager {
 
   void onRoomPropertiesUpdated(Map<String, RoomProperty> updatedProperties) {
     if (!updatedProperties.containsKey(RoomPropertyKey.liveStatus.text)) {
-      debugPrint("[live status mgr] update properties not contain live status");
+      ZegoLoggerService.logInfo(
+        "update properties not contain live status",
+        tag: "live streaming",
+        subTag: "live status manager",
+      );
       return;
     }
 
     var roomProperties = ZegoUIKit().getRoomProperties();
 
-    debugPrint(
-        "[live status mgr] onRoomPropertiesUpdated roomProperties:$roomProperties");
+    ZegoLoggerService.logInfo(
+      "onRoomPropertiesUpdated roomProperties:$roomProperties",
+      tag: "live streaming",
+      subTag: "live status manager",
+    );
 
     if (!roomProperties.containsKey(RoomPropertyKey.liveStatus.text)) {
       /// live is not start if host not enter
-      debugPrint(
-          "[live status mgr] host key is not exist, set live status not start");
+      ZegoLoggerService.logInfo(
+        "host key is not exist, set live status not start",
+        tag: "live streaming",
+        subTag: "live status manager",
+      );
       notifier.value = LiveStatus.notStart;
     } else if (roomProperties.containsKey(RoomPropertyKey.liveStatus.text)) {
       /// live is start or end
@@ -94,12 +119,18 @@ class ZegoLiveStatusManager {
       notifier.value = 1 == int.parse(liveStatusValue.value)
           ? LiveStatus.living //  start: 1
           : LiveStatus.ended; //  end: 0, empty, null or others
-      debugPrint(
-          "[live status mgr] update live status, value is $liveStatusValue, status is ${notifier.value}");
+      ZegoLoggerService.logInfo(
+        "update live status, value is $liveStatusValue, status is ${notifier.value}",
+        tag: "live streaming",
+        subTag: "live status manager",
+      );
     } else {
       /// live is not start
-      debugPrint(
-          "[live status mgr] live status key is not exist, live is not start");
+      ZegoLoggerService.logInfo(
+        "live status key is not exist, live is not start",
+        tag: "live streaming",
+        subTag: "live status manager",
+      );
       notifier.value = LiveStatus.notStart;
     }
 
@@ -115,7 +146,11 @@ class ZegoLiveStatusManager {
     }
 
     if (LiveStatus.ended == notifier.value && !hostManager.isHost) {
-      debugPrint("live status is end, co-host switch to audience");
+      ZegoLoggerService.logInfo(
+        "live status is end, co-host switch to audience",
+        tag: "live streaming",
+        subTag: "live status manager",
+      );
       connectManager?.updateAudienceConnectState(ConnectState.idle);
     }
   }

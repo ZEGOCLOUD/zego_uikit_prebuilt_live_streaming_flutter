@@ -115,3 +115,7 @@
 ## 1.4.1
 
 * support custom start live button
+
+## 1.4.2
+
+* support custom background

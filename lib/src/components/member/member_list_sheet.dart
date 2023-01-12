@@ -261,8 +261,11 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
                   .getSignalingPlugin()
                   .refuseInvitation(user.id, '')
                   .then((result) {
-                debugPrint(
-                    "refuse audience ${user.name} co-host request, code:${result.code}, message:${result.message}");
+                ZegoLoggerService.logInfo(
+                  "refuse audience ${user.name} co-host request, code:${result.code}, message:${result.message}",
+                  tag: "live streaming",
+                  subTag: "member list",
+                );
                 if (result.code.isEmpty) {
                   widget.connectManager.removeRequestCoHostUsers(user);
                 } else {
@@ -283,8 +286,11 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
                   .getSignalingPlugin()
                   .acceptInvitation(user.id, '')
                   .then((result) {
-                debugPrint(
-                    "accept audience ${user.name} co-host request, code:${result.code}, message:${result.message}");
+                ZegoLoggerService.logInfo(
+                  "accept audience ${user.name} co-host request, code:${result.code}, message:${result.message}",
+                  tag: "live streaming",
+                  subTag: "member list",
+                );
                 if (result.code.isEmpty) {
                   widget.connectManager.removeRequestCoHostUsers(user);
                 } else {

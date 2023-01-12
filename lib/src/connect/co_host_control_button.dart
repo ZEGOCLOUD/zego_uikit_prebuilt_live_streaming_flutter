@@ -93,7 +93,12 @@ class _ZegoCoHostControlButtonState extends State<ZegoCoHostControlButton> {
       onWillPressed: () {
         return checkHostExist() && checkLiving();
       },
-      onPressed: (String code, String message, List<String> errorInvitees) {
+      onPressed: (
+        String code,
+        String message,
+        String invitationID,
+        List<String> errorInvitees,
+      ) {
         if (code.isNotEmpty) {
           showError(
               "${widget.translationText.requestCoHostFailedToast}, $code $message");

@@ -53,15 +53,18 @@ class _ZegoDisableChatButtonState extends State<ZegoDisableChatButton> {
     return GestureDetector(
       onTap: () async {
         if (isUpdatingRoomProperty) {
-          debugPrint(
-              "[disable chat button] room property update is not finish");
+          ZegoLoggerService.logInfo(
+            "room property update is not finish",
+            tag: "live streaming",
+            subTag: "disable chat button",
+          );
           return;
         }
 
         isChatEnabled = !isChatEnabled;
         isUpdatingRoomProperty = true;
         ZegoUIKit()
-            .updateRoomProperty(
+            .setRoomProperty(
                 disableChatRoomPropertyKey, isChatEnabled.toString())
             .then((value) {
           isUpdatingRoomProperty = false;

@@ -75,6 +75,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     extends State<ZegoUIKitPrebuiltLiveStreaming> with WidgetsBindingObserver {
   List<StreamSubscription<dynamic>?> subscriptions = [];
 
+  var readyNotifier = ValueNotifier<bool>(false);
   var startedByLocalNotifier = ValueNotifier<bool>(false);
   late final ZegoLiveHostManager hostManager;
   late final ZegoLiveStatusManager liveStatusManager;
@@ -87,7 +88,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     WidgetsBinding.instance.addObserver(this);
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
-      log("version: zego_uikit_prebuilt_live_streaming: 1.4.1; $version");
+      log("version: zego_uikit_prebuilt_live_streaming: 1.4.3; $version");
     });
 
     hostManager = ZegoLiveHostManager(config: widget.config);
@@ -143,7 +144,11 @@ class _ZegoUIKitPrebuiltLiveStreamingState
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
 
-    debugPrint("[live streaming] didChangeAppLifecycleState $state");
+    ZegoLoggerService.logInfo(
+      "didChangeAppLifecycleState $state",
+      tag: "live streaming",
+      subTag: "prebuilt",
+    );
 
     switch (state) {
       case AppLifecycleState.resumed:
@@ -273,6 +278,8 @@ class _ZegoUIKitPrebuiltLiveStreamingState
   Future<void> onRoomLogin(ZegoRoomLoginResult result) async {
     await hostManager.init();
     await liveStatusManager.init();
+
+    readyNotifier.value = true;
   }
 
   /// Get your token from tokenServer
@@ -331,7 +338,11 @@ class _ZegoUIKitPrebuiltLiveStreamingState
   }
 
   void onMeRemovedFromRoom(String fromUserID) {
-    debugPrint("[live streaming] local user removed by $fromUserID");
+    ZegoLoggerService.logInfo(
+      "local user removed by $fromUserID",
+      tag: "live streaming",
+      subTag: "prebuilt",
+    );
 
     if (null != widget.config.onMeRemovedFromRoom) {
       widget.config.onMeRemovedFromRoom!.call(fromUserID);
@@ -353,6 +364,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
       startedNotifier: startedByLocalNotifier,
       hostManager: hostManager,
       translationText: widget.config.translationText,
+      liveStreamingPageReady: readyNotifier,
     );
   }
 

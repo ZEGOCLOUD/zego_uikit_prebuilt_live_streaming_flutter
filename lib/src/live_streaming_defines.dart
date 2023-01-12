@@ -1,3 +1,4 @@
+// Flutter imports:
 import 'package:flutter/cupertino.dart';
 
 /// prefab button on menu bar
@@ -29,6 +30,7 @@ class ZegoDialogInfo {
 
 typedef ZegoStartLiveButtonBuilder = Widget Function(
   BuildContext context,
+
   /// you MUST call this function to make Preview Page skip to Live Page
   VoidCallback startLive,
 );
