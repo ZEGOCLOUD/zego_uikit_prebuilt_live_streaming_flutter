@@ -17,6 +17,16 @@ enum PluginNetworkState {
 }
 
 class ZegoPrebuiltPlugins {
+  ZegoPrebuiltPlugins(
+      {required this.appID,
+      required this.appSign,
+      required this.userID,
+      required this.userName,
+      required this.roomID,
+      required this.plugins,
+      this.onPluginReLogin}) {
+    _install();
+  }
   final int appID;
   final String appSign;
 
@@ -29,23 +39,14 @@ class ZegoPrebuiltPlugins {
 
   final VoidCallback? onPluginReLogin;
 
-  ZegoPrebuiltPlugins(
-      {required this.appID,
-      required this.appSign,
-      required this.userID,
-      required this.userName,
-      required this.roomID,
-      required this.plugins,
-      this.onPluginReLogin}) {
-    _install();
-  }
-
   PluginNetworkState networkState = PluginNetworkState.unknown;
   List<StreamSubscription<dynamic>?> subscriptions = [];
-  var pluginUserStateNotifier =
-      ValueNotifier<PluginConnectionState>(PluginConnectionState.disconnected);
-  var roomStateNotifier =
-      ValueNotifier<PluginRoomState>(PluginRoomState.disconnected);
+  ValueNotifier<ZegoSignalingPluginConnectionState> pluginUserStateNotifier =
+      ValueNotifier<ZegoSignalingPluginConnectionState>(
+          ZegoSignalingPluginConnectionState.disconnected);
+  ValueNotifier<ZegoSignalingPluginRoomState> roomStateNotifier =
+      ValueNotifier<ZegoSignalingPluginRoomState>(
+          ZegoSignalingPluginRoomState.disconnected);
   bool tryReLogging = false;
   bool initialized = false;
   bool roomHasInitLogin = false;
@@ -54,12 +55,12 @@ class ZegoPrebuiltPlugins {
 
   void _install() {
     ZegoUIKit().installPlugins(plugins);
-    for (var pluginType in ZegoUIKitPluginType.values) {
+    for (final pluginType in ZegoUIKitPluginType.values) {
       ZegoUIKit().getPlugin(pluginType)?.getVersion().then((version) {
         ZegoLoggerService.logInfo(
-          "plugin-$pluginType:$version",
-          tag: "live streaming",
-          subTag: "plugin",
+          'plugin-$pluginType:$version',
+          tag: 'live streaming',
+          subTag: 'plugin',
         );
       });
     }
@@ -78,9 +79,9 @@ class ZegoPrebuiltPlugins {
 
   Future<void> init() async {
     ZegoLoggerService.logInfo(
-      "plugins init",
-      tag: "live streaming",
-      subTag: "plugin",
+      'plugins init',
+      tag: 'live streaming',
+      subTag: 'plugin',
     );
     initialized = true;
 
@@ -89,72 +90,73 @@ class ZegoPrebuiltPlugins {
         .init(appID, appSign: appSign)
         .then((value) {
       ZegoLoggerService.logInfo(
-        "plugins init done",
-        tag: "live streaming",
-        subTag: "plugin",
+        'plugins init done',
+        tag: 'live streaming',
+        subTag: 'plugin',
       );
     });
 
     ZegoLoggerService.logInfo(
-      "plugins init, login...",
-      tag: "live streaming",
-      subTag: "plugin",
+      'plugins init, login...',
+      tag: 'live streaming',
+      subTag: 'plugin',
     );
     await ZegoUIKit()
         .getSignalingPlugin()
-        .login(userID, userName)
+        .login(id: userID, name: userName)
         .then((value) async {
       ZegoLoggerService.logInfo(
-        "plugins login done, join room...",
-        tag: "live streaming",
-        subTag: "plugin",
+        'plugins login done, join room...',
+        tag: 'live streaming',
+        subTag: 'plugin',
       );
       return joinRoom().then((value) {
         ZegoLoggerService.logInfo(
-          "plugins room joined",
-          tag: "live streaming",
-          subTag: "plugin",
+          'plugins room joined',
+          tag: 'live streaming',
+          subTag: 'plugin',
         );
         roomHasInitLogin = true;
       });
     });
 
     ZegoLoggerService.logInfo(
-      "plugins init done",
-      tag: "live streaming",
-      subTag: "plugin",
+      'plugins init done',
+      tag: 'live streaming',
+      subTag: 'plugin',
     );
   }
 
   Future<bool> joinRoom() async {
     ZegoLoggerService.logInfo(
-      "plugins joinRoom",
-      tag: "live streaming",
-      subTag: "plugin",
+      'plugins joinRoom',
+      tag: 'live streaming',
+      subTag: 'plugin',
     );
 
-    return await ZegoUIKit()
-        .getSignalingPlugin()
-        .joinRoom(roomID)
-        .then((result) {
-      ZegoLoggerService.logInfo(
-        "plugins login result: ${result.code} ${result.message}",
-        tag: "live streaming",
-        subTag: "plugin",
+    return ZegoUIKit().getSignalingPlugin().joinRoom(roomID).then((result) {
+      if (result.error != null) {
+        ZegoLoggerService.logInfo('[plugin] plugins login failed: ${result.error}',
+        tag: 'live streaming',
+        subTag: 'plugin',
       );
-      if (result.code.isNotEmpty) {
-        showDebugToast("login room failed, ${result.code} ${result.message}");
+        showDebugToast('login room failed, ${result.error}');
+      } else {
+        ZegoLoggerService.logInfo('[plugin] plugins login success',
+        tag: 'live streaming',
+        subTag: 'plugin',
+      );
       }
 
-      return result.code.isEmpty;
+      return result.error == null;
     });
   }
 
   Future<void> uninit() async {
     ZegoLoggerService.logInfo(
-      "uninit",
-      tag: "live streaming",
-      subTag: "plugin",
+      'uninit',
+      tag: 'live streaming',
+      subTag: 'plugin',
     );
     initialized = false;
 
@@ -165,44 +167,44 @@ class ZegoPrebuiltPlugins {
     await ZegoUIKit().getSignalingPlugin().logout();
     await ZegoUIKit().getSignalingPlugin().uninit();
 
-    for (var streamSubscription in subscriptions) {
+    for (final streamSubscription in subscriptions) {
       streamSubscription?.cancel();
     }
   }
 
   Future<void> onUserInfoUpdate(String userID, String userName) async {
-    var localUser = ZegoUIKit().getLocalUser();
+    final localUser = ZegoUIKit().getLocalUser();
     if (localUser.id == userID && localUser.name == userName) {
       ZegoLoggerService.logInfo(
-        "same user, cancel this re-login",
-        tag: "live streaming",
-        subTag: "plugin",
+        'same user, cancel this re-login',
+        tag: 'live streaming',
+        subTag: 'plugin',
       );
       return;
     }
 
     await ZegoUIKit().getSignalingPlugin().logout();
-    await ZegoUIKit().getSignalingPlugin().login(userID, userName);
+    await ZegoUIKit().getSignalingPlugin().login(id: userID, name: userName);
   }
 
-  void onUserConnectionState(Map params) {
-    ZegoLoggerService.logInfo(
-      "onUserConnectionState, param: $params",
-      tag: "live streaming",
-      subTag: "plugin",
+  void onUserConnectionState(
+      ZegoSignalingPluginConnectionStateChangedEvent event) {
+    ZegoLoggerService.logInfo('[plugin] onUserConnectionState, param: $event',
+      tag: 'live streaming',
+      subTag: 'plugin',
     );
 
-    pluginUserStateNotifier.value =
-        PluginConnectionState.values[params['state']!];
+    pluginUserStateNotifier.value = event.state;
 
     ZegoLoggerService.logInfo(
-      "onUserConnectionState, user state: ${pluginUserStateNotifier.value}",
-      tag: "live streaming",
-      subTag: "plugin",
+      'onUserConnectionState, user state: ${pluginUserStateNotifier.value}',
+      tag: 'live streaming',
+      subTag: 'plugin',
     );
 
     if (tryReLogging &&
-        pluginUserStateNotifier.value == PluginConnectionState.connected) {
+        pluginUserStateNotifier.value ==
+            ZegoSignalingPluginConnectionState.connected) {
       tryReLogging = false;
       onPluginReLogin?.call();
     }
@@ -210,19 +212,19 @@ class ZegoPrebuiltPlugins {
     tryReEnterRoom();
   }
 
-  void onRoomState(Map params) {
+  void onRoomState(ZegoSignalingPluginRoomStateChangedEvent event) {
     ZegoLoggerService.logInfo(
-      "onRoomState, param: $params",
-      tag: "live streaming",
-      subTag: "plugin",
+      'onRoomState, event: $event',
+      tag: 'live streaming',
+      subTag: 'plugin',
     );
 
-    roomStateNotifier.value = PluginRoomState.values[params['state']!];
+    roomStateNotifier.value = event.state;
 
     ZegoLoggerService.logInfo(
-      "onRoomState, state: ${roomStateNotifier.value}, networkState:$networkState",
-      tag: "live streaming",
-      subTag: "plugin",
+        '[plugin] onRoomState, state: ${roomStateNotifier.value}, networkState:$networkState',      
+      tag: 'live streaming',
+      subTag: 'plugin',
     );
 
     tryReEnterRoom();
@@ -230,9 +232,9 @@ class ZegoPrebuiltPlugins {
 
   void onNetworkModeChanged(ZegoNetworkMode networkMode) {
     ZegoLoggerService.logInfo(
-      "onNetworkModeChanged $networkMode, previous network state: $networkState",
-      tag: "live streaming",
-      subTag: "plugin",
+      'onNetworkModeChanged $networkMode, previous network state: $networkState',
+      tag: 'live streaming',
+      subTag: 'plugin',
     );
 
     switch (networkMode) {
@@ -256,103 +258,91 @@ class ZegoPrebuiltPlugins {
   }
 
   Future<void> tryReLogin() async {
-    ZegoLoggerService.logInfo(
-      "tryReLogin, state:${pluginUserStateNotifier.value}",
-      tag: "live streaming",
-      subTag: "plugin",
+    ZegoLoggerService.logInfo('[plugin] tryReLogin, state:${pluginUserStateNotifier.value}',      
+      tag: 'live streaming',
+      subTag: 'plugin',
     );
 
     if (!initialized) {
-      ZegoLoggerService.logInfo(
-        "tryReLogin, plugin is not init",
-        tag: "live streaming",
-        subTag: "plugin",
-      );
+      ZegoLoggerService.logInfo('[plugin] tryReLogin, plugin is not init',      
+      tag: 'live streaming',
+      subTag: 'plugin',
+    );
       return;
     }
 
-    if (pluginUserStateNotifier.value != PluginConnectionState.disconnected) {
-      ZegoLoggerService.logInfo(
-        "tryReLogin, user state is not disconnected",
-        tag: "live streaming",
-        subTag: "plugin",
-      );
+    if (pluginUserStateNotifier.value !=
+        ZegoSignalingPluginConnectionState.disconnected) {
+      ZegoLoggerService.logInfo('[plugin] tryReLogin, user state is not disconnected',      
+      tag: 'live streaming',
+      subTag: 'plugin',
+    );
       return;
     }
 
-    ZegoLoggerService.logInfo(
-      "re-login, id:$userID, name:$userName",
-      tag: "live streaming",
-      subTag: "plugin",
+    ZegoLoggerService.logInfo('[plugin] re-login, id:$userID, name:$userName',      
+      tag: 'live streaming',
+      subTag: 'plugin',
     );
     tryReLogging = true;
     return await ZegoUIKit().getSignalingPlugin().logout().then((value) async {
-      await ZegoUIKit().getSignalingPlugin().login(userID, userName);
+      await ZegoUIKit().getSignalingPlugin().login(id: userID, name: userName);
     });
   }
 
   Future<bool> tryReEnterRoom() async {
     ZegoLoggerService.logInfo(
-      "tryReEnterRoom, room state: ${roomStateNotifier.value}, networkState:$networkState",
-      tag: "live streaming",
-      subTag: "plugin",
-    );
+        '[plugin] tryReEnterRoom, room state: ${roomStateNotifier.value}, networkState:$networkState');
 
     if (!initialized) {
-      ZegoLoggerService.logInfo(
-        "tryReEnterRoom, plugin is not init",
-        tag: "live streaming",
-        subTag: "plugin",
-      );
+      ZegoLoggerService.logInfo('[plugin] tryReEnterRoom, plugin is not init',      
+      tag: 'live streaming',
+      subTag: 'plugin',
+    );
       return false;
     }
     if (!roomHasInitLogin) {
-      ZegoLoggerService.logInfo(
-        "tryReEnterRoom, first login room has not finished",
-        tag: "live streaming",
-        subTag: "plugin",
-      );
+      ZegoLoggerService.logInfo('[plugin] tryReEnterRoom, first login room has not finished',      
+      tag: 'live streaming',
+      subTag: 'plugin',
+    );
       return false;
     }
 
-    if (PluginRoomState.disconnected != roomStateNotifier.value) {
-      ZegoLoggerService.logInfo(
-        "tryReEnterRoom, room state is not disconnected",
-        tag: "live streaming",
-        subTag: "plugin",
-      );
+    if (ZegoSignalingPluginRoomState.disconnected != roomStateNotifier.value) {
+      ZegoLoggerService.logInfo('[plugin] tryReEnterRoom, room state is not disconnected',      
+      tag: 'live streaming',
+      subTag: 'plugin',
+    );
       return false;
     }
 
     if (networkState != PluginNetworkState.online) {
-      ZegoLoggerService.logInfo(
-        "tryReEnterRoom, network is not connected",
-        tag: "live streaming",
-        subTag: "plugin",
-      );
+      ZegoLoggerService.logInfo('[plugin] tryReEnterRoom, network is not connected',      
+      tag: 'live streaming',
+      subTag: 'plugin',
+    );
       return false;
     }
 
-    if (pluginUserStateNotifier.value != PluginConnectionState.connected) {
-      ZegoLoggerService.logInfo(
-        "tryReEnterRoom, user state is not connected",
-        tag: "live streaming",
-        subTag: "plugin",
-      );
+    if (pluginUserStateNotifier.value !=
+        ZegoSignalingPluginConnectionState.connected) {
+      ZegoLoggerService.logInfo('[plugin] tryReEnterRoom, user state is not connected',      
+      tag: 'live streaming',
+      subTag: 'plugin',
+    );
       return false;
     }
 
-    ZegoLoggerService.logInfo(
-      "try re-enter room",
-      tag: "live streaming",
-      subTag: "plugin",
+    ZegoLoggerService.logInfo('[plugin] try re-enter room',      
+      tag: 'live streaming',
+      subTag: 'plugin',
     );
     return await joinRoom().then((result) {
-      ZegoLoggerService.logInfo(
-        "re-enter room result:$result",
-        tag: "live streaming",
-        subTag: "plugin",
-      );
+      ZegoLoggerService.logInfo('[plugin] re-enter room result:$result',      
+      tag: 'live streaming',
+      subTag: 'plugin',
+    );
 
       if (!result) {
         return false;

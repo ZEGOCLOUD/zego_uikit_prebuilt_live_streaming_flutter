@@ -4,11 +4,14 @@ import 'dart:core';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zego_uikit/zego_uikit.dart';
-
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/audio_video_view_foreground.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/bottom_bar.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/defines.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/message/in_room_live_commenting_view.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/top_bar.dart';
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/host_manager.dart';
@@ -16,11 +19,6 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/connect/live_status_manag
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/plugins.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
-import 'audio_video_view_foreground.dart';
-import 'bottom_bar.dart';
-import 'defines.dart';
-import 'message/in_room_live_commenting_view.dart';
-import 'top_bar.dart';
 
 /// user and sdk should be login and init before page enter
 class ZegoLivePage extends StatefulWidget {
@@ -109,12 +107,12 @@ class ZegoLivePageState extends State<ZegoLivePage>
   }
 
   @override
-  void dispose() async {
+  Future<void> dispose() async {
     super.dispose();
 
     widget.liveStatusManager.notifier.removeListener(onLiveStatusUpdated);
 
-    for (var subscription in subscriptions) {
+    for (final subscription in subscriptions) {
       subscription?.cancel();
     }
 
@@ -150,7 +148,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
                                   stream:
                                       ZegoUIKit().getScreenSharingListStream(),
                                   builder: (context, snapshot) {
-                                    var screenSharingUsers =
+                                    final screenSharingUsers =
                                         snapshot.data ?? [];
                                     return audioVideoContainer(
                                       host,
@@ -178,9 +176,9 @@ class ZegoLivePageState extends State<ZegoLivePage>
     if (widget.config.bottomMenuBarConfig.maxCount > 5) {
       widget.config.bottomMenuBarConfig.maxCount = 5;
       ZegoLoggerService.logInfo(
-        'menu bar buttons limited count\'s value  is exceeding the maximum limit',
-        tag: "live streaming",
-        subTag: "live page",
+        "menu bar buttons limited count's value  is exceeding the maximum limit",
+        tag: 'live streaming',
+        subTag: 'live page',
       );
     }
   }
@@ -263,7 +261,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
     double height,
     bool withScreenSharing,
   ) {
-    var audioVideoContainerLayout = withScreenSharing
+    final audioVideoContainerLayout = withScreenSharing
         ? ZegoLayout.gallery()
         : ZegoLayout.pictureInPicture(
             smallViewPosition: ZegoViewPosition.bottomRight,
@@ -345,11 +343,11 @@ class ZegoLivePageState extends State<ZegoLivePage>
     if (isLivingWithHost &&
         (ZegoUIKit()
                 .getCameraStateNotifier(
-                    widget.hostManager.notifier.value?.id ?? "")
+                    widget.hostManager.notifier.value?.id ?? '')
                 .value ||
             ZegoUIKit()
                 .getMicrophoneStateNotifier(
-                    widget.hostManager.notifier.value?.id ?? "")
+                    widget.hostManager.notifier.value?.id ?? '')
                 .value)) {
       /// put host on first position
       users.removeWhere(
@@ -378,7 +376,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
             Container(color: Colors.transparent),
         ValueListenableBuilder<bool>(
             valueListenable:
-                ZegoUIKit().getMicrophoneStateNotifier(user?.id ?? ""),
+                ZegoUIKit().getMicrophoneStateNotifier(user?.id ?? ''),
             builder: (context, isMicrophoneEnabled, _) {
               return ZegoAudioVideoForeground(
                 size: size,
@@ -390,7 +388,8 @@ class ZegoLivePageState extends State<ZegoLivePage>
                 //  only show if close
                 showMicrophoneStateOnView: !isMicrophoneEnabled,
                 showCameraStateOnView: false,
-                showUserNameOnView: true,
+                showUserNameOnView:
+                    widget.config.audioVideoViewConfig.showUserNameOnView,
               );
             }),
       ],
@@ -399,8 +398,8 @@ class ZegoLivePageState extends State<ZegoLivePage>
 
   Widget audioVideoViewBackground(
       BuildContext context, Size size, ZegoUIKitUser? user, Map extraInfo) {
-    var screenSize = MediaQuery.of(context).size;
-    var isSmallView = (screenSize.width - size.width).abs() > 1;
+    final screenSize = MediaQuery.of(context).size;
+    final isSmallView = (screenSize.width - size.width).abs() > 1;
     return Stack(
       children: [
         Container(
@@ -460,17 +459,17 @@ class ZegoLivePageState extends State<ZegoLivePage>
 
   void onHostManagerUpdated() {
     ZegoLoggerService.logInfo(
-      "live page, host mgr updated, ${widget.hostManager.notifier.value}",
-      tag: "live streaming",
-      subTag: "live page",
+      'live page, host mgr updated, ${widget.hostManager.notifier.value}',
+      tag: 'live streaming',
+      subTag: 'live page',
     );
   }
 
   void onLiveStatusUpdated() {
     ZegoLoggerService.logInfo(
-      "live page, live status mgr updated, ${widget.liveStatusManager.notifier.value}",
-      tag: "live streaming",
-      subTag: "live page",
+      'live page, live status mgr updated, ${widget.liveStatusManager.notifier.value}',
+      tag: 'live streaming',
+      subTag: 'live page',
     );
 
     if (LiveStatus.ended == widget.liveStatusManager.notifier.value) {
@@ -480,11 +479,11 @@ class ZegoLivePageState extends State<ZegoLivePage>
 
     if (!widget.hostManager.isHost) {
       ZegoLoggerService.logInfo(
-        "audience, live streaming end by host, "
-        "host: ${widget.hostManager.notifier.value}, "
-        "live status: ${widget.liveStatusManager.notifier.value}",
-        tag: "live streaming",
-        subTag: "live page",
+        'audience, live streaming end by host, '
+        'host: ${widget.hostManager.notifier.value}, '
+        'live status: ${widget.liveStatusManager.notifier.value}',
+        tag: 'live streaming',
+        subTag: 'live page',
       );
 
       if (widget.hostManager.notifier.value != null &&
@@ -496,41 +495,41 @@ class ZegoLivePageState extends State<ZegoLivePage>
     }
   }
 
-  void onTurnOnYourCameraRequest(String fromUserID) async {
+  Future<void> onTurnOnYourCameraRequest(String fromUserID) async {
     ZegoLoggerService.logInfo(
-      "onTurnOnYourCameraRequest, fromUserID:$fromUserID",
-      tag: "live streaming",
-      subTag: "live page",
+      'onTurnOnYourCameraRequest, fromUserID:$fromUserID',
+      tag: 'live streaming',
+      subTag: 'live page',
     );
 
-    var canCameraTurnOnByOthers =
+    final canCameraTurnOnByOthers =
         await widget.config.onCameraTurnOnByOthersConfirmation?.call(context) ??
             false;
     ZegoLoggerService.logInfo(
-      "canMicrophoneTurnOnByOthers:$canCameraTurnOnByOthers",
-      tag: "live streaming",
-      subTag: "live page",
+      'canMicrophoneTurnOnByOthers:$canCameraTurnOnByOthers',
+      tag: 'live streaming',
+      subTag: 'live page',
     );
     if (canCameraTurnOnByOthers) {
       ZegoUIKit().turnCameraOn(true);
     }
   }
 
-  void onTurnOnYourMicrophoneRequest(String fromUserID) async {
+  Future<void> onTurnOnYourMicrophoneRequest(String fromUserID) async {
     ZegoLoggerService.logInfo(
-      "onTurnOnYourMicrophoneRequest, fromUserID:$fromUserID",
-      tag: "live streaming",
-      subTag: "live page",
+      'onTurnOnYourMicrophoneRequest, fromUserID:$fromUserID',
+      tag: 'live streaming',
+      subTag: 'live page',
     );
 
-    var canMicrophoneTurnOnByOthers = await widget
+    final canMicrophoneTurnOnByOthers = await widget
             .config.onMicrophoneTurnOnByOthersConfirmation
             ?.call(context) ??
         false;
     ZegoLoggerService.logInfo(
-      "canMicrophoneTurnOnByOthers:$canMicrophoneTurnOnByOthers",
-      tag: "live streaming",
-      subTag: "live page",
+      'canMicrophoneTurnOnByOthers:$canMicrophoneTurnOnByOthers',
+      tag: 'live streaming',
+      subTag: 'live page',
     );
     if (canMicrophoneTurnOnByOthers) {
       ZegoUIKit().turnMicrophoneOn(true);

@@ -224,6 +224,9 @@ class ZegoPrebuiltAudioVideoViewConfig {
   /// set video is mirror or not
   bool isVideoMirror;
 
+  /// hide user name of audio video view if set false
+  bool showUserNameOnView;
+
   /// video view mode
   /// if set to true, video view will proportional zoom fills the entire View and may be partially cut
   /// if set to false, video view proportional scaling up, there may be black borders
@@ -245,11 +248,12 @@ class ZegoPrebuiltAudioVideoViewConfig {
 
   ZegoPrebuiltAudioVideoViewConfig({
     this.isVideoMirror = true,
-    this.foregroundBuilder,
-    this.backgroundBuilder,
+    this.showUserNameOnView = true,
     this.showAvatarInAudioMode = true,
     this.showSoundWavesInAudioMode = true,
     this.useVideoViewAspectFill = true,
+    this.foregroundBuilder,
+    this.backgroundBuilder,
   });
 }
 

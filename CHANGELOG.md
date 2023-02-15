@@ -1,3 +1,7 @@
+## 2.0.0
+
+ - Architecture upgrade based on adapter.
+
 ## 0.0.1
 
 * Upload Initial release.
@@ -126,3 +130,11 @@
 * update resources
 * support sdk log
 * update a dependency to the latest release
+
+## 1.4.4
+
+* support display user name on audio video view or not  
+
+## 1.4.5
+
+* downgrade flutter_screenutil to ">=5.5.3+2 <5.6.1"

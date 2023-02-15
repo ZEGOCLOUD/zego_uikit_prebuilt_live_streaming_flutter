@@ -16,16 +16,15 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_translation.dart';
 
 class ZegoCoHostControlButton extends StatefulWidget {
-  final ZegoLiveHostManager hostManager;
-  final ZegoLiveConnectManager connectManager;
-  final ZegoTranslationText translationText;
-
   const ZegoCoHostControlButton({
     Key? key,
     required this.hostManager,
     required this.connectManager,
     required this.translationText,
   }) : super(key: key);
+  final ZegoLiveHostManager hostManager;
+  final ZegoLiveConnectManager connectManager;
+  final ZegoTranslationText translationText;
 
   @override
   State<ZegoCoHostControlButton> createState() =>
@@ -81,8 +80,8 @@ class _ZegoCoHostControlButtonState extends State<ZegoCoHostControlButton> {
   Widget requestCoHostButton() {
     return ZegoStartInvitationButton(
       invitationType: ZegoInvitationType.requestCoHost.value,
-      invitees: [widget.hostManager.notifier.value?.id ?? ""],
-      data: "",
+      invitees: [widget.hostManager.notifier.value?.id ?? ''],
+      data: '',
       icon: buttonIcon,
       buttonSize: Size(330.r, 72.r),
       iconSize: Size(48.r, 48.r),
@@ -100,8 +99,8 @@ class _ZegoCoHostControlButtonState extends State<ZegoCoHostControlButton> {
         List<String> errorInvitees,
       ) {
         if (code.isNotEmpty) {
-          showError(
-              "${widget.translationText.requestCoHostFailedToast}, $code $message");
+          showError('${widget.translationText.requestCoHostFailedToast}, '
+              '$code $message');
         } else {
           showSuccess(widget.translationText.sendRequestCoHostToast);
         }
@@ -117,7 +116,7 @@ class _ZegoCoHostControlButtonState extends State<ZegoCoHostControlButton> {
 
   Widget cancelRequestCoHostButton() {
     return ZegoCancelInvitationButton(
-      invitees: [widget.hostManager.notifier.value?.id ?? ""],
+      invitees: [widget.hostManager.notifier.value?.id ?? ''],
       icon: buttonIcon,
       buttonSize: Size(330.r, 72.r),
       iconSize: Size(48.r, 48.r),

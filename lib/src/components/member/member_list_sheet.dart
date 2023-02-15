@@ -48,7 +48,7 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: ((context, constraints) {
+    return LayoutBuilder(builder: (context, constraints) {
       return Column(
         children: [
           header(98.h),
@@ -68,7 +68,7 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
           ),
         ],
       );
-    }));
+    });
   }
 
   bool isStreamPlaying(String userID) {
@@ -86,7 +86,7 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
             widget.hostManager.notifier.value?.id == remoteUser.id);
 
         /// co-host
-        List<ZegoUIKitUser> coHostUsers = [];
+        final coHostUsers = <ZegoUIKitUser>[];
         remoteUsers.removeWhere((remoteUser) {
           if (isStreamPlaying(remoteUser.id)) {
             coHostUsers.add(remoteUser);
@@ -96,7 +96,7 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
         });
 
         /// requesting co-host
-        List<ZegoUIKitUser> usersInRequestCoHost = [];
+        final usersInRequestCoHost = <ZegoUIKitUser>[];
         remoteUsers.removeWhere((remoteUser) {
           if (isUserInRequestCoHost(remoteUser.id)) {
             usersInRequestCoHost.add(remoteUser);
@@ -105,7 +105,7 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
           return false;
         });
 
-        List<ZegoUIKitUser> sortUsers = [];
+        var sortUsers = <ZegoUIKitUser>[];
         if (widget.hostManager.notifier.value != null) {
           sortUsers.add(widget.hostManager.notifier.value!);
         }
@@ -166,7 +166,8 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
               stream: ZegoUIKit().getUserListStream(),
               builder: (context, snapshot) {
                 return Text(
-                  "${widget.translationText.memberListTitle} (${ZegoUIKit().getAllUsers().length})",
+                  '${widget.translationText.memberListTitle} '
+                  '(${ZegoUIKit().getAllUsers().length})',
                   style: TextStyle(
                     fontSize: 36.0.r,
                     color: const Color(0xffffffff),
@@ -183,18 +184,18 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
     return ValueListenableBuilder<ZegoUIKitUser?>(
       valueListenable: widget.hostManager.notifier,
       builder: (context, host, _) {
-        List<String> extensions = [];
+        final extensions = <String>[];
         if (ZegoUIKit().getLocalUser().id == user.id) {
-          extensions.add("You");
+          extensions.add('You');
         }
         if (host?.id == user.id) {
-          extensions.add("Host");
+          extensions.add('Host');
         } else if (ZegoUIKit().getCameraStateNotifier(user.id).value ||
             ZegoUIKit().getMicrophoneStateNotifier(user.id).value) {
-          extensions.add("Co-host");
+          extensions.add('Co-host');
         }
 
-        var extensionTextStyle = TextStyle(
+        final extensionTextStyle = TextStyle(
           fontSize: 32.0.r,
           color: const Color(0xffA7A6B7),
           decoration: TextDecoration.none,
@@ -205,7 +206,7 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
           nameConstraintSize = Size(
               nameConstraintSize.width -
                   5.r -
-                  getTextSize(extensions.join(","), extensionTextStyle).width,
+                  getTextSize(extensions.join(','), extensionTextStyle).width,
               nameConstraintSize.height);
         }
 
@@ -225,7 +226,7 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
             ),
             SizedBox(width: 5.r),
             Text(
-              extensions.isEmpty ? "" : "(${extensions.join(",")})",
+              extensions.isEmpty ? '' : "(${extensions.join(",")})",
               style: extensionTextStyle,
             ),
           ],
@@ -238,7 +239,7 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
     return ValueListenableBuilder<List<ZegoUIKitUser>>(
         valueListenable: widget.connectManager.requestCoHostUsersNotifier,
         builder: (context, requestCoHostUsers, _) {
-          var index = requestCoHostUsers.indexWhere(
+          final index = requestCoHostUsers.indexWhere(
               (requestCoHostUser) => user.id == requestCoHostUser.id);
           if (-1 != index) {
             return requestCoHostUserControlItem(user);
@@ -259,17 +260,17 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
             onPressed: () {
               ZegoUIKit()
                   .getSignalingPlugin()
-                  .refuseInvitation(user.id, '')
+                  .refuseInvitation(inviterID: user.id, data: '')
                   .then((result) {
                 ZegoLoggerService.logInfo(
-                  "refuse audience ${user.name} co-host request, code:${result.code}, message:${result.message}",
-                  tag: "live streaming",
-                  subTag: "member list",
+                  'refuse audience ${user.name} co-host request, $result',
+                  tag: 'live streaming',
+                  subTag: 'member list',
                 );
-                if (result.code.isEmpty) {
+                if (result.error == null) {
                   widget.connectManager.removeRequestCoHostUsers(user);
                 } else {
-                  showError("code:${result.code}, message:${result.message}");
+                  showError('error:${result.error}');
                 }
               });
             }),
@@ -284,17 +285,18 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
             onPressed: () {
               ZegoUIKit()
                   .getSignalingPlugin()
-                  .acceptInvitation(user.id, '')
+                  .acceptInvitation(inviterID: user.id, data: '')
                   .then((result) {
                 ZegoLoggerService.logInfo(
-                  "accept audience ${user.name} co-host request, code:${result.code}, message:${result.message}",
-                  tag: "live streaming",
-                  subTag: "member list",
+                  'accept audience ${user.name} co-host request, '
+                  'result:$result',
+                  tag: 'live streaming',
+                  subTag: 'member list',
                 );
-                if (result.code.isEmpty) {
+                if (result.error == null) {
                   widget.connectManager.removeRequestCoHostUsers(user);
                 } else {
-                  showError("code:${result.code}, message:${result.message}");
+                  showError('error:${result.error}');
                 }
               });
             }),
@@ -303,7 +305,7 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
   }
 
   Widget hostControlItem(ZegoUIKitUser user) {
-    List<PopupItem> popupItems = [];
+    final popupItems = <PopupItem>[];
 
     if (user.id != widget.hostManager.notifier.value?.id &&
         isCoHost(user) &&
@@ -367,7 +369,7 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
       width: 630.r,
       height: 98.r,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular((44.r)),
+        borderRadius: BorderRadius.circular(44.r),
         gradient: const LinearGradient(
           colors: [Color(0xffA754FF), Color(0xff510DF1)],
           begin: Alignment.topLeft,
@@ -375,7 +377,6 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
         ),
       ),
       child: Align(
-        alignment: Alignment.center,
         child: Text(
           text,
           style: TextStyle(
@@ -401,11 +402,10 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
         child: Container(
           decoration: BoxDecoration(
             color: backgroundColor,
-            borderRadius: BorderRadius.circular((32.r)),
+            borderRadius: BorderRadius.circular(32.r),
             gradient: gradient,
           ),
           child: Align(
-            alignment: Alignment.center,
             child: Text(
               text,
               style: TextStyle(
@@ -433,7 +433,7 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
       child: Center(
         child: builder?.call(context, Size(92.r, 92.r), user, {}) ??
             Text(
-              user.name.isNotEmpty ? user.name.characters.first : "",
+              user.name.isNotEmpty ? user.name.characters.first : '',
               style: TextStyle(
                 fontSize: 32.0.r,
                 color: const Color(0xff222222),
@@ -478,7 +478,7 @@ void showMemberListSheet({
           padding: MediaQuery.of(context).viewInsets,
           duration: const Duration(milliseconds: 50),
           child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 10),
             child: ZegoMemberListSheet(
               isPluginEnabled: isPluginEnabled,
               avatarBuilder: avatarBuilder,
