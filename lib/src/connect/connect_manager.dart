@@ -11,11 +11,11 @@ import 'package:zego_uikit/zego_uikit.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/dialogs.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/permissions.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/toast.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/connect/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_translation.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/connect/defines.dart';
 
 class ZegoLiveConnectManager {
   ZegoLiveConnectManager({
@@ -27,6 +27,7 @@ class ZegoLiveConnectManager {
   }) {
     listenStream();
   }
+
   final ZegoLiveHostManager hostManager;
   final ValueNotifier<LiveStatus> liveStatusNotifier;
   final ZegoUIKitPrebuiltLiveStreamingConfig config;
@@ -79,26 +80,38 @@ class ZegoLiveConnectManager {
         ..add(ZegoUIKit()
             .getSignalingPlugin()
             .getInvitationReceivedStream()
+            .where((param) => ZegoInvitationTypeExtension.isCoHostType(
+                (param['type'] as int?) ?? -1))
             .listen(onInvitationReceived))
         ..add(ZegoUIKit()
             .getSignalingPlugin()
             .getInvitationAcceptedStream()
+            .where((param) => ZegoInvitationTypeExtension.isCoHostType(
+                (param['type'] as int?) ?? -1))
             .listen(onInvitationAccepted))
         ..add(ZegoUIKit()
             .getSignalingPlugin()
             .getInvitationCanceledStream()
+            .where((param) => ZegoInvitationTypeExtension.isCoHostType(
+                (param['type'] as int?) ?? -1))
             .listen(onInvitationCanceled))
         ..add(ZegoUIKit()
             .getSignalingPlugin()
             .getInvitationRefusedStream()
+            .where((param) => ZegoInvitationTypeExtension.isCoHostType(
+                (param['type'] as int?) ?? -1))
             .listen(onInvitationRefused))
         ..add(ZegoUIKit()
             .getSignalingPlugin()
             .getInvitationTimeoutStream()
+            .where((param) => ZegoInvitationTypeExtension.isCoHostType(
+                (param['type'] as int?) ?? -1))
             .listen(onInvitationTimeout))
         ..add(ZegoUIKit()
             .getSignalingPlugin()
             .getInvitationResponseTimeoutStream()
+            .where((param) => ZegoInvitationTypeExtension.isCoHostType(
+                (param['type'] as int?) ?? -1))
             .listen(onInvitationResponseTimeout));
     }
   }
@@ -129,7 +142,7 @@ class ZegoLiveConnectManager {
     });
   }
 
-  void inviteAudienceConnect(ZegoUIKitUser invitee) async {
+  Future<void> inviteAudienceConnect(ZegoUIKitUser invitee) async {
     ZegoLoggerService.logInfo(
       'invite audience connect, ${invitee.id} ${invitee.name}',
       tag: 'live streaming',
@@ -175,7 +188,7 @@ class ZegoLiveConnectManager {
     updateAudienceConnectState(ConnectState.idle);
   }
 
-  void onInvitationReceived(Map params) {
+  void onInvitationReceived(Map<String, dynamic> params) {
     final ZegoUIKitUser inviter = params['inviter']!;
     final int type = params['type']!; // call type
     final String data = params['data']!; // extended field
@@ -305,7 +318,7 @@ class ZegoLiveConnectManager {
     );
   }
 
-  void onInvitationAccepted(Map params) {
+  void onInvitationAccepted(Map<String, dynamic> params) {
     final ZegoUIKitUser invitee = params['invitee']!;
     final String data = params['data']!; // extended field
 
@@ -331,7 +344,7 @@ class ZegoLiveConnectManager {
     }
   }
 
-  void onInvitationCanceled(Map params) {
+  void onInvitationCanceled(Map<String, dynamic> params) {
     final ZegoUIKitUser inviter = params['inviter']!;
     final String data = params['data']!; // extended field
 
@@ -348,7 +361,7 @@ class ZegoLiveConnectManager {
     }
   }
 
-  void onInvitationRefused(Map params) {
+  void onInvitationRefused(Map<String, dynamic> params) {
     final ZegoUIKitUser invitee = params['invitee']!;
     final String data = params['data']!; // extended field
 
@@ -370,7 +383,7 @@ class ZegoLiveConnectManager {
     }
   }
 
-  void onInvitationTimeout(Map params) {
+  void onInvitationTimeout(Map<String, dynamic> params) {
     final ZegoUIKitUser inviter = params['inviter']!;
     final String data = params['data']!; // extended field
 
@@ -393,7 +406,7 @@ class ZegoLiveConnectManager {
     }
   }
 
-  void onInvitationResponseTimeout(Map params) {
+  void onInvitationResponseTimeout(Map<String, dynamic> params) {
     final List<ZegoUIKitUser> invitees = params['invitees']!;
     final String data = params['data']!; // extended field
 

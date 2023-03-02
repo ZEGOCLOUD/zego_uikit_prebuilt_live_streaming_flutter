@@ -9,12 +9,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/effects/beauty_effect_button.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/permissions.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_translation.dart';
-import 'effects/beauty_effect_button.dart';
-import 'permissions.dart';
 
 /// user should be login before page enter
 class ZegoPreviewPage extends StatefulWidget {
@@ -30,12 +30,10 @@ class ZegoPreviewPage extends StatefulWidget {
     required this.startedNotifier,
     required this.translationText,
     required this.liveStreamingPageReady,
-    this.tokenServerUrl = '',
   }) : super(key: key);
 
   final int appID;
   final String appSign;
-  final String tokenServerUrl;
 
   final String userID;
   final String userName;
@@ -63,7 +61,7 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
   }
 
   @override
-  void dispose() async {
+  void dispose() {
     super.dispose();
   }
 
@@ -132,8 +130,8 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
   }
 
   Widget topBar() {
-    var buttonSize = Size(88.r, 88.r);
-    var iconSize = Size(56.r, 56.r);
+    final buttonSize = Size(88.r, 88.r);
+    final iconSize = Size(56.r, 56.r);
 
     return Align(
       alignment: Alignment.topCenter,
@@ -174,8 +172,8 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
   }
 
   Widget bottomBar() {
-    var buttonSize = Size(88.r, 88.r);
-    var iconSize = Size(56.r, 56.r);
+    final buttonSize = Size(88.r, 88.r);
+    final iconSize = Size(56.r, 56.r);
 
     return Align(
       alignment: Alignment.bottomCenter,
@@ -208,14 +206,17 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
           ).then((value) {
             if (!widget.liveStreamingPageReady.value) {
               ZegoLoggerService.logInfo(
-                "live streaming page is waiting room login",
-                tag: "live streaming",
-                subTag: "preview page",
+                'live streaming page is waiting room login',
+                tag: 'live streaming',
+                subTag: 'preview page',
               );
               return;
             }
 
             widget.startedNotifier.value = true;
+            widget.config.onLiveStreamingStateUpdate?.call(
+              ZegoLiveStreamingState.living,
+            );
           });
         }) ??
         GestureDetector(
@@ -227,21 +228,24 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
             ).then((value) {
               if (!widget.liveStreamingPageReady.value) {
                 ZegoLoggerService.logInfo(
-                  "live streaming page is waiting room login",
-                  tag: "live streaming",
-                  subTag: "preview page",
+                  'live streaming page is waiting room login',
+                  tag: 'live streaming',
+                  subTag: 'preview page',
                 );
                 return;
               }
 
               widget.startedNotifier.value = true;
+              widget.config.onLiveStreamingStateUpdate?.call(
+                ZegoLiveStreamingState.living,
+              );
             });
           },
           child: Container(
             width: 300.r,
             height: 88.r,
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular((44.r)),
+                borderRadius: BorderRadius.circular(44.r),
                 gradient: const LinearGradient(
                   colors: [Color(0xffA754FF), Color(0xff510DF1)],
                   begin: Alignment.topLeft,
@@ -263,28 +267,44 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
   }
 
   Widget audioVideoViewForeground(
-      BuildContext context, Size size, ZegoUIKitUser? user, Map extraInfo) {
+    BuildContext context,
+    Size size,
+    ZegoUIKitUser? user,
+    Map<String, dynamic> extraInfo,
+  ) {
     return Stack(
       children: [
-        widget.config.audioVideoViewConfig.foregroundBuilder
-                ?.call(context, size, user, extraInfo) ??
+        widget.config.audioVideoViewConfig.foregroundBuilder?.call(
+              context,
+              size,
+              user,
+              extraInfo,
+            ) ??
             Container(color: Colors.transparent),
       ],
     );
   }
 
   Widget audioVideoViewBackground(
-      BuildContext context, Size size, ZegoUIKitUser? user, Map extraInfo) {
-    var screenSize = MediaQuery.of(context).size;
-    var isSmallView = (screenSize.width - size.width).abs() > 1;
+    BuildContext context,
+    Size size,
+    ZegoUIKitUser? user,
+    Map<String, dynamic> extraInfo,
+  ) {
+    final screenSize = MediaQuery.of(context).size;
+    final isSmallView = (screenSize.width - size.width).abs() > 1;
     return Stack(
       children: [
         Container(
             color: isSmallView
                 ? const Color(0xff333437)
                 : const Color(0xff4A4B4D)),
-        widget.config.audioVideoViewConfig.backgroundBuilder
-                ?.call(context, size, user, extraInfo) ??
+        widget.config.audioVideoViewConfig.backgroundBuilder?.call(
+              context,
+              size,
+              user,
+              extraInfo,
+            ) ??
             Container(color: Colors.transparent),
       ],
     );

@@ -13,28 +13,31 @@ Future<bool> showLiveDialog({
   required BuildContext context,
   required String title,
   required String content,
-  required String leftButtonText,
-  required VoidCallback leftButtonCallback,
   required String rightButtonText,
-  required VoidCallback rightButtonCallback,
+  String? leftButtonText,
+  VoidCallback? leftButtonCallback,
+  VoidCallback? rightButtonCallback,
 }) async {
-  return await showAlertDialog(
+  return showAlertDialog(
     context,
     title,
     content,
     [
-      CupertinoDialogAction(
-        child: Text(
-          leftButtonText,
-          style: TextStyle(
-            fontSize: 32.r,
-            color: Colors.white,
-            fontWeight: FontWeight.w500,
+      if (leftButtonText != null)
+        CupertinoDialogAction(
+          onPressed:
+              leftButtonCallback ?? () => Navigator.of(context).pop(false),
+          child: Text(
+            leftButtonText,
+            style: TextStyle(
+              fontSize: 32.r,
+              color: Colors.white,
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ),
-        onPressed: leftButtonCallback,
-      ),
       CupertinoDialogAction(
+        onPressed: rightButtonCallback ?? () => Navigator.of(context).pop(true),
         child: Text(
           rightButtonText,
           style: TextStyle(
@@ -43,7 +46,6 @@ Future<bool> showLiveDialog({
             fontWeight: FontWeight.w500,
           ),
         ),
-        onPressed: rightButtonCallback,
       ),
     ],
     titleStyle: TextStyle(

@@ -23,8 +23,8 @@ class ZegoDialogInfo {
   ZegoDialogInfo({
     required this.title,
     required this.message,
-    this.cancelButtonName = "Cancel",
-    this.confirmButtonName = "OK",
+    this.cancelButtonName = 'Cancel',
+    this.confirmButtonName = 'OK',
   });
 }
 

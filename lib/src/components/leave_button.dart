@@ -42,14 +42,15 @@ class ZegoLeaveStreamingButton extends StatelessWidget {
         backgroundColor: ZegoUIKitDefaultTheme.buttonBackgroundColor,
       ),
       onLeaveConfirmation: (context) async {
-        var canLeave = await config.onLeaveConfirmation?.call(context) ?? true;
+        final canLeave =
+            await config.onLeaveConfirmation?.call(context) ?? true;
         if (canLeave) {
           if (hostManager.isHost) {
             /// live is ready to end, host will update if receive property notify
             /// so need to keep current host value, DISABLE local host value UPDATE
             hostUpdateEnabledNotifier.value = false;
             ZegoUIKit().updateRoomProperties({
-              RoomPropertyKey.host.text: "",
+              RoomPropertyKey.host.text: '',
               RoomPropertyKey.liveStatus.text: LiveStatus.ended.index.toString()
             });
           }

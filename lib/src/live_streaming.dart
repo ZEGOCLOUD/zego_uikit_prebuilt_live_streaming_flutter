@@ -1,15 +1,12 @@
 // Dart imports:
 import 'dart:async';
-import 'dart:convert';
 import 'dart:core';
 import 'dart:developer';
 
 // Flutter imports:
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:http/http.dart' as http;
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
@@ -21,19 +18,20 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/components/toast.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/live_status_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/plugins.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_defines.dart';
-import 'live_streaming_config.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/pk/src/pk_impl.dart';
 
 class ZegoUIKitPrebuiltLiveStreaming extends StatefulWidget {
   const ZegoUIKitPrebuiltLiveStreaming({
     Key? key,
+    this.screenSharingController,
     required this.appID,
     required this.appSign,
     required this.userID,
     required this.userName,
     required this.liveID,
     required this.config,
-    this.tokenServerUrl = '',
   }) : super(key: key);
 
   /// you need to fill in the appID you obtained from console.zegocloud.com
@@ -42,19 +40,6 @@ class ZegoUIKitPrebuiltLiveStreaming extends StatefulWidget {
   /// for Android/iOS
   /// you need to fill in the appID you obtained from console.zegocloud.com
   final String appSign;
-
-  /// tokenServerUrl is only for web.
-  /// If you have to support Web and Android, iOS, then you can use it like this
-  /// ```
-  ///   ZegoUIKitPrebuiltLiveStreaming(
-  ///     appID: appID,
-  ///     appSign: kIsWeb ? '' : appSign,
-  ///     userID: userID,
-  ///     userName: userName,
-  ///     tokenServerUrl: kIsWeb ? tokenServerUrl：'',
-  ///   );
-  /// ```
-  final String tokenServerUrl;
 
   /// local user info
   final String userID;
@@ -65,6 +50,9 @@ class ZegoUIKitPrebuiltLiveStreaming extends StatefulWidget {
   final String liveID;
 
   final ZegoUIKitPrebuiltLiveStreamingConfig config;
+
+  /// screen sharing controller
+  final ZegoScreenSharingViewController? screenSharingController;
 
   @override
   State<ZegoUIKitPrebuiltLiveStreaming> createState() =>
@@ -85,10 +73,10 @@ class _ZegoUIKitPrebuiltLiveStreamingState
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance?.addObserver(this);
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
-      log("version: zego_uikit_prebuilt_live_streaming: 1.4.4; $version");
+      log('version: zego_uikit_prebuilt_live_streaming: 2.2.1; $version');
     });
 
     hostManager = ZegoLiveHostManager(config: widget.config);
@@ -109,6 +97,17 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     }
     plugins?.init();
 
+    if (widget.config.plugins.isNotEmpty) {
+      ZegoLiveStreamingPKBattleManager().init(
+        hostManager: hostManager,
+        liveStatusNotifier: liveStatusManager.notifier,
+        config: widget.config,
+        translationText: widget.config.translationText,
+        startedByLocalNotifier: startedByLocalNotifier,
+        contextQuery: () => context,
+      );
+    }
+
     subscriptions.add(
         ZegoUIKit().getMeRemovedFromRoomStream().listen(onMeRemovedFromRoom));
 
@@ -117,9 +116,12 @@ class _ZegoUIKitPrebuiltLiveStreamingState
   }
 
   @override
-  void dispose() async {
+  Future<void> dispose() async {
     super.dispose();
+
     WidgetsBinding.instance?.removeObserver(this);
+    await ZegoLiveStreamingPKBattleManager().uninit();
+    widget.config.onLiveStreamingStateUpdate?.call(ZegoLiveStreamingState.idle);
 
     plugins?.uninit();
 
@@ -128,26 +130,26 @@ class _ZegoUIKitPrebuiltLiveStreamingState
 
     uninitContext();
 
-    for (var subscription in subscriptions) {
+    for (final subscription in subscriptions) {
       subscription?.cancel();
     }
   }
 
-  @override
-  void didUpdateWidget(ZegoUIKitPrebuiltLiveStreaming oldWidget) {
-    super.didUpdateWidget(oldWidget);
-
-    plugins?.onUserInfoUpdate(widget.userID, widget.userName);
-  }
+  // @override
+  // void didUpdateWidget(ZegoUIKitPrebuiltLiveStreaming oldWidget) {
+  //   super.didUpdateWidget(oldWidget);
+  //
+  //   plugins?.onUserInfoUpdate(widget.userID, widget.userName);
+  // }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
 
     ZegoLoggerService.logInfo(
-      "didChangeAppLifecycleState $state",
-      tag: "live streaming",
-      subTag: "prebuilt",
+      'didChangeAppLifecycleState $state',
+      tag: 'live streaming',
+      subTag: 'prebuilt',
     );
 
     switch (state) {
@@ -184,8 +186,8 @@ class _ZegoUIKitPrebuiltLiveStreamingState
   }
 
   Future<void> initPermissions() async {
-    bool isCameraGranted = true;
-    bool isMicrophoneGranted = true;
+    var isCameraGranted = true;
+    var isMicrophoneGranted = true;
     if (widget.config.turnOnCameraWhenJoining) {
       isCameraGranted = await requestPermission(Permission.camera);
     }
@@ -208,35 +210,21 @@ class _ZegoUIKitPrebuiltLiveStreamingState
   }
 
   void initContext() {
-    if (!kIsWeb) {
-      assert(widget.appSign.isNotEmpty);
-      initPermissions().then((value) {
-        ZegoUIKit().login(widget.userID, widget.userName).then((value) {
-          ZegoUIKit()
-              .init(
-                appID: widget.appID,
-                appSign: widget.appSign,
-                scenario: ZegoScenario.Broadcast,
-              )
-              .then(onContextInit);
-        });
-      });
-    } else {
-      assert(widget.tokenServerUrl.isNotEmpty);
-      ZegoUIKit().login(widget.userID, widget.userName).then((value) {
-        ZegoUIKit()
-            .init(
-              appID: widget.appID,
-              tokenServerUrl: widget.tokenServerUrl,
-              scenario: ZegoScenario.Broadcast,
-            )
-            .then(onContextInit);
-      });
-    }
+    assert(widget.appSign.isNotEmpty);
+    initPermissions().then((value) {
+      ZegoUIKit().login(widget.userID, widget.userName);
+      ZegoUIKit()
+          .init(
+            appID: widget.appID,
+            appSign: widget.appSign,
+            scenario: ZegoScenario.Broadcast,
+          )
+          .then(onContextInit);
+    });
   }
 
   void onContextInit(_) {
-    var useBeautyEffect = widget.config.bottomMenuBarConfig.hostButtons
+    final useBeautyEffect = widget.config.bottomMenuBarConfig.hostButtons
             .contains(ZegoMenuBarButtonName.beautyEffectButton) ||
         widget.config.bottomMenuBarConfig.coHostButtons
             .contains(ZegoMenuBarButtonName.beautyEffectButton);
@@ -256,23 +244,14 @@ class _ZegoUIKitPrebuiltLiveStreamingState
       ..turnMicrophoneOn(widget.config.turnOnMicrophoneWhenJoining)
       ..setAudioOutputToSpeaker(widget.config.useSpeakerWhenJoining);
 
-    if (!kIsWeb) {
-      ZegoUIKit()
-          .joinRoom(
-        widget.liveID,
-        markAsLargeRoom: widget.config.markAsLargeRoom,
-      )
-          .then((result) async {
-        await onRoomLogin(result);
-      });
-    } else {
-      getToken(widget.userID).then((token) {
-        assert(token.isNotEmpty);
-        ZegoUIKit().joinRoom(widget.liveID, token: token).then((result) async {
-          await onRoomLogin(result);
-        });
-      });
-    }
+    ZegoUIKit()
+        .joinRoom(
+      widget.liveID,
+      markAsLargeRoom: widget.config.markAsLargeRoom,
+    )
+        .then((result) async {
+      await onRoomLogin(result);
+    });
   }
 
   Future<void> onRoomLogin(ZegoRoomLoginResult result) async {
@@ -282,19 +261,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     readyNotifier.value = true;
   }
 
-  /// Get your token from tokenServer
-  Future<String> getToken(String userID) async {
-    final response = await http
-        .get(Uri.parse('${widget.tokenServerUrl}/access_token?uid=$userID'));
-    if (response.statusCode == 200) {
-      final jsonObj = json.decode(response.body);
-      return jsonObj['token'];
-    } else {
-      return "";
-    }
-  }
-
-  void uninitContext() async {
+  Future<void> uninitContext() async {
     // var useBeautyEffect = widget.config.bottomMenuBarConfig.buttons
     //     .contains(ZegoMenuBarButtonName.beautyEffectButton);
     // if (useBeautyEffect) {
@@ -320,7 +287,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
       return true;
     }
 
-    return await showLiveDialog(
+    return showLiveDialog(
       context: context,
       title: widget.config.confirmDialogInfo!.title,
       content: widget.config.confirmDialogInfo!.message,
@@ -339,10 +306,22 @@ class _ZegoUIKitPrebuiltLiveStreamingState
 
   void onMeRemovedFromRoom(String fromUserID) {
     ZegoLoggerService.logInfo(
-      "local user removed by $fromUserID",
-      tag: "live streaming",
-      subTag: "prebuilt",
+      'local user removed by $fromUserID',
+      tag: 'live streaming',
+      subTag: 'prebuilt',
     );
+
+    /// hide co-host end request dialog
+    if (hostManager.connectManager?.isEndCoHostDialogVisible ?? false) {
+      hostManager.connectManager!.isEndCoHostDialogVisible = false;
+      Navigator.of(context).pop();
+    }
+
+    /// hide invite join co-host dialog
+    if (hostManager.connectManager?.isInviteToJoinCoHostDlgVisible ?? false) {
+      hostManager.connectManager!.isInviteToJoinCoHostDlgVisible = false;
+      Navigator.of(context).pop();
+    }
 
     if (null != widget.config.onMeRemovedFromRoom) {
       widget.config.onMeRemovedFromRoom!.call(fromUserID);
@@ -360,7 +339,6 @@ class _ZegoUIKitPrebuiltLiveStreamingState
       userName: widget.userName,
       liveID: widget.liveID,
       config: widget.config,
-      tokenServerUrl: widget.tokenServerUrl,
       startedNotifier: startedByLocalNotifier,
       hostManager: hostManager,
       translationText: widget.config.translationText,
@@ -376,10 +354,10 @@ class _ZegoUIKitPrebuiltLiveStreamingState
       userName: widget.userName,
       liveID: widget.liveID,
       config: widget.config,
-      tokenServerUrl: widget.tokenServerUrl,
       hostManager: hostManager,
       liveStatusManager: liveStatusManager,
       plugins: plugins,
+      screenSharingController: widget.screenSharingController,
     );
   }
 }

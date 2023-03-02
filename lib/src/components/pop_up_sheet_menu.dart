@@ -5,13 +5,12 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/defines.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/toast.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/connect_manager.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_translation.dart';
-import 'defines.dart';
-import 'toast.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/zego_uikit_prebuilt_live_streaming.dart';
 
 class ZegoPopUpSheetMenu extends StatefulWidget {
   const ZegoPopUpSheetMenu({
@@ -46,7 +45,7 @@ class _ZegoPopUpSheetMenuState extends State<ZegoPopUpSheetMenu> {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: ((context, constraints) {
+    return LayoutBuilder(builder: (context, constraints) {
       return MediaQuery.removePadding(
         context: context,
         removeTop: true,
@@ -55,21 +54,21 @@ class _ZegoPopUpSheetMenuState extends State<ZegoPopUpSheetMenu> {
           shrinkWrap: true,
           itemCount: widget.popupItems.length,
           itemBuilder: (context, index) {
-            var popupItem = widget.popupItems[index];
+            final popupItem = widget.popupItems[index];
             return popUpItemWidget(index, popupItem);
           },
         ),
       );
-    }));
+    });
   }
 
   Widget popUpItemWidget(int index, PopupItem popupItem) {
     return GestureDetector(
       onTap: () {
         ZegoLoggerService.logInfo(
-          "[pop-up sheet] click ${popupItem.text}",
-          tag: "live streaming",
-          subTag: "pop-up sheet",
+          '[pop-up sheet] click ${popupItem.text}',
+          tag: 'live streaming',
+          subTag: 'pop-up sheet',
         );
 
         switch (popupItem.value) {
@@ -77,10 +76,17 @@ class _ZegoPopUpSheetMenuState extends State<ZegoPopUpSheetMenu> {
             widget.connectManager.kickCoHost(widget.targetUser);
             break;
           case PopupItemValue.inviteConnect:
-            var targetUserIsInviting = widget
+            final pkBattleState =
+                ZegoLiveStreamingPKBattleManager().state.value;
+            final needHideCoHostWidget =
+                pkBattleState == ZegoLiveStreamingPKBattleState.inPKBattle ||
+                    pkBattleState == ZegoLiveStreamingPKBattleState.loading;
+            if (needHideCoHostWidget) break;
+
+            final targetUserIsInviting = widget
                 .connectManager.audienceIDsOfInvitingConnect
                 .contains(widget.targetUser.id);
-            var targetUserIsRequesting = -1 !=
+            final targetUserIsRequesting = -1 !=
                 widget.connectManager.requestCoHostUsersNotifier.value
                     .indexWhere((user) => user.id == widget.targetUser.id);
             if (targetUserIsInviting || targetUserIsRequesting) {
@@ -93,9 +99,9 @@ class _ZegoPopUpSheetMenuState extends State<ZegoPopUpSheetMenu> {
             ZegoUIKit()
                 .removeUserFromRoom([widget.targetUser.id]).then((result) {
               ZegoLoggerService.logInfo(
-                "kick out result:$result",
-                tag: "live streaming",
-                subTag: "pop-up sheet",
+                'kick out result:$result',
+                tag: 'live streaming',
+                subTag: 'pop-up sheet',
               );
             });
             break;
@@ -160,7 +166,7 @@ void showPopUpSheet({
         padding: MediaQuery.of(context).viewInsets,
         duration: const Duration(milliseconds: 50),
         child: Container(
-          height: (101 * popupItems.length).r,
+          height: (popupItems.length * 101).r,
           padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
           child: ZegoPopUpSheetMenu(
             targetUser: user,

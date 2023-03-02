@@ -9,11 +9,11 @@ enum LiveStatus {
 
 class PrebuiltLiveStreamingImage {
   static Image asset(String name) {
-    return Image.asset(name, package: "zego_uikit_prebuilt_live_streaming");
+    return Image.asset(name, package: 'zego_uikit_prebuilt_live_streaming');
   }
 
   static AssetImage assetImage(String name) {
-    return AssetImage(name, package: "zego_uikit_prebuilt_live_streaming");
+    return AssetImage(name, package: 'zego_uikit_prebuilt_live_streaming');
   }
 }
 
@@ -36,11 +36,10 @@ class PrebuiltLiveStreamingIconUrls {
       'assets/icons/toolbar_flip_camera.png';
   static const String toolbarMicNormal = 'assets/icons/toolbar_mic_normal.png';
   static const String toolbarMicOff = 'assets/icons/toolbar_mic_off.png';
-  static const String toolbarConnect = 'assets/icons/toolbar_connect.png';
   static const String toolbarCoHost = 'assets/icons/toolbar_cohost.png';
 
   static const String memberMore = 'assets/icons/member_more.png';
   static const String bottomBarMore = 'assets/icons/bottombar_more.png';
 
-  static const String effectReset = "assets/icons/effect_reset.png";
+  static const String effectReset = 'assets/icons/effect_reset.png';
 }

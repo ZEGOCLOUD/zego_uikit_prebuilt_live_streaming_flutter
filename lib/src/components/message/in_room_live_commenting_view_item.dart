@@ -23,8 +23,8 @@ class ZegoInRoomLiveCommentingViewItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var messageBackgroundColor = const Color(0xff2a2a2a).withOpacity(0.5);
-    var messageNameColor = const Color(0xffFFB763);
+    final messageBackgroundColor = const Color(0xff2a2a2a).withOpacity(0.5);
+    const messageNameColor = Color(0xffFFB763);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -52,7 +52,7 @@ class ZegoInRoomLiveCommentingViewItem extends StatelessWidget {
                   ),
                   WidgetSpan(child: SizedBox(width: 10.r)),
                   TextSpan(
-                    text: isHorizontal ? message : "\n$message",
+                    text: isHorizontal ? message : '\n$message',
                     style: TextStyle(
                       fontSize: 26.r,
                       fontWeight: FontWeight.w400,
@@ -69,7 +69,7 @@ class ZegoInRoomLiveCommentingViewItem extends StatelessWidget {
   }
 
   TextSpan prefixWidget() {
-    var messageHostColor = const Color(0xff9f76ff);
+    const messageHostColor = Color(0xff9f76ff);
 
     return TextSpan(children: [
       WidgetSpan(

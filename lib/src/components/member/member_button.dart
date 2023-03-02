@@ -6,13 +6,12 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/member/member_list_sheet.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/host_manager.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_translation.dart';
-import 'member_list_sheet.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/zego_uikit_prebuilt_live_streaming.dart';
 
 class ZegoMemberButton extends StatefulWidget {
   const ZegoMemberButton({
@@ -98,26 +97,39 @@ class _ZegoMemberButtonState extends State<ZegoMemberButton> {
   }
 
   Widget redPoint() {
-    return Positioned(
-      top: 0,
-      right: 0,
-      child: ValueListenableBuilder<bool>(
-        valueListenable: redPointNotifier,
-        builder: (context, visibility, _) {
-          if (!visibility) {
-            return Container();
-          }
+    return ValueListenableBuilder(
+      valueListenable: ZegoLiveStreamingPKBattleManager().state,
+      builder: (context, pkBattleState, _) {
+        final needHideCoHostWidget =
+            pkBattleState == ZegoLiveStreamingPKBattleState.inPKBattle ||
+                pkBattleState == ZegoLiveStreamingPKBattleState.loading;
 
-          return Container(
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.red,
+        if (needHideCoHostWidget) {
+          return Container();
+        } else {
+          return Positioned(
+            top: 0,
+            right: 0,
+            child: ValueListenableBuilder<bool>(
+              valueListenable: redPointNotifier,
+              builder: (context, visibility, _) {
+                if (!visibility) {
+                  return Container();
+                }
+
+                return Container(
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.red,
+                  ),
+                  width: 20.r,
+                  height: 20.r,
+                );
+              },
             ),
-            width: 20.r,
-            height: 20.r,
           );
-        },
-      ),
+        }
+      },
     );
   }
 

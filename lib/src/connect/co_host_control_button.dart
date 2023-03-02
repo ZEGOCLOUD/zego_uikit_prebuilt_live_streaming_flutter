@@ -14,6 +14,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/connect/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_translation.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/pk/pk_service.dart';
 
 class ZegoCoHostControlButton extends StatefulWidget {
   const ZegoCoHostControlButton({
@@ -56,22 +57,34 @@ class _ZegoCoHostControlButtonState extends State<ZegoCoHostControlButton> {
   }
 
   @override
-  void dispose() async {
+  Future<void> dispose() async {
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<ConnectState>(
-      valueListenable: widget.connectManager.audienceLocalConnectStateNotifier,
-      builder: (context, connectState, _) {
-        switch (connectState) {
-          case ConnectState.idle:
-            return requestCoHostButton();
-          case ConnectState.connecting:
-            return cancelRequestCoHostButton();
-          case ConnectState.connected:
-            return endCoHostButton();
+    return ValueListenableBuilder(
+      valueListenable: ZegoLiveStreamingPKBattleManager().state,
+      builder: (BuildContext context,
+          ZegoLiveStreamingPKBattleState pkBattleState, Widget? child) {
+        if (pkBattleState == ZegoLiveStreamingPKBattleState.inPKBattle ||
+            pkBattleState == ZegoLiveStreamingPKBattleState.loading) {
+          return const SizedBox.shrink();
+        } else {
+          return ValueListenableBuilder<ConnectState>(
+            valueListenable:
+                widget.connectManager.audienceLocalConnectStateNotifier,
+            builder: (context, connectState, _) {
+              switch (connectState) {
+                case ConnectState.idle:
+                  return requestCoHostButton();
+                case ConnectState.connecting:
+                  return cancelRequestCoHostButton();
+                case ConnectState.connected:
+                  return endCoHostButton();
+              }
+            },
+          );
         }
       },
     );

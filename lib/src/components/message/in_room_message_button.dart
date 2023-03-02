@@ -9,10 +9,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/message/defines.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/message/in_room_message_input_board.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
-import 'defines.dart';
-import 'in_room_message_input_board.dart';
 
 class ZegoInRoomMessageButton extends StatefulWidget {
   final ZegoLiveHostManager hostManager;
@@ -48,7 +48,7 @@ class _ZegoInRoomMessageButtonState extends State<ZegoInRoomMessageButton> {
   void dispose() {
     super.dispose();
 
-    for (var subscription in subscriptions) {
+    for (final subscription in subscriptions) {
       subscription?.cancel();
     }
   }
@@ -91,18 +91,18 @@ class _ZegoInRoomMessageButtonState extends State<ZegoInRoomMessageButton> {
     }
 
     ZegoLoggerService.logInfo(
-      "chat enabled property changed to "
-      "${updatedProperties[disableChatRoomPropertyKey]!.value}",
-      tag: "live streaming",
-      subTag: "message button",
+      'chat enabled property changed to '
+      '${updatedProperties[disableChatRoomPropertyKey]!.value}',
+      tag: 'live streaming',
+      subTag: 'message button',
     );
     chatEnableNotifier.value =
         toBoolean(updatedProperties[disableChatRoomPropertyKey]!.value);
     if (!chatEnableNotifier.value && isMessageInputting) {
       ZegoLoggerService.logInfo(
-        "message inputting, close it",
-        tag: "live streaming",
-        subTag: "message button",
+        'message inputting, close it',
+        tag: 'live streaming',
+        subTag: 'message button',
       );
       Navigator.of(context).pop();
     }

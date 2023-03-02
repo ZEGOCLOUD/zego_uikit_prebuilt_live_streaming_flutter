@@ -6,8 +6,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/effects/sound_effect_sheet.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
-import 'sound_effect_sheet.dart';
 
 class ZegoSoundEffectButton extends StatefulWidget {
   final List<VoiceChangerType> voiceChangeEffect;
@@ -31,13 +31,13 @@ class ZegoSoundEffectButton extends StatefulWidget {
 }
 
 class _ZegoSoundEffectButtonState extends State<ZegoSoundEffectButton> {
-  var voiceChangerSelectedIDNotifier = ValueNotifier<String>("");
-  var reverbSelectedIDNotifier = ValueNotifier<String>("");
+  var voiceChangerSelectedIDNotifier = ValueNotifier<String>('');
+  var reverbSelectedIDNotifier = ValueNotifier<String>('');
 
   @override
   Widget build(BuildContext context) {
-    Size containerSize = widget.buttonSize ?? Size(96.r, 96.r);
-    Size sizeBoxSize = widget.iconSize ?? Size(56.r, 56.r);
+    final containerSize = widget.buttonSize ?? Size(96.r, 96.r);
+    final sizeBoxSize = widget.iconSize ?? Size(56.r, 56.r);
     return GestureDetector(
       onTap: () async {
         showSoundEffectSheet(

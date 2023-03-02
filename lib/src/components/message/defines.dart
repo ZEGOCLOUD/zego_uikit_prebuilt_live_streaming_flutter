@@ -1,1 +1,1 @@
-const disableChatRoomPropertyKey = "enableChat";
+const disableChatRoomPropertyKey = 'enableChat';

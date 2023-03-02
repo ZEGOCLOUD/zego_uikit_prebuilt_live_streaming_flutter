@@ -5,13 +5,20 @@ import 'package:flutter/cupertino.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
-import 'live_streaming_defines.dart';
-import 'live_streaming_translation.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_defines.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_translation.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/pk/defines.dart';
 
 enum ZegoLiveStreamingRole {
   host,
   coHost,
   audience,
+}
+
+enum ZegoLiveStreamingState {
+  idle,
+  living,
+  inPKBattle,
 }
 
 class ZegoUIKitPrebuiltLiveStreamingConfig {
@@ -36,11 +43,13 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         effectConfig = ZegoEffectConfig(),
         translationText = ZegoTranslationText(),
         confirmDialogInfo = ZegoDialogInfo(
-          title: "Stop the live",
-          message: "Are you sure to stop the live?",
-          cancelButtonName: "Cancel",
-          confirmButtonName: "Stop it",
-        );
+          title: 'Stop the live',
+          message: 'Are you sure to stop the live?',
+          cancelButtonName: 'Cancel',
+          confirmButtonName: 'Stop it',
+        ),
+        pkBattleConfig = ZegoLiveStreamingPKBattleConfig(),
+        pkBattleEvents = ZegoLiveStreamingPKBattleEvents();
 
   ZegoUIKitPrebuiltLiveStreamingConfig.audience(
       {List<IZegoUIKitPlugin>? plugins})
@@ -61,7 +70,9 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         memberListConfig = ZegoMemberListConfig(),
         inRoomMessageViewConfig = ZegoInRoomMessageViewConfig(),
         effectConfig = ZegoEffectConfig(),
-        translationText = ZegoTranslationText();
+        translationText = ZegoTranslationText(),
+        pkBattleConfig = ZegoLiveStreamingPKBattleConfig(),
+        pkBattleEvents = ZegoLiveStreamingPKBattleEvents();
 
   ZegoUIKitPrebuiltLiveStreamingConfig({
     this.turnOnCameraWhenJoining = true,
@@ -82,6 +93,8 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
     this.onCameraTurnOnByOthersConfirmation,
     this.onMicrophoneTurnOnByOthersConfirmation,
     this.background,
+    ZegoLiveStreamingPKBattleConfig? pkBattleConfig,
+    ZegoLiveStreamingPKBattleEvents? pkBattleEvents,
     ZegoTranslationText? translationText,
   })  : audioVideoViewConfig =
             audioVideoViewConfig ?? ZegoPrebuiltAudioVideoViewConfig(),
@@ -90,7 +103,9 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         inRoomMessageViewConfig =
             messageConfig ?? ZegoInRoomMessageViewConfig(),
         effectConfig = effectConfig ?? ZegoEffectConfig(),
-        translationText = translationText ?? ZegoTranslationText();
+        translationText = translationText ?? ZegoTranslationText(),
+        pkBattleConfig = pkBattleConfig ?? ZegoLiveStreamingPKBattleConfig(),
+        pkBattleEvents = pkBattleEvents ?? ZegoLiveStreamingPKBattleEvents();
 
   /// specify if a host or co-host, audience
   ZegoLiveStreamingRole role = ZegoLiveStreamingRole.audience;
@@ -142,6 +157,8 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
 
   /// customize handling after end live streaming
   VoidCallback? onLiveStreamingEnded;
+
+  void Function(ZegoLiveStreamingState state)? onLiveStreamingStateUpdate;
 
   ZegoTranslationText translationText;
 
@@ -218,6 +235,10 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   ///       )));
   /// ```
   Widget? background;
+
+  // cross room pk events
+  ZegoLiveStreamingPKBattleEvents pkBattleEvents;
+  ZegoLiveStreamingPKBattleConfig pkBattleConfig;
 }
 
 class ZegoPrebuiltAudioVideoViewConfig {
@@ -380,4 +401,35 @@ class ZegoEffectConfig {
   bool get isSupportVoiceChange => voiceChangeEffect.isNotEmpty;
 
   bool get isSupportReverb => reverbEffect.isNotEmpty;
+}
+
+typedef ZegoLiveStreamingPKBattleHostReconnectingBuilder = Widget Function(
+  BuildContext context,
+  ZegoUIKitUser? host,
+  Map<String, dynamic> extraInfo,
+);
+
+typedef ZegoLiveStreamingPKBattleViewBuilder = Widget Function(
+  BuildContext context,
+  List<ZegoUIKitUser?> hosts,
+  Map<String, dynamic> extraInfo,
+);
+
+class ZegoLiveStreamingPKBattleConfig {
+  /// The distance that the pkBattleEvents's top edge is inset from the top of the stack.
+  /// default is 164.r
+  double? pKBattleViewTopPadding;
+
+  /// When the connected host gets offline due to exceptions, SDK defaults to show "Host is reconnecting".
+  /// To customize the content that displays when the connected host gets offline, use the [hostReconnectingBuilder].
+  ZegoLiveStreamingPKBattleHostReconnectingBuilder? hostReconnectingBuilder;
+
+  /// To overlay custom components on the PKBattleView, use the [pkBattleViewForegroundBuilder].
+  ZegoLiveStreamingPKBattleViewBuilder? pkBattleViewForegroundBuilder;
+
+  /// To add custom components on the top edge of the PKBattleView, use the [pkBattleViewTopBuilder].
+  ZegoLiveStreamingPKBattleViewBuilder? pkBattleViewTopBuilder;
+
+  /// To add custom components on the bottom edge of the PKBattleView, use the [pkBattleViewBottomBuilder].
+  ZegoLiveStreamingPKBattleViewBuilder? pkBattleViewBottomBuilder;
 }

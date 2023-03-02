@@ -6,8 +6,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/message/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
-import 'defines.dart';
 
 class ZegoDisableChatButton extends StatefulWidget {
   final Size? iconSize;
@@ -34,8 +34,8 @@ class _ZegoDisableChatButtonState extends State<ZegoDisableChatButton> {
 
   @override
   Widget build(BuildContext context) {
-    Size containerSize = widget.buttonSize ?? Size(96.r, 96.r);
-    Size sizeBoxSize = widget.iconSize ?? Size(56.r, 56.r);
+    final containerSize = widget.buttonSize ?? Size(96.r, 96.r);
+    final sizeBoxSize = widget.iconSize ?? Size(56.r, 56.r);
 
     isChatEnabled = ZegoUIKit()
             .getRoomProperties()
@@ -44,7 +44,7 @@ class _ZegoDisableChatButtonState extends State<ZegoDisableChatButton> {
             ZegoUIKit().getRoomProperties()[disableChatRoomPropertyKey]!.value)
         : true;
 
-    var icon = ButtonIcon(
+    final icon = ButtonIcon(
       icon: PrebuiltLiveStreamingImage.asset(isChatEnabled
           ? PrebuiltLiveStreamingIconUrls.enableIM
           : PrebuiltLiveStreamingIconUrls.disableIM),
@@ -54,9 +54,9 @@ class _ZegoDisableChatButtonState extends State<ZegoDisableChatButton> {
       onTap: () async {
         if (isUpdatingRoomProperty) {
           ZegoLoggerService.logInfo(
-            "room property update is not finish",
-            tag: "live streaming",
-            subTag: "disable chat button",
+            'room property update is not finish',
+            tag: 'live streaming',
+            subTag: 'disable chat button',
           );
           return;
         }

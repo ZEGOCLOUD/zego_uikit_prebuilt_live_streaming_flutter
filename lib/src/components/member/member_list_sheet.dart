@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/defines.dart';
@@ -13,7 +12,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/connect/connect_manager.d
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_translation.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/zego_uikit_prebuilt_live_streaming.dart';
 
 class ZegoMemberListSheet extends StatefulWidget {
   const ZegoMemberListSheet({
@@ -116,10 +115,22 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
         sortUsers += usersInRequestCoHost;
         sortUsers += remoteUsers;
 
+        // remove other room's users
+        final currentRoomUsers = ZegoUIKit().getAllUsers();
+        sortUsers.removeWhere((element) {
+          final targetIndex =
+              currentRoomUsers.indexWhere((user) => element.id == user.id);
+          return targetIndex == -1;
+        });
+
         return sortUsers;
       },
-      itemBuilder:
-          (BuildContext context, Size size, ZegoUIKitUser user, Map extraInfo) {
+      itemBuilder: (
+        BuildContext context,
+        Size size,
+        ZegoUIKitUser user,
+        Map<String, dynamic> extraInfo,
+      ) {
         return ValueListenableBuilder<bool>(
             valueListenable: ZegoUIKit().getCameraStateNotifier(user.id),
             builder: (context, _, __) {
@@ -236,19 +247,36 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
   }
 
   Widget controlsItem(ZegoUIKitUser user) {
-    return ValueListenableBuilder<List<ZegoUIKitUser>>(
-        valueListenable: widget.connectManager.requestCoHostUsersNotifier,
-        builder: (context, requestCoHostUsers, _) {
-          final index = requestCoHostUsers.indexWhere(
-              (requestCoHostUser) => user.id == requestCoHostUser.id);
-          if (-1 != index) {
-            return requestCoHostUserControlItem(user);
-          } else if (widget.hostManager.isHost) {
+    return ValueListenableBuilder(
+      valueListenable: ZegoLiveStreamingPKBattleManager().state,
+      builder: (context, pkBattleState, _) {
+        final needHideCoHostWidget =
+            pkBattleState == ZegoLiveStreamingPKBattleState.inPKBattle ||
+                pkBattleState == ZegoLiveStreamingPKBattleState.loading;
+        if (needHideCoHostWidget) {
+          if (widget.hostManager.isHost) {
             return hostControlItem(user);
+          } else {
+            return Container();
           }
+        } else {
+          return ValueListenableBuilder<List<ZegoUIKitUser>>(
+            valueListenable: widget.connectManager.requestCoHostUsersNotifier,
+            builder: (context, requestCoHostUsers, _) {
+              final index = requestCoHostUsers.indexWhere(
+                  (requestCoHostUser) => user.id == requestCoHostUser.id);
+              if (-1 != index) {
+                return requestCoHostUserControlItem(user);
+              } else if (widget.hostManager.isHost) {
+                return hostControlItem(user);
+              }
 
-          return Container();
-        });
+              return Container();
+            },
+          );
+        }
+      },
+    );
   }
 
   Widget requestCoHostUserControlItem(ZegoUIKitUser user) {
@@ -270,7 +298,7 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
                 if (result.error == null) {
                   widget.connectManager.removeRequestCoHostUsers(user);
                 } else {
-                  showError('error:${result.error}');
+                  showDebugToast('error:${result.error}');
                 }
               });
             }),
@@ -296,7 +324,7 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
                 if (result.error == null) {
                   widget.connectManager.removeRequestCoHostUsers(user);
                 } else {
-                  showError('error:${result.error}');
+                  showDebugToast('error:${result.error}');
                 }
               });
             }),
@@ -305,60 +333,70 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
   }
 
   Widget hostControlItem(ZegoUIKitUser user) {
-    final popupItems = <PopupItem>[];
+    return ValueListenableBuilder(
+      valueListenable: ZegoLiveStreamingPKBattleManager().state,
+      builder: (context, pkBattleState, _) {
+        final needHideCoHostWidget =
+            pkBattleState == ZegoLiveStreamingPKBattleState.inPKBattle ||
+                pkBattleState == ZegoLiveStreamingPKBattleState.loading;
 
-    if (user.id != widget.hostManager.notifier.value?.id &&
-        isCoHost(user) &&
-        (widget.isPluginEnabled)) {
-      popupItems.add(PopupItem(
-        PopupItemValue.kickCoHost,
-        widget.translationText.removeCoHostButton,
-      ));
-    }
+        final popupItems = <PopupItem>[];
 
-    if (widget.isPluginEnabled &&
-        //  not host
-        user.id != widget.hostManager.notifier.value?.id &&
-        !isCoHost(user)) {
-      popupItems.add(PopupItem(
-          PopupItemValue.inviteConnect,
-          widget.translationText.inviteCoHostButton
-              .replaceFirst(widget.translationText.param_1, user.name)));
-    }
+        if (user.id != widget.hostManager.notifier.value?.id &&
+            isCoHost(user) &&
+            (widget.isPluginEnabled)) {
+          popupItems.add(PopupItem(
+            PopupItemValue.kickCoHost,
+            widget.translationText.removeCoHostButton,
+          ));
+        }
 
-    if (user.id != widget.hostManager.notifier.value?.id) {
-      popupItems.add(PopupItem(
-          PopupItemValue.kickOutAttendance,
-          widget.translationText.removeUserMenuDialogButton
-              .replaceFirst(widget.translationText.param_1, user.name)));
-    }
+        if (widget.isPluginEnabled &&
+            //  not host
+            user.id != widget.hostManager.notifier.value?.id &&
+            !isCoHost(user) &&
+            !needHideCoHostWidget) {
+          popupItems.add(PopupItem(
+              PopupItemValue.inviteConnect,
+              widget.translationText.inviteCoHostButton
+                  .replaceFirst(widget.translationText.param_1, user.name)));
+        }
 
-    if (popupItems.isEmpty) {
-      return Container();
-    }
+        if (user.id != widget.hostManager.notifier.value?.id) {
+          popupItems.add(PopupItem(
+              PopupItemValue.kickOutAttendance,
+              widget.translationText.removeUserMenuDialogButton
+                  .replaceFirst(widget.translationText.param_1, user.name)));
+        }
 
-    popupItems.add(PopupItem(
-      PopupItemValue.cancel,
-      widget.translationText.cancelMenuDialogButton,
-    ));
+        if (popupItems.isEmpty) {
+          return Container();
+        }
 
-    return ZegoTextIconButton(
-      buttonSize: Size(60.r, 60.r),
-      iconSize: Size(60.r, 60.r),
-      icon: ButtonIcon(
-        icon: PrebuiltLiveStreamingImage.asset(
-            PrebuiltLiveStreamingIconUrls.memberMore),
-      ),
-      onPressed: () {
-        /// product manager say close sheet together
-        Navigator.of(context).pop();
+        popupItems.add(PopupItem(
+          PopupItemValue.cancel,
+          widget.translationText.cancelMenuDialogButton,
+        ));
 
-        showPopUpSheet(
-          context: context,
-          user: user,
-          popupItems: popupItems,
-          connectManager: widget.connectManager,
-          translationText: widget.translationText,
+        return ZegoTextIconButton(
+          buttonSize: Size(60.r, 60.r),
+          iconSize: Size(60.r, 60.r),
+          icon: ButtonIcon(
+            icon: PrebuiltLiveStreamingImage.asset(
+                PrebuiltLiveStreamingIconUrls.memberMore),
+          ),
+          onPressed: () {
+            /// product manager say close sheet together
+            Navigator.of(context).pop();
+
+            showPopUpSheet(
+              context: context,
+              user: user,
+              popupItems: popupItems,
+              connectManager: widget.connectManager,
+              translationText: widget.translationText,
+            );
+          },
         );
       },
     );

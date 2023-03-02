@@ -1,3 +1,23 @@
+## 2.2.0
+
+- support full screen for screen sharing
+
+## 2.1.3
+
+ - Fix the issue of the re-login problem caused by onUserInfoUpdate
+
+## 2.1.2
+
+ - Fix the issue of mixed stream view of pkBattles is sometimes not displayed due to express doesn't trigger the first frame callback.
+
+## 2.1.1
+
+ - support rtc pkbattles
+
+## 2.1.0
+
+ - Support PK Battles.
+
 ## 2.0.0
 
  - Architecture upgrade based on adapter.

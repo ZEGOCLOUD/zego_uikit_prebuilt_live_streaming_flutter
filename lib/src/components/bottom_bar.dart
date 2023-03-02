@@ -1,27 +1,22 @@
 // Flutter imports:
-
-// Flutter imports:
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/defines.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/effects/beauty_effect_button.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/effects/sound_effect_button.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/leave_button.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/message/disable_chat_button.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/message/in_room_message_button.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/co_host_control_button.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_defines.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_translation.dart';
-import 'defines.dart';
-import 'effects/beauty_effect_button.dart';
-import 'effects/sound_effect_button.dart';
-import 'leave_button.dart';
-import 'message/disable_chat_button.dart';
-import 'message/in_room_message_button.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/zego_uikit_prebuilt_live_streaming.dart';
 
 class ZegoBottomBar extends StatefulWidget {
   final ZegoUIKitPrebuiltLiveStreamingConfig config;
@@ -72,38 +67,40 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
       height: 124.r,
       child: Stack(
         children: [
-          widget.config.bottomMenuBarConfig.showInRoomMessageButton
-              ? SizedBox(
-                  height: 124.r,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      zegoLiveButtonPadding,
-                      ZegoInRoomMessageButton(hostManager: widget.hostManager),
-                    ],
-                  ),
-                )
-              : const SizedBox(),
-          widget.hostManager.isHost
-              ? rightToolbar(context)
-              : ValueListenableBuilder(
-                  valueListenable:
-                      widget.connectManager.audienceLocalConnectStateNotifier,
-                  builder: (context, connectState, _) {
-                    if (widget.config.plugins.isEmpty) {
-                      return rightToolbar(context);
-                    }
+          if (widget.config.bottomMenuBarConfig.showInRoomMessageButton)
+            SizedBox(
+              height: 124.r,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  zegoLiveButtonPadding,
+                  ZegoInRoomMessageButton(hostManager: widget.hostManager),
+                ],
+              ),
+            )
+          else
+            const SizedBox(),
+          if (widget.hostManager.isHost)
+            rightToolbar(context)
+          else
+            ValueListenableBuilder(
+              valueListenable:
+                  widget.connectManager.audienceLocalConnectStateNotifier,
+              builder: (context, connectState, _) {
+                if (widget.config.plugins.isEmpty) {
+                  return rightToolbar(context);
+                }
 
-                    if (ConnectState.connecting == connectState) {
-                      return rightToolbar(context);
-                    }
+                if (ConnectState.connecting == connectState) {
+                  return rightToolbar(context);
+                }
 
-                    updateButtonsByRole();
+                updateButtonsByRole();
 
-                    return rightToolbar(context);
-                  },
-                ),
+                return rightToolbar(context);
+              },
+            ),
         ],
       ),
     );
@@ -114,9 +111,9 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
       buttons = widget.config.bottomMenuBarConfig.hostButtons;
       extendButtons = widget.config.bottomMenuBarConfig.hostExtendButtons;
     } else {
-      var connectState =
+      final connectState =
           widget.connectManager.audienceLocalConnectStateNotifier.value;
-      var isCoHost = ConnectState.connected == connectState;
+      final isCoHost = ConnectState.connected == connectState;
 
       buttons = isCoHost
           ? widget.config.bottomMenuBarConfig.coHostButtons
@@ -151,52 +148,57 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
   }
 
   List<Widget> getDisplayButtons(BuildContext context) {
-    List<Widget> buttonList = [...getDefaultButtons(context), ...extendButtons];
+    final buttonList = <Widget>[
+      ...getDefaultButtons(context),
+      ...extendButtons
+    ];
 
-    List<Widget> displayButtonList = [];
+    var displayButtonList = <Widget>[];
     if (buttonList.length > widget.config.bottomMenuBarConfig.maxCount) {
       /// the list count exceeds the limit, so divided into two parts,
       /// one part display in the Menu bar, the other part display in the menu with more buttons
-      displayButtonList =
-          buttonList.sublist(0, widget.config.bottomMenuBarConfig.maxCount - 1);
+      displayButtonList = buttonList.sublist(
+        0,
+        widget.config.bottomMenuBarConfig.maxCount - 1,
+      )..add(
+          buttonWrapper(
+            child: ZegoMoreButton(
+                menuButtonListFunc: () {
+                  final buttonList = <Widget>[
+                    ...getDefaultButtons(context, cameraDefaultValueFunc: () {
+                      return ZegoUIKit()
+                          .getCameraStateNotifier(ZegoUIKit().getLocalUser().id)
+                          .value;
+                    }, microphoneDefaultValueFunc: () {
+                      return ZegoUIKit()
+                          .getMicrophoneStateNotifier(
+                              ZegoUIKit().getLocalUser().id)
+                          .value;
+                    }),
+                    ...extendButtons
+                  ]..removeRange(
+                      0,
+                      widget.config.bottomMenuBarConfig.maxCount - 1,
+                    );
 
-      displayButtonList.add(
-        buttonWrapper(
-          child: ZegoMoreButton(
-              menuButtonListFunc: () {
-                List<Widget> buttonList = [
-                  ...getDefaultButtons(context, cameraDefaultValueFunc: () {
-                    return ZegoUIKit()
-                        .getCameraStateNotifier(ZegoUIKit().getLocalUser().id)
-                        .value;
-                  }, microphoneDefaultValueFunc: () {
-                    return ZegoUIKit()
-                        .getMicrophoneStateNotifier(
-                            ZegoUIKit().getLocalUser().id)
-                        .value;
-                  }),
-                  ...extendButtons
-                ];
-                buttonList.removeRange(
-                    0, widget.config.bottomMenuBarConfig.maxCount - 1);
-
-                return buttonList;
-              },
-              icon: ButtonIcon(
-                icon: PrebuiltLiveStreamingImage.asset(
-                    PrebuiltLiveStreamingIconUrls.bottomBarMore),
-                backgroundColor: Colors.transparent,
-              )),
-        ),
-      );
+                  return buttonList;
+                },
+                icon: ButtonIcon(
+                  icon: PrebuiltLiveStreamingImage.asset(
+                      PrebuiltLiveStreamingIconUrls.bottomBarMore),
+                  backgroundColor: Colors.transparent,
+                )),
+          ),
+        );
     } else {
       displayButtonList = buttonList;
     }
 
-    List<Widget> displayButtonsWithSpacing = [];
-    for (var button in displayButtonList) {
-      displayButtonsWithSpacing.add(button);
-      displayButtonsWithSpacing.add(zegoLiveButtonPadding);
+    final displayButtonsWithSpacing = <Widget>[];
+    for (final button in displayButtonList) {
+      displayButtonsWithSpacing
+        ..add(button)
+        ..add(zegoLiveButtonPadding);
     }
 
     return displayButtonsWithSpacing;
@@ -270,25 +272,35 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
     microphoneDefaultOn =
         microphoneDefaultValueFunc?.call() ?? microphoneDefaultOn;
 
-    var buttonSize = zegoLiveButtonSize;
-    var iconSize = zegoLiveButtonIconSize;
+    final buttonSize = zegoLiveButtonSize;
+    final iconSize = zegoLiveButtonIconSize;
     switch (type) {
       case ZegoMenuBarButtonName.toggleMicrophoneButton:
-        return ZegoToggleMicrophoneButton(
-          buttonSize: buttonSize,
-          iconSize: iconSize,
-          normalIcon: ButtonIcon(
-            icon: PrebuiltLiveStreamingImage.asset(
-                PrebuiltLiveStreamingIconUrls.toolbarMicNormal),
-            backgroundColor: Colors.transparent,
-          ),
-          offIcon: ButtonIcon(
-            icon: PrebuiltLiveStreamingImage.asset(
-                PrebuiltLiveStreamingIconUrls.toolbarMicOff),
-            backgroundColor: Colors.transparent,
-          ),
-          defaultOn: microphoneDefaultOn,
+        return ValueListenableBuilder(
+          valueListenable: ZegoLiveStreamingPKBattleManager().state,
+          builder: (context, pkBattleState, _) {
+            final needUserMuteMode =
+                pkBattleState == ZegoLiveStreamingPKBattleState.inPKBattle ||
+                    pkBattleState == ZegoLiveStreamingPKBattleState.loading;
+            return ZegoToggleMicrophoneButton(
+              buttonSize: buttonSize,
+              iconSize: iconSize,
+              normalIcon: ButtonIcon(
+                icon: PrebuiltLiveStreamingImage.asset(
+                    PrebuiltLiveStreamingIconUrls.toolbarMicNormal),
+                backgroundColor: Colors.transparent,
+              ),
+              offIcon: ButtonIcon(
+                icon: PrebuiltLiveStreamingImage.asset(
+                    PrebuiltLiveStreamingIconUrls.toolbarMicOff),
+                backgroundColor: Colors.transparent,
+              ),
+              defaultOn: microphoneDefaultOn,
+              muteMode: needUserMuteMode,
+            );
+          },
         );
+
       case ZegoMenuBarButtonName.switchAudioOutputButton:
         return ZegoSwitchAudioOutputButton(
           buttonSize: buttonSize,

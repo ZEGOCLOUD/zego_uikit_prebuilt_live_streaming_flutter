@@ -6,9 +6,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/effects/beauty_effect_reset_button.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/effects/effect_grid.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
-import 'beauty_effect_reset_button.dart';
-import 'effect_grid.dart';
 
 class ZegoBeautyEffectSheet extends StatefulWidget {
   final List<BeautyEffectType> beautyEffects;
@@ -22,16 +22,21 @@ class ZegoBeautyEffectSheet extends StatefulWidget {
   State<ZegoBeautyEffectSheet> createState() => _ZegoBeautyEffectSheetState();
 }
 
-get _besHeaderHeight => 98.r;
-get _besSliderHeight => 32.r;
-get _besSliderPadding => 43.r;
-get _besSheetTotalHeight => 317.r;
-get _besLineToSheetPadding => 36.r;
-get _besLineHeight => 1.r;
+double get _besHeaderHeight => 98.r;
+
+double get _besSliderHeight => 32.r;
+
+double get _besSliderPadding => 43.r;
+
+double get _besSheetTotalHeight => 317.r;
+
+double get _besLineToSheetPadding => 36.r;
+
+double get _besLineHeight => 1.r;
 
 class _ZegoBeautyEffectSheetState extends State<ZegoBeautyEffectSheet> {
   late ZegoEffectGridModel beauty;
-  var selectedIDNotifier = ValueNotifier<String>("");
+  var selectedIDNotifier = ValueNotifier<String>('');
   var selectedEffectTypeNotifier =
       ValueNotifier<BeautyEffectType>(BeautyEffectType.none);
 
@@ -39,10 +44,10 @@ class _ZegoBeautyEffectSheetState extends State<ZegoBeautyEffectSheet> {
   void initState() {
     super.initState();
 
-    List<BeautyEffectType> beautyEffects = List.from(widget.beautyEffects);
-    beautyEffects.removeWhere((effect) => effect == BeautyEffectType.none);
+    final beautyEffects = List<BeautyEffectType>.from(widget.beautyEffects)
+      ..removeWhere((effect) => effect == BeautyEffectType.none);
     beauty = ZegoEffectGridModel(
-      title: "",
+      title: '',
       selectedID: selectedIDNotifier,
       items: beautyEffects
           .map(
@@ -51,7 +56,7 @@ class _ZegoBeautyEffectSheetState extends State<ZegoBeautyEffectSheet> {
               effectType: effect,
               icon: ButtonIcon(
                 icon: PrebuiltLiveStreamingImage.asset(
-                    "assets/icons/face_beauty_" + effect.name + ".png"),
+                    'assets/icons/face_beauty_${effect.name}.png'),
               ),
               iconText: effect.text,
               onPressed: () {
@@ -77,9 +82,10 @@ class _ZegoBeautyEffectSheetState extends State<ZegoBeautyEffectSheet> {
             return Column(
               children: [
                 slider(height: _besSliderHeight),
-                BeautyEffectType.none == selectedEffectTypeNotifier.value
-                    ? Container()
-                    : SizedBox(height: _besSliderPadding),
+                if (BeautyEffectType.none == selectedEffectTypeNotifier.value)
+                  Container()
+                else
+                  SizedBox(height: _besSliderPadding),
               ],
             );
           },
@@ -117,7 +123,7 @@ class _ZegoBeautyEffectSheetState extends State<ZegoBeautyEffectSheet> {
 
   Widget slider({required double height}) {
     var selectedEffectValue = 50;
-    var beautyParam = ZegoUIKit().getBeautyValue();
+    final beautyParam = ZegoUIKit().getBeautyValue();
     switch (selectedEffectTypeNotifier.value) {
       case BeautyEffectType.whiten:
         selectedEffectValue = beautyParam.whitenIntensity;
@@ -175,7 +181,7 @@ class _ZegoBeautyEffectSheetState extends State<ZegoBeautyEffectSheet> {
           ),
           SizedBox(width: 10.r),
           Text(
-            "Face beautification",
+            'Face beautification',
             style: TextStyle(
               fontSize: 36.0.r,
               color: const Color(0xffffffff),
@@ -187,7 +193,7 @@ class _ZegoBeautyEffectSheetState extends State<ZegoBeautyEffectSheet> {
             buttonSize: Size(_besHeaderHeight, _besHeaderHeight),
             iconSize: Size(38.r, 38.r),
             onPressed: () {
-              beauty.selectedID.value = "";
+              beauty.selectedID.value = '';
 
               selectedEffectTypeNotifier.value = BeautyEffectType.none;
 

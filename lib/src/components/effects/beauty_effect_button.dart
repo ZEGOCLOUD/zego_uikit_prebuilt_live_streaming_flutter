@@ -6,8 +6,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/effects/beauty_effect_sheet.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
-import 'beauty_effect_sheet.dart';
 
 class ZegoBeautyEffectButton extends StatefulWidget {
   const ZegoBeautyEffectButton({
@@ -30,8 +30,8 @@ class ZegoBeautyEffectButton extends StatefulWidget {
 class _ZegoBeautyEffectButtonState extends State<ZegoBeautyEffectButton> {
   @override
   Widget build(BuildContext context) {
-    Size containerSize = widget.buttonSize ?? Size(96.r, 96.r);
-    Size sizeBoxSize = widget.iconSize ?? Size(56.r, 56.r);
+    final containerSize = widget.buttonSize ?? Size(96.r, 96.r);
+    final sizeBoxSize = widget.iconSize ?? Size(56.r, 56.r);
     return GestureDetector(
       onTap: () async {
         showBeautyEffectSheet(context, beautyEffects: widget.beautyEffects);

@@ -124,7 +124,7 @@ class _ZegoEffectGridState extends State<ZegoEffectGrid> {
             children: widget.model.items
                 .map((item) {
                   var buttonSize = widget.buttonSize ?? Size(88.r, 133.r);
-                  var bestButtonWidth =
+                  final bestButtonWidth =
                       getTextSize(item.iconText, gridItemTextStyle).width;
                   buttonSize = Size(
                     bestButtonWidth + 20.r,

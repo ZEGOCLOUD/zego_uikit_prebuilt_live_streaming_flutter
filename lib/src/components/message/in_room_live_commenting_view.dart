@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
-import 'in_room_live_commenting_view_item.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/message/in_room_live_commenting_view_item.dart';
 
 class ZegoInRoomLiveCommentingView extends StatefulWidget {
   final ZegoInRoomMessageItemBuilder? itemBuilder;

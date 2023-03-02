@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/dialogs.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_translation.dart';
-import 'dialogs.dart';
 
 Future<void> checkPermissions({
   required BuildContext context,
@@ -70,7 +70,7 @@ Future<bool> showAppSettingsDialog(
   BuildContext context,
   ZegoDialogInfo dialogInfo,
 ) async {
-  return await showLiveDialog(
+  return showLiveDialog(
     context: context,
     title: dialogInfo.title,
     content: dialogInfo.message,

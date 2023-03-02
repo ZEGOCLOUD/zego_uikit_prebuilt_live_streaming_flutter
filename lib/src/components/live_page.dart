@@ -4,26 +4,31 @@ import 'dart:core';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
+
 // Package imports:
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zego_uikit/zego_uikit.dart';
+
+// Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/audio_video_view_foreground.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/bottom_bar.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/message/in_room_live_commenting_view.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/top_bar.dart';
-// Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/live_status_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/plugins.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/pk/pk_view.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/pk/src/pk_impl.dart';
 
 /// user and sdk should be login and init before page enter
 class ZegoLivePage extends StatefulWidget {
   const ZegoLivePage({
     Key? key,
+    this.screenSharingController,
     required this.appID,
     required this.appSign,
     required this.userID,
@@ -33,12 +38,10 @@ class ZegoLivePage extends StatefulWidget {
     required this.hostManager,
     required this.liveStatusManager,
     this.plugins,
-    this.tokenServerUrl = '',
   }) : super(key: key);
 
   final int appID;
   final String appSign;
-  final String tokenServerUrl;
 
   final String userID;
   final String userName;
@@ -46,6 +49,7 @@ class ZegoLivePage extends StatefulWidget {
   final String liveID;
 
   final ZegoUIKitPrebuiltLiveStreamingConfig config;
+  final ZegoScreenSharingViewController? screenSharingController;
 
   final ZegoLiveHostManager hostManager;
   final ZegoLiveStatusManager liveStatusManager;
@@ -125,7 +129,20 @@ class ZegoLivePageState extends State<ZegoLivePage>
       resizeToAvoidBottomInset: false,
       body: WillPopScope(
         onWillPop: () async {
-          return await widget.config.onLeaveConfirmation!(context);
+          final canLeave = await widget.config.onLeaveConfirmation!(context);
+          if (canLeave) {
+            if (widget.hostManager.isHost) {
+              /// live is ready to end, host will update if receive property notify
+              /// so need to keep current host value, DISABLE local host value UPDATE
+              widget.hostManager.hostUpdateEnabledNotifier.value = false;
+              ZegoUIKit().updateRoomProperties({
+                RoomPropertyKey.host.text: '',
+                RoomPropertyKey.liveStatus.text:
+                    LiveStatus.ended.index.toString()
+              });
+            }
+          }
+          return canLeave;
         },
         child: ScreenUtilInit(
           designSize: const Size(750, 1334),
@@ -137,38 +154,54 @@ class ZegoLivePageState extends State<ZegoLivePage>
                 return ValueListenableBuilder<ZegoUIKitUser?>(
                     valueListenable: widget.hostManager.notifier,
                     builder: (context, host, _) {
-                      return ValueListenableBuilder<LiveStatus>(
-                          valueListenable: widget.liveStatusManager.notifier,
-                          builder: (context, liveStatus, _) {
-                            return Stack(
-                              children: [
-                                background(constraints.maxHeight),
-                                backgroundTips(),
-                                StreamBuilder<List<ZegoUIKitUser>>(
-                                  stream:
-                                      ZegoUIKit().getScreenSharingListStream(),
-                                  builder: (context, snapshot) {
-                                    final screenSharingUsers =
-                                        snapshot.data ?? [];
-                                    return audioVideoContainer(
-                                      host,
-                                      constraints.maxHeight,
-                                      screenSharingUsers.isNotEmpty,
-                                    );
-                                  },
-                                ),
-                                topBar(),
-                                bottomBar(),
-                                messageList(),
-                              ],
-                            );
-                          });
+                      return Stack(
+                        children: [
+                          background(constraints.maxHeight),
+                          backgroundTips(),
+                          avContainerOrPKBattleView(constraints),
+                          topBar(),
+                          bottomBar(),
+                          messageList(),
+                        ],
+                      );
                     });
               }),
             );
           },
         ),
       ),
+    );
+  }
+
+  Widget avContainerOrPKBattleView(BoxConstraints constraints) {
+    return ValueListenableBuilder(
+      valueListenable: ZegoLiveStreamingPKBattleManager().state,
+      builder: (context, ZegoLiveStreamingPKBattleState pkBattleState, _) {
+        if (pkBattleState != ZegoLiveStreamingPKBattleState.inPKBattle) {
+          return StreamBuilder<List<ZegoUIKitUser>>(
+            stream: ZegoUIKit().getScreenSharingListStream(),
+            builder: (context, snapshot) {
+              final screenSharingUsers = snapshot.data ?? [];
+              return ValueListenableBuilder<ZegoUIKitUser?>(
+                valueListenable: widget.hostManager.notifier,
+                builder: (context, host, _) {
+                  return audioVideoContainer(
+                    host,
+                    constraints.maxHeight,
+                    screenSharingUsers.isNotEmpty,
+                  );
+                },
+              );
+            },
+          );
+        } else {
+          return Positioned(
+            top: widget.config.pkBattleConfig.pKBattleViewTopPadding ?? 164.r,
+            child: ZegoLiveStreamingPKBattleView(
+                constraints: constraints, config: widget.config),
+          );
+        }
+      },
     );
   }
 
@@ -191,7 +224,6 @@ class ZegoLivePageState extends State<ZegoLivePage>
       child: Listener(
         ///  listen for all click events in current view, include the click
         ///  receivers(such as button...), but only listen
-        onPointerDown: (e) {},
         child: AbsorbPointer(
           absorbing: false,
           child: child,
@@ -201,19 +233,24 @@ class ZegoLivePageState extends State<ZegoLivePage>
   }
 
   Widget backgroundTips() {
-    return isLiving
-        ? Container()
-        : Center(
-            child: Text(
-              widget.config.translationText.noHostOnline,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 32.r,
-                fontWeight: FontWeight.w400,
-                color: Colors.white,
-              ),
-            ),
-          );
+    return ValueListenableBuilder(
+      valueListenable: widget.liveStatusManager.notifier,
+      builder: (BuildContext context, LiveStatus value, Widget? child) {
+        return LiveStatus.living == value
+            ? Container()
+            : Center(
+                child: Text(
+                  widget.config.translationText.noHostOnline,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 32.r,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.white,
+                  ),
+                ),
+              );
+      },
+    );
   }
 
   Widget background(double height) {
@@ -261,77 +298,86 @@ class ZegoLivePageState extends State<ZegoLivePage>
     double height,
     bool withScreenSharing,
   ) {
-    final audioVideoContainerLayout = withScreenSharing
-        ? ZegoLayout.gallery()
-        : ZegoLayout.pictureInPicture(
-            smallViewPosition: ZegoViewPosition.bottomRight,
-            isSmallViewDraggable: false,
-            smallViewSize: Size(139.5.w, 248.0.h),
-            smallViewMargin: EdgeInsets.only(
-              left: 24.r,
-              top: 144.r,
-              right: 24.r,
-              bottom: 144.r,
+    return ValueListenableBuilder(
+      valueListenable: widget.liveStatusManager.notifier,
+      builder: (context, LiveStatus liveStatusValue, Widget? child) {
+        final audioVideoContainerLayout = withScreenSharing
+            ? ZegoLayout.gallery()
+            : ZegoLayout.pictureInPicture(
+                smallViewPosition: ZegoViewPosition.bottomRight,
+                isSmallViewDraggable: false,
+                smallViewSize: Size(139.5.w, 248.0.h),
+                smallViewMargin: EdgeInsets.only(
+                  left: 24.r,
+                  top: 144.r,
+                  right: 24.r,
+                  bottom: 144.r,
+                ),
+              );
+
+        Widget children = Container();
+
+        if (LiveStatus.living == liveStatusValue) {
+          children = ZegoAudioVideoContainer(
+            layout: audioVideoContainerLayout,
+            foregroundBuilder: audioVideoViewForeground,
+            backgroundBuilder: audioVideoViewBackground,
+            sortAudioVideo: audioVideoViewSorter,
+            avatarConfig: ZegoAvatarConfig(
+              showInAudioMode:
+                  widget.config.audioVideoViewConfig.showAvatarInAudioMode,
+              showSoundWavesInAudioMode:
+                  widget.config.audioVideoViewConfig.showSoundWavesInAudioMode,
+              builder: widget.config.avatarBuilder,
             ),
+            screenSharingViewController: widget.screenSharingController,
           );
+        } else if (LiveStatus.living != liveStatusValue &&
+            null != widget.hostManager.notifier.value) {
+          /// support local co-host view in host preparing
+          return ValueListenableBuilder<bool>(
+            valueListenable: ZegoUIKit()
+                .getCameraStateNotifier(ZegoUIKit().getLocalUser().id),
+            builder: (context, isCameraEnabled, _) {
+              return ValueListenableBuilder<bool>(
+                  valueListenable: ZegoUIKit().getMicrophoneStateNotifier(
+                      ZegoUIKit().getLocalUser().id),
+                  builder: (context, isMicrophoneEnabled, _) {
+                    if (!isCameraEnabled && !isMicrophoneEnabled) {
+                      return Container();
+                    }
 
-    Widget children = Container();
+                    /// local open camera or microphone
+                    return ZegoAudioVideoContainer(
+                      layout: audioVideoContainerLayout,
+                      backgroundBuilder: audioVideoViewBackground,
+                      foregroundBuilder: audioVideoViewForeground,
+                      sortAudioVideo: audioVideoViewSorter,
+                      avatarConfig: ZegoAvatarConfig(
+                        showInAudioMode: widget
+                            .config.audioVideoViewConfig.showAvatarInAudioMode,
+                        showSoundWavesInAudioMode: widget.config
+                            .audioVideoViewConfig.showSoundWavesInAudioMode,
+                        builder: widget.config.avatarBuilder,
+                      ),
+                      screenSharingViewController:
+                          widget.screenSharingController,
+                    );
+                  });
+            },
+          );
+        }
 
-    if (isLiving) {
-      children = ZegoAudioVideoContainer(
-        layout: audioVideoContainerLayout,
-        foregroundBuilder: audioVideoViewForeground,
-        backgroundBuilder: audioVideoViewBackground,
-        sortAudioVideo: audioVideoViewSorter,
-        avatarConfig: ZegoAvatarConfig(
-          showInAudioMode:
-              widget.config.audioVideoViewConfig.showAvatarInAudioMode,
-          showSoundWavesInAudioMode:
-              widget.config.audioVideoViewConfig.showSoundWavesInAudioMode,
-          builder: widget.config.avatarBuilder,
-        ),
-      );
-    } else if (LiveStatus.living != widget.liveStatusManager.notifier.value &&
-        null != widget.hostManager.notifier.value) {
-      /// support local co-host view in host preparing
-      return ValueListenableBuilder<bool>(
-          valueListenable:
-              ZegoUIKit().getCameraStateNotifier(ZegoUIKit().getLocalUser().id),
-          builder: (context, isCameraEnabled, _) {
-            return ValueListenableBuilder<bool>(
-                valueListenable: ZegoUIKit()
-                    .getMicrophoneStateNotifier(ZegoUIKit().getLocalUser().id),
-                builder: (context, isMicrophoneEnabled, _) {
-                  if (!isCameraEnabled && !isMicrophoneEnabled) {
-                    return Container();
-                  }
-
-                  /// local open camera or microphone
-                  return ZegoAudioVideoContainer(
-                    layout: audioVideoContainerLayout,
-                    backgroundBuilder: audioVideoViewBackground,
-                    foregroundBuilder: audioVideoViewForeground,
-                    sortAudioVideo: audioVideoViewSorter,
-                    avatarConfig: ZegoAvatarConfig(
-                      showInAudioMode: widget
-                          .config.audioVideoViewConfig.showAvatarInAudioMode,
-                      showSoundWavesInAudioMode: widget.config
-                          .audioVideoViewConfig.showSoundWavesInAudioMode,
-                      builder: widget.config.avatarBuilder,
-                    ),
-                  );
-                });
-          });
-    }
-
-    return Positioned(
-      top: 0,
-      left: 0,
-      child: SizedBox(
-        width: 750.w,
-        height: height,
-        child: children,
-      ),
+        return Positioned(
+          top: 0,
+          left: 0,
+          child: SizedBox(
+            width: 750.w,
+            height: height,
+            child: children,
+          ),
+        );
+      },
     );
   }
 
@@ -350,9 +396,10 @@ class ZegoLivePageState extends State<ZegoLivePage>
                     widget.hostManager.notifier.value?.id ?? '')
                 .value)) {
       /// put host on first position
-      users.removeWhere(
-          (user) => user.id == widget.hostManager.notifier.value!.id);
-      users.insert(0, widget.hostManager.notifier.value!);
+      users
+        ..removeWhere(
+            (user) => user.id == widget.hostManager.notifier.value!.id)
+        ..insert(0, widget.hostManager.notifier.value!);
 
       /// not sort before next host changed
       audioVideoContainerHostHadSorted = true;
@@ -362,12 +409,16 @@ class ZegoLivePageState extends State<ZegoLivePage>
   }
 
   Widget audioVideoViewForeground(
-      BuildContext context, Size size, ZegoUIKitUser? user, Map extraInfo) {
-    if (extraInfo[ZegoViewBuilderMapExtraInfoKey.isScreenSharingView.name]
-            as bool? ??
-        false) {
-      return Container();
-    }
+    BuildContext context,
+    Size size,
+    ZegoUIKitUser? user,
+    Map<String, dynamic> extraInfo,
+  ) {
+    // if (extraInfo[ZegoViewBuilderMapExtraInfoKey.isScreenSharingView.name]
+    //         as bool? ??
+    //     false) {
+    //   return Container();
+    // }
 
     return Stack(
       children: [
@@ -397,7 +448,11 @@ class ZegoLivePageState extends State<ZegoLivePage>
   }
 
   Widget audioVideoViewBackground(
-      BuildContext context, Size size, ZegoUIKitUser? user, Map extraInfo) {
+    BuildContext context,
+    Size size,
+    ZegoUIKitUser? user,
+    Map<String, dynamic> extraInfo,
+  ) {
     final screenSize = MediaQuery.of(context).size;
     final isSmallView = (screenSize.width - size.width).abs() > 1;
     return Stack(
@@ -406,8 +461,12 @@ class ZegoLivePageState extends State<ZegoLivePage>
             color: isSmallView
                 ? const Color(0xff333437)
                 : const Color(0xff4A4B4D)),
-        widget.config.audioVideoViewConfig.backgroundBuilder
-                ?.call(context, size, user, extraInfo) ??
+        widget.config.audioVideoViewConfig.backgroundBuilder?.call(
+              context,
+              size,
+              user,
+              extraInfo,
+            ) ??
             Container(color: Colors.transparent),
       ],
     );

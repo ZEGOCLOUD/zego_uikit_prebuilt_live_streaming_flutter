@@ -7,11 +7,11 @@ import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/components.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/leave_button.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_translation.dart';
-import 'leave_button.dart';
 
 class ZegoTopBar extends StatefulWidget {
   final bool isPluginEnabled;
@@ -104,6 +104,10 @@ class _ZegoTopBarState extends State<ZegoTopBar> {
             SizedBox(
               height: 68.r,
               child: Container(
+                decoration: BoxDecoration(
+                  color: ZegoUIKitDefaultTheme.buttonBackgroundColor,
+                  borderRadius: BorderRadius.circular(68.r),
+                ),
                 child: Row(
                   children: [
                     SizedBox(width: 6.r),
@@ -124,10 +128,6 @@ class _ZegoTopBarState extends State<ZegoTopBar> {
                     ),
                     SizedBox(width: 24.r),
                   ],
-                ),
-                decoration: BoxDecoration(
-                  color: ZegoUIKitDefaultTheme.buttonBackgroundColor,
-                  borderRadius: BorderRadius.circular(68.r),
                 ),
               ),
             ),

@@ -6,8 +6,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/effects/effect_grid.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
-import 'effect_grid.dart';
 
 class ZegoSoundEffectSheet extends StatefulWidget {
   final List<VoiceChangerType> voiceChangerEffect;
@@ -86,7 +86,7 @@ class _ZegoSoundEffectSheetState extends State<ZegoSoundEffectSheet> {
           ),
           SizedBox(width: 10.r),
           Text(
-            "Audio effect",
+            'Audio effect',
             style: TextStyle(
               fontSize: 36.0.r,
               color: const Color(0xffffffff),
@@ -99,17 +99,17 @@ class _ZegoSoundEffectSheetState extends State<ZegoSoundEffectSheet> {
   }
 
   void initVoiceChangerData() {
-    List<VoiceChangerType> voiceChangerEffect =
-        List.from(widget.voiceChangerEffect);
-    voiceChangerEffect.removeWhere((effect) => effect == VoiceChangerType.none);
-    voiceChangerEffect.insert(0, VoiceChangerType.none);
+    final voiceChangerEffect =
+        List<VoiceChangerType>.from(widget.voiceChangerEffect)
+          ..removeWhere((effect) => effect == VoiceChangerType.none)
+          ..insert(0, VoiceChangerType.none);
     if (widget.voiceChangerSelectedIDNotifier.value.isEmpty) {
       widget.voiceChangerSelectedIDNotifier.value =
           voiceChangerEffect.first.index.toString();
     }
 
     voiceChangerModel = ZegoEffectGridModel(
-      title: "Voice changing",
+      title: 'Voice changing',
       selectedID: widget.voiceChangerSelectedIDNotifier,
       items: voiceChangerEffect
           .map(
@@ -118,13 +118,11 @@ class _ZegoSoundEffectSheetState extends State<ZegoSoundEffectSheet> {
               effectType: effect,
               icon: ButtonIcon(
                 icon: PrebuiltLiveStreamingImage.asset(
-                    "assets/icons/voice_changer_" + effect.name + ".png"),
+                    'assets/icons/voice_changer_${effect.name}.png'),
               ),
               selectIcon: ButtonIcon(
                 icon: PrebuiltLiveStreamingImage.asset(
-                    "assets/icons/voice_changer_" +
-                        effect.name +
-                        "_selected.png"),
+                    'assets/icons/voice_changer_${effect.name}_selected.png'),
               ),
               iconText: effect.text,
               onPressed: () {
@@ -134,23 +132,23 @@ class _ZegoSoundEffectSheetState extends State<ZegoSoundEffectSheet> {
           )
           .toList(),
     );
-    for (var item in voiceChangerModel.items) {
+    for (final item in voiceChangerModel.items) {
       item.icon.backgroundColor = const Color(0xff3b3a3d);
       item.selectIcon?.backgroundColor = const Color(0xff3b3a3d);
     }
   }
 
   void initReverbData() {
-    List<ReverbType> reverbEffect = List.from(widget.reverbEffect);
-    reverbEffect.removeWhere((effect) => effect == ReverbType.none);
-    reverbEffect.insert(0, ReverbType.none);
+    final reverbEffect = List<ReverbType>.from(widget.reverbEffect)
+      ..removeWhere((effect) => effect == ReverbType.none)
+      ..insert(0, ReverbType.none);
     if (widget.reverbSelectedIDNotifier.value.isEmpty) {
       widget.reverbSelectedIDNotifier.value =
           reverbEffect.first.index.toString();
     }
 
     reverbPresetModel = ZegoEffectGridModel(
-      title: "Reverb",
+      title: 'Reverb',
       selectedID: widget.reverbSelectedIDNotifier,
       items: reverbEffect
           .map(
@@ -159,7 +157,7 @@ class _ZegoSoundEffectSheetState extends State<ZegoSoundEffectSheet> {
               effectType: effect,
               icon: ButtonIcon(
                 icon: PrebuiltLiveStreamingImage.asset(
-                    "assets/icons/reverb_preset_" + effect.name + ".png"),
+                    'assets/icons/reverb_preset_${effect.name}.png'),
               ),
               iconText: effect.text,
               onPressed: () {

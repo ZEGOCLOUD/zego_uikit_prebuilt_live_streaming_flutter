@@ -8,12 +8,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/defines.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_sheet_menu.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_translation.dart';
-import 'defines.dart';
-import 'pop_up_sheet_menu.dart';
 
 class ZegoAudioVideoForeground extends StatelessWidget {
   final Size size;
@@ -46,7 +46,7 @@ class ZegoAudioVideoForeground extends StatelessWidget {
     if (user == null) {
       return Container(color: Colors.transparent);
     }
-    return LayoutBuilder(builder: ((context, constraints) {
+    return LayoutBuilder(builder: (context, constraints) {
       return Stack(
         children: [
           Positioned(
@@ -84,7 +84,7 @@ class ZegoAudioVideoForeground extends StatelessWidget {
           ),
         ],
       );
-    }));
+    });
   }
 
   Widget userName(BuildContext context, double maxWidth) {
@@ -94,7 +94,7 @@ class ZegoAudioVideoForeground extends StatelessWidget {
               maxWidth: maxWidth,
             ),
             child: Text(
-              user?.name ?? "",
+              user?.name ?? '',
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 fontSize: 22.0.r,
@@ -142,7 +142,7 @@ class ZegoAudioVideoForeground extends StatelessWidget {
       return Container();
     }
 
-    List<PopupItem> popupItems = [];
+    final popupItems = <PopupItem>[];
 
     // if (user.id != hostManager.notifier.value?.id &&
     //     isCoHost(user) &&
