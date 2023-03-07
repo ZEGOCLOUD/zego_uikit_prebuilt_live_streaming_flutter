@@ -4,5 +4,6 @@ export 'src/components/dialogs.dart';
 export 'src/live_streaming.dart';
 export 'src/live_streaming_config.dart';
 export 'src/live_streaming_defines.dart';
+export 'src/live_streaming_controller.dart';
 export 'src/live_streaming_translation.dart';
 export 'src/pk/pk_service.dart';

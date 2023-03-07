@@ -5,9 +5,9 @@ import 'dart:developer';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Package imports:
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
@@ -22,12 +22,13 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/connect/plugins.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/pk/src/pk_impl.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/zego_uikit_prebuilt_live_streaming.dart';
 
 class ZegoUIKitPrebuiltLiveStreaming extends StatefulWidget {
   const ZegoUIKitPrebuiltLiveStreaming({
     Key? key,
     this.appDesignSize,
-    this.screenSharingController,
+    this.controller,
     required this.appID,
     required this.appSign,
     required this.userID,
@@ -53,8 +54,7 @@ class ZegoUIKitPrebuiltLiveStreaming extends StatefulWidget {
 
   final ZegoUIKitPrebuiltLiveStreamingConfig config;
 
-  /// screen sharing controller
-  final ZegoScreenSharingViewController? screenSharingController;
+  final ZegoUIKitPrebuiltLiveStreamingController? controller;
 
   ///
   final Size? appDesignSize;
@@ -81,7 +81,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     WidgetsBinding.instance?.addObserver(this);
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
-      log('version: zego_uikit_prebuilt_live_streaming: 2.2.1; $version');
+      log('version: zego_uikit_prebuilt_live_streaming: 2.3.0; $version');
     });
 
     hostManager = ZegoLiveHostManager(config: widget.config);
@@ -366,7 +366,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
       hostManager: hostManager,
       liveStatusManager: liveStatusManager,
       plugins: plugins,
-      screenSharingController: widget.screenSharingController,
+      controller: widget.controller,
     );
   }
 }

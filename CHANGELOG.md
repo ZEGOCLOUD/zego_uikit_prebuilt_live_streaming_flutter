@@ -1,3 +1,6 @@
+## 2.3.0
+
+- support screen share
 
 ## 2.2.1
 - remove login token

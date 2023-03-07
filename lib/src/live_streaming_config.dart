@@ -93,6 +93,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
     this.onCameraTurnOnByOthersConfirmation,
     this.onMicrophoneTurnOnByOthersConfirmation,
     this.background,
+    this.layout,
     ZegoLiveStreamingPKBattleConfig? pkBattleConfig,
     ZegoLiveStreamingPKBattleEvents? pkBattleEvents,
     ZegoTranslationText? translationText,
@@ -105,7 +106,9 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         effectConfig = effectConfig ?? ZegoEffectConfig(),
         translationText = translationText ?? ZegoTranslationText(),
         pkBattleConfig = pkBattleConfig ?? ZegoLiveStreamingPKBattleConfig(),
-        pkBattleEvents = pkBattleEvents ?? ZegoLiveStreamingPKBattleEvents();
+        pkBattleEvents = pkBattleEvents ?? ZegoLiveStreamingPKBattleEvents() {
+    layout ??= ZegoLayout.pictureInPicture();
+  }
 
   /// specify if a host or co-host, audience
   ZegoLiveStreamingRole role = ZegoLiveStreamingRole.audience;
@@ -161,6 +164,8 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   void Function(ZegoLiveStreamingState state)? onLiveStreamingStateUpdate;
 
   ZegoTranslationText translationText;
+
+  ZegoLayout? layout;
 
   /// customize your user's avatar, default we use userID's first character as avatar
   /// User avatars are generally stored in your server, ZegoUIKitPrebuiltLiveStreaming does not know each user's avatar, so by default, ZegoUIKitPrebuiltLiveStreaming will use the first letter of the user name to draw the default user avatar, as shown in the following figure,
@@ -306,6 +311,7 @@ class ZegoBottomMenuBarConfig {
       ZegoMenuBarButtonName.switchCameraButton,
       ZegoMenuBarButtonName.toggleCameraButton,
       ZegoMenuBarButtonName.toggleMicrophoneButton,
+      ZegoMenuBarButtonName.toggleScreenSharingButton,
     ],
     this.coHostButtons = const [
       ZegoMenuBarButtonName.switchCameraButton,

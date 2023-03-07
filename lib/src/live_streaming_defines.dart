@@ -12,6 +12,7 @@ enum ZegoMenuBarButtonName {
   beautyEffectButton,
   soundEffectButton,
   enableChatButton,
+  toggleScreenSharingButton,
 }
 
 class ZegoDialogInfo {
