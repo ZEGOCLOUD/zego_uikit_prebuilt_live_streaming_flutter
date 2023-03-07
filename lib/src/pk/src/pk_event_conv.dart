@@ -2,10 +2,6 @@ part of 'pk_impl.dart';
 
 extension ZegoLiveStreamingPKBattleManagerEventConv
     on ZegoLiveStreamingPKBattleManager {
-  Stream<ZegoPKRelayCDNStateUpdateEvent> getPKRelayCDNStateUpdateEvent() {
-    throw UnimplementedError();
-  }
-
   Stream<ZegoIncomingPKBattleRequestReceivedEvent>
       getPKBattleEndedByAnotherHostEventStream() {
     return _getIncomingPKBattleRequestReceivedEventStream()

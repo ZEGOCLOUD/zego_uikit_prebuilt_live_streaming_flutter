@@ -5,6 +5,7 @@ import 'dart:developer';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
@@ -25,6 +26,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/pk/src/pk_impl.dart';
 class ZegoUIKitPrebuiltLiveStreaming extends StatefulWidget {
   const ZegoUIKitPrebuiltLiveStreaming({
     Key? key,
+    this.appDesignSize,
     this.screenSharingController,
     required this.appID,
     required this.appSign,
@@ -53,6 +55,9 @@ class ZegoUIKitPrebuiltLiveStreaming extends StatefulWidget {
 
   /// screen sharing controller
   final ZegoScreenSharingViewController? screenSharingController;
+
+  ///
+  final Size? appDesignSize;
 
   @override
   State<ZegoUIKitPrebuiltLiveStreaming> createState() =>
@@ -132,6 +137,10 @@ class _ZegoUIKitPrebuiltLiveStreamingState
 
     for (final subscription in subscriptions) {
       subscription?.cancel();
+    }
+
+    if (widget.appDesignSize != null) {
+      ScreenUtil.init(context, designSize: widget.appDesignSize!);
     }
   }
 

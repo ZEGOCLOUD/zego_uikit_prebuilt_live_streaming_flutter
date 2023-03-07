@@ -11,42 +11,31 @@ class ZegoLiveStreamingPKBattleEvents {
     ZegoIncomingPKBattleRequestReceivedEvent event,
     ZegoDefaultAction defaultAction,
   )? onIncomingPKBattleRequestReceived;
-  void Function(
-    ZegoIncomingPKBattleRequestAcceptedEvent event,
-    ZegoDefaultAction defaultAction,
-  )? onIncomingPKBattleRequestAccepted;
-  void Function(
-    ZegoIncomingPKBattleRequestRejectedEvent event,
-    ZegoDefaultAction defaultAction,
-  )? onIncomingPKBattleRequestRejected;
+
   Function(
     ZegoIncomingPKBattleRequestCancelledEvent event,
     ZegoDefaultAction defaultAction,
   )? onIncomingPKBattleRequestCancelled;
+
   void Function(
     ZegoIncomingPKBattleRequestTimeoutEvent event,
     ZegoDefaultAction defaultAction,
   )? onIncomingPKBattleRequestTimeout;
+
   void Function(
     ZegoOutgoingPKBattleRequestAcceptedEvent event,
     ZegoDefaultAction defaultAction,
   )? onOutgoingPKBattleRequestAccepted;
+
   void Function(
     ZegoOutgoingPKBattleRequestRejectedEvent event,
     ZegoDefaultAction defaultAction,
   )? onOutgoingPKBattleRequestRejected;
+
   void Function(
     ZegoOutgoingPKBattleRequestTimeoutEvent event,
     ZegoDefaultAction defaultAction,
   )? onOutgoingPKBattleRequestTimeout;
-  void Function(
-    ZegoOutgoingPKBattleRequestSendedEvent event,
-    ZegoDefaultAction defaultAction,
-  )? onOutgoingPKBattleRequestSended;
-  void Function(
-    ZegoOutgoingPKBattleRequestCanceledEvent event,
-    ZegoDefaultAction defaultAction,
-  )? onOutgoingPKBattleRequestCanceled;
 
   void Function(
     ZegoIncomingPKBattleRequestReceivedEvent event,
@@ -55,15 +44,11 @@ class ZegoLiveStreamingPKBattleEvents {
 
   ZegoLiveStreamingPKBattleEvents({
     this.onIncomingPKBattleRequestReceived,
-    this.onIncomingPKBattleRequestAccepted,
-    this.onIncomingPKBattleRequestRejected,
     this.onIncomingPKBattleRequestCancelled,
     this.onIncomingPKBattleRequestTimeout,
     this.onOutgoingPKBattleRequestAccepted,
     this.onOutgoingPKBattleRequestRejected,
     this.onOutgoingPKBattleRequestTimeout,
-    this.onOutgoingPKBattleRequestSended,
-    this.onOutgoingPKBattleRequestCanceled,
     this.onPKBattleEndedByAnotherHost,
   });
 }
@@ -184,20 +169,6 @@ class ZegoOutgoingPKBattleRequestTimeoutEvent {
   String toString() => '{requestID: $requestID, '
       'anotherHost: ${anotherHost.id}(${anotherHost.name})}';
 }
-
-class ZegoIncomingPKBattleRequestAcceptedEvent {}
-
-class ZegoIncomingPKBattleRequestRejectedEvent {}
-
-class ZegoOutgoingPKBattleRequestSendedEvent {}
-
-class ZegoOutgoingPKBattleRequestCanceledEvent {}
-
-class ZegoPKStartedEvent {}
-
-class ZegoPKViewAvaliableEvent {}
-
-class ZegoPKRelayCDNStateUpdateEvent {}
 
 class ZegoLiveStreamingPKBattleResult {
   const ZegoLiveStreamingPKBattleResult({

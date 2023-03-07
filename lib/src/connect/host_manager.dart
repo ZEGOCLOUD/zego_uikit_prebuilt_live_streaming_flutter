@@ -28,7 +28,7 @@ class ZegoLiveHostManager {
   /// internal variables
   final hostUpdateEnabledNotifier = ValueNotifier<bool>(true);
   final notifier = ValueNotifier<ZegoUIKitUser?>(null);
-  String pendingUserID = '';
+  String pendingHostID = '';
   List<StreamSubscription<dynamic>?> subscriptions = [];
   int localHostPropertyUpdateTime = 0;
   bool configIsHost = false;
@@ -93,7 +93,7 @@ class ZegoLiveHostManager {
 
     hostUpdateEnabledNotifier.value = true;
     notifier.value = null;
-    pendingUserID = '';
+    pendingHostID = '';
 
     for (final subscription in subscriptions) {
       subscription?.cancel();
@@ -101,14 +101,14 @@ class ZegoLiveHostManager {
   }
 
   void onUserListUpdated(List<ZegoUIKitUser> users) {
-    if (pendingUserID.isNotEmpty) {
+    if (pendingHostID.isNotEmpty) {
       ZegoLoggerService.logInfo(
-        'exist pending host $pendingUserID',
+        'exist pending host $pendingHostID',
         tag: 'live streaming',
         subTag: 'host manager',
       );
 
-      final host = ZegoUIKit().getUser(pendingUserID);
+      final host = ZegoUIKit().getUser(pendingHostID);
       if (host != null && !host.isEmpty()) {
         ZegoLoggerService.logInfo(
           'host updated, ${host.toString()}',
@@ -116,7 +116,7 @@ class ZegoLiveHostManager {
           subTag: 'host manager',
         );
         updateHostValue(host);
-        pendingUserID = '';
+        pendingHostID = '';
       }
     }
   }
@@ -190,7 +190,7 @@ class ZegoLiveHostManager {
           tag: 'live streaming',
           subTag: 'host manager',
         );
-        pendingUserID = hostIDProperty.value;
+        pendingHostID = hostIDProperty.value;
       } else {
         if (host?.id != notifier.value?.id &&
             notifier.value?.id == ZegoUIKit().getLocalUser().id) {
