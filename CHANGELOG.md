@@ -1,3 +1,8 @@
+## 2.3.1
+
+- fix some bugs
+- update dependency
+
 ## 2.3.0
 
 - support screen share

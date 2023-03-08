@@ -8,6 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/defines.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/toast.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/zego_uikit_prebuilt_live_streaming.dart';
@@ -141,14 +142,18 @@ class _ZegoPopUpSheetMenuState extends State<ZegoPopUpSheetMenu> {
   }
 }
 
-void showPopUpSheet({
+Future<void> showPopUpSheet({
   required BuildContext context,
   required ZegoUIKitUser user,
   required List<PopupItem> popupItems,
   required ZegoTranslationText translationText,
   required ZegoLiveConnectManager connectManager,
-}) {
-  showModalBottomSheet(
+  required ZegoPopUpManager popUpManager,
+}) async {
+  final key = DateTime.now().millisecondsSinceEpoch;
+  popUpManager.addAPopUpSheet(key);
+
+  return showModalBottomSheet(
     barrierColor: ZegoUIKitDefaultTheme.viewBarrierColor,
     backgroundColor: const Color(0xff111014),
     //ZegoUIKitDefaultTheme.viewBackgroundColor,
@@ -177,5 +182,7 @@ void showPopUpSheet({
         ),
       );
     },
-  );
+  ).then((value) {
+    popUpManager.removeAPopUpSheet(key);
+  });
 }

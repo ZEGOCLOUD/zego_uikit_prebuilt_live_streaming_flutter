@@ -9,6 +9,7 @@ import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/defines.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_sheet_menu.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/host_manager.dart';
@@ -22,6 +23,7 @@ class ZegoAudioVideoForeground extends StatelessWidget {
   final bool isPluginEnabled;
   final ZegoLiveHostManager hostManager;
   final ZegoLiveConnectManager connectManager;
+  final ZegoPopUpManager popUpManager;
   final ZegoTranslationText translationText;
 
   final bool showMicrophoneStateOnView;
@@ -35,6 +37,7 @@ class ZegoAudioVideoForeground extends StatelessWidget {
     required this.isPluginEnabled,
     required this.hostManager,
     required this.connectManager,
+    required this.popUpManager,
     required this.translationText,
     this.showMicrophoneStateOnView = true,
     this.showCameraStateOnView = true,
@@ -169,6 +172,7 @@ class ZegoAudioVideoForeground extends StatelessWidget {
           user: user,
           popupItems: popupItems,
           connectManager: connectManager,
+          popUpManager: popUpManager,
           translationText: translationText,
         );
       },

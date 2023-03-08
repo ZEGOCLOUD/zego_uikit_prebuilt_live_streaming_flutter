@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/defines.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_sheet_menu.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/toast.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/connect_manager.dart';
@@ -21,6 +22,7 @@ class ZegoMemberListSheet extends StatefulWidget {
     required this.isPluginEnabled,
     required this.hostManager,
     required this.connectManager,
+    required this.popUpManager,
     required this.translationText,
   }) : super(key: key);
 
@@ -28,6 +30,7 @@ class ZegoMemberListSheet extends StatefulWidget {
   final ZegoAvatarBuilder? avatarBuilder;
   final ZegoLiveHostManager hostManager;
   final ZegoLiveConnectManager connectManager;
+  final ZegoPopUpManager popUpManager;
   final ZegoTranslationText translationText;
 
   @override
@@ -394,6 +397,7 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
               user: user,
               popupItems: popupItems,
               connectManager: widget.connectManager,
+              popUpManager: widget.popUpManager,
               translationText: widget.translationText,
             );
           },
@@ -489,15 +493,19 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
   }
 }
 
-void showMemberListSheet({
+Future<void> showMemberListSheet({
   ZegoAvatarBuilder? avatarBuilder,
   required bool isPluginEnabled,
   required BuildContext context,
   required ZegoLiveHostManager hostManager,
   required ZegoLiveConnectManager connectManager,
+  required ZegoPopUpManager popUpManager,
   required ZegoTranslationText translationText,
-}) {
-  showModalBottomSheet(
+}) async {
+  final key = DateTime.now().millisecondsSinceEpoch;
+  popUpManager.addAPopUpSheet(key);
+
+  return showModalBottomSheet(
     barrierColor: ZegoUIKitDefaultTheme.viewBarrierColor,
     backgroundColor: ZegoUIKitDefaultTheme.viewBackgroundColor,
     context: context,
@@ -522,11 +530,14 @@ void showMemberListSheet({
               avatarBuilder: avatarBuilder,
               hostManager: hostManager,
               connectManager: connectManager,
+              popUpManager: popUpManager,
               translationText: translationText,
             ),
           ),
         ),
       );
     },
-  );
+  ).then((value) {
+    popUpManager.removeAPopUpSheet(key);
+  });
 }

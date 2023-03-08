@@ -18,12 +18,16 @@ class ZegoInRoomMessageButton extends StatefulWidget {
   final ZegoLiveHostManager hostManager;
   final Size? iconSize;
   final Size? buttonSize;
+  final Function(int)? onSheetPopUp;
+  final Function(int)? onSheetPop;
 
   const ZegoInRoomMessageButton({
     Key? key,
     required this.hostManager,
     this.iconSize,
     this.buttonSize,
+    this.onSheetPopUp,
+    this.onSheetPop,
   }) : super(key: key);
 
   @override
@@ -65,11 +69,15 @@ class _ZegoInRoomMessageButtonState extends State<ZegoInRoomMessageButton> {
         return ZegoTextIconButton(
           onPressed: chatLocalEnabled
               ? () {
+                  final key = DateTime.now().millisecondsSinceEpoch;
+                  widget.onSheetPopUp?.call(key);
+
                   isMessageInputting = true;
                   Navigator.of(context)
                       .push(ZegoInRoomMessageInputBoard())
                       .then((value) {
                     isMessageInputting = false;
+                    widget.onSheetPop?.call(key);
                   });
                 }
               : null,

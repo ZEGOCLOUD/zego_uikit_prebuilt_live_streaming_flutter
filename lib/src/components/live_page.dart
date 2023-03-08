@@ -7,22 +7,20 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/audio_video_view_foreground.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/bottom_bar.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/message/in_room_live_commenting_view.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/top_bar.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/live_status_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/plugins.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/pk/pk_view.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/pk/src/pk_impl.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/zego_uikit_prebuilt_live_streaming.dart';
 
 /// user and sdk should be login and init before page enter
@@ -37,6 +35,7 @@ class ZegoLivePage extends StatefulWidget {
     required this.config,
     required this.hostManager,
     required this.liveStatusManager,
+    required this.popUpManager,
     this.plugins,
     this.controller,
   }) : super(key: key);
@@ -53,6 +52,7 @@ class ZegoLivePage extends StatefulWidget {
 
   final ZegoLiveHostManager hostManager;
   final ZegoLiveStatusManager liveStatusManager;
+  final ZegoPopUpManager popUpManager;
   final ZegoPrebuiltPlugins? plugins;
 
   final ZegoUIKitPrebuiltLiveStreamingController? controller;
@@ -488,6 +488,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
                 user: user,
                 hostManager: widget.hostManager,
                 connectManager: connectManager,
+                popUpManager: widget.popUpManager,
                 translationText: widget.config.translationText,
                 isPluginEnabled: widget.plugins?.isEnabled ?? false,
                 //  only show if close
@@ -537,6 +538,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
         hostManager: widget.hostManager,
         hostUpdateEnabledNotifier: widget.hostManager.hostUpdateEnabledNotifier,
         connectManager: connectManager,
+        popUpManager: widget.popUpManager,
         translationText: widget.config.translationText,
       ),
     );
@@ -552,6 +554,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
         hostUpdateEnabledNotifier: widget.hostManager.hostUpdateEnabledNotifier,
         liveStatusNotifier: widget.liveStatusManager.notifier,
         connectManager: connectManager,
+        popUpManager: widget.popUpManager,
         translationText: widget.config.translationText,
       ),
     );

@@ -8,6 +8,7 @@ import 'package:zego_uikit/zego_uikit.dart';
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/components.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/leave_button.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
@@ -19,6 +20,7 @@ class ZegoTopBar extends StatefulWidget {
   final ZegoLiveHostManager hostManager;
   final ValueNotifier<bool> hostUpdateEnabledNotifier;
   final ZegoLiveConnectManager connectManager;
+  final ZegoPopUpManager popUpManager;
   final ZegoTranslationText translationText;
 
   const ZegoTopBar({
@@ -28,6 +30,7 @@ class ZegoTopBar extends StatefulWidget {
     required this.hostManager,
     required this.hostUpdateEnabledNotifier,
     required this.connectManager,
+    required this.popUpManager,
     required this.translationText,
   }) : super(key: key);
 
@@ -64,6 +67,7 @@ class _ZegoTopBarState extends State<ZegoTopBar> {
                 avatarBuilder: widget.config.avatarBuilder,
                 hostManager: widget.hostManager,
                 connectManager: widget.connectManager,
+                popUpManager:widget.popUpManager,
                 translationText: widget.translationText,
               ),
               SizedBox(width: 33.r),

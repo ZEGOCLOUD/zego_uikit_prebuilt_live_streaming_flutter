@@ -11,6 +11,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/components/effects/sound_
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/leave_button.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/message/disable_chat_button.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/message/in_room_message_button.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/co_host_control_button.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/defines.dart';
@@ -23,6 +24,7 @@ class ZegoBottomBar extends StatefulWidget {
   final Size buttonSize;
 
   final ZegoLiveHostManager hostManager;
+  final ZegoPopUpManager popUpManager;
   final ValueNotifier<bool> hostUpdateEnabledNotifier;
 
   final ValueNotifier<LiveStatus> liveStatusNotifier;
@@ -37,6 +39,7 @@ class ZegoBottomBar extends StatefulWidget {
     required this.hostUpdateEnabledNotifier,
     required this.liveStatusNotifier,
     required this.connectManager,
+    required this.popUpManager,
     required this.translationText,
   }) : super(key: key);
 
@@ -75,7 +78,15 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   zegoLiveButtonPadding,
-                  ZegoInRoomMessageButton(hostManager: widget.hostManager),
+                  ZegoInRoomMessageButton(
+                    hostManager: widget.hostManager,
+                    onSheetPopUp: (int key) {
+                      widget.popUpManager.addAPopUpSheet(key);
+                    },
+                    onSheetPop: (int key) {
+                      widget.popUpManager.removeAPopUpSheet(key);
+                    },
+                  ),
                 ],
               ),
             )
@@ -163,31 +174,38 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
       )..add(
           buttonWrapper(
             child: ZegoMoreButton(
-                menuButtonListFunc: () {
-                  final buttonList = <Widget>[
-                    ...getDefaultButtons(context, cameraDefaultValueFunc: () {
-                      return ZegoUIKit()
-                          .getCameraStateNotifier(ZegoUIKit().getLocalUser().id)
-                          .value;
-                    }, microphoneDefaultValueFunc: () {
-                      return ZegoUIKit()
-                          .getMicrophoneStateNotifier(
-                              ZegoUIKit().getLocalUser().id)
-                          .value;
-                    }),
-                    ...extendButtons
-                  ]..removeRange(
-                      0,
-                      widget.config.bottomMenuBarConfig.maxCount - 1,
-                    );
+              menuButtonListFunc: () {
+                final buttonList = <Widget>[
+                  ...getDefaultButtons(context, cameraDefaultValueFunc: () {
+                    return ZegoUIKit()
+                        .getCameraStateNotifier(ZegoUIKit().getLocalUser().id)
+                        .value;
+                  }, microphoneDefaultValueFunc: () {
+                    return ZegoUIKit()
+                        .getMicrophoneStateNotifier(
+                            ZegoUIKit().getLocalUser().id)
+                        .value;
+                  }),
+                  ...extendButtons
+                ]..removeRange(
+                    0,
+                    widget.config.bottomMenuBarConfig.maxCount - 1,
+                  );
 
-                  return buttonList;
-                },
-                icon: ButtonIcon(
-                  icon: PrebuiltLiveStreamingImage.asset(
-                      PrebuiltLiveStreamingIconUrls.bottomBarMore),
-                  backgroundColor: Colors.transparent,
-                )),
+                return buttonList;
+              },
+              icon: ButtonIcon(
+                icon: PrebuiltLiveStreamingImage.asset(
+                    PrebuiltLiveStreamingIconUrls.bottomBarMore),
+                backgroundColor: Colors.transparent,
+              ),
+              onSheetPopUp: (int key) {
+                widget.popUpManager.addAPopUpSheet(key);
+              },
+              onSheetPop: (int key) {
+                widget.popUpManager.removeAPopUpSheet(key);
+              },
+            ),
           ),
         );
     } else {

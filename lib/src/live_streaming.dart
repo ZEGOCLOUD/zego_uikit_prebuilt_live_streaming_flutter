@@ -24,6 +24,8 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_defines.da
 import 'package:zego_uikit_prebuilt_live_streaming/src/pk/src/pk_impl.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/zego_uikit_prebuilt_live_streaming.dart';
 
+import 'components/pop_up_manager.dart';
+
 class ZegoUIKitPrebuiltLiveStreaming extends StatefulWidget {
   const ZegoUIKitPrebuiltLiveStreaming({
     Key? key,
@@ -67,6 +69,7 @@ class ZegoUIKitPrebuiltLiveStreaming extends StatefulWidget {
 class _ZegoUIKitPrebuiltLiveStreamingState
     extends State<ZegoUIKitPrebuiltLiveStreaming> with WidgetsBindingObserver {
   List<StreamSubscription<dynamic>?> subscriptions = [];
+  final popUpManager = ZegoPopUpManager();
 
   var readyNotifier = ValueNotifier<bool>(false);
   var startedByLocalNotifier = ValueNotifier<bool>(false);
@@ -81,7 +84,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     WidgetsBinding.instance?.addObserver(this);
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
-      log('version: zego_uikit_prebuilt_live_streaming: 2.3.0; $version');
+      log('version: zego_uikit_prebuilt_live_streaming: 2.3.1; $version');
     });
 
     hostManager = ZegoLiveHostManager(config: widget.config);
@@ -332,6 +335,9 @@ class _ZegoUIKitPrebuiltLiveStreamingState
       Navigator.of(context).pop();
     }
 
+    ///more button, member list, chat dialog
+    popUpManager.autoPop(context);
+
     if (null != widget.config.onMeRemovedFromRoom) {
       widget.config.onMeRemovedFromRoom!.call(fromUserID);
     } else {
@@ -365,6 +371,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
       config: widget.config,
       hostManager: hostManager,
       liveStatusManager: liveStatusManager,
+      popUpManager: popUpManager,
       plugins: plugins,
       controller: widget.controller,
     );

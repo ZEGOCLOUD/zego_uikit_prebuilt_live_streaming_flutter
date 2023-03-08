@@ -9,6 +9,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/member/member_list_sheet.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/zego_uikit_prebuilt_live_streaming.dart';
@@ -20,6 +21,7 @@ class ZegoMemberButton extends StatefulWidget {
     required this.isPluginEnabled,
     required this.hostManager,
     required this.connectManager,
+    required this.popUpManager,
     required this.translationText,
   }) : super(key: key);
 
@@ -27,6 +29,7 @@ class ZegoMemberButton extends StatefulWidget {
   final ZegoAvatarBuilder? avatarBuilder;
   final ZegoLiveHostManager hostManager;
   final ZegoLiveConnectManager connectManager;
+  final ZegoPopUpManager popUpManager;
   final ZegoTranslationText translationText;
 
   @override
@@ -69,6 +72,7 @@ class _ZegoMemberButtonState extends State<ZegoMemberButton> {
           avatarBuilder: widget.avatarBuilder,
           hostManager: widget.hostManager,
           connectManager: widget.connectManager,
+          popUpManager: widget.popUpManager,
           translationText: widget.translationText,
         );
       },
