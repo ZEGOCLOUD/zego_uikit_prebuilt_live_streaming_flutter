@@ -311,7 +311,6 @@ class ZegoBottomMenuBarConfig {
       ZegoMenuBarButtonName.switchCameraButton,
       ZegoMenuBarButtonName.toggleCameraButton,
       ZegoMenuBarButtonName.toggleMicrophoneButton,
-      ZegoMenuBarButtonName.toggleScreenSharingButton,
     ],
     this.coHostButtons = const [
       ZegoMenuBarButtonName.switchCameraButton,
