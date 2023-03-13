@@ -28,7 +28,6 @@ class ZegoPreviewPage extends StatefulWidget {
     required this.config,
     required this.hostManager,
     required this.startedNotifier,
-    required this.translationText,
     required this.liveStreamingPageReady,
   }) : super(key: key);
 
@@ -44,7 +43,6 @@ class ZegoPreviewPage extends StatefulWidget {
 
   final ZegoLiveHostManager hostManager;
   final ValueNotifier<bool> startedNotifier;
-  final ZegoTranslationText translationText;
 
   final ValueNotifier<bool> liveStreamingPageReady;
 
@@ -183,6 +181,7 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ZegoBeautyEffectButton(
+              translationText: widget.config.translationText,
               beautyEffects: widget.config.effectConfig.beautyEffects,
               buttonSize: buttonSize,
               iconSize: iconSize,
@@ -202,7 +201,7 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
           checkPermissions(
             context: context,
             isShowDialog: true,
-            translationText: widget.translationText,
+            translationText: widget.config.translationText,
           ).then((value) {
             if (!widget.liveStreamingPageReady.value) {
               ZegoLoggerService.logInfo(
@@ -224,7 +223,7 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
             checkPermissions(
               context: context,
               isShowDialog: true,
-              translationText: widget.translationText,
+              translationText: widget.config.translationText,
             ).then((value) {
               if (!widget.liveStreamingPageReady.value) {
                 ZegoLoggerService.logInfo(
@@ -254,7 +253,7 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
             child: Align(
               alignment: Alignment.center,
               child: Text(
-                widget.translationText.startLiveStreamingButton,
+                widget.config.translationText.startLiveStreamingButton,
                 style: TextStyle(
                   fontSize: 32.r,
                   fontWeight: FontWeight.w600,

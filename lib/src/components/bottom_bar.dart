@@ -29,7 +29,6 @@ class ZegoBottomBar extends StatefulWidget {
 
   final ValueNotifier<LiveStatus> liveStatusNotifier;
   final ZegoLiveConnectManager connectManager;
-  final ZegoTranslationText translationText;
 
   const ZegoBottomBar({
     Key? key,
@@ -40,7 +39,6 @@ class ZegoBottomBar extends StatefulWidget {
     required this.liveStatusNotifier,
     required this.connectManager,
     required this.popUpManager,
-    required this.translationText,
   }) : super(key: key);
 
   @override
@@ -70,28 +68,6 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
       height: 124.r,
       child: Stack(
         children: [
-          if (widget.config.bottomMenuBarConfig.showInRoomMessageButton)
-            SizedBox(
-              height: 124.r,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  zegoLiveButtonPadding,
-                  ZegoInRoomMessageButton(
-                    hostManager: widget.hostManager,
-                    onSheetPopUp: (int key) {
-                      widget.popUpManager.addAPopUpSheet(key);
-                    },
-                    onSheetPop: (int key) {
-                      widget.popUpManager.removeAPopUpSheet(key);
-                    },
-                  ),
-                ],
-              ),
-            )
-          else
-            const SizedBox(),
           if (widget.hostManager.isHost)
             rightToolbar(context)
           else
@@ -112,6 +88,29 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
                 return rightToolbar(context);
               },
             ),
+          if (widget.config.bottomMenuBarConfig.showInRoomMessageButton)
+            SizedBox(
+              height: 124.r,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  zegoLiveButtonPadding,
+                  ZegoInRoomMessageButton(
+                    translationText: widget.config.translationText,
+                    hostManager: widget.hostManager,
+                    onSheetPopUp: (int key) {
+                      widget.popUpManager.addAPopUpSheet(key);
+                    },
+                    onSheetPop: (int key) {
+                      widget.popUpManager.removeAPopUpSheet(key);
+                    },
+                  ),
+                ],
+              ),
+            )
+          else
+            const SizedBox(),
         ],
       ),
     );
@@ -136,25 +135,22 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
   }
 
   Widget rightToolbar(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(left: 120.0.r),
-      child: CustomScrollView(
-        scrollDirection: Axis.horizontal,
-        slivers: [
-          SliverFillRemaining(
-            hasScrollBody: false,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                ...getDisplayButtons(context),
-                zegoLiveButtonPadding,
-                zegoLiveButtonPadding,
-              ],
-            ),
+    return CustomScrollView(
+      scrollDirection: Axis.horizontal,
+      slivers: [
+        SliverFillRemaining(
+          hasScrollBody: false,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              ...getDisplayButtons(context),
+              zegoLiveButtonPadding,
+              zegoLiveButtonPadding,
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -369,12 +365,14 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
         );
       case ZegoMenuBarButtonName.beautyEffectButton:
         return ZegoBeautyEffectButton(
+          translationText: widget.config.translationText,
           beautyEffects: widget.config.effectConfig.beautyEffects,
           buttonSize: buttonSize,
           iconSize: iconSize,
         );
       case ZegoMenuBarButtonName.soundEffectButton:
         return ZegoSoundEffectButton(
+          translationText: widget.config.translationText,
           voiceChangeEffect: widget.config.effectConfig.voiceChangeEffect,
           reverbEffect: widget.config.effectConfig.reverbEffect,
           buttonSize: buttonSize,
@@ -384,7 +382,7 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
         return ZegoCoHostControlButton(
           hostManager: widget.hostManager,
           connectManager: widget.connectManager,
-          translationText: widget.translationText,
+          translationText: widget.config.translationText,
         );
       case ZegoMenuBarButtonName.enableChatButton:
         return ZegoDisableChatButton(

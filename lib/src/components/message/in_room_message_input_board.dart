@@ -2,10 +2,15 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:zego_uikit/zego_uikit.dart';
+
+import 'package:zego_uikit_prebuilt_live_streaming/zego_uikit_prebuilt_live_streaming.dart';
 
 class ZegoInRoomMessageInputBoard extends ModalRoute<String> {
-  ZegoInRoomMessageInputBoard() : super();
+  ZegoInRoomMessageInputBoard({
+    required this.translationText,
+  }) : super();
+
+  final ZegoTranslationText translationText;
 
   @override
   Duration get transitionDuration => const Duration(milliseconds: 200);
@@ -43,6 +48,7 @@ class ZegoInRoomMessageInputBoard extends ModalRoute<String> {
             ),
           ),
           ZegoInRoomMessageInput(
+            placeHolder: translationText.messageEmptyToast,
             onSubmit: () {
               Navigator.pop(context);
             },

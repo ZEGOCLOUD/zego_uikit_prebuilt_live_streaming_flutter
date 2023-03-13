@@ -6,13 +6,13 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/message/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/message/in_room_message_input_board.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/zego_uikit_prebuilt_live_streaming.dart';
 
 class ZegoInRoomMessageButton extends StatefulWidget {
   final ZegoLiveHostManager hostManager;
@@ -20,10 +20,12 @@ class ZegoInRoomMessageButton extends StatefulWidget {
   final Size? buttonSize;
   final Function(int)? onSheetPopUp;
   final Function(int)? onSheetPop;
+  final ZegoTranslationText translationText;
 
   const ZegoInRoomMessageButton({
     Key? key,
     required this.hostManager,
+    required this.translationText,
     this.iconSize,
     this.buttonSize,
     this.onSheetPopUp,
@@ -74,7 +76,9 @@ class _ZegoInRoomMessageButtonState extends State<ZegoInRoomMessageButton> {
 
                   isMessageInputting = true;
                   Navigator.of(context)
-                      .push(ZegoInRoomMessageInputBoard())
+                      .push(ZegoInRoomMessageInputBoard(
+                    translationText: widget.translationText,
+                  ))
                       .then((value) {
                     isMessageInputting = false;
                     widget.onSheetPop?.call(key);

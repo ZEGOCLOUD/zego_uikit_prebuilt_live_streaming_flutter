@@ -106,15 +106,16 @@ class ZegoPrebuiltPlugins {
     await ZegoUIKit()
         .getSignalingPlugin()
         .login(id: userID, name: userName)
-        .then((value) async {
+        .then((result) async {
       ZegoLoggerService.logInfo(
-        'plugins login done, join room...',
+        'plugins login done, login result:$result, try to join room...',
         tag: 'live streaming',
         subTag: 'plugin',
       );
-      return joinRoom().then((value) {
+
+      return joinRoom().then((result) {
         ZegoLoggerService.logInfo(
-          'plugins room joined',
+          'plugins room joined, join result:$result',
           tag: 'live streaming',
           subTag: 'plugin',
         );

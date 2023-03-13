@@ -1,3 +1,11 @@
+## 2.3.3
+- fixed landscape not displaying full web screen sharing content
+- add message and voice/beauty text customization
+
+## 2.3.2
+
+- fix no response to the chat button click when text direction is RTL
+
 ## 2.3.1
 
 - fix some bugs

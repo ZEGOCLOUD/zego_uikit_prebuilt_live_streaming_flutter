@@ -24,16 +24,19 @@ class _ZegoInRoomLiveCommentingViewState
     extends State<ZegoInRoomLiveCommentingView> {
   @override
   Widget build(BuildContext context) {
-    return ZegoInRoomMessageView(
-      historyMessages: ZegoUIKit().getInRoomMessages(),
-      stream: ZegoUIKit().getInRoomMessageListStream(),
-      itemBuilder: widget.itemBuilder ??
-          (BuildContext context, ZegoInRoomMessage message, _) {
-            return ZegoInRoomLiveCommentingViewItem(
-              user: message.user,
-              message: message.message,
-            );
-          },
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: ZegoInRoomMessageView(
+        historyMessages: ZegoUIKit().getInRoomMessages(),
+        stream: ZegoUIKit().getInRoomMessageListStream(),
+        itemBuilder: widget.itemBuilder ??
+            (BuildContext context, ZegoInRoomMessage message, _) {
+              return ZegoInRoomLiveCommentingViewItem(
+                user: message.user,
+                message: message.message,
+              );
+            },
+      ),
     );
   }
 }

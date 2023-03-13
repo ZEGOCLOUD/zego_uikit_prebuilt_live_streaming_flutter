@@ -8,11 +8,13 @@ import 'package:zego_uikit/zego_uikit.dart';
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/effects/beauty_effect_sheet.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_translation.dart';
 
 class ZegoBeautyEffectButton extends StatefulWidget {
   const ZegoBeautyEffectButton({
     Key? key,
     required this.beautyEffects,
+    required this.translationText,
     this.iconSize,
     this.buttonSize,
     this.icon,
@@ -22,6 +24,7 @@ class ZegoBeautyEffectButton extends StatefulWidget {
   final Size? buttonSize;
   final ButtonIcon? icon;
   final List<BeautyEffectType> beautyEffects;
+  final ZegoTranslationText translationText;
 
   @override
   State<ZegoBeautyEffectButton> createState() => _ZegoBeautyEffectButtonState();
@@ -34,7 +37,11 @@ class _ZegoBeautyEffectButtonState extends State<ZegoBeautyEffectButton> {
     final sizeBoxSize = widget.iconSize ?? Size(56.r, 56.r);
     return GestureDetector(
       onTap: () async {
-        showBeautyEffectSheet(context, beautyEffects: widget.beautyEffects);
+        showBeautyEffectSheet(
+          context,
+          translationText: widget.translationText,
+          beautyEffects: widget.beautyEffects,
+        );
       },
       child: Container(
         width: containerSize.width,

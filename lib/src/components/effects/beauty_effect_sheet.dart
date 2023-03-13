@@ -9,12 +9,15 @@ import 'package:zego_uikit/zego_uikit.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/effects/beauty_effect_reset_button.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/effects/effect_grid.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_translation.dart';
 
 class ZegoBeautyEffectSheet extends StatefulWidget {
+  final ZegoTranslationText translationText;
   final List<BeautyEffectType> beautyEffects;
 
   const ZegoBeautyEffectSheet({
     Key? key,
+    required this.translationText,
     required this.beautyEffects,
   }) : super(key: key);
 
@@ -58,7 +61,7 @@ class _ZegoBeautyEffectSheetState extends State<ZegoBeautyEffectSheet> {
                 icon: PrebuiltLiveStreamingImage.asset(
                     'assets/icons/face_beauty_${effect.name}.png'),
               ),
-              iconText: effect.text,
+              iconText: beautyEffectTypeText(effect),
               onPressed: () {
                 selectedEffectTypeNotifier.value = effect;
               },
@@ -204,10 +207,26 @@ class _ZegoBeautyEffectSheetState extends State<ZegoBeautyEffectSheet> {
       ),
     );
   }
+
+  String beautyEffectTypeText(BeautyEffectType effectType) {
+    switch (effectType) {
+      case BeautyEffectType.whiten:
+        return widget.translationText.beautyEffectTypeWhitenTitle;
+      case BeautyEffectType.rosy:
+        return widget.translationText.beautyEffectTypeRosyTitle;
+      case BeautyEffectType.smooth:
+        return widget.translationText.beautyEffectTypeSmoothTitle;
+      case BeautyEffectType.sharpen:
+        return widget.translationText.beautyEffectTypeSharpenTitle;
+      case BeautyEffectType.none:
+        return widget.translationText.beautyEffectTypeNoneTitle;
+    }
+  }
 }
 
 void showBeautyEffectSheet(
   BuildContext context, {
+  required ZegoTranslationText translationText,
   required List<BeautyEffectType> beautyEffects,
 }) {
   showModalBottomSheet(
@@ -222,7 +241,10 @@ void showBeautyEffectSheet(
         duration: const Duration(milliseconds: 50),
         child: SizedBox(
           height: _besSheetTotalHeight + (_besSliderHeight + _besSliderPadding),
-          child: ZegoBeautyEffectSheet(beautyEffects: beautyEffects),
+          child: ZegoBeautyEffectSheet(
+            translationText: translationText,
+            beautyEffects: beautyEffects,
+          ),
         ),
       );
     },

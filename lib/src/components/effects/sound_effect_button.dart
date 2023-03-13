@@ -8,6 +8,7 @@ import 'package:zego_uikit/zego_uikit.dart';
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/effects/sound_effect_sheet.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_translation.dart';
 
 class ZegoSoundEffectButton extends StatefulWidget {
   final List<VoiceChangerType> voiceChangeEffect;
@@ -16,9 +17,11 @@ class ZegoSoundEffectButton extends StatefulWidget {
   final Size? iconSize;
   final Size? buttonSize;
   final ButtonIcon? icon;
+  final ZegoTranslationText translationText;
 
   const ZegoSoundEffectButton({
     Key? key,
+    required this.translationText,
     required this.voiceChangeEffect,
     required this.reverbEffect,
     this.iconSize,
@@ -42,6 +45,7 @@ class _ZegoSoundEffectButtonState extends State<ZegoSoundEffectButton> {
       onTap: () async {
         showSoundEffectSheet(
           context,
+          translationText: widget.translationText,
           voiceChangeEffect: widget.voiceChangeEffect,
           voiceChangerSelectedIDNotifier: voiceChangerSelectedIDNotifier,
           reverbEffect: widget.reverbEffect,

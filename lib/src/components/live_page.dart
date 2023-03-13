@@ -158,7 +158,10 @@ class ZegoLivePageState extends State<ZegoLivePage>
                     builder: (context, host, _) {
                       return Stack(
                         children: [
-                          ...background(constraints.maxHeight),
+                          ...background(
+                            constraints.maxWidth,
+                            constraints.maxHeight,
+                          ),
                           avContainerOrPKBattleView(constraints),
                           topBar(),
                           bottomBar(),
@@ -188,6 +191,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
                 builder: (context, host, _) {
                   return audioVideoContainer(
                     host,
+                    constraints.maxWidth,
                     constraints.maxHeight,
                     screenSharingUsers.isNotEmpty,
                   );
@@ -254,7 +258,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
     );
   }
 
-  List<Widget> background(double height) {
+  List<Widget> background(double width, double height) {
     if (widget.config.background != null) {
       return [
         /// full screen
@@ -273,7 +277,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
         top: 0,
         left: 0,
         child: Container(
-          width: 750.w,
+          width: width,
           height: height,
           decoration: BoxDecoration(
             image: DecorationImage(
@@ -291,6 +295,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
 
   Widget audioVideoContainer(
     ZegoUIKitUser? host,
+    double maxWidth,
     double maxHeight,
     bool withScreenSharing,
   ) {
@@ -306,13 +311,15 @@ class ZegoLivePageState extends State<ZegoLivePage>
                     if (!isCameraEnabled && !isMicrophoneEnabled) {
                       audioVideoContainerHostHadSorted = false;
                     }
-                    return audioVideoWidget(maxHeight, withScreenSharing);
+                    return audioVideoWidget(
+                        maxWidth, maxHeight, withScreenSharing);
                   });
             })
-        : audioVideoWidget(maxHeight, withScreenSharing);
+        : audioVideoWidget(maxWidth, maxHeight, withScreenSharing);
   }
 
   Widget audioVideoWidget(
+    double width,
     double height,
     bool withScreenSharing,
   ) {
@@ -423,7 +430,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
           top: 0,
           left: 0,
           child: SizedBox(
-            width: 750.w,
+            width: width,
             height: height,
             child: children,
           ),
@@ -555,7 +562,6 @@ class ZegoLivePageState extends State<ZegoLivePage>
         liveStatusNotifier: widget.liveStatusManager.notifier,
         connectManager: connectManager,
         popUpManager: widget.popUpManager,
-        translationText: widget.config.translationText,
       ),
     );
   }
