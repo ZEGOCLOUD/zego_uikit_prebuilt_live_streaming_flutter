@@ -67,7 +67,7 @@ class _ZegoTopBarState extends State<ZegoTopBar> {
                 avatarBuilder: widget.config.avatarBuilder,
                 hostManager: widget.hostManager,
                 connectManager: widget.connectManager,
-                popUpManager:widget.popUpManager,
+                popUpManager: widget.popUpManager,
                 translationText: widget.translationText,
               ),
               SizedBox(width: 33.r),

@@ -12,14 +12,16 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_translatio
 Future<void> checkPermissions({
   required BuildContext context,
   required ZegoTranslationText translationText,
+  required bool rootNavigator,
   bool isShowDialog = false,
 }) async {
   await Permission.camera.status.then((status) async {
     if (status != PermissionStatus.granted) {
       if (isShowDialog) {
         await showAppSettingsDialog(
-          context,
-          translationText.cameraPermissionSettingDialogInfo,
+          context: context,
+          dialogInfo: translationText.cameraPermissionSettingDialogInfo,
+          rootNavigator: rootNavigator,
         );
       }
     }
@@ -29,8 +31,9 @@ Future<void> checkPermissions({
     if (status != PermissionStatus.granted) {
       if (isShowDialog) {
         await showAppSettingsDialog(
-          context,
-          translationText.microphonePermissionSettingDialogInfo,
+          context: context,
+          dialogInfo: translationText.microphonePermissionSettingDialogInfo,
+          rootNavigator: rootNavigator,
         );
       }
     }
@@ -40,6 +43,7 @@ Future<void> checkPermissions({
 Future<void> requestPermissions({
   required BuildContext context,
   required ZegoTranslationText translationText,
+  required bool rootNavigator,
   bool isShowDialog = false,
 }) async {
   await [
@@ -49,8 +53,9 @@ Future<void> requestPermissions({
     if (statuses[Permission.camera] != PermissionStatus.granted) {
       if (isShowDialog) {
         await showAppSettingsDialog(
-          context,
-          translationText.cameraPermissionSettingDialogInfo,
+          context: context,
+          dialogInfo: translationText.cameraPermissionSettingDialogInfo,
+          rootNavigator: rootNavigator,
         );
       }
     }
@@ -58,30 +63,39 @@ Future<void> requestPermissions({
     if (statuses[Permission.microphone] != PermissionStatus.granted) {
       if (isShowDialog) {
         await showAppSettingsDialog(
-          context,
-          translationText.microphonePermissionSettingDialogInfo,
+          context: context,
+          dialogInfo: translationText.microphonePermissionSettingDialogInfo,
+          rootNavigator: rootNavigator,
         );
       }
     }
   });
 }
 
-Future<bool> showAppSettingsDialog(
-  BuildContext context,
-  ZegoDialogInfo dialogInfo,
-) async {
+Future<bool> showAppSettingsDialog({
+  required BuildContext context,
+  required ZegoDialogInfo dialogInfo,
+  required bool rootNavigator,
+}) async {
   return showLiveDialog(
     context: context,
     title: dialogInfo.title,
     content: dialogInfo.message,
+    rootNavigator: rootNavigator,
     leftButtonText: dialogInfo.cancelButtonName,
     leftButtonCallback: () {
-      Navigator.of(context).pop(false);
+      Navigator.of(
+        context,
+        rootNavigator: rootNavigator,
+      ).pop(false);
     },
     rightButtonText: dialogInfo.confirmButtonName,
     rightButtonCallback: () async {
       await openAppSettings();
-      Navigator.of(context).pop(false);
+      Navigator.of(
+        context,
+        rootNavigator: rootNavigator,
+      ).pop(false);
     },
   );
 }

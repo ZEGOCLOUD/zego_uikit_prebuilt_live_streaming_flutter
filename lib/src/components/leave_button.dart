@@ -64,14 +64,20 @@ class ZegoLeaveStreamingButton extends StatelessWidget {
           if (config.onLiveStreamingEnded != null) {
             config.onLiveStreamingEnded!.call();
           } else {
-            Navigator.of(context).pop();
+            Navigator.of(
+              context,
+              rootNavigator: hostManager.config.rootNavigator,
+            ).pop();
           }
         } else {
           /// audience leave live streaming
           if (config.onLeaveLiveStreaming != null) {
             config.onLeaveLiveStreaming!.call();
           } else {
-            Navigator.of(context).pop();
+            Navigator.of(
+              context,
+              rootNavigator: hostManager.config.rootNavigator,
+            ).pop();
           }
         }
       },

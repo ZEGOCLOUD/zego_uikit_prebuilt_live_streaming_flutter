@@ -9,12 +9,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/effects/beauty_effect_button.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/permissions.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_translation.dart';
+
+import 'dart:math' as math; // import this
 
 /// user should be login before page enter
 class ZegoPreviewPage extends StatefulWidget {
@@ -140,11 +142,21 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
           children: [
             ZegoTextIconButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.of(
+                  context,
+                  rootNavigator: widget.config.rootNavigator,
+                ).pop();
               },
               icon: ButtonIcon(
-                icon: PrebuiltLiveStreamingImage.asset(
-                    PrebuiltLiveStreamingIconUrls.pageBack),
+                icon: isRTL(context)
+                    ? Transform(
+                        alignment: Alignment.center,
+                        transform: Matrix4.rotationY(math.pi),
+                        child: PrebuiltLiveStreamingImage.asset(
+                            PrebuiltLiveStreamingIconUrls.pageBack),
+                      )
+                    : PrebuiltLiveStreamingImage.asset(
+                        PrebuiltLiveStreamingIconUrls.pageBack),
               ),
               iconSize: iconSize,
               buttonSize: buttonSize,
@@ -182,6 +194,7 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
           children: [
             ZegoBeautyEffectButton(
               translationText: widget.config.translationText,
+              rootNavigator: widget.config.rootNavigator,
               beautyEffects: widget.config.effectConfig.beautyEffects,
               buttonSize: buttonSize,
               iconSize: iconSize,
@@ -202,6 +215,7 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
             context: context,
             isShowDialog: true,
             translationText: widget.config.translationText,
+            rootNavigator: widget.config.rootNavigator,
           ).then((value) {
             if (!widget.liveStreamingPageReady.value) {
               ZegoLoggerService.logInfo(
@@ -224,6 +238,7 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
               context: context,
               isShowDialog: true,
               translationText: widget.config.translationText,
+              rootNavigator: widget.config.rootNavigator,
             ).then((value) {
               if (!widget.liveStreamingPageReady.value) {
                 ZegoLoggerService.logInfo(

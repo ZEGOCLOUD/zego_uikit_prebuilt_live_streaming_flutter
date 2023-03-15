@@ -366,6 +366,7 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
       case ZegoMenuBarButtonName.beautyEffectButton:
         return ZegoBeautyEffectButton(
           translationText: widget.config.translationText,
+          rootNavigator: widget.config.rootNavigator,
           beautyEffects: widget.config.effectConfig.beautyEffects,
           buttonSize: buttonSize,
           iconSize: iconSize,
@@ -373,6 +374,7 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
       case ZegoMenuBarButtonName.soundEffectButton:
         return ZegoSoundEffectButton(
           translationText: widget.config.translationText,
+          rootNavigator: widget.config.rootNavigator,
           voiceChangeEffect: widget.config.effectConfig.voiceChangeEffect,
           reverbEffect: widget.config.effectConfig.reverbEffect,
           buttonSize: buttonSize,

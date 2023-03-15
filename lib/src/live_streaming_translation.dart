@@ -18,6 +18,9 @@ class ZegoTranslationText {
 
   String noHostOnline;
   String memberListTitle;
+  String memberListRoleYou;
+  String memberListRoleHost;
+  String memberListRoleCoHost;
   String sendRequestCoHostToast;
   String hostRejectCoHostRequestToast;
   String inviteCoHostFailedToast;
@@ -37,6 +40,7 @@ class ZegoTranslationText {
   String audioEffectTitle;
   String audioEffectReverbTitle;
   String audioEffectVoiceChangingTitle;
+  String beautyEffectTitle;
 
   /// voice effect
   String voiceChangerNoneTitle;
@@ -87,6 +91,9 @@ class ZegoTranslationText {
     String? removeUserMenuDialogButton,
     String? noHostOnline,
     String? memberListTitle,
+    String? memberListRoleYou,
+    String? memberListRoleHost,
+    String? memberListRoleCoHost,
     String? sendRequestCoHostToast,
     String? hostRejectCoHostRequestToast,
     String? inviteCoHostFailedToast,
@@ -102,6 +109,7 @@ class ZegoTranslationText {
     String? audioEffectTitle,
     String? audioEffectReverbTitle,
     String? audioEffectVoiceChangingTitle,
+    String? beautyEffectTitle,
     String? voiceChangerNoneTitle,
     String? voiceChangerLittleBoyTitle,
     String? voiceChangerLittleGirlTitle,
@@ -146,6 +154,9 @@ class ZegoTranslationText {
         cancelMenuDialogButton = cancelMenuDialogButton ?? 'Cancel',
         noHostOnline = noHostOnline ?? 'No host is online.',
         memberListTitle = memberListTitle ?? 'Audience',
+        memberListRoleYou = memberListRoleYou ?? 'You',
+        memberListRoleHost = memberListRoleHost ?? 'Host',
+        memberListRoleCoHost = memberListRoleCoHost ?? 'Co-host',
         sendRequestCoHostToast = sendRequestCoHostToast ??
             'You are applying to be a co-host, please wait for confirmation.',
         hostRejectCoHostRequestToast = hostRejectCoHostRequestToast ??
@@ -199,6 +210,7 @@ class ZegoTranslationText {
         audioEffectReverbTitle = audioEffectReverbTitle ?? 'Reverb',
         audioEffectVoiceChangingTitle =
             audioEffectVoiceChangingTitle ?? 'Voice changing',
+        beautyEffectTitle = beautyEffectTitle ?? 'Face beautification',
         voiceChangerNoneTitle = voiceChangerNoneTitle ?? 'None',
         voiceChangerLittleBoyTitle = voiceChangerLittleBoyTitle ?? 'Little boy',
         voiceChangerLittleGirlTitle =

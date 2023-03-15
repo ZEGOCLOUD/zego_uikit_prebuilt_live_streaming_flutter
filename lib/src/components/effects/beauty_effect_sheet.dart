@@ -3,21 +3,22 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/effects/beauty_effect_reset_button.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/effects/effect_grid.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_translation.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/zego_uikit_prebuilt_live_streaming.dart';
 
 class ZegoBeautyEffectSheet extends StatefulWidget {
   final ZegoTranslationText translationText;
+  final bool rootNavigator;
   final List<BeautyEffectType> beautyEffects;
 
   const ZegoBeautyEffectSheet({
     Key? key,
     required this.translationText,
+    required this.rootNavigator,
     required this.beautyEffects,
   }) : super(key: key);
 
@@ -173,7 +174,10 @@ class _ZegoBeautyEffectSheetState extends State<ZegoBeautyEffectSheet> {
         children: [
           GestureDetector(
             onTap: () {
-              Navigator.of(context).pop();
+              Navigator.of(
+                context,
+                rootNavigator: widget.rootNavigator,
+              ).pop();
             },
             child: SizedBox(
               width: 70.r,
@@ -184,7 +188,7 @@ class _ZegoBeautyEffectSheetState extends State<ZegoBeautyEffectSheet> {
           ),
           SizedBox(width: 10.r),
           Text(
-            'Face beautification',
+            widget.translationText.beautyEffectTitle,
             style: TextStyle(
               fontSize: 36.0.r,
               color: const Color(0xffffffff),
@@ -227,11 +231,13 @@ class _ZegoBeautyEffectSheetState extends State<ZegoBeautyEffectSheet> {
 void showBeautyEffectSheet(
   BuildContext context, {
   required ZegoTranslationText translationText,
+  required bool rootNavigator,
   required List<BeautyEffectType> beautyEffects,
 }) {
   showModalBottomSheet(
     context: context,
     barrierColor: ZegoUIKitDefaultTheme.viewBarrierColor,
+    useRootNavigator: rootNavigator,
     backgroundColor: Colors.transparent,
     isDismissible: true,
     isScrollControlled: true,
@@ -243,6 +249,7 @@ void showBeautyEffectSheet(
           height: _besSheetTotalHeight + (_besSliderHeight + _besSliderPadding),
           child: ZegoBeautyEffectSheet(
             translationText: translationText,
+            rootNavigator: rootNavigator,
             beautyEffects: beautyEffects,
           ),
         ),

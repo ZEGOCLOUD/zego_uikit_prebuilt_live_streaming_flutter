@@ -11,6 +11,7 @@ import 'package:zego_uikit/zego_uikit.dart';
 
 Future<bool> showLiveDialog({
   required BuildContext context,
+  required bool rootNavigator,
   required String title,
   required String content,
   required String rightButtonText,
@@ -25,8 +26,11 @@ Future<bool> showLiveDialog({
     [
       if (leftButtonText != null)
         CupertinoDialogAction(
-          onPressed:
-              leftButtonCallback ?? () => Navigator.of(context).pop(false),
+          onPressed: leftButtonCallback ??
+              () => Navigator.of(
+                    context,
+                    rootNavigator: rootNavigator,
+                  ).pop(false),
           child: Text(
             leftButtonText,
             style: TextStyle(
@@ -37,7 +41,11 @@ Future<bool> showLiveDialog({
           ),
         ),
       CupertinoDialogAction(
-        onPressed: rightButtonCallback ?? () => Navigator.of(context).pop(true),
+        onPressed: rightButtonCallback ??
+            () => Navigator.of(
+                  context,
+                  rootNavigator: rootNavigator,
+                ).pop(true),
         child: Text(
           rightButtonText,
           style: TextStyle(

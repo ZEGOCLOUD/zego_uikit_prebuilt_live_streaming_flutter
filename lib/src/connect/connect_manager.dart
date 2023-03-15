@@ -50,6 +50,12 @@ class ZegoLiveConnectManager {
   List<StreamSubscription<dynamic>?> subscriptions = [];
 
   void init() {
+    ZegoLoggerService.logInfo(
+      'init',
+      tag: 'live streaming',
+      subTag: 'connect manager',
+    );
+
     if (ZegoLiveStreamingRole.host == config.role &&
         hostManager.notifier.value != null &&
         hostManager.notifier.value!.id != ZegoUIKit().getLocalUser().id) {
@@ -63,6 +69,12 @@ class ZegoLiveConnectManager {
   }
 
   void uninit() {
+    ZegoLoggerService.logInfo(
+      'uninit',
+      tag: 'live streaming',
+      subTag: 'connect manager',
+    );
+
     audienceLocalConnectStateNotifier.value = ConnectState.idle;
     requestCoHostUsersNotifier.value = [];
     isInviteToJoinCoHostDlgVisible = false;
@@ -248,6 +260,7 @@ class ZegoLiveConnectManager {
       title: translation.title,
       content: translation.message,
       leftButtonText: translation.cancelButtonName,
+      rootNavigator: config.rootNavigator,
       leftButtonCallback: () {
         isInviteToJoinCoHostDlgVisible = false;
 
@@ -270,7 +283,10 @@ class ZegoLiveConnectManager {
           );
         }
 
-        Navigator.of(contextQuery()).pop();
+        Navigator.of(
+          contextQuery(),
+          rootNavigator: config.rootNavigator,
+        ).pop();
       },
       rightButtonText: translation.confirmButtonName,
       rightButtonCallback: () {
@@ -301,6 +317,7 @@ class ZegoLiveConnectManager {
               context: contextQuery(),
               isShowDialog: true,
               translationText: translationText,
+              rootNavigator: config.rootNavigator,
             ).then((_) {
               updateAudienceConnectState(ConnectState.connected);
             });
@@ -313,7 +330,10 @@ class ZegoLiveConnectManager {
           );
         }
 
-        Navigator.of(contextQuery()).pop();
+        Navigator.of(
+          contextQuery(),
+          rootNavigator: config.rootNavigator,
+        ).pop();
       },
     );
   }
@@ -335,6 +355,7 @@ class ZegoLiveConnectManager {
         context: contextQuery(),
         isShowDialog: true,
         translationText: translationText,
+        rootNavigator: config.rootNavigator,
       ).then((value) {
         ZegoUIKit().turnCameraOn(true);
         ZegoUIKit().turnMicrophoneOn(true);
@@ -401,7 +422,10 @@ class ZegoLiveConnectManager {
       /// hide invite join co-host dialog
       if (isInviteToJoinCoHostDlgVisible) {
         isInviteToJoinCoHostDlgVisible = false;
-        Navigator.of(contextQuery()).pop();
+        Navigator.of(
+          contextQuery(),
+          rootNavigator: config.rootNavigator,
+        ).pop();
       }
     }
   }
@@ -445,19 +469,26 @@ class ZegoLiveConnectManager {
     isEndCoHostDialogVisible = true;
     showLiveDialog(
       context: contextQuery(),
+      rootNavigator: config.rootNavigator,
       title: translationText.endConnectionDialogInfo.title,
       content: translationText.endConnectionDialogInfo.message,
       leftButtonText: translationText.endConnectionDialogInfo.cancelButtonName,
       leftButtonCallback: () {
         isEndCoHostDialogVisible = false;
         //  pop this dialog
-        Navigator.of(contextQuery()).pop(false);
+        Navigator.of(
+          contextQuery(),
+          rootNavigator: config.rootNavigator,
+        ).pop(false);
       },
       rightButtonText:
           translationText.endConnectionDialogInfo.confirmButtonName,
       rightButtonCallback: () {
         isEndCoHostDialogVisible = false;
-        Navigator.of(contextQuery()).pop(true);
+        Navigator.of(
+          contextQuery(),
+          rootNavigator: config.rootNavigator,
+        ).pop(true);
 
         audienceEndConnect();
       },
@@ -491,13 +522,19 @@ class ZegoLiveConnectManager {
         /// hide invite join co-host dialog
         if (isInviteToJoinCoHostDlgVisible) {
           isInviteToJoinCoHostDlgVisible = false;
-          Navigator.of(contextQuery()).pop();
+          Navigator.of(
+            contextQuery(),
+            rootNavigator: config.rootNavigator,
+          ).pop();
         }
 
         /// hide co-host end request dialog
         if (isEndCoHostDialogVisible) {
           isEndCoHostDialogVisible = false;
-          Navigator.of(contextQuery()).pop();
+          Navigator.of(
+            contextQuery(),
+            rootNavigator: config.rootNavigator,
+          ).pop();
         }
         break;
       case ConnectState.connecting:

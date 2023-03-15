@@ -14,6 +14,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/pk/pk_event_default_actio
 import 'package:zego_uikit_prebuilt_live_streaming/zego_uikit_prebuilt_live_streaming.dart';
 
 part 'pk_event_conv.dart';
+
 part 'pk_utils.dart';
 
 class ZegoLiveStreamingPKBattleManager {
@@ -38,7 +39,9 @@ class ZegoLiveStreamingPKBattleManager {
   String waitingOutgoingPKBattleRequestID = '';
 
   BuildContext get context => contextQuery();
+
   bool get isLiving => liveStatusNotifier.value == LiveStatus.living;
+
   bool get isHost => hostManager.isHost;
   String cachedRoomID = '';
   Completer<void>? stateTrancformCompleter;
@@ -699,13 +702,19 @@ class ZegoLiveStreamingPKBattleManager {
         if (hostManager.connectManager?.isInviteToJoinCoHostDlgVisible ??
             false) {
           hostManager.connectManager!.isInviteToJoinCoHostDlgVisible = false;
-          Navigator.of(contextQuery()).pop();
+          Navigator.of(
+            contextQuery(),
+            rootNavigator: config.rootNavigator,
+          ).pop();
         }
 
         /// hide co-host end request dialog
         if (hostManager.connectManager?.isEndCoHostDialogVisible ?? false) {
           hostManager.connectManager!.isEndCoHostDialogVisible = false;
-          Navigator.of(contextQuery()).pop();
+          Navigator.of(
+            contextQuery(),
+            rootNavigator: config.rootNavigator,
+          ).pop();
         }
         // cancel audience's co-host request
         if (ConnectState.connecting ==
@@ -722,6 +731,7 @@ class ZegoLiveStreamingPKBattleManager {
               ?.updateAudienceConnectState(ConnectState.idle);
           showLiveDialog(
             context: context,
+            rootNavigator: config.rootNavigator,
             title: 'Host Start PK Battle',
             content: 'Your co-hosting ended',
             rightButtonText: 'OK',
@@ -772,6 +782,7 @@ class ZegoLiveStreamingPKBattleManager {
   factory ZegoLiveStreamingPKBattleManager() => _instance;
   static final ZegoLiveStreamingPKBattleManager _instance =
       ZegoLiveStreamingPKBattleManager._();
+
   ZegoLiveStreamingPKBattleManager._();
 }
 

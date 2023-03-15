@@ -1,3 +1,4 @@
+// Flutter imports:
 import 'package:flutter/cupertino.dart';
 
 class ZegoPopUpManager {
@@ -11,9 +12,12 @@ class ZegoPopUpManager {
     _popupSheetKeys.remove(key);
   }
 
-  void autoPop(BuildContext context) {
+  void autoPop(BuildContext context, bool rootNavigator) {
     for (final _ in _popupSheetKeys) {
-      Navigator.of(context).pop();
+      Navigator.of(
+        context,
+        rootNavigator: rootNavigator,
+      ).pop();
     }
 
     _popupSheetKeys.clear();

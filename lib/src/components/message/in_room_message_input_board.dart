@@ -1,16 +1,19 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
 
-// Package imports:
-
+// Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/zego_uikit_prebuilt_live_streaming.dart';
+
+// Package imports:
 
 class ZegoInRoomMessageInputBoard extends ModalRoute<String> {
   ZegoInRoomMessageInputBoard({
     required this.translationText,
+    required this.rootNavigator,
   }) : super();
 
   final ZegoTranslationText translationText;
+  final bool rootNavigator;
 
   @override
   Duration get transitionDuration => const Duration(milliseconds: 200);
@@ -43,14 +46,20 @@ class ZegoInRoomMessageInputBoard extends ModalRoute<String> {
         children: <Widget>[
           Expanded(
             child: GestureDetector(
-              onTap: () => Navigator.pop(context),
+              onTap: () => Navigator.of(
+                context,
+                rootNavigator: rootNavigator,
+              ).pop(),
               child: Container(color: Colors.transparent),
             ),
           ),
           ZegoInRoomMessageInput(
             placeHolder: translationText.messageEmptyToast,
             onSubmit: () {
-              Navigator.pop(context);
+              Navigator.of(
+                context,
+                rootNavigator: rootNavigator,
+              ).pop();
             },
           ),
         ],

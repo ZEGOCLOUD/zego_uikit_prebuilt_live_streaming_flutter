@@ -288,7 +288,10 @@ extension ZegoLiveStreamingPKBattleManagerEventConv
             tag: 'ZegoLiveStreamingPKBattleService',
             subTag: 'event',
           );
-          Navigator.of(context).pop();
+          Navigator.of(
+            context,
+            rootNavigator: config.rootNavigator,
+          ).pop();
           ZegoUIKitPrebuiltLiveStreamingService().pkBattleState.value =
               ZegoLiveStreamingPKBattleState.idle;
         }
@@ -315,7 +318,10 @@ extension ZegoLiveStreamingPKBattleManagerEventConv
             tag: 'ZegoLiveStreamingPKBattleService',
             subTag: 'event',
           );
-          Navigator.of(context).pop();
+          Navigator.of(
+            context,
+            rootNavigator: config.rootNavigator,
+          ).pop();
           ZegoUIKitPrebuiltLiveStreamingService().pkBattleState.value =
               ZegoLiveStreamingPKBattleState.idle;
         }

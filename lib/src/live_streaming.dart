@@ -8,23 +8,17 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
-import 'package:zego_uikit_prebuilt_live_streaming/src/components/dialogs.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/live_page.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/permissions.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/preview_page.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/toast.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/live_status_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/plugins.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_defines.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/pk/src/pk_impl.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/zego_uikit_prebuilt_live_streaming.dart';
-
-import 'components/pop_up_manager.dart';
 
 class ZegoUIKitPrebuiltLiveStreaming extends StatefulWidget {
   const ZegoUIKitPrebuiltLiveStreaming({
@@ -84,7 +78,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     WidgetsBinding.instance?.addObserver(this);
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
-      log('version: zego_uikit_prebuilt_live_streaming: 2.3.3; $version');
+      log('version: zego_uikit_prebuilt_live_streaming: 2.3.5; $version');
     });
 
     hostManager = ZegoLiveHostManager(config: widget.config);
@@ -209,22 +203,31 @@ class _ZegoUIKitPrebuiltLiveStreamingState
 
     if (!isCameraGranted) {
       await showAppSettingsDialog(
-        context,
-        widget.config.translationText.cameraPermissionSettingDialogInfo,
+        context: context,
+        rootNavigator: widget.config.rootNavigator,
+        dialogInfo:
+            widget.config.translationText.cameraPermissionSettingDialogInfo,
       );
     }
     if (!isMicrophoneGranted) {
       await showAppSettingsDialog(
-        context,
-        widget.config.translationText.microphonePermissionSettingDialogInfo,
+        context: context,
+        rootNavigator: widget.config.rootNavigator,
+        dialogInfo:
+            widget.config.translationText.microphonePermissionSettingDialogInfo,
       );
     }
   }
 
   void initContext() {
+    assert(widget.userID.isNotEmpty);
+    assert(widget.userName.isNotEmpty);
+    assert(widget.appID > 0);
     assert(widget.appSign.isNotEmpty);
+
     initPermissions().then((value) {
       ZegoUIKit().login(widget.userID, widget.userName);
+
       ZegoUIKit()
           .init(
             appID: widget.appID,
@@ -267,6 +270,16 @@ class _ZegoUIKitPrebuiltLiveStreamingState
   }
 
   Future<void> onRoomLogin(ZegoRoomLoginResult result) async {
+    assert(result.errorCode == 0);
+
+    if (result.errorCode != 0) {
+      ZegoLoggerService.logInfo(
+        'failed to login room:${result.errorCode},${result.extendedData}',
+        tag: 'live streaming',
+        subTag: 'prebuilt',
+      );
+    }
+
     await hostManager.init();
     await liveStatusManager.init();
 
@@ -301,17 +314,24 @@ class _ZegoUIKitPrebuiltLiveStreamingState
 
     return showLiveDialog(
       context: context,
+      rootNavigator: widget.config.rootNavigator,
       title: widget.config.confirmDialogInfo!.title,
       content: widget.config.confirmDialogInfo!.message,
       leftButtonText: widget.config.confirmDialogInfo!.cancelButtonName,
       leftButtonCallback: () {
         //  pop this dialog
-        Navigator.of(context).pop(false);
+        Navigator.of(
+          context,
+          rootNavigator: widget.config.rootNavigator,
+        ).pop(false);
       },
       rightButtonText: widget.config.confirmDialogInfo!.confirmButtonName,
       rightButtonCallback: () {
         //  pop this dialog
-        Navigator.of(context).pop(true);
+        Navigator.of(
+          context,
+          rootNavigator: widget.config.rootNavigator,
+        ).pop(true);
       },
     );
   }
@@ -326,23 +346,32 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     /// hide co-host end request dialog
     if (hostManager.connectManager?.isEndCoHostDialogVisible ?? false) {
       hostManager.connectManager!.isEndCoHostDialogVisible = false;
-      Navigator.of(context).pop();
+      Navigator.of(
+        context,
+        rootNavigator: widget.config.rootNavigator,
+      ).pop();
     }
 
     /// hide invite join co-host dialog
     if (hostManager.connectManager?.isInviteToJoinCoHostDlgVisible ?? false) {
       hostManager.connectManager!.isInviteToJoinCoHostDlgVisible = false;
-      Navigator.of(context).pop();
+      Navigator.of(
+        context,
+        rootNavigator: widget.config.rootNavigator,
+      ).pop();
     }
 
     ///more button, member list, chat dialog
-    popUpManager.autoPop(context);
+    popUpManager.autoPop(context, widget.config.rootNavigator);
 
     if (null != widget.config.onMeRemovedFromRoom) {
       widget.config.onMeRemovedFromRoom!.call(fromUserID);
     } else {
       //  pop this dialog
-      Navigator.of(context).pop(true);
+      Navigator.of(
+        context,
+        rootNavigator: widget.config.rootNavigator,
+      ).pop(true);
     }
   }
 

@@ -1,3 +1,11 @@
+## 2.3.5
+- add the rootNavigator parameter in config param, try to set it to true when you get stuck with navigation
+- fixed an issue with the back button icon of the preview page in the RTL scenario
+- add assert to key parameters to ensure prebuilt run normally
+
+## 2.3.4
+- add member list text customization
+
 ## 2.3.3
 - fixed landscape not displaying full web screen sharing content
 - add message and voice/beauty text customization

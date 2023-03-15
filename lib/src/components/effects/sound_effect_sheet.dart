@@ -3,15 +3,15 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/effects/effect_grid.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_translation.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/zego_uikit_prebuilt_live_streaming.dart';
 
 class ZegoSoundEffectSheet extends StatefulWidget {
   final ZegoTranslationText translationText;
+  final bool rootNavigator;
 
   final List<VoiceChangerType> voiceChangerEffect;
   final ValueNotifier<String> voiceChangerSelectedIDNotifier;
@@ -22,6 +22,7 @@ class ZegoSoundEffectSheet extends StatefulWidget {
   const ZegoSoundEffectSheet({
     Key? key,
     required this.translationText,
+    required this.rootNavigator,
     required this.voiceChangerEffect,
     required this.voiceChangerSelectedIDNotifier,
     required this.reverbEffect,
@@ -79,7 +80,10 @@ class _ZegoSoundEffectSheetState extends State<ZegoSoundEffectSheet> {
         children: [
           GestureDetector(
             onTap: () {
-              Navigator.of(context).pop();
+              Navigator.of(
+                context,
+                rootNavigator: widget.rootNavigator,
+              ).pop();
             },
             child: SizedBox(
               width: 70.r,
@@ -237,6 +241,7 @@ class _ZegoSoundEffectSheetState extends State<ZegoSoundEffectSheet> {
 void showSoundEffectSheet(
   BuildContext context, {
   required ZegoTranslationText translationText,
+  required bool rootNavigator,
   required List<VoiceChangerType> voiceChangeEffect,
   required List<ReverbType> reverbEffect,
   required ValueNotifier<String> voiceChangerSelectedIDNotifier,
@@ -246,6 +251,7 @@ void showSoundEffectSheet(
     barrierColor: ZegoUIKitDefaultTheme.viewBarrierColor,
     backgroundColor: ZegoUIKitDefaultTheme.viewBackgroundColor,
     context: context,
+    useRootNavigator: rootNavigator,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.only(
         topLeft: Radius.circular(32.0),
@@ -264,6 +270,7 @@ void showSoundEffectSheet(
             height: 600.r,
             child: ZegoSoundEffectSheet(
               translationText: translationText,
+              rootNavigator: rootNavigator,
               voiceChangerEffect: voiceChangeEffect,
               voiceChangerSelectedIDNotifier: voiceChangerSelectedIDNotifier,
               reverbEffect: reverbEffect,

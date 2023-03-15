@@ -75,9 +75,13 @@ class _ZegoInRoomMessageButtonState extends State<ZegoInRoomMessageButton> {
                   widget.onSheetPopUp?.call(key);
 
                   isMessageInputting = true;
-                  Navigator.of(context)
+                  Navigator.of(
+                    context,
+                    rootNavigator: widget.hostManager.config.rootNavigator,
+                  )
                       .push(ZegoInRoomMessageInputBoard(
                     translationText: widget.translationText,
+                    rootNavigator: widget.hostManager.config.rootNavigator,
                   ))
                       .then((value) {
                     isMessageInputting = false;
@@ -116,7 +120,10 @@ class _ZegoInRoomMessageButtonState extends State<ZegoInRoomMessageButton> {
         tag: 'live streaming',
         subTag: 'message button',
       );
-      Navigator.of(context).pop();
+      Navigator.of(
+        context,
+        rootNavigator: widget.hostManager.config.rootNavigator,
+      ).pop();
     }
   }
 

@@ -112,7 +112,10 @@ class _ZegoPopUpSheetMenuState extends State<ZegoPopUpSheetMenu> {
 
         widget.onPressed?.call(popupItem.value);
 
-        Navigator.of(context).pop();
+        Navigator.of(
+          context,
+          rootNavigator: widget.connectManager.config.rootNavigator,
+        ).pop();
       },
       child: Container(
         width: double.infinity,
@@ -158,6 +161,7 @@ Future<void> showPopUpSheet({
     backgroundColor: const Color(0xff111014),
     //ZegoUIKitDefaultTheme.viewBackgroundColor,
     context: context,
+    useRootNavigator: connectManager.config.rootNavigator,
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.only(
         topLeft: Radius.circular(32.0.r),

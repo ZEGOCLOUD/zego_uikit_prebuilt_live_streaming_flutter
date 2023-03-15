@@ -29,6 +29,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         turnOnMicrophoneWhenJoining = true,
         useSpeakerWhenJoining = true,
         markAsLargeRoom = false,
+        rootNavigator = false,
         audioVideoViewConfig = ZegoPrebuiltAudioVideoViewConfig(
           showSoundWavesInAudioMode: true,
         ),
@@ -59,6 +60,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         turnOnMicrophoneWhenJoining = false,
         useSpeakerWhenJoining = true,
         markAsLargeRoom = false,
+        rootNavigator = false,
         audioVideoViewConfig = ZegoPrebuiltAudioVideoViewConfig(
           showSoundWavesInAudioMode: true,
         ),
@@ -79,6 +81,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
     this.turnOnMicrophoneWhenJoining = true,
     this.useSpeakerWhenJoining = true,
     this.markAsLargeRoom = false,
+    this.rootNavigator = false,
     ZegoPrebuiltAudioVideoViewConfig? audioVideoViewConfig,
     ZegoBottomMenuBarConfig? bottomMenuBarConfig,
     ZegoMemberListConfig? memberListConfig,
@@ -166,6 +169,12 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   ZegoTranslationText translationText;
 
   ZegoLayout? layout;
+
+  /// same as Flutter's Navigator's param
+  /// If `rootNavigator` is set to true, the state from the furthest instance of
+  /// this class is given instead. Useful for pushing contents above all
+  /// subsequent instances of [Navigator].
+  bool rootNavigator;
 
   /// customize your user's avatar, default we use userID's first character as avatar
   /// User avatars are generally stored in your server, ZegoUIKitPrebuiltLiveStreaming does not know each user's avatar, so by default, ZegoUIKitPrebuiltLiveStreaming will use the first letter of the user name to draw the default user avatar, as shown in the following figure,

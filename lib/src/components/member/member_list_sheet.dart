@@ -166,7 +166,10 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
         children: [
           GestureDetector(
             onTap: () {
-              Navigator.of(context).pop();
+              Navigator.of(
+                context,
+                rootNavigator: widget.hostManager.config.rootNavigator,
+              ).pop();
             },
             child: SizedBox(
               width: 70.r,
@@ -200,13 +203,13 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
       builder: (context, host, _) {
         final extensions = <String>[];
         if (ZegoUIKit().getLocalUser().id == user.id) {
-          extensions.add('You');
+          extensions.add(widget.translationText.memberListRoleYou);
         }
         if (host?.id == user.id) {
-          extensions.add('Host');
+          extensions.add(widget.translationText.memberListRoleHost);
         } else if (ZegoUIKit().getCameraStateNotifier(user.id).value ||
             ZegoUIKit().getMicrophoneStateNotifier(user.id).value) {
-          extensions.add('Co-host');
+          extensions.add(widget.translationText.memberListRoleCoHost);
         }
 
         final extensionTextStyle = TextStyle(
@@ -390,7 +393,10 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
           ),
           onPressed: () {
             /// product manager say close sheet together
-            Navigator.of(context).pop();
+            Navigator.of(
+              context,
+              rootNavigator: widget.hostManager.config.rootNavigator,
+            ).pop();
 
             showPopUpSheet(
               context: context,
@@ -509,6 +515,7 @@ Future<void> showMemberListSheet({
     barrierColor: ZegoUIKitDefaultTheme.viewBarrierColor,
     backgroundColor: ZegoUIKitDefaultTheme.viewBackgroundColor,
     context: context,
+    useRootNavigator: hostManager.config.rootNavigator,
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.only(
         topLeft: Radius.circular(32.0.r),

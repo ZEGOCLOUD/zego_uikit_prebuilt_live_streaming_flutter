@@ -78,9 +78,14 @@ class ZegoUIKitPrebuiltLiveStreamingService {
   ZegoUIKitUser? get anotherHost => _pkImpl.anotherHost;
 
   BuildContext get context => _pkImpl.context;
+
+  bool get rootNavigator => _pkImpl.config.rootNavigator;
+
   // internal
   factory ZegoUIKitPrebuiltLiveStreamingService() => instance;
+
   ZegoUIKitPrebuiltLiveStreamingService._();
+
   static final ZegoUIKitPrebuiltLiveStreamingService instance =
       ZegoUIKitPrebuiltLiveStreamingService._();
   static final ZegoLiveStreamingPKBattleManager _pkImpl =

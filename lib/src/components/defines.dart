@@ -34,3 +34,7 @@ class PopupItem {
 
   const PopupItem(this.value, this.text);
 }
+
+bool isRTL(BuildContext context) {
+  return Directionality.of(context) == TextDirection.rtl;
+}

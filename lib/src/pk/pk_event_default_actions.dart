@@ -8,6 +8,9 @@ class ZegoLiveStreamingPKBattleDefaultActions {
   static BuildContext get context =>
       ZegoUIKitPrebuiltLiveStreamingService().context;
 
+  static bool get rootNavigator =>
+      ZegoUIKitPrebuiltLiveStreamingService().rootNavigator;
+
   static Future<void> onIncomingPKBattleRequestReceived(
       ZegoIncomingPKBattleRequestReceivedEvent event) async {
     ZegoLoggerService.logInfo(
@@ -18,19 +21,26 @@ class ZegoLiveStreamingPKBattleDefaultActions {
     // TODO add a showing requestReceived dialog flag
     await showLiveDialog(
       context: context,
+      rootNavigator: rootNavigator,
       title: 'PK Battle Request',
       content: '${event.anotherHost.name} sends a PK battle request to you.',
       leftButtonText: 'Reject',
       leftButtonCallback: () {
         ZegoUIKitPrebuiltLiveStreamingService()
             .rejectIncomingPKBattleRequest(event);
-        Navigator.of(context).pop();
+        Navigator.of(
+          context,
+          rootNavigator: rootNavigator,
+        ).pop();
       },
       rightButtonText: 'Accept',
       rightButtonCallback: () {
         ZegoUIKitPrebuiltLiveStreamingService()
             .acceptIncomingPKBattleRequest(event);
-        Navigator.of(context).pop();
+        Navigator.of(
+          context,
+          rootNavigator: rootNavigator,
+        ).pop();
       },
     );
   }
@@ -66,6 +76,7 @@ class ZegoLiveStreamingPKBattleDefaultActions {
     // TODO add a showing ok dialog flag
     showLiveDialog(
       context: context,
+      rootNavigator: rootNavigator,
       title: 'PK Battle Ended',
       content: '${event.anotherHost.name} ended the PK Battle.',
       rightButtonText: 'OK',
@@ -110,6 +121,7 @@ class ZegoLiveStreamingPKBattleDefaultActions {
 
     showLiveDialog(
       context: context,
+      rootNavigator: rootNavigator,
       title: title,
       content: content,
       rightButtonText: 'OK',
