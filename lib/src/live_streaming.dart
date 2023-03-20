@@ -31,6 +31,7 @@ class ZegoUIKitPrebuiltLiveStreaming extends StatefulWidget {
     required this.userName,
     required this.liveID,
     required this.config,
+    required this.onExit,
   }) : super(key: key);
 
   /// you need to fill in the appID you obtained from console.zegocloud.com
@@ -43,6 +44,10 @@ class ZegoUIKitPrebuiltLiveStreaming extends StatefulWidget {
   /// local user info
   final String userID;
   final String userName;
+  
+  // for Audience/Host   
+  // executes a custom command on user exit live
+  final void Function()? onExit;
 
   /// You can customize the liveName arbitrarily,
   /// just need to know: users who use the same liveName can talk with each other.
@@ -297,6 +302,9 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     await ZegoUIKit().resetBeautyEffect();
 
     await ZegoUIKit().leaveRoom();
+    
+    // executes a custom command 
+    await widget.onExit;
 
     // await ZegoUIKit().uninit();
   }
