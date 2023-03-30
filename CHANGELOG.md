@@ -1,12 +1,20 @@
+## 2.3.6
+
+- fixed appDesignSize for ScreenUtil that didn't work
+- fixed crash in screen sharing
+
 ## 2.3.5
+
 - add the rootNavigator parameter in config param, try to set it to true when you get stuck with navigation
 - fixed an issue with the back button icon of the preview page in the RTL scenario
 - add assert to key parameters to ensure prebuilt run normally
 
 ## 2.3.4
+
 - add member list text customization
 
 ## 2.3.3
+
 - fixed landscape not displaying full web screen sharing content
 - add message and voice/beauty text customization
 
@@ -24,6 +32,7 @@
 - support screen share
 
 ## 2.2.1
+
 - remove login token
 - optimizing code warnings
 
@@ -33,23 +42,23 @@
 
 ## 2.1.3
 
- - Fix the issue of the re-login problem caused by onUserInfoUpdate
+- Fix the issue of the re-login problem caused by onUserInfoUpdate
 
 ## 2.1.2
 
- - Fix the issue of mixed stream view of pkBattles is sometimes not displayed due to express doesn't trigger the first frame callback.
+- Fix the issue of mixed stream view of pkBattles is sometimes not displayed due to express doesn't trigger the first frame callback.
 
 ## 2.1.1
 
- - support rtc pkbattles
+- support rtc pkbattles
 
 ## 2.1.0
 
- - Support PK Battles.
+- Support PK Battles.
 
 ## 2.0.0
 
- - Architecture upgrade based on adapter.
+- Architecture upgrade based on adapter.
 
 ## 1.4.5
 

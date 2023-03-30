@@ -330,25 +330,19 @@ class ZegoLivePageState extends State<ZegoLivePage>
         var rules =
             ZegoShowFullscreenModeToggleButtonRules.showWhenScreenPressed;
         if (widget.config.layout != null) {
-          if (widget.config.layout is ZegoLayoutPictureInPicture) {
-            // ignore: cast_nullable_to_non_nullable
+          if (widget.config.layout is ZegoLayoutPictureInPictureConfig) {
             showNewScreenSharingViewInFullscreenMode =
-                (widget.config.layout as ZegoLayoutPictureInPicture)
-                    .layoutConfig
+                (widget.config.layout as ZegoLayoutPictureInPictureConfig)
                     .showNewScreenSharingViewInFullscreenMode;
-            // ignore: cast_nullable_to_non_nullable
-            rules = (widget.config.layout as ZegoLayoutPictureInPicture)
-                .layoutConfig
+            rules = (widget.config.layout as ZegoLayoutPictureInPictureConfig)
                 .showScreenSharingFullscreenModeToggleButtonRules;
           } else {
             // ignore: cast_nullable_to_non_nullable
             showNewScreenSharingViewInFullscreenMode =
-                (widget.config.layout as ZegoLayoutGallery)
-                    .layoutConfig
+                (widget.config.layout as ZegoLayoutGalleryConfig)
                     .showNewScreenSharingViewInFullscreenMode;
             // ignore: cast_nullable_to_non_nullable
-            rules = (widget.config.layout as ZegoLayoutGallery)
-                .layoutConfig
+            rules = (widget.config.layout as ZegoLayoutGalleryConfig)
                 .showScreenSharingFullscreenModeToggleButtonRules;
           }
         }

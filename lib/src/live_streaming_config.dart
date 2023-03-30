@@ -49,6 +49,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
           cancelButtonName: 'Cancel',
           confirmButtonName: 'Stop it',
         ),
+        previewConfig = ZegoLiveStreamingPreviewConfig(),
         pkBattleConfig = ZegoLiveStreamingPKBattleConfig(),
         pkBattleEvents = ZegoLiveStreamingPKBattleEvents();
 
@@ -73,6 +74,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         inRoomMessageViewConfig = ZegoInRoomMessageViewConfig(),
         effectConfig = ZegoEffectConfig(),
         translationText = ZegoTranslationText(),
+        previewConfig = ZegoLiveStreamingPreviewConfig(),
         pkBattleConfig = ZegoLiveStreamingPKBattleConfig(),
         pkBattleEvents = ZegoLiveStreamingPKBattleEvents();
 
@@ -97,6 +99,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
     this.onMicrophoneTurnOnByOthersConfirmation,
     this.background,
     this.layout,
+    ZegoLiveStreamingPreviewConfig? previewConfig,
     ZegoLiveStreamingPKBattleConfig? pkBattleConfig,
     ZegoLiveStreamingPKBattleEvents? pkBattleEvents,
     ZegoTranslationText? translationText,
@@ -108,6 +111,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
             messageConfig ?? ZegoInRoomMessageViewConfig(),
         effectConfig = effectConfig ?? ZegoEffectConfig(),
         translationText = translationText ?? ZegoTranslationText(),
+        previewConfig = previewConfig ?? ZegoLiveStreamingPreviewConfig(),
         pkBattleConfig = pkBattleConfig ?? ZegoLiveStreamingPKBattleConfig(),
         pkBattleEvents = pkBattleEvents ?? ZegoLiveStreamingPKBattleEvents() {
     layout ??= ZegoLayout.pictureInPicture();
@@ -250,7 +254,10 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   /// ```
   Widget? background;
 
-  // cross room pk events
+  /// preview config
+  ZegoLiveStreamingPreviewConfig previewConfig;
+
+  /// cross room pk events
   ZegoLiveStreamingPKBattleEvents pkBattleEvents;
   ZegoLiveStreamingPKBattleConfig pkBattleConfig;
 }
@@ -446,4 +453,16 @@ class ZegoLiveStreamingPKBattleConfig {
 
   /// To add custom components on the bottom edge of the PKBattleView, use the [pkBattleViewBottomBuilder].
   ZegoLiveStreamingPKBattleViewBuilder? pkBattleViewBottomBuilder;
+}
+
+class ZegoLiveStreamingPreviewConfig {
+  Image? pageBackIcon;
+  Image? beautyEffectIcon;
+  Image? switchCameraIcon;
+
+  ZegoLiveStreamingPreviewConfig({
+    this.pageBackIcon,
+    this.beautyEffectIcon,
+    this.switchCameraIcon,
+  });
 }

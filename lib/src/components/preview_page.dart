@@ -27,10 +27,11 @@ class ZegoPreviewPage extends StatefulWidget {
     required this.userID,
     required this.userName,
     required this.liveID,
-    required this.config,
+    required this.liveStreamingConfig,
     required this.hostManager,
     required this.startedNotifier,
     required this.liveStreamingPageReady,
+    required this.config,
   }) : super(key: key);
 
   final int appID;
@@ -41,12 +42,14 @@ class ZegoPreviewPage extends StatefulWidget {
 
   final String liveID;
 
-  final ZegoUIKitPrebuiltLiveStreamingConfig config;
+  final ZegoUIKitPrebuiltLiveStreamingConfig liveStreamingConfig;
 
   final ZegoLiveHostManager hostManager;
   final ValueNotifier<bool> startedNotifier;
 
   final ValueNotifier<bool> liveStreamingPageReady;
+
+  final ZegoLiveStreamingPreviewConfig config;
 
   @override
   State<ZegoPreviewPage> createState() => _ZegoPreviewPageState();
@@ -93,11 +96,11 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
                     foregroundBuilder: audioVideoViewForeground,
                     backgroundBuilder: audioVideoViewBackground,
                     avatarConfig: ZegoAvatarConfig(
-                      showInAudioMode: widget
-                          .config.audioVideoViewConfig.showAvatarInAudioMode,
-                      showSoundWavesInAudioMode: widget.config
+                      showInAudioMode: widget.liveStreamingConfig
+                          .audioVideoViewConfig.showAvatarInAudioMode,
+                      showSoundWavesInAudioMode: widget.liveStreamingConfig
                           .audioVideoViewConfig.showSoundWavesInAudioMode,
-                      builder: widget.config.avatarBuilder,
+                      builder: widget.liveStreamingConfig.avatarBuilder,
                     ),
                   ),
                   topBar(),
@@ -144,19 +147,20 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
               onPressed: () {
                 Navigator.of(
                   context,
-                  rootNavigator: widget.config.rootNavigator,
+                  rootNavigator: widget.liveStreamingConfig.rootNavigator,
                 ).pop();
               },
               icon: ButtonIcon(
-                icon: isRTL(context)
-                    ? Transform(
-                        alignment: Alignment.center,
-                        transform: Matrix4.rotationY(math.pi),
-                        child: PrebuiltLiveStreamingImage.asset(
-                            PrebuiltLiveStreamingIconUrls.pageBack),
-                      )
-                    : PrebuiltLiveStreamingImage.asset(
-                        PrebuiltLiveStreamingIconUrls.pageBack),
+                icon: widget.config.pageBackIcon ??
+                    (isRTL(context)
+                        ? Transform(
+                            alignment: Alignment.center,
+                            transform: Matrix4.rotationY(math.pi),
+                            child: PrebuiltLiveStreamingImage.asset(
+                                PrebuiltLiveStreamingIconUrls.pageBack),
+                          )
+                        : PrebuiltLiveStreamingImage.asset(
+                            PrebuiltLiveStreamingIconUrls.pageBack)),
               ),
               iconSize: iconSize,
               buttonSize: buttonSize,
@@ -166,8 +170,9 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
               buttonSize: buttonSize,
               iconSize: iconSize,
               icon: ButtonIcon(
-                icon: PrebuiltLiveStreamingImage.asset(
-                    PrebuiltLiveStreamingIconUrls.previewFlipCamera),
+                icon: widget.config.switchCameraIcon ??
+                    PrebuiltLiveStreamingImage.asset(
+                        PrebuiltLiveStreamingIconUrls.previewFlipCamera),
                 backgroundColor: Colors.transparent,
               ),
               defaultUseFrontFacingCamera: ZegoUIKit()
@@ -193,11 +198,17 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ZegoBeautyEffectButton(
-              translationText: widget.config.translationText,
-              rootNavigator: widget.config.rootNavigator,
-              beautyEffects: widget.config.effectConfig.beautyEffects,
+              translationText: widget.liveStreamingConfig.translationText,
+              rootNavigator: widget.liveStreamingConfig.rootNavigator,
+              beautyEffects:
+                  widget.liveStreamingConfig.effectConfig.beautyEffects,
               buttonSize: buttonSize,
               iconSize: iconSize,
+              icon: widget.config.beautyEffectIcon != null
+                  ? ButtonIcon(
+                      icon: widget.config.beautyEffectIcon,
+                    )
+                  : null,
             ),
             SizedBox(width: 48.r),
             startButton(),
@@ -210,12 +221,13 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
   }
 
   Widget startButton() {
-    return widget.config.startLiveButtonBuilder?.call(context, () async {
+    return widget.liveStreamingConfig.startLiveButtonBuilder?.call(context,
+            () async {
           checkPermissions(
             context: context,
             isShowDialog: true,
-            translationText: widget.config.translationText,
-            rootNavigator: widget.config.rootNavigator,
+            translationText: widget.liveStreamingConfig.translationText,
+            rootNavigator: widget.liveStreamingConfig.rootNavigator,
           ).then((value) {
             if (!widget.liveStreamingPageReady.value) {
               ZegoLoggerService.logInfo(
@@ -227,7 +239,7 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
             }
 
             widget.startedNotifier.value = true;
-            widget.config.onLiveStreamingStateUpdate?.call(
+            widget.liveStreamingConfig.onLiveStreamingStateUpdate?.call(
               ZegoLiveStreamingState.living,
             );
           });
@@ -237,8 +249,8 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
             checkPermissions(
               context: context,
               isShowDialog: true,
-              translationText: widget.config.translationText,
-              rootNavigator: widget.config.rootNavigator,
+              translationText: widget.liveStreamingConfig.translationText,
+              rootNavigator: widget.liveStreamingConfig.rootNavigator,
             ).then((value) {
               if (!widget.liveStreamingPageReady.value) {
                 ZegoLoggerService.logInfo(
@@ -250,7 +262,7 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
               }
 
               widget.startedNotifier.value = true;
-              widget.config.onLiveStreamingStateUpdate?.call(
+              widget.liveStreamingConfig.onLiveStreamingStateUpdate?.call(
                 ZegoLiveStreamingState.living,
               );
             });
@@ -268,7 +280,8 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
             child: Align(
               alignment: Alignment.center,
               child: Text(
-                widget.config.translationText.startLiveStreamingButton,
+                widget.liveStreamingConfig.translationText
+                    .startLiveStreamingButton,
                 style: TextStyle(
                   fontSize: 32.r,
                   fontWeight: FontWeight.w600,
@@ -288,7 +301,7 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
   ) {
     return Stack(
       children: [
-        widget.config.audioVideoViewConfig.foregroundBuilder?.call(
+        widget.liveStreamingConfig.audioVideoViewConfig.foregroundBuilder?.call(
               context,
               size,
               user,
@@ -313,7 +326,7 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
             color: isSmallView
                 ? const Color(0xff333437)
                 : const Color(0xff4A4B4D)),
-        widget.config.audioVideoViewConfig.backgroundBuilder?.call(
+        widget.liveStreamingConfig.audioVideoViewConfig.backgroundBuilder?.call(
               context,
               size,
               user,

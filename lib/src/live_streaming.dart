@@ -71,6 +71,8 @@ class _ZegoUIKitPrebuiltLiveStreamingState
   late final ZegoLiveStatusManager liveStatusManager;
   ZegoPrebuiltPlugins? plugins;
 
+  late NavigatorState navigatorState;
+
   @override
   void initState() {
     super.initState();
@@ -78,7 +80,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     WidgetsBinding.instance?.addObserver(this);
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
-      log('version: zego_uikit_prebuilt_live_streaming: 2.3.5; $version');
+      log('version: zego_uikit_prebuilt_live_streaming: 2.3.6; $version');
     });
 
     hostManager = ZegoLiveHostManager(config: widget.config);
@@ -118,11 +120,11 @@ class _ZegoUIKitPrebuiltLiveStreamingState
   }
 
   @override
-  Future<void> dispose() async {
+  void dispose() {
     super.dispose();
 
     WidgetsBinding.instance?.removeObserver(this);
-    await ZegoLiveStreamingPKBattleManager().uninit();
+    ZegoLiveStreamingPKBattleManager().uninit();
     widget.config.onLiveStreamingStateUpdate?.call(ZegoLiveStreamingState.idle);
 
     plugins?.uninit();
@@ -137,16 +139,18 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     }
 
     if (widget.appDesignSize != null) {
-      ScreenUtil.init(context, designSize: widget.appDesignSize!);
+      ScreenUtil.init(
+        navigatorState.context,
+        designSize: widget.appDesignSize!,
+      );
     }
   }
 
-  // @override
-  // void didUpdateWidget(ZegoUIKitPrebuiltLiveStreaming oldWidget) {
-  //   super.didUpdateWidget(oldWidget);
-  //
-  //   plugins?.onUserInfoUpdate(widget.userID, widget.userName);
-  // }
+  @override
+  void didChangeDependencies() {
+    navigatorState = Navigator.of(context);
+    super.didChangeDependencies();
+  }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
@@ -382,10 +386,11 @@ class _ZegoUIKitPrebuiltLiveStreamingState
       userID: widget.userID,
       userName: widget.userName,
       liveID: widget.liveID,
-      config: widget.config,
+      liveStreamingConfig: widget.config,
       startedNotifier: startedByLocalNotifier,
       hostManager: hostManager,
       liveStreamingPageReady: readyNotifier,
+      config: widget.config.previewConfig,
     );
   }
 
