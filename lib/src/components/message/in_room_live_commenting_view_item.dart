@@ -13,6 +13,7 @@ class ZegoInRoomLiveCommentingViewItem extends StatelessWidget {
     this.prefix,
     this.maxLines = 3,
     this.isHorizontal = true,
+    this.opacity = 0.5,
   }) : super(key: key);
 
   final String? prefix;
@@ -20,10 +21,11 @@ class ZegoInRoomLiveCommentingViewItem extends StatelessWidget {
   final String message;
   final int? maxLines;
   final bool isHorizontal;
+  final double opacity;
 
   @override
   Widget build(BuildContext context) {
-    final messageBackgroundColor = const Color(0xff2a2a2a).withOpacity(0.5);
+    final messageBackgroundColor = const Color(0xff2a2a2a).withOpacity(opacity);
     const messageNameColor = Color(0xffFFB763);
 
     return Column(

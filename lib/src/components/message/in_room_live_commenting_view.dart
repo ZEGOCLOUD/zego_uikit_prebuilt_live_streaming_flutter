@@ -9,10 +9,12 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/components/message/in_roo
 
 class ZegoInRoomLiveCommentingView extends StatefulWidget {
   final ZegoInRoomMessageItemBuilder? itemBuilder;
+  final double opacity;
 
   const ZegoInRoomLiveCommentingView({
     Key? key,
     this.itemBuilder,
+    this.opacity = 0.5,
   }) : super(key: key);
 
   @override
@@ -34,6 +36,7 @@ class _ZegoInRoomLiveCommentingViewState
               return ZegoInRoomLiveCommentingViewItem(
                 user: message.user,
                 message: message.message,
+                opacity: widget.opacity,
               );
             },
       ),

@@ -75,7 +75,7 @@ class ZegoLiveHostManager {
     }
   }
 
-  void uninit() {
+  Future<void> uninit() async {
     ZegoLoggerService.logInfo(
       'uninit',
       tag: 'live streaming',
@@ -88,7 +88,7 @@ class ZegoLiveHostManager {
         tag: 'live streaming',
         subTag: 'host manager',
       );
-      ZegoUIKit().setRoomProperty(RoomPropertyKey.host.text, '');
+      await ZegoUIKit().setRoomProperty(RoomPropertyKey.host.text, '');
     }
 
     hostUpdateEnabledNotifier.value = true;

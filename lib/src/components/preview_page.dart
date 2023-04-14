@@ -239,9 +239,6 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
             }
 
             widget.startedNotifier.value = true;
-            widget.liveStreamingConfig.onLiveStreamingStateUpdate?.call(
-              ZegoLiveStreamingState.living,
-            );
           });
         }) ??
         GestureDetector(
@@ -262,9 +259,6 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
               }
 
               widget.startedNotifier.value = true;
-              widget.liveStreamingConfig.onLiveStreamingStateUpdate?.call(
-                ZegoLiveStreamingState.living,
-              );
             });
           },
           child: Container(

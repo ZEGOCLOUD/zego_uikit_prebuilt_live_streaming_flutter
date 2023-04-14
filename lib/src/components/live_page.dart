@@ -326,45 +326,8 @@ class ZegoLivePageState extends State<ZegoLivePage>
     return ValueListenableBuilder(
       valueListenable: widget.liveStatusManager.notifier,
       builder: (context, LiveStatus liveStatusValue, Widget? child) {
-        var showNewScreenSharingViewInFullscreenMode = true;
-        var rules =
-            ZegoShowFullscreenModeToggleButtonRules.showWhenScreenPressed;
-        if (widget.config.layout != null) {
-          if (widget.config.layout is ZegoLayoutPictureInPictureConfig) {
-            showNewScreenSharingViewInFullscreenMode =
-                (widget.config.layout as ZegoLayoutPictureInPictureConfig)
-                    .showNewScreenSharingViewInFullscreenMode;
-            rules = (widget.config.layout as ZegoLayoutPictureInPictureConfig)
-                .showScreenSharingFullscreenModeToggleButtonRules;
-          } else {
-            // ignore: cast_nullable_to_non_nullable
-            showNewScreenSharingViewInFullscreenMode =
-                (widget.config.layout as ZegoLayoutGalleryConfig)
-                    .showNewScreenSharingViewInFullscreenMode;
-            // ignore: cast_nullable_to_non_nullable
-            rules = (widget.config.layout as ZegoLayoutGalleryConfig)
-                .showScreenSharingFullscreenModeToggleButtonRules;
-          }
-        }
 
-        final audioVideoContainerLayout = withScreenSharing
-            ? ZegoLayout.gallery(
-                showNewScreenSharingViewInFullscreenMode:
-                    showNewScreenSharingViewInFullscreenMode,
-                showScreenSharingFullscreenModeToggleButtonRules: rules)
-            : ZegoLayout.pictureInPicture(
-                smallViewPosition: ZegoViewPosition.bottomRight,
-                isSmallViewDraggable: false,
-                smallViewSize: Size(139.5.w, 248.0.h),
-                smallViewMargin: EdgeInsets.only(
-                  left: 24.r,
-                  top: 144.r,
-                  right: 24.r,
-                  bottom: 144.r,
-                ),
-                showNewScreenSharingViewInFullscreenMode:
-                    showNewScreenSharingViewInFullscreenMode,
-                showScreenSharingFullscreenModeToggleButtonRules: rules);
+        final audioVideoContainerLayout = getAudioVideoContainerLayout(withScreenSharing);
 
         Widget children = Container();
 
@@ -431,6 +394,37 @@ class ZegoLivePageState extends State<ZegoLivePage>
         );
       },
     );
+  }
+
+  ZegoLayout getAudioVideoContainerLayout(bool withScreenSharing) {
+    if (withScreenSharing) {
+      if (widget.config.layout != null && widget.config.layout is ZegoLayoutGalleryConfig) {
+        return widget.config.layout!;
+      } else {
+        return ZegoLayout.gallery(
+                showNewScreenSharingViewInFullscreenMode:
+                    true,
+                showScreenSharingFullscreenModeToggleButtonRules: ZegoShowFullscreenModeToggleButtonRules.showWhenScreenPressed);
+      }
+    } else {
+      if (widget.config.layout != null) {
+        return widget.config.layout!;
+      } else {
+        return ZegoLayout.pictureInPicture(
+                smallViewPosition: ZegoViewPosition.bottomRight,
+                isSmallViewDraggable: false,
+                smallViewSize: Size(139.5.w, 248.0.h),
+                smallViewMargin: EdgeInsets.only(
+                  left: 24.r,
+                  top: 144.r,
+                  right: 24.r,
+                  bottom: 144.r,
+                ),
+                showNewScreenSharingViewInFullscreenMode:
+                    true,
+                showScreenSharingFullscreenModeToggleButtonRules: ZegoShowFullscreenModeToggleButtonRules.showWhenScreenPressed);
+      }
+    }
   }
 
   List<ZegoUIKitUser> audioVideoViewSorter(List<ZegoUIKitUser> users) {
@@ -568,6 +562,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
         constraints: BoxConstraints.loose(Size(540.r, 400.r)),
         child: ZegoInRoomLiveCommentingView(
           itemBuilder: widget.config.inRoomMessageViewConfig.itemBuilder,
+          opacity: widget.config.inRoomMessageViewConfig.opacity,
         ),
       ),
     );
@@ -602,8 +597,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
         subTag: 'live page',
       );
 
-      if (widget.hostManager.notifier.value != null &&
-          LiveStatus.ended == widget.liveStatusManager.notifier.value) {
+      if (LiveStatus.ended == widget.liveStatusManager.notifier.value) {
         if (widget.config.onLiveStreamingEnded != null) {
           widget.config.onLiveStreamingEnded!.call();
         }

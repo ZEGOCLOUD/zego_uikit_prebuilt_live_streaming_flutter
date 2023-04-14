@@ -19,6 +19,7 @@ enum ZegoLiveStreamingState {
   idle,
   living,
   inPKBattle,
+  ended,
 }
 
 class ZegoUIKitPrebuiltLiveStreamingConfig {
@@ -362,11 +363,14 @@ class ZegoMemberListConfig {
 }
 
 class ZegoInRoomMessageViewConfig {
+  double opacity;
+
   /// customize your item view of message list
   ZegoInRoomMessageItemBuilder? itemBuilder;
 
   ZegoInRoomMessageViewConfig({
     this.itemBuilder,
+    this.opacity = 0.5,
   });
 }
 
@@ -456,11 +460,15 @@ class ZegoLiveStreamingPKBattleConfig {
 }
 
 class ZegoLiveStreamingPreviewConfig {
+  /// whether the host displays the preview page
+  bool showPreviewForHost;
+
   Image? pageBackIcon;
   Image? beautyEffectIcon;
   Image? switchCameraIcon;
 
   ZegoLiveStreamingPreviewConfig({
+    this.showPreviewForHost = true,
     this.pageBackIcon,
     this.beautyEffectIcon,
     this.switchCameraIcon,

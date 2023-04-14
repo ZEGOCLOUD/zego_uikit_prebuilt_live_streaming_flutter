@@ -1,3 +1,10 @@
+## 2.3.8
+- fix the problem that the layout of configuration parameters does not working
+
+## 2.3.7
+- add a configuration option that allows the host to skip preview and start live directly
+- add transparency configuration for the message list
+
 ## 2.3.6
 
 - fixed appDesignSize for ScreenUtil that didn't work

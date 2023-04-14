@@ -23,14 +23,15 @@ import 'package:zego_uikit_prebuilt_live_streaming/zego_uikit_prebuilt_live_stre
 class ZegoUIKitPrebuiltLiveStreaming extends StatefulWidget {
   const ZegoUIKitPrebuiltLiveStreaming({
     Key? key,
-    this.appDesignSize,
-    this.controller,
     required this.appID,
     required this.appSign,
     required this.userID,
     required this.userName,
     required this.liveID,
     required this.config,
+    this.appDesignSize,
+    this.controller,
+    this.onDispose,
   }) : super(key: key);
 
   /// you need to fill in the appID you obtained from console.zegocloud.com
@@ -54,6 +55,8 @@ class ZegoUIKitPrebuiltLiveStreaming extends StatefulWidget {
 
   ///
   final Size? appDesignSize;
+
+  final VoidCallback? onDispose;
 
   @override
   State<ZegoUIKitPrebuiltLiveStreaming> createState() =>
@@ -80,8 +83,12 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     WidgetsBinding.instance?.addObserver(this);
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
-      log('version: zego_uikit_prebuilt_live_streaming: 2.3.6; $version');
+      log('version: zego_uikit_prebuilt_live_streaming: 2.3.8; $version');
     });
+
+    if (!widget.config.previewConfig.showPreviewForHost) {
+      startedByLocalNotifier.value = true;
+    }
 
     hostManager = ZegoLiveHostManager(config: widget.config);
     liveStatusManager = ZegoLiveStatusManager(
@@ -125,7 +132,6 @@ class _ZegoUIKitPrebuiltLiveStreamingState
 
     WidgetsBinding.instance?.removeObserver(this);
     ZegoLiveStreamingPKBattleManager().uninit();
-    widget.config.onLiveStreamingStateUpdate?.call(ZegoLiveStreamingState.idle);
 
     plugins?.uninit();
 
@@ -133,6 +139,8 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     liveStatusManager.uninit();
 
     uninitContext();
+
+    widget.config.onLiveStreamingStateUpdate?.call(ZegoLiveStreamingState.idle);
 
     for (final subscription in subscriptions) {
       subscription?.cancel();
@@ -144,6 +152,8 @@ class _ZegoUIKitPrebuiltLiveStreamingState
         designSize: widget.appDesignSize!,
       );
     }
+
+    widget.onDispose?.call();
   }
 
   @override
@@ -185,8 +195,8 @@ class _ZegoUIKitPrebuiltLiveStreamingState
               if (hostManager.isHost) {
                 return ValueListenableBuilder<bool>(
                     valueListenable: startedByLocalNotifier,
-                    builder: (context, isStartedByLocal, _) {
-                      return isStartedByLocal ? livePage() : previewPage();
+                    builder: (context, isLiveStarted, _) {
+                      return isLiveStarted ? livePage() : previewPage();
                     });
               } else {
                 return livePage();
