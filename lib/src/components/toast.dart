@@ -6,7 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_screenutil_zego/flutter_screenutil_zego.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart' as styled_toast;
 
 typedef ContextQuery = BuildContext Function();

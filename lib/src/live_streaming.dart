@@ -6,9 +6,6 @@ import 'dart:developer';
 // Flutter imports:
 import 'package:flutter/material.dart';
 
-// Package imports:
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/live_page.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/permissions.dart';
@@ -29,9 +26,9 @@ class ZegoUIKitPrebuiltLiveStreaming extends StatefulWidget {
     required this.userName,
     required this.liveID,
     required this.config,
-    this.appDesignSize,
     this.controller,
     this.onDispose,
+    @Deprecated('Since 2.4.1') this.appDesignSize,
   }) : super(key: key);
 
   /// you need to fill in the appID you obtained from console.zegocloud.com
@@ -53,10 +50,9 @@ class ZegoUIKitPrebuiltLiveStreaming extends StatefulWidget {
 
   final ZegoUIKitPrebuiltLiveStreamingController? controller;
 
-  ///
-  final Size? appDesignSize;
-
   final VoidCallback? onDispose;
+
+  final Size? appDesignSize;
 
   @override
   State<ZegoUIKitPrebuiltLiveStreaming> createState() =>
@@ -74,8 +70,6 @@ class _ZegoUIKitPrebuiltLiveStreamingState
   late final ZegoLiveStatusManager liveStatusManager;
   ZegoPrebuiltPlugins? plugins;
 
-  late NavigatorState navigatorState;
-
   @override
   void initState() {
     super.initState();
@@ -83,7 +77,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     WidgetsBinding.instance?.addObserver(this);
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
-      log('version: zego_uikit_prebuilt_live_streaming: 2.3.8; $version');
+      log('version: zego_uikit_prebuilt_live_streaming: 2.4.0; $version');
     });
 
     if (!widget.config.previewConfig.showPreviewForHost) {
@@ -146,20 +140,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
       subscription?.cancel();
     }
 
-    if (widget.appDesignSize != null) {
-      ScreenUtil.init(
-        navigatorState.context,
-        designSize: widget.appDesignSize!,
-      );
-    }
-
     widget.onDispose?.call();
-  }
-
-  @override
-  void didChangeDependencies() {
-    navigatorState = Navigator.of(context);
-    super.didChangeDependencies();
   }
 
   @override

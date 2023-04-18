@@ -1,3 +1,14 @@
+
+## 2.4.2
+- mark 'appDesignSize' as Deprecated
+
+## 2.4.1
+- Update dependencies
+
+## 2.4.0
+- To differentiate the 'appDesignSize' between the App and ZegoUIKitPrebuiltLiveStreaming, we introduced the 'flutter_screenutil_zego' library and removed the 'appDesignSize' parameter from the
+  ZegoUIKitPrebuiltLiveStreaming that was previously present.
+
 ## 2.3.8
 - fix the problem that the layout of configuration parameters does not working
 
