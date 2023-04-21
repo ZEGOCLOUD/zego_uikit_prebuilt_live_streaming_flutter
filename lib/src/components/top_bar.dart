@@ -63,8 +63,9 @@ class _ZegoTopBarState extends State<ZegoTopBar> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               ZegoMemberButton(
-                isPluginEnabled: widget.isPluginEnabled,
                 avatarBuilder: widget.config.avatarBuilder,
+                itemBuilder: widget.config.memberListConfig.itemBuilder,
+                isPluginEnabled: widget.isPluginEnabled,
                 hostManager: widget.hostManager,
                 connectManager: widget.connectManager,
                 popUpManager: widget.popUpManager,

@@ -18,6 +18,7 @@ class ZegoMemberButton extends StatefulWidget {
   const ZegoMemberButton({
     Key? key,
     this.avatarBuilder,
+    this.itemBuilder,
     required this.isPluginEnabled,
     required this.hostManager,
     required this.connectManager,
@@ -27,6 +28,7 @@ class ZegoMemberButton extends StatefulWidget {
 
   final bool isPluginEnabled;
   final ZegoAvatarBuilder? avatarBuilder;
+  final ZegoMemberListItemBuilder? itemBuilder;
   final ZegoLiveHostManager hostManager;
   final ZegoLiveConnectManager connectManager;
   final ZegoPopUpManager popUpManager;
@@ -68,8 +70,9 @@ class _ZegoMemberButtonState extends State<ZegoMemberButton> {
       onTap: () {
         showMemberListSheet(
           context: context,
-          isPluginEnabled: widget.isPluginEnabled,
           avatarBuilder: widget.avatarBuilder,
+          itemBuilder: widget.itemBuilder,
+          isPluginEnabled: widget.isPluginEnabled,
           hostManager: widget.hostManager,
           connectManager: widget.connectManager,
           popUpManager: widget.popUpManager,

@@ -46,6 +46,7 @@ class _ZegoLiveStreamingPKBattleViewState
   ZegoUIKitUser? get leftUser => pkManager.isHost
       ? ZegoUIKit().getLocalUser()
       : pkManager.hostManager.notifier.value;
+
   ZegoUIKitUser? get rightUser => pkManager.anotherHost;
 
   List<ZegoUIKitUser?> get hosts => [leftUser, rightUser];
@@ -251,13 +252,20 @@ class _ZegoLiveStreamingPKBattleViewState
       builder: (context, constraints) {
         return Stack(
           children: [
-            widget.config.audioVideoViewConfig.backgroundBuilder?.call(
-                  context,
-                  Size(constraints.maxWidth, constraints.maxHeight),
-                  user,
-                  {},
-                ) ??
-                Container(color: Colors.transparent),
+            ValueListenableBuilder(
+              valueListenable: ZegoUIKitUserPropertiesNotifier(
+                  user ?? ZegoUIKitUser.empty()),
+              builder: (context, _, __) {
+                return widget.config.audioVideoViewConfig.backgroundBuilder
+                        ?.call(
+                      context,
+                      Size(constraints.maxWidth, constraints.maxHeight),
+                      user,
+                      {},
+                    ) ??
+                    Container(color: Colors.transparent);
+              },
+            ),
             Positioned(
               top: 0,
               left: 0,
@@ -295,11 +303,19 @@ class _ZegoLiveStreamingPKBattleViewState
         if (widget.config.audioVideoViewConfig.foregroundBuilder != null)
           LayoutBuilder(
             builder: (context, constraints) {
-              return widget.config.audioVideoViewConfig.foregroundBuilder!.call(
-                context,
-                Size(constraints.maxWidth, constraints.maxHeight),
-                left ? leftUser : rightUser,
-                {},
+              return ValueListenableBuilder(
+                valueListenable: ZegoUIKitUserPropertiesNotifier(
+                  (left ? leftUser : rightUser) ?? ZegoUIKitUser.empty(),
+                ),
+                builder: (context, _, __) {
+                  return widget.config.audioVideoViewConfig.foregroundBuilder!
+                      .call(
+                    context,
+                    Size(constraints.maxWidth, constraints.maxHeight),
+                    left ? leftUser : rightUser,
+                    {},
+                  );
+                },
               );
             },
           ),

@@ -19,6 +19,7 @@ class ZegoMemberListSheet extends StatefulWidget {
   const ZegoMemberListSheet({
     Key? key,
     this.avatarBuilder,
+    this.itemBuilder,
     required this.isPluginEnabled,
     required this.hostManager,
     required this.connectManager,
@@ -27,11 +28,13 @@ class ZegoMemberListSheet extends StatefulWidget {
   }) : super(key: key);
 
   final bool isPluginEnabled;
-  final ZegoAvatarBuilder? avatarBuilder;
   final ZegoLiveHostManager hostManager;
   final ZegoLiveConnectManager connectManager;
   final ZegoPopUpManager popUpManager;
   final ZegoTranslationText translationText;
+
+  final ZegoAvatarBuilder? avatarBuilder;
+  final ZegoMemberListItemBuilder? itemBuilder;
 
   @override
   State<ZegoMemberListSheet> createState() => _ZegoMemberListSheetState();
@@ -128,34 +131,31 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
 
         return sortUsers;
       },
-      itemBuilder: (
-        BuildContext context,
-        Size size,
-        ZegoUIKitUser user,
-        Map<String, dynamic> extraInfo,
-      ) {
-        return ValueListenableBuilder<bool>(
-            valueListenable: ZegoUIKit().getCameraStateNotifier(user.id),
-            builder: (context, _, __) {
-              return ValueListenableBuilder<bool>(
-                  valueListenable:
-                      ZegoUIKit().getMicrophoneStateNotifier(user.id),
-                  builder: (context, _, __) {
-                    return Container(
-                      margin: EdgeInsets.only(bottom: 36.r),
-                      child: Row(
-                        children: [
-                          avatarItem(context, user, widget.avatarBuilder),
-                          SizedBox(width: 24.r),
-                          userNameItem(user),
-                          const Expanded(child: SizedBox()),
-                          controlsItem(user),
-                        ],
-                      ),
-                    );
-                  });
-            });
-      },
+      itemBuilder: widget.itemBuilder ??
+          (
+            BuildContext context,
+            Size size,
+            ZegoUIKitUser user,
+            Map<String, dynamic> extraInfo,
+          ) {
+            return ValueListenableBuilder(
+              valueListenable: ZegoUIKitUserPropertiesNotifier(user),
+              builder: (context, _, __) {
+                return Container(
+                  margin: EdgeInsets.only(bottom: 36.r),
+                  child: Row(
+                    children: [
+                      avatarItem(context, user, widget.avatarBuilder),
+                      SizedBox(width: 24.r),
+                      userNameItem(user),
+                      const Expanded(child: SizedBox()),
+                      controlsItem(user),
+                    ],
+                  ),
+                );
+              },
+            );
+          },
     );
   }
 
@@ -501,6 +501,7 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
 
 Future<void> showMemberListSheet({
   ZegoAvatarBuilder? avatarBuilder,
+  ZegoMemberListItemBuilder? itemBuilder,
   required bool isPluginEnabled,
   required BuildContext context,
   required ZegoLiveHostManager hostManager,
@@ -533,8 +534,9 @@ Future<void> showMemberListSheet({
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: ZegoMemberListSheet(
-              isPluginEnabled: isPluginEnabled,
               avatarBuilder: avatarBuilder,
+              itemBuilder: itemBuilder,
+              isPluginEnabled: isPluginEnabled,
               hostManager: hostManager,
               connectManager: connectManager,
               popUpManager: popUpManager,
