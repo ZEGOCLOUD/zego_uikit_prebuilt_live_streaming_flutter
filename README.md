@@ -14,6 +14,8 @@
 | --- | --- |
 |![host_3.gif](https://storage.zego.im/sdk-doc/Pics/ZegoUIKit/Flutter/live/host_3.gif)|![audience_3](https://storage.zego.im/sdk-doc/Pics/ZegoUIKit/Flutter/live/audience_3.gif)|
 
+[![Tutorial | How to build live streaming using Flutter in 10 mins with ZEGOCLOUD](https://res.cloudinary.com/marcomontalbano/image/upload/v1682409206/video_to_markdown/images/youtube--uVnanx2Q2lM-c05b58ac6eb4c4700831b2b3070cd403.jpg)](https://youtu.be/uVnanx2Q2lM "Tutorial | How to build live streaming using Flutter in 10 mins with ZEGOCLOUD")
+
 ## When do you need the Live Streaming Kit
 
 - Build apps faster and easier
