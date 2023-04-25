@@ -1,3 +1,5 @@
+library zego_uikit_prebuilt_live_streaming;
+
 export 'package:zego_uikit/zego_uikit.dart';
 
 export 'src/components/dialogs.dart';

@@ -1,4 +1,8 @@
-## 2.4.3
+
+## 2.4.4
+- Update dependencies
+
+- ## 2.4.3
 - Fix some issues
 
 ## 2.4.2

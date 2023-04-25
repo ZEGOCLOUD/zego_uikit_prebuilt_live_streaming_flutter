@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_screenutil_zego/flutter_screenutil_zego.dart';
+import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/audio_video_view_foreground.dart';
@@ -326,8 +327,8 @@ class ZegoLivePageState extends State<ZegoLivePage>
     return ValueListenableBuilder(
       valueListenable: widget.liveStatusManager.notifier,
       builder: (context, LiveStatus liveStatusValue, Widget? child) {
-
-        final audioVideoContainerLayout = getAudioVideoContainerLayout(withScreenSharing);
+        final audioVideoContainerLayout =
+            getAudioVideoContainerLayout(withScreenSharing);
 
         Widget children = Container();
 
@@ -398,31 +399,32 @@ class ZegoLivePageState extends State<ZegoLivePage>
 
   ZegoLayout getAudioVideoContainerLayout(bool withScreenSharing) {
     if (withScreenSharing) {
-      if (widget.config.layout != null && widget.config.layout is ZegoLayoutGalleryConfig) {
+      if (widget.config.layout != null &&
+          widget.config.layout is ZegoLayoutGalleryConfig) {
         return widget.config.layout!;
       } else {
         return ZegoLayout.gallery(
-                showNewScreenSharingViewInFullscreenMode:
-                    true,
-                showScreenSharingFullscreenModeToggleButtonRules: ZegoShowFullscreenModeToggleButtonRules.showWhenScreenPressed);
+            showNewScreenSharingViewInFullscreenMode: true,
+            showScreenSharingFullscreenModeToggleButtonRules:
+                ZegoShowFullscreenModeToggleButtonRules.showWhenScreenPressed);
       }
     } else {
       if (widget.config.layout != null) {
         return widget.config.layout!;
       } else {
         return ZegoLayout.pictureInPicture(
-                smallViewPosition: ZegoViewPosition.bottomRight,
-                isSmallViewDraggable: false,
-                smallViewSize: Size(139.5.w, 248.0.h),
-                smallViewMargin: EdgeInsets.only(
-                  left: 24.r,
-                  top: 144.r,
-                  right: 24.r,
-                  bottom: 144.r,
-                ),
-                showNewScreenSharingViewInFullscreenMode:
-                    true,
-                showScreenSharingFullscreenModeToggleButtonRules: ZegoShowFullscreenModeToggleButtonRules.showWhenScreenPressed);
+            smallViewPosition: ZegoViewPosition.bottomRight,
+            isSmallViewDraggable: false,
+            smallViewSize: Size(139.5.w, 248.0.h),
+            smallViewMargin: EdgeInsets.only(
+              left: 24.r,
+              top: 144.r,
+              right: 24.r,
+              bottom: 144.r,
+            ),
+            showNewScreenSharingViewInFullscreenMode: true,
+            showScreenSharingFullscreenModeToggleButtonRules:
+                ZegoShowFullscreenModeToggleButtonRules.showWhenScreenPressed);
       }
     }
   }

@@ -30,8 +30,8 @@ dependencies:
   flutter:
     sdk: flutter
     
-  zego_uikit_prebuilt_live_streaming: ^2.4.3
-  zego_uikit_signaling_plugin: ^2.1.2
+  zego_uikit_prebuilt_live_streaming: ^2.4.4
+  zego_uikit_signaling_plugin: ^2.1.3
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

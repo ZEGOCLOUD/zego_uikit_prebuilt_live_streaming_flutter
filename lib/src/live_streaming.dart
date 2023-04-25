@@ -6,6 +6,9 @@ import 'dart:developer';
 // Flutter imports:
 import 'package:flutter/material.dart';
 
+// Package imports:
+import 'package:permission_handler/permission_handler.dart';
+
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/live_page.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/permissions.dart';
@@ -77,7 +80,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     WidgetsBinding.instance?.addObserver(this);
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
-      log('version: zego_uikit_prebuilt_live_streaming: 2.4.3; $version');
+      log('version: zego_uikit_prebuilt_live_streaming: 2.4.4; $version');
     });
 
     if (!widget.config.previewConfig.showPreviewForHost) {

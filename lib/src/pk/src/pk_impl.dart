@@ -6,6 +6,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+// Package imports:
+import 'package:zego_express_engine/zego_express_engine.dart';
+
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/host_manager.dart';

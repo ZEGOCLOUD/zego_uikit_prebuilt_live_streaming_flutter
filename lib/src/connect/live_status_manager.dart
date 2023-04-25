@@ -84,6 +84,7 @@ class ZegoLiveStatusManager {
       );
 
       config.onLiveStreamingStateUpdate?.call(ZegoLiveStreamingState.ended);
+
       /// un-normal leave by leave button
       await ZegoUIKit().setRoomProperty(
         RoomPropertyKey.liveStatus.text,
