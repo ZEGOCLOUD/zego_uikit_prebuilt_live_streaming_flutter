@@ -1,8 +1,27 @@
+## 2.5.5
+- supports specifying extend button position in the bottom bar by an index, allowing it to be positioned before the built-in button.
+
+## 2.5.4
+- rename style variable
+
+## 2.5.3
+- Support customizing the style of buttons (icons and text) in the bottom toolbar.
+
+## 2.5.2
+- support close duration in config
+
+## 2.5.1
+- add a "leave" method to the controller that allows for actively leave the current live.
+- support tracking the duration of the live locally.
+- fix some beauty bugs
+
+## 2.5.0
+- support advance beauty
 
 ## 2.4.4
 - Update dependencies
 
-- ## 2.4.3
+## 2.4.3
 - Fix some issues
 
 ## 2.4.2

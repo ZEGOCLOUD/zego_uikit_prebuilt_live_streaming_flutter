@@ -12,9 +12,13 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
 class ZegoDisableChatButton extends StatefulWidget {
   final Size? iconSize;
   final Size? buttonSize;
+  final ButtonIcon? enableIcon;
+  final ButtonIcon? disableIcon;
 
   const ZegoDisableChatButton({
     Key? key,
+    this.enableIcon,
+    this.disableIcon,
     this.iconSize,
     this.buttonSize,
   }) : super(key: key);
@@ -44,11 +48,14 @@ class _ZegoDisableChatButtonState extends State<ZegoDisableChatButton> {
             ZegoUIKit().getRoomProperties()[disableChatRoomPropertyKey]!.value)
         : true;
 
-    final icon = ButtonIcon(
-      icon: PrebuiltLiveStreamingImage.asset(isChatEnabled
-          ? PrebuiltLiveStreamingIconUrls.enableIM
-          : PrebuiltLiveStreamingIconUrls.disableIM),
-    );
+    final icon = isChatEnabled ? widget.enableIcon : widget.disableIcon;
+    icon?.icon ??= isChatEnabled
+        ? PrebuiltLiveStreamingImage.asset(
+            PrebuiltLiveStreamingIconUrls.enableIM,
+          )
+        : PrebuiltLiveStreamingImage.asset(
+            PrebuiltLiveStreamingIconUrls.disableIM,
+          );
 
     return GestureDetector(
       onTap: () async {
@@ -76,12 +83,12 @@ class _ZegoDisableChatButtonState extends State<ZegoDisableChatButton> {
         width: containerSize.width,
         height: containerSize.height,
         decoration: BoxDecoration(
-          color: icon.backgroundColor ?? Colors.transparent,
+          color: icon?.backgroundColor ?? Colors.transparent,
           shape: BoxShape.circle,
         ),
         child: SizedBox.fromSize(
           size: sizeBoxSize,
-          child: icon.icon,
+          child: icon?.icon,
         ),
       ),
     );

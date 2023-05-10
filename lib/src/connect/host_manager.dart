@@ -139,7 +139,17 @@ class ZegoLiveHostManager {
     );
 
     /// host exist
-    final hostIDProperty = roomProperties[RoomPropertyKey.host.text]!;
+    final hostIDProperty = roomProperties[RoomPropertyKey.host.text];
+    if (null == hostIDProperty) {
+      ZegoLoggerService.logInfo(
+        'onRoomPropertiesUpdated, not exist host property',
+        tag: 'live streaming',
+        subTag: 'host manager',
+      );
+
+      return;
+    }
+
     if (hostIDProperty.updateUserID == ZegoUIKit().getLocalUser().id) {
       return;
     }

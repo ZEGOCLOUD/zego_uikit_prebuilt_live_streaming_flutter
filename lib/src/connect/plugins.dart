@@ -25,6 +25,7 @@ class ZegoPrebuiltPlugins {
     required this.roomID,
     required this.plugins,
     this.onPluginReLogin,
+    this.beautyConfig,
   }) {
     _install();
   }
@@ -36,6 +37,8 @@ class ZegoPrebuiltPlugins {
   final String userName;
 
   final String roomID;
+
+  final ZegoBeautyPluginConfig? beautyConfig;
 
   final List<IZegoUIKitPlugin> plugins;
 
@@ -123,6 +126,8 @@ class ZegoPrebuiltPlugins {
       });
     });
 
+    await initEffectsPlugins();
+
     ZegoLoggerService.logInfo(
       'plugins init all done',
       tag: 'live streaming',
@@ -157,6 +162,24 @@ class ZegoPrebuiltPlugins {
     });
   }
 
+  Future<void> initEffectsPlugins() async {
+    if (ZegoPluginAdapter().getPlugin(ZegoUIKitPluginType.beauty) != null) {
+      ZegoUIKit()
+          .getBeautyPlugin()
+          .setConfig(beautyConfig ?? ZegoBeautyPluginConfig());
+      await ZegoUIKit()
+          .getBeautyPlugin()
+          .init(appID, appSign: appSign)
+          .then((value) {
+        ZegoLoggerService.logInfo(
+          'effects plugin init done',
+          tag: 'live streaming',
+          subTag: 'plugin',
+        );
+      });
+    }
+  }
+
   Future<void> uninit() async {
     ZegoLoggerService.logInfo(
       'uninit',
@@ -168,10 +191,15 @@ class ZegoPrebuiltPlugins {
     roomHasInitLogin = false;
     tryReLogging = false;
 
-    await ZegoUIKit().getSignalingPlugin().leaveRoom();
-    await ZegoUIKit().getSignalingPlugin().logout();
-    await ZegoUIKit().getSignalingPlugin().uninit();
-
+    if (ZegoPluginAdapter().getPlugin(ZegoUIKitPluginType.signaling) != null) {
+      await ZegoUIKit().getSignalingPlugin().leaveRoom();
+      await ZegoUIKit().getSignalingPlugin().logout();
+      await ZegoUIKit().getSignalingPlugin().uninit();
+    }
+    if (ZegoPluginAdapter().getPlugin(ZegoUIKitPluginType.beauty) != null) {
+      await ZegoUIKit().getBeautyPlugin().uninit();
+    }
+    
     for (final streamSubscription in subscriptions) {
       streamSubscription?.cancel();
     }

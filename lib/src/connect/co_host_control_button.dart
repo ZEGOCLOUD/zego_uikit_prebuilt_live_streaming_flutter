@@ -22,10 +22,24 @@ class ZegoCoHostControlButton extends StatefulWidget {
     required this.hostManager,
     required this.connectManager,
     required this.translationText,
+    this.requestCoHostButtonIcon,
+    this.cancelRequestCoHostButtonIcon,
+    this.endCoHostButtonIcon,
+    this.requestCoHostButtonText,
+    this.cancelRequestCoHostButtonText,
+    this.endCoHostButtonText,
   }) : super(key: key);
+
   final ZegoLiveHostManager hostManager;
   final ZegoLiveConnectManager connectManager;
   final ZegoTranslationText translationText;
+
+  final ButtonIcon? requestCoHostButtonIcon;
+  final ButtonIcon? cancelRequestCoHostButtonIcon;
+  final ButtonIcon? endCoHostButtonIcon;
+  final String? requestCoHostButtonText;
+  final String? cancelRequestCoHostButtonText;
+  final String? endCoHostButtonText;
 
   @override
   State<ZegoCoHostControlButton> createState() =>
@@ -95,11 +109,14 @@ class _ZegoCoHostControlButtonState extends State<ZegoCoHostControlButton> {
       invitationType: ZegoInvitationType.requestCoHost.value,
       invitees: [widget.hostManager.notifier.value?.id ?? ''],
       data: '',
-      icon: buttonIcon,
+      icon: null != widget.requestCoHostButtonIcon?.icon
+          ? widget.requestCoHostButtonIcon
+          : buttonIcon,
       buttonSize: Size(330.r, 72.r),
       iconSize: Size(48.r, 48.r),
       iconTextSpacing: 12.r,
-      text: widget.translationText.requestCoHostButton,
+      text: widget.requestCoHostButtonText ??
+          widget.translationText.requestCoHostButton,
       textStyle: buttonTextStyle,
       verticalLayout: false,
       onWillPressed: () {
@@ -120,7 +137,6 @@ class _ZegoCoHostControlButtonState extends State<ZegoCoHostControlButton> {
 
         widget.connectManager
             .updateAudienceConnectState(ConnectState.connecting);
-        //
       },
       clickableTextColor: Colors.white,
       clickableBackgroundColor: const Color(0xff1E2740).withOpacity(0.4),
@@ -130,11 +146,14 @@ class _ZegoCoHostControlButtonState extends State<ZegoCoHostControlButton> {
   Widget cancelRequestCoHostButton() {
     return ZegoCancelInvitationButton(
       invitees: [widget.hostManager.notifier.value?.id ?? ''],
-      icon: buttonIcon,
+      icon: null != widget.cancelRequestCoHostButtonIcon?.icon
+          ? widget.cancelRequestCoHostButtonIcon
+          : buttonIcon,
       buttonSize: Size(330.r, 72.r),
       iconSize: Size(48.r, 48.r),
       iconTextSpacing: 12.r,
-      text: widget.translationText.cancelRequestCoHostButton,
+      text: widget.cancelRequestCoHostButtonText ??
+          widget.translationText.cancelRequestCoHostButton,
       textStyle: buttonTextStyle,
       verticalLayout: false,
       onPressed: (String code, String message, List<String> errorInvitees) {
@@ -148,12 +167,15 @@ class _ZegoCoHostControlButtonState extends State<ZegoCoHostControlButton> {
 
   Widget endCoHostButton() {
     return ZegoTextIconButton(
-      icon: buttonIcon,
+      icon: null != widget.endCoHostButtonIcon?.icon
+          ? widget.endCoHostButtonIcon
+          : buttonIcon,
       buttonRadius: 72.r / 2,
       buttonSize: Size(168.r, 72.r),
       iconSize: Size(48.r, 48.r),
       iconTextSpacing: 12.r,
-      text: widget.translationText.endCoHostButton,
+      text:
+          widget.endCoHostButtonText ?? widget.translationText.endCoHostButton,
       textStyle: buttonTextStyle,
       verticalLayout: false,
       onPressed: widget.connectManager.coHostRequestToEnd,

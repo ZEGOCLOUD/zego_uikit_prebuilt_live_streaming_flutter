@@ -17,6 +17,8 @@ import 'package:zego_uikit_prebuilt_live_streaming/zego_uikit_prebuilt_live_stre
 
 class ZegoInRoomMessageButton extends StatefulWidget {
   final ZegoLiveHostManager hostManager;
+  final ButtonIcon? enabledIcon;
+  final ButtonIcon? disabledIcon;
   final Size? iconSize;
   final Size? buttonSize;
   final Function(int)? onSheetPopUp;
@@ -27,6 +29,8 @@ class ZegoInRoomMessageButton extends StatefulWidget {
     Key? key,
     required this.hostManager,
     required this.translationText,
+    this.enabledIcon,
+    this.disabledIcon,
     this.iconSize,
     this.buttonSize,
     this.onSheetPopUp,
@@ -69,6 +73,17 @@ class _ZegoInRoomMessageButtonState extends State<ZegoInRoomMessageButton> {
         if (!widget.hostManager.isHost) {
           chatLocalEnabled = isChatEnabled;
         }
+
+        final buttonIcon =
+            chatLocalEnabled ? widget.enabledIcon : widget.disabledIcon;
+        buttonIcon?.icon ??= chatLocalEnabled
+            ? PrebuiltLiveStreamingImage.asset(
+                PrebuiltLiveStreamingIconUrls.im,
+              )
+            : PrebuiltLiveStreamingImage.asset(
+                PrebuiltLiveStreamingIconUrls.imDisabled,
+              );
+
         return ZegoTextIconButton(
           onPressed: chatLocalEnabled
               ? () {
@@ -90,11 +105,7 @@ class _ZegoInRoomMessageButtonState extends State<ZegoInRoomMessageButton> {
                   });
                 }
               : null,
-          icon: ButtonIcon(
-            icon: PrebuiltLiveStreamingImage.asset(chatLocalEnabled
-                ? PrebuiltLiveStreamingIconUrls.im
-                : PrebuiltLiveStreamingIconUrls.imDisabled),
-          ),
+          icon: buttonIcon,
           iconSize: widget.iconSize ?? Size(72.r, 72.r),
           buttonSize: widget.buttonSize ?? Size(96.r, 96.r),
         );

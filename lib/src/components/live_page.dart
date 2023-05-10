@@ -7,15 +7,11 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_screenutil_zego/flutter_screenutil_zego.dart';
-import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/audio_video_view_foreground.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/components/bottom_bar.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/components/defines.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/components/message/in_room_live_commenting_view.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/live_page_surface.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_manager.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/components/top_bar.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/live_status_manager.dart';
@@ -164,9 +160,15 @@ class ZegoLivePageState extends State<ZegoLivePage>
                             constraints.maxHeight,
                           ),
                           avContainerOrPKBattleView(constraints),
-                          topBar(),
-                          bottomBar(),
-                          messageList(),
+                          ZegoLivePageSurface(
+                            config: widget.config,
+                            hostManager: widget.hostManager,
+                            liveStatusManager: widget.liveStatusManager,
+                            popUpManager: widget.popUpManager,
+                            connectManager: connectManager,
+                            controller: widget.controller,
+                            plugins: widget.plugins,
+                          ),
                         ],
                       );
                     });
@@ -212,14 +214,15 @@ class ZegoLivePageState extends State<ZegoLivePage>
   }
 
   void correctConfigValue() {
-    if (widget.config.bottomMenuBarConfig.maxCount > 5) {
-      widget.config.bottomMenuBarConfig.maxCount = 5;
-      ZegoLoggerService.logInfo(
-        "menu bar buttons limited count's value  is exceeding the maximum limit",
-        tag: 'live streaming',
-        subTag: 'live page',
-      );
-    }
+    /// will max than 5 if custom
+    // if (widget.config.bottomMenuBarConfig.maxCount > 5) {
+    //   widget.config.bottomMenuBarConfig.maxCount = 5;
+    //   ZegoLoggerService.logInfo(
+    //     "menu bar buttons limited count's value  is exceeding the maximum limit",
+    //     tag: 'live streaming',
+    //     subTag: 'live page',
+    //   );
+    // }
   }
 
   Widget clickListener({required Widget child}) {
@@ -521,52 +524,6 @@ class ZegoLivePageState extends State<ZegoLivePage>
             ) ??
             Container(color: Colors.transparent),
       ],
-    );
-  }
-
-  Widget topBar() {
-    return Positioned(
-      left: 0,
-      right: 0,
-      top: 64.r,
-      child: ZegoTopBar(
-        config: widget.config,
-        isPluginEnabled: widget.plugins?.isEnabled ?? false,
-        hostManager: widget.hostManager,
-        hostUpdateEnabledNotifier: widget.hostManager.hostUpdateEnabledNotifier,
-        connectManager: connectManager,
-        popUpManager: widget.popUpManager,
-        translationText: widget.config.translationText,
-      ),
-    );
-  }
-
-  Widget bottomBar() {
-    return Align(
-      alignment: Alignment.bottomCenter,
-      child: ZegoBottomBar(
-        buttonSize: zegoLiveButtonSize,
-        config: widget.config,
-        hostManager: widget.hostManager,
-        hostUpdateEnabledNotifier: widget.hostManager.hostUpdateEnabledNotifier,
-        liveStatusNotifier: widget.liveStatusManager.notifier,
-        connectManager: connectManager,
-        popUpManager: widget.popUpManager,
-      ),
-    );
-  }
-
-  Widget messageList() {
-    return Positioned(
-      left: 32.r,
-      bottom: 124.r,
-      child: ConstrainedBox(
-        constraints: BoxConstraints.loose(Size(540.r, 400.r)),
-        child: ZegoInRoomLiveCommentingView(
-          itemBuilder: widget.config.inRoomMessageViewConfig.itemBuilder,
-          opacity: widget.config.inRoomMessageViewConfig.opacity,
-        ),
-      ),
     );
   }
 

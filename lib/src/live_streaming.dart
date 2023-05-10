@@ -55,6 +55,7 @@ class ZegoUIKitPrebuiltLiveStreaming extends StatefulWidget {
 
   final VoidCallback? onDispose;
 
+  @Deprecated('Since 2.4.1')
   final Size? appDesignSize;
 
   @override
@@ -80,7 +81,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     WidgetsBinding.instance?.addObserver(this);
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
-      log('version: zego_uikit_prebuilt_live_streaming: 2.4.4; $version');
+      log('version: zego_uikit_prebuilt_live_streaming: 2.5.5; $version');
     });
 
     if (!widget.config.previewConfig.showPreviewForHost) {
@@ -101,6 +102,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
         userName: widget.userName,
         roomID: widget.liveID,
         plugins: widget.config.plugins,
+        beautyConfig: widget.config.beautyConfig,
       );
     }
     plugins?.init();
@@ -118,6 +120,11 @@ class _ZegoUIKitPrebuiltLiveStreamingState
 
     subscriptions.add(
         ZegoUIKit().getMeRemovedFromRoomStream().listen(onMeRemovedFromRoom));
+
+    widget.controller?.initByPrebuilt(
+      prebuiltConfig: widget.config,
+      hostManager: hostManager,
+    );
 
     initToast();
     initContext();
@@ -144,6 +151,8 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     }
 
     widget.onDispose?.call();
+
+    widget.controller?.uninitByPrebuilt();
   }
 
   @override

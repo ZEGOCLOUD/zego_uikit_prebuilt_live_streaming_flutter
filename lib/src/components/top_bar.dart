@@ -17,11 +17,15 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_translatio
 class ZegoTopBar extends StatefulWidget {
   final bool isPluginEnabled;
   final ZegoUIKitPrebuiltLiveStreamingConfig config;
+
   final ZegoLiveHostManager hostManager;
   final ValueNotifier<bool> hostUpdateEnabledNotifier;
+
   final ZegoLiveConnectManager connectManager;
   final ZegoPopUpManager popUpManager;
   final ZegoTranslationText translationText;
+
+  final ValueNotifier<bool>? isLeaveRequestingNotifier;
 
   const ZegoTopBar({
     Key? key,
@@ -32,6 +36,7 @@ class ZegoTopBar extends StatefulWidget {
     required this.connectManager,
     required this.popUpManager,
     required this.translationText,
+    this.isLeaveRequestingNotifier,
   }) : super(key: key);
 
   @override
@@ -92,6 +97,7 @@ class _ZegoTopBarState extends State<ZegoTopBar> {
       config: widget.config,
       hostManager: widget.hostManager,
       hostUpdateEnabledNotifier: widget.hostUpdateEnabledNotifier,
+      isLeaveRequestingNotifier: widget.isLeaveRequestingNotifier,
     );
   }
 

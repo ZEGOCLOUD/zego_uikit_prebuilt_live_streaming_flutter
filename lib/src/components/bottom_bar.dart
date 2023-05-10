@@ -31,6 +31,8 @@ class ZegoBottomBar extends StatefulWidget {
   final ValueNotifier<LiveStatus> liveStatusNotifier;
   final ZegoLiveConnectManager connectManager;
 
+  final ValueNotifier<bool>? isLeaveRequestingNotifier;
+
   const ZegoBottomBar({
     Key? key,
     required this.config,
@@ -40,6 +42,7 @@ class ZegoBottomBar extends StatefulWidget {
     required this.liveStatusNotifier,
     required this.connectManager,
     required this.popUpManager,
+    this.isLeaveRequestingNotifier,
   }) : super(key: key);
 
   @override
@@ -48,7 +51,7 @@ class ZegoBottomBar extends StatefulWidget {
 
 class _ZegoBottomBarState extends State<ZegoBottomBar> {
   List<ZegoMenuBarButtonName> buttons = [];
-  List<Widget> extendButtons = [];
+  List<ZegoMenuBarExtendButton> extendButtons = [];
 
   @override
   void initState() {
@@ -89,29 +92,7 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
                 return rightToolbar(context);
               },
             ),
-          if (widget.config.bottomMenuBarConfig.showInRoomMessageButton)
-            SizedBox(
-              height: 124.r,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  zegoLiveButtonPadding,
-                  ZegoInRoomMessageButton(
-                    translationText: widget.config.translationText,
-                    hostManager: widget.hostManager,
-                    onSheetPopUp: (int key) {
-                      widget.popUpManager.addAPopUpSheet(key);
-                    },
-                    onSheetPop: (int key) {
-                      widget.popUpManager.removeAPopUpSheet(key);
-                    },
-                  ),
-                ],
-              ),
-            )
-          else
-            const SizedBox(),
+          leftChatButton(),
         ],
       ),
     );
@@ -133,9 +114,74 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
           ? widget.config.bottomMenuBarConfig.coHostExtendButtons
           : widget.config.bottomMenuBarConfig.audienceExtendButtons;
     }
+
+    if (buttons.contains(ZegoMenuBarButtonName.chatButton) &&
+        !widget.config.bottomMenuBarConfig.showInRoomMessageButton) {
+      buttons
+          .removeWhere((button) => button == ZegoMenuBarButtonName.chatButton);
+    }
+  }
+
+  Widget leftChatButton() {
+    if (buttons.contains(ZegoMenuBarButtonName.chatButton)) {
+      return const SizedBox();
+    }
+
+    if (widget.config.bottomMenuBarConfig.showInRoomMessageButton) {
+      return SizedBox(
+        height: 124.r,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            zegoLiveButtonPadding,
+            ZegoInRoomMessageButton(
+              translationText: widget.config.translationText,
+              hostManager: widget.hostManager,
+              onSheetPopUp: (int key) {
+                widget.popUpManager.addAPopUpSheet(key);
+              },
+              onSheetPop: (int key) {
+                widget.popUpManager.removeAPopUpSheet(key);
+              },
+              enabledIcon: ButtonIcon(
+                icon: widget.config.bottomMenuBarConfig.buttonStyle
+                    ?.chatEnabledButtonIcon,
+              ),
+              disabledIcon: ButtonIcon(
+                icon: widget.config.bottomMenuBarConfig.buttonStyle
+                    ?.chatDisabledButtonIcon,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return const SizedBox();
   }
 
   Widget rightToolbar(BuildContext context) {
+    var leftPaddings = <Widget>[];
+    if (!widget.config.bottomMenuBarConfig.showInRoomMessageButton) {
+      leftPaddings = [
+        zegoLiveButtonPadding,
+        zegoLiveButtonPadding,
+      ];
+    } else if (buttons.contains(ZegoMenuBarButtonName.chatButton)) {
+      leftPaddings = [
+        zegoLiveButtonPadding,
+        zegoLiveButtonPadding,
+      ];
+    } else if (buttons.contains(ZegoMenuBarButtonName.expanding)) {
+      leftPaddings = [
+        zegoLiveButtonPadding,
+        zegoLiveButtonPadding,
+        zegoLiveButtonPadding,
+        SizedBox.fromSize(size: zegoLiveButtonSize),
+      ];
+    }
+
     return CustomScrollView(
       scrollDirection: Axis.horizontal,
       slivers: [
@@ -145,6 +191,7 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              ...leftPaddings,
               ...getDisplayButtons(context),
               zegoLiveButtonPadding,
               zegoLiveButtonPadding,
@@ -155,11 +202,46 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
     );
   }
 
-  List<Widget> getDisplayButtons(BuildContext context) {
-    final buttonList = <Widget>[
-      ...getDefaultButtons(context),
-      ...extendButtons
+  List<Widget> sortDisplayButtons(
+    List<Widget> builtInButton,
+    List<ZegoMenuBarExtendButton> _extendButtons,
+  ) {
+    /// classify
+    final unsortedExtendIndexesWithButton = <int, Widget>{};
+    final notNeedSortedExtendButtons = <Widget>[];
+    final totalButtonCount = builtInButton.length + _extendButtons.length;
+    for (var i = 0; i < _extendButtons.length; i++) {
+      final extendButton = _extendButtons[i];
+      if (extendButton.index >= 0 && extendButton.index < totalButtonCount) {
+        unsortedExtendIndexesWithButton[extendButton.index] = extendButton;
+      } else {
+        // button which index is -1 mean not need to sort
+        notNeedSortedExtendButtons.add(extendButton);
+      }
+    }
+
+    /// sort
+    final entries = unsortedExtendIndexesWithButton.entries.toList();
+    entries.sort((a, b) => a.key.compareTo(b.key));
+    final sortedExtendIndexesWithButton = Map<int, Widget>.fromEntries(entries);
+
+    /// insert
+    final sortButtons = <Widget>[
+      ...builtInButton,
+      ...notNeedSortedExtendButtons
     ];
+    sortedExtendIndexesWithButton.forEach((index, button) {
+      sortButtons.insert(index, button);
+    });
+
+    return sortButtons;
+  }
+
+  List<Widget> getDisplayButtons(BuildContext context) {
+    final buttonList = sortDisplayButtons(
+      getDefaultButtons(context),
+      extendButtons,
+    );
 
     var displayButtonList = <Widget>[];
     if (buttonList.length > widget.config.bottomMenuBarConfig.maxCount) {
@@ -172,19 +254,23 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
           buttonWrapper(
             child: ZegoMoreButton(
               menuButtonListFunc: () {
-                final buttonList = <Widget>[
-                  ...getDefaultButtons(context, cameraDefaultValueFunc: () {
-                    return ZegoUIKit()
-                        .getCameraStateNotifier(ZegoUIKit().getLocalUser().id)
-                        .value;
-                  }, microphoneDefaultValueFunc: () {
-                    return ZegoUIKit()
-                        .getMicrophoneStateNotifier(
-                            ZegoUIKit().getLocalUser().id)
-                        .value;
-                  }),
-                  ...extendButtons
-                ]..removeRange(
+                final buttonList = sortDisplayButtons(
+                  getDefaultButtons(
+                    context,
+                    cameraDefaultValueFunc: () {
+                      return ZegoUIKit()
+                          .getCameraStateNotifier(ZegoUIKit().getLocalUser().id)
+                          .value;
+                    },
+                    microphoneDefaultValueFunc: () {
+                      return ZegoUIKit()
+                          .getMicrophoneStateNotifier(
+                              ZegoUIKit().getLocalUser().id)
+                          .value;
+                    },
+                  ),
+                  extendButtons,
+                )..removeRange(
                     0,
                     widget.config.bottomMenuBarConfig.maxCount - 1,
                   );
@@ -220,18 +306,63 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
   }
 
   Widget buttonWrapper({required Widget child, ZegoMenuBarButtonName? type}) {
+    if (ZegoMenuBarButtonName.expanding == type) {
+      return child;
+    }
+
     var buttonSize = widget.buttonSize;
+
+    /// co-host button
+    final coHostButtonTextStyle = TextStyle(
+      color: Colors.white,
+      fontSize: 26.r,
+      fontWeight: FontWeight.w500,
+    );
+    final iconTextSpacing = 20.r;
     switch (type) {
       case ZegoMenuBarButtonName.coHostControlButton:
         switch (widget.connectManager.audienceLocalConnectStateNotifier.value) {
           case ConnectState.idle:
-            buttonSize = Size(330.r, 72.r);
+            final textSize = getTextSize(
+              widget.config.bottomMenuBarConfig.buttonStyle
+                      ?.requestCoHostButtonText ??
+                  widget.config.translationText.requestCoHostButton,
+              coHostButtonTextStyle,
+            );
+            buttonSize = Size(
+              textSize.width +
+                  (textSize.width > 1 ? iconTextSpacing : 0) +
+                  zegoLiveButtonSize.width,
+              zegoLiveButtonSize.height,
+            );
             break;
           case ConnectState.connecting:
-            buttonSize = Size(330.r, 72.r);
+            final textSize = getTextSize(
+              widget.config.bottomMenuBarConfig.buttonStyle
+                      ?.cancelRequestCoHostButtonText ??
+                  widget.config.translationText.cancelRequestCoHostButton,
+              coHostButtonTextStyle,
+            );
+            buttonSize = Size(
+              textSize.width +
+                  (textSize.width > 1 ? iconTextSpacing : 0) +
+                  zegoLiveButtonSize.width,
+              zegoLiveButtonSize.height,
+            );
             break;
           case ConnectState.connected:
-            buttonSize = Size(168.r, 72.r);
+            final textSize = getTextSize(
+              widget.config.bottomMenuBarConfig.buttonStyle
+                      ?.endCoHostButtonText ??
+                  widget.config.translationText.endCoHostButton,
+              coHostButtonTextStyle,
+            );
+            buttonSize = Size(
+              textSize.width +
+                  (textSize.width > 1 ? iconTextSpacing : 0) +
+                  zegoLiveButtonSize.width,
+              zegoLiveButtonSize.height,
+            );
             break;
         }
         break;
@@ -301,13 +432,19 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
               buttonSize: buttonSize,
               iconSize: iconSize,
               normalIcon: ButtonIcon(
-                icon: PrebuiltLiveStreamingImage.asset(
-                    PrebuiltLiveStreamingIconUrls.toolbarMicNormal),
+                icon: widget.config.bottomMenuBarConfig.buttonStyle
+                        ?.toggleMicrophoneOnButtonIcon ??
+                    PrebuiltLiveStreamingImage.asset(
+                      PrebuiltLiveStreamingIconUrls.toolbarMicNormal,
+                    ),
                 backgroundColor: Colors.transparent,
               ),
               offIcon: ButtonIcon(
-                icon: PrebuiltLiveStreamingImage.asset(
-                    PrebuiltLiveStreamingIconUrls.toolbarMicOff),
+                icon: widget.config.bottomMenuBarConfig.buttonStyle
+                        ?.toggleMicrophoneOffButtonIcon ??
+                    PrebuiltLiveStreamingImage.asset(
+                      PrebuiltLiveStreamingIconUrls.toolbarMicOff,
+                    ),
                 backgroundColor: Colors.transparent,
               ),
               defaultOn: microphoneDefaultOn,
@@ -321,19 +458,37 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
           buttonSize: buttonSize,
           iconSize: iconSize,
           defaultUseSpeaker: widget.config.useSpeakerWhenJoining,
+          speakerIcon: ButtonIcon(
+            icon: widget.config.bottomMenuBarConfig.buttonStyle
+                ?.switchAudioOutputToSpeakerButtonIcon,
+          ),
+          headphoneIcon: ButtonIcon(
+            icon: widget.config.bottomMenuBarConfig.buttonStyle
+                ?.switchAudioOutputToHeadphoneButtonIcon,
+          ),
+          bluetoothIcon: ButtonIcon(
+            icon: widget.config.bottomMenuBarConfig.buttonStyle
+                ?.switchAudioOutputToBluetoothButtonIcon,
+          ),
         );
       case ZegoMenuBarButtonName.toggleCameraButton:
         return ZegoToggleCameraButton(
           buttonSize: buttonSize,
           iconSize: iconSize,
           normalIcon: ButtonIcon(
-            icon: PrebuiltLiveStreamingImage.asset(
-                PrebuiltLiveStreamingIconUrls.toolbarCameraNormal),
+            icon: widget.config.bottomMenuBarConfig.buttonStyle
+                    ?.toggleCameraOnButtonIcon ??
+                PrebuiltLiveStreamingImage.asset(
+                  PrebuiltLiveStreamingIconUrls.toolbarCameraNormal,
+                ),
             backgroundColor: Colors.transparent,
           ),
           offIcon: ButtonIcon(
-            icon: PrebuiltLiveStreamingImage.asset(
-                PrebuiltLiveStreamingIconUrls.toolbarCameraOff),
+            icon: widget.config.bottomMenuBarConfig.buttonStyle
+                    ?.toggleCameraOffButtonIcon ??
+                PrebuiltLiveStreamingImage.asset(
+                  PrebuiltLiveStreamingIconUrls.toolbarCameraOff,
+                ),
             backgroundColor: Colors.transparent,
           ),
           defaultOn: cameraDefaultOn,
@@ -343,8 +498,11 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
           buttonSize: buttonSize,
           iconSize: iconSize,
           icon: ButtonIcon(
-            icon: PrebuiltLiveStreamingImage.asset(
-                PrebuiltLiveStreamingIconUrls.toolbarFlipCamera),
+            icon: widget.config.bottomMenuBarConfig.buttonStyle
+                    ?.switchCameraButtonIcon ??
+                PrebuiltLiveStreamingImage.asset(
+                  PrebuiltLiveStreamingIconUrls.toolbarFlipCamera,
+                ),
             backgroundColor: Colors.transparent,
           ),
           defaultUseFrontFacingCamera: ZegoUIKit()
@@ -357,12 +515,15 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
           buttonSize: buttonSize,
           iconSize: iconSize,
           icon: ButtonIcon(
-            icon: const Icon(Icons.close, color: Colors.white),
+            icon: widget
+                    .config.bottomMenuBarConfig.buttonStyle?.leaveButtonIcon ??
+                const Icon(Icons.close, color: Colors.white),
             backgroundColor: ZegoUIKitDefaultTheme.buttonBackgroundColor,
           ),
           config: widget.config,
           hostManager: widget.hostManager,
           hostUpdateEnabledNotifier: widget.hostUpdateEnabledNotifier,
+          isLeaveRequestingNotifier: widget.isLeaveRequestingNotifier,
         );
       case ZegoMenuBarButtonName.beautyEffectButton:
         return ZegoBeautyEffectButton(
@@ -371,6 +532,10 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
           beautyEffects: widget.config.effectConfig.beautyEffects,
           buttonSize: buttonSize,
           iconSize: iconSize,
+          icon: ButtonIcon(
+            icon: widget
+                .config.bottomMenuBarConfig.buttonStyle?.beautyEffectButtonIcon,
+          ),
         );
       case ZegoMenuBarButtonName.soundEffectButton:
         return ZegoSoundEffectButton(
@@ -380,24 +545,87 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
           reverbEffect: widget.config.effectConfig.reverbEffect,
           buttonSize: buttonSize,
           iconSize: iconSize,
+          icon: ButtonIcon(
+            icon: widget
+                .config.bottomMenuBarConfig.buttonStyle?.soundEffectButtonIcon,
+          ),
         );
       case ZegoMenuBarButtonName.coHostControlButton:
         return ZegoCoHostControlButton(
           hostManager: widget.hostManager,
           connectManager: widget.connectManager,
           translationText: widget.config.translationText,
+          requestCoHostButtonIcon: ButtonIcon(
+            icon: widget.config.bottomMenuBarConfig.buttonStyle
+                ?.requestCoHostButtonIcon,
+          ),
+          cancelRequestCoHostButtonIcon: ButtonIcon(
+            icon: widget.config.bottomMenuBarConfig.buttonStyle
+                ?.cancelRequestCoHostButtonIcon,
+          ),
+          endCoHostButtonIcon: ButtonIcon(
+            icon: widget
+                .config.bottomMenuBarConfig.buttonStyle?.endCoHostButtonIcon,
+          ),
+          requestCoHostButtonText: widget
+              .config.bottomMenuBarConfig.buttonStyle?.requestCoHostButtonText,
+          cancelRequestCoHostButtonText: widget.config.bottomMenuBarConfig
+              .buttonStyle?.cancelRequestCoHostButtonText,
+          endCoHostButtonText: widget
+              .config.bottomMenuBarConfig.buttonStyle?.endCoHostButtonText,
         );
       case ZegoMenuBarButtonName.enableChatButton:
         return ZegoDisableChatButton(
           buttonSize: buttonSize,
           iconSize: iconSize,
+          enableIcon: ButtonIcon(
+            icon: widget
+                .config.bottomMenuBarConfig.buttonStyle?.enableChatButtonIcon,
+          ),
+          disableIcon: ButtonIcon(
+            icon: widget
+                .config.bottomMenuBarConfig.buttonStyle?.disableChatButtonIcon,
+          ),
         );
       case ZegoMenuBarButtonName.toggleScreenSharingButton:
         return ZegoScreenSharingToggleButton(
           buttonSize: buttonSize,
           iconSize: iconSize,
           onPressed: (isScreenSharing) {},
+          iconStartSharing: ButtonIcon(
+            icon: widget.config.bottomMenuBarConfig.buttonStyle
+                ?.toggleScreenSharingOnButtonIcon,
+          ),
+          iconStopSharing: ButtonIcon(
+            icon: widget.config.bottomMenuBarConfig.buttonStyle
+                ?.toggleScreenSharingOffButtonIcon,
+          ),
         );
+      case ZegoMenuBarButtonName.chatButton:
+        if (widget.config.bottomMenuBarConfig.showInRoomMessageButton) {
+          return ZegoInRoomMessageButton(
+            translationText: widget.config.translationText,
+            hostManager: widget.hostManager,
+            onSheetPopUp: (int key) {
+              widget.popUpManager.addAPopUpSheet(key);
+            },
+            onSheetPop: (int key) {
+              widget.popUpManager.removeAPopUpSheet(key);
+            },
+            enabledIcon: ButtonIcon(
+              icon: widget.config.bottomMenuBarConfig.buttonStyle
+                  ?.chatEnabledButtonIcon,
+            ),
+            disabledIcon: ButtonIcon(
+              icon: widget.config.bottomMenuBarConfig.buttonStyle
+                  ?.chatDisabledButtonIcon,
+            ),
+          );
+        } else {
+          return const SizedBox();
+        }
+      case ZegoMenuBarButtonName.expanding:
+        return Expanded(child: Container());
     }
   }
 }

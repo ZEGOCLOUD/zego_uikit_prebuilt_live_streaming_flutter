@@ -12,15 +12,6 @@ Size get zegoLiveButtonIconSize => Size(40.r, 40.r);
 SizedBox get zegoLiveButtonPadding =>
     SizedBox.fromSize(size: Size.fromRadius(8.r));
 
-Size getTextSize(String text, TextStyle textStyle) {
-  final textPainter = TextPainter(
-      text: TextSpan(text: text, style: textStyle),
-      maxLines: 1,
-      textDirection: TextDirection.ltr)
-    ..layout(minWidth: 0, maxWidth: double.infinity);
-  return textPainter.size;
-}
-
 enum PopupItemValue {
   inviteConnect,
   kickCoHost,

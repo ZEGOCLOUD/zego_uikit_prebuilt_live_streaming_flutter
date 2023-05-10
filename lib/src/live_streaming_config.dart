@@ -52,7 +52,8 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         ),
         previewConfig = ZegoLiveStreamingPreviewConfig(),
         pkBattleConfig = ZegoLiveStreamingPKBattleConfig(),
-        pkBattleEvents = ZegoLiveStreamingPKBattleEvents();
+        pkBattleEvents = ZegoLiveStreamingPKBattleEvents(),
+        durationConfig = ZegoLiveDurationConfig();
 
   ZegoUIKitPrebuiltLiveStreamingConfig.audience(
       {List<IZegoUIKitPlugin>? plugins})
@@ -77,7 +78,8 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         translationText = ZegoTranslationText(),
         previewConfig = ZegoLiveStreamingPreviewConfig(),
         pkBattleConfig = ZegoLiveStreamingPKBattleConfig(),
-        pkBattleEvents = ZegoLiveStreamingPKBattleEvents();
+        pkBattleEvents = ZegoLiveStreamingPKBattleEvents(),
+        durationConfig = ZegoLiveDurationConfig();
 
   ZegoUIKitPrebuiltLiveStreamingConfig({
     this.turnOnCameraWhenJoining = true,
@@ -90,6 +92,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
     ZegoMemberListConfig? memberListConfig,
     ZegoInRoomMessageViewConfig? messageConfig,
     ZegoEffectConfig? effectConfig,
+    ZegoLiveDurationConfig? durationConfig,
     this.confirmDialogInfo,
     this.onLeaveConfirmation,
     this.onLeaveLiveStreaming,
@@ -104,6 +107,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
     ZegoLiveStreamingPKBattleConfig? pkBattleConfig,
     ZegoLiveStreamingPKBattleEvents? pkBattleEvents,
     ZegoTranslationText? translationText,
+    this.beautyConfig,
   })  : audioVideoViewConfig =
             audioVideoViewConfig ?? ZegoPrebuiltAudioVideoViewConfig(),
         bottomMenuBarConfig = bottomMenuBarConfig ?? ZegoBottomMenuBarConfig(),
@@ -114,7 +118,8 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         translationText = translationText ?? ZegoTranslationText(),
         previewConfig = previewConfig ?? ZegoLiveStreamingPreviewConfig(),
         pkBattleConfig = pkBattleConfig ?? ZegoLiveStreamingPKBattleConfig(),
-        pkBattleEvents = pkBattleEvents ?? ZegoLiveStreamingPKBattleEvents() {
+        pkBattleEvents = pkBattleEvents ?? ZegoLiveStreamingPKBattleEvents(),
+        durationConfig = durationConfig ?? ZegoLiveDurationConfig() {
     layout ??= ZegoLayout.pictureInPicture();
   }
 
@@ -261,6 +266,12 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   /// cross room pk events
   ZegoLiveStreamingPKBattleEvents pkBattleEvents;
   ZegoLiveStreamingPKBattleConfig pkBattleConfig;
+
+  /// duration config
+  ZegoLiveDurationConfig durationConfig;
+
+  ///
+  ZegoBeautyPluginConfig? beautyConfig;
 }
 
 class ZegoPrebuiltAudioVideoViewConfig {
@@ -312,13 +323,18 @@ class ZegoBottomMenuBarConfig {
   /// these buttons will sequentially added to menu bar,
   /// and auto added extra buttons to the pop-up menu
   /// when the limit [maxCount] is exceeded
-  List<Widget> hostExtendButtons = [];
-  List<Widget> coHostExtendButtons = [];
-  List<Widget> audienceExtendButtons = [];
+  ///
+  /// If you need to position extend button in front of the built-in button,
+  /// you can set a lower index of ZegoMenuBarExtendButton, such as 0
+  List<ZegoMenuBarExtendButton> hostExtendButtons = [];
+  List<ZegoMenuBarExtendButton> coHostExtendButtons = [];
+  List<ZegoMenuBarExtendButton> audienceExtendButtons = [];
 
   /// limited item count display on menu bar,
   /// if this count is exceeded, More button is displayed
   int maxCount;
+
+  ZegoBottomMenuBarButtonStyle? buttonStyle;
 
   ZegoBottomMenuBarConfig({
     this.showInRoomMessageButton = true,
@@ -342,6 +358,92 @@ class ZegoBottomMenuBarConfig {
     this.coHostExtendButtons = const [],
     this.audienceExtendButtons = const [],
     this.maxCount = 5,
+    this.buttonStyle,
+  });
+}
+
+class ZegoMenuBarExtendButton extends StatelessWidget {
+  /// This index refers to the position of buttons on the entire bottom toolbar,
+  /// including both built-in buttons and extended buttons.
+  ///
+  /// If this index is set, the corresponding extended button will be placed at the specified position.
+  /// If this index is not set, the extended buttons will be placed after the built-in buttons by default.
+  ///
+  /// the index starts from 0, and -1 indicates placed after the built-in buttons by default.
+  final int index;
+  final Widget child;
+
+  const ZegoMenuBarExtendButton({
+    Key? key,
+    required this.child,
+    this.index = -1,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return child;
+  }
+}
+
+class ZegoBottomMenuBarButtonStyle {
+  Widget? chatEnabledButtonIcon;
+  Widget? chatDisabledButtonIcon;
+
+  Widget? toggleMicrophoneOnButtonIcon;
+  Widget? toggleMicrophoneOffButtonIcon;
+
+  Widget? toggleCameraOnButtonIcon;
+  Widget? toggleCameraOffButtonIcon;
+
+  Widget? switchCameraButtonIcon;
+
+  Widget? switchAudioOutputToSpeakerButtonIcon;
+  Widget? switchAudioOutputToHeadphoneButtonIcon;
+  Widget? switchAudioOutputToBluetoothButtonIcon;
+
+  Widget? leaveButtonIcon;
+
+  Widget? requestCoHostButtonIcon;
+  String? requestCoHostButtonText;
+  Widget? cancelRequestCoHostButtonIcon;
+  String? cancelRequestCoHostButtonText;
+  Widget? endCoHostButtonIcon;
+  String? endCoHostButtonText;
+
+  Widget? beautyEffectButtonIcon;
+
+  Widget? soundEffectButtonIcon;
+
+  Widget? enableChatButtonIcon;
+  Widget? disableChatButtonIcon;
+
+  Widget? toggleScreenSharingOnButtonIcon;
+  Widget? toggleScreenSharingOffButtonIcon;
+
+  ZegoBottomMenuBarButtonStyle({
+    this.chatEnabledButtonIcon,
+    this.chatDisabledButtonIcon,
+    this.toggleMicrophoneOnButtonIcon,
+    this.toggleMicrophoneOffButtonIcon,
+    this.toggleCameraOnButtonIcon,
+    this.toggleCameraOffButtonIcon,
+    this.switchCameraButtonIcon,
+    this.switchAudioOutputToSpeakerButtonIcon,
+    this.switchAudioOutputToHeadphoneButtonIcon,
+    this.switchAudioOutputToBluetoothButtonIcon,
+    this.leaveButtonIcon,
+    this.requestCoHostButtonIcon,
+    this.requestCoHostButtonText,
+    this.cancelRequestCoHostButtonIcon,
+    this.cancelRequestCoHostButtonText,
+    this.endCoHostButtonIcon,
+    this.endCoHostButtonText,
+    this.beautyEffectButtonIcon,
+    this.soundEffectButtonIcon,
+    this.enableChatButtonIcon,
+    this.disableChatButtonIcon,
+    this.toggleScreenSharingOnButtonIcon,
+    this.toggleScreenSharingOffButtonIcon,
   });
 }
 
@@ -463,14 +565,36 @@ class ZegoLiveStreamingPreviewConfig {
   /// whether the host displays the preview page
   bool showPreviewForHost;
 
-  Image? pageBackIcon;
-  Image? beautyEffectIcon;
-  Image? switchCameraIcon;
+  Widget? pageBackIcon;
+  Widget? beautyEffectIcon;
+  Widget? switchCameraIcon;
 
   ZegoLiveStreamingPreviewConfig({
     this.showPreviewForHost = true,
     this.pageBackIcon,
     this.beautyEffectIcon,
     this.switchCameraIcon,
+  });
+}
+
+///
+class ZegoLiveDurationConfig {
+  ///
+  bool isVisible;
+
+  /// countdown during a call, throwing out once per second.
+  ///
+  /// example: auto hang up after 5 minutes
+  /// ..durationConfig.isVisible = true
+  /// ..durationConfig.onDurationUpdate = (Duration duration) {
+  ///   if (duration.inSeconds >= 5 * 60) {
+  ///     liveController?.leave(context);
+  ///   }
+  /// }
+  void Function(Duration)? onDurationUpdate;
+
+  ZegoLiveDurationConfig({
+    this.isVisible = true,
+    this.onDurationUpdate,
   });
 }

@@ -39,12 +39,16 @@ class _ZegoBeautyEffectButtonState extends State<ZegoBeautyEffectButton> {
     final sizeBoxSize = widget.iconSize ?? Size(56.r, 56.r);
     return GestureDetector(
       onTap: () async {
-        showBeautyEffectSheet(
-          context,
-          translationText: widget.translationText,
-          rootNavigator: widget.rootNavigator,
-          beautyEffects: widget.beautyEffects,
-        );
+        if (ZegoUIKit.instance.getPlugin(ZegoUIKitPluginType.beauty) != null) {
+          ZegoUIKit.instance.getBeautyPlugin().showBeautyUI(context);
+        } else {
+          showBeautyEffectSheet(
+            context,
+            translationText: widget.translationText,
+            rootNavigator: widget.rootNavigator,
+            beautyEffects: widget.beautyEffects,
+          );
+        }
       },
       child: Container(
         width: containerSize.width,

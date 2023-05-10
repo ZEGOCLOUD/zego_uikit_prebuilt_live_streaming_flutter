@@ -13,6 +13,10 @@ enum ZegoMenuBarButtonName {
   soundEffectButton,
   enableChatButton,
   toggleScreenSharingButton,
+  chatButton,
+
+  /// for horizontal layout
+  expanding,
 }
 
 class ZegoDialogInfo {
