@@ -1,6 +1,7 @@
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
 
+/// @nodoc
 enum ZegoInvitationType {
   ///  audience request host to be co-host
   requestCoHost,
@@ -15,6 +16,7 @@ enum ZegoInvitationType {
   crossRoomPKBattleRequest,
 }
 
+/// @nodoc
 extension ZegoInvitationTypeExtension on ZegoInvitationType {
   static bool isCoHostType(int type) {
     return type == ZegoInvitationType.requestCoHost.value ||
@@ -39,12 +41,14 @@ extension ZegoInvitationTypeExtension on ZegoInvitationType {
   };
 }
 
+/// @nodoc
 enum ConnectState {
   idle,
   connecting,
   connected,
 }
 
+/// @nodoc
 bool isCoHost(ZegoUIKitUser user) {
   return ZegoUIKit().getCameraStateNotifier(user.id).value ||
       ZegoUIKit().getMicrophoneStateNotifier(user.id).value;

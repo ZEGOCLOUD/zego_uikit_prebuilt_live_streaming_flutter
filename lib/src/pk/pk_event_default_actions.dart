@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
-import 'package:zego_uikit_prebuilt_live_streaming/zego_uikit_prebuilt_live_streaming.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/dialogs.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/pk/pk_service.dart';
 
+/// @nodoc
 class ZegoLiveStreamingPKBattleDefaultActions {
   static BuildContext get context =>
       ZegoUIKitPrebuiltLiveStreamingService().context;

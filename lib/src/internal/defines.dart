@@ -1,12 +1,14 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
 
+/// @nodoc
 enum LiveStatus {
   ended,
   living,
   notStart,
 }
 
+/// @nodoc
 class PrebuiltLiveStreamingImage {
   static Image asset(String name) {
     return Image.asset(name, package: 'zego_uikit_prebuilt_live_streaming');
@@ -17,6 +19,7 @@ class PrebuiltLiveStreamingImage {
   }
 }
 
+/// @nodoc
 class PrebuiltLiveStreamingIconUrls {
   static const String im = 'assets/icons/toolbar_im.png';
   static const String imDisabled = 'assets/icons/toolbar_im_disabled.png';

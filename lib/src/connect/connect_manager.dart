@@ -15,8 +15,10 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/connect/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_translation.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_defines.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_inner_text.dart';
 
+/// @nodoc
 class ZegoLiveConnectManager {
   ZegoLiveConnectManager({
     required this.hostManager,
@@ -32,7 +34,7 @@ class ZegoLiveConnectManager {
   final ValueNotifier<LiveStatus> liveStatusNotifier;
   final ZegoUIKitPrebuiltLiveStreamingConfig config;
   final BuildContext Function() contextQuery;
-  final ZegoTranslationText translationText;
+  final ZegoInnerText translationText;
 
   /// internal variables
   /// audience: current audience connection state, audience or co-host
@@ -130,7 +132,7 @@ class ZegoLiveConnectManager {
 
   Future<bool> kickCoHost(ZegoUIKitUser coHost) async {
     ZegoLoggerService.logInfo(
-      'kick-out co-host ${coHost.toString()}',
+      'kick-out co-host $coHost',
       tag: 'live streaming',
       subTag: 'connect manager',
     );
@@ -208,7 +210,7 @@ class ZegoLiveConnectManager {
     final invitationType = ZegoInvitationTypeExtension.mapValue[type]!;
 
     ZegoLoggerService.logInfo(
-      'on invitation received, data:${inviter.toString()},'
+      'on invitation received, data:$inviter,'
       ' $type($invitationType) $data',
       tag: 'live streaming',
       subTag: 'connect manager',
@@ -343,7 +345,7 @@ class ZegoLiveConnectManager {
     final String data = params['data']!; // extended field
 
     ZegoLoggerService.logInfo(
-      'on invitation accepted, invitee:${invitee.toString()}, data:$data',
+      'on invitation accepted, invitee:$invitee, data:$data',
       tag: 'live streaming',
       subTag: 'connect manager',
     );
@@ -370,7 +372,7 @@ class ZegoLiveConnectManager {
     final String data = params['data']!; // extended field
 
     ZegoLoggerService.logInfo(
-      'on invitation canceled, data:${inviter.toString()}, $data',
+      'on invitation canceled, data:$inviter, $data',
       tag: 'live streaming',
       subTag: 'connect manager',
     );
@@ -387,7 +389,7 @@ class ZegoLiveConnectManager {
     final String data = params['data']!; // extended field
 
     ZegoLoggerService.logInfo(
-      'on invitation refused, data: $data, invitee:${invitee.toString()}',
+      'on invitation refused, data: $data, invitee:$invitee',
       tag: 'live streaming',
       subTag: 'connect manager',
     );
@@ -396,8 +398,9 @@ class ZegoLiveConnectManager {
       audienceIDsOfInvitingConnect.remove(invitee.id);
 
       showError(translationText.audienceRejectInvitationToast.replaceFirst(
-          translationText.param_1,
-          ZegoUIKit().getUser(invitee.id)?.name ?? ''));
+        translationText.param_1,
+        ZegoUIKit().getUser(invitee.id).name,
+      ));
     } else {
       showError(translationText.hostRejectCoHostRequestToast);
       updateAudienceConnectState(ConnectState.idle);
@@ -409,7 +412,7 @@ class ZegoLiveConnectManager {
     final String data = params['data']!; // extended field
 
     ZegoLoggerService.logInfo(
-      'on invitation timeout, data:${inviter.toString()}, $data',
+      'on invitation timeout, inviter:$inviter, data:$data',
       tag: 'live streaming',
       subTag: 'connect manager',
     );

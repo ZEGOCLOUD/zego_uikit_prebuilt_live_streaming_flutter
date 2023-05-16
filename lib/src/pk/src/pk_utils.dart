@@ -1,5 +1,6 @@
 part of 'pk_impl.dart';
 
+/// @nodoc
 extension ZegoLiveStreamingPKBattleUtils on ZegoLiveStreamingPKBattleManager {
   Future<void> _waitCompleter(String apiName) async {
     if (stateTrancformCompleter != null) {

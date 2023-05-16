@@ -6,7 +6,7 @@ import 'dart:core';
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:flutter_screenutil_zego/flutter_screenutil_zego.dart';
+import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/bottom_bar.dart';
@@ -16,16 +16,20 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_manager
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/top_bar.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/host_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/connect/live_duration_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/live_status_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/plugins.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/zego_uikit_prebuilt_live_streaming.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_controller.dart';
 
+/// @nodoc
 class ZegoLivePageSurface extends StatefulWidget {
   const ZegoLivePageSurface({
     Key? key,
     required this.config,
     required this.hostManager,
     required this.liveStatusManager,
+    required this.liveDurationManager,
     required this.popUpManager,
     required this.connectManager,
     this.plugins,
@@ -36,6 +40,7 @@ class ZegoLivePageSurface extends StatefulWidget {
 
   final ZegoLiveHostManager hostManager;
   final ZegoLiveStatusManager liveStatusManager;
+  final ZegoLiveDurationManager liveDurationManager;
   final ZegoPopUpManager popUpManager;
   final ZegoPrebuiltPlugins? plugins;
   final ZegoLiveConnectManager connectManager;
@@ -46,13 +51,14 @@ class ZegoLivePageSurface extends StatefulWidget {
   State<ZegoLivePageSurface> createState() => ZegoLivePageSurfaceState();
 }
 
+/// @nodoc
 class ZegoLivePageSurfaceState extends State<ZegoLivePageSurface>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<Offset> _animation;
 
   Timer? durationTimer;
-  DateTime? durationStartTime;
+  Duration? beginDuration;
   var durationNotifier = ValueNotifier<Duration>(Duration.zero);
 
   @override
@@ -75,12 +81,12 @@ class ZegoLivePageSurfaceState extends State<ZegoLivePageSurface>
         subTag: 'prebuilt',
       );
 
-      durationStartTime = DateTime.now();
-      durationTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-        durationNotifier.value = DateTime.now().difference(durationStartTime!);
-        widget.config.durationConfig.onDurationUpdate
-            ?.call(durationNotifier.value);
-      });
+      if (widget.liveDurationManager.isValid) {
+        startDurationTimer();
+      } else {
+        widget.liveDurationManager.notifier
+            .addListener(onLiveDurationManagerValueChanged);
+      }
     }
   }
 
@@ -135,7 +141,7 @@ class ZegoLivePageSurfaceState extends State<ZegoLivePageSurface>
         connectManager: widget.connectManager,
         popUpManager: widget.popUpManager,
         isLeaveRequestingNotifier: widget.controller?.isLeaveRequestingNotifier,
-        translationText: widget.config.translationText,
+        translationText: widget.config.innerText,
       ),
     );
   }
@@ -182,15 +188,21 @@ class ZegoLivePageSurfaceState extends State<ZegoLivePageSurface>
       child: ValueListenableBuilder<Duration>(
         valueListenable: durationNotifier,
         builder: (context, elapsedTime, _) {
-          return Text(
-            durationFormatString(elapsedTime),
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.white,
-              decoration: TextDecoration.none,
-              fontSize: 25.r,
-            ),
-          );
+          if (!widget.liveDurationManager.isValid) {
+            return Container();
+          }
+
+          return elapsedTime.inSeconds <= 0
+              ? Container()
+              : Text(
+                  durationFormatString(elapsedTime),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    decoration: TextDecoration.none,
+                    fontSize: 25.r,
+                  ),
+                );
         },
       ),
     );
@@ -206,5 +218,25 @@ class ZegoLivePageSurfaceState extends State<ZegoLivePageSurface>
     return hours > 0
         ? '${hours.toString().padLeft(2, '0')}:'
         : minutesFormatString;
+  }
+
+  void onLiveDurationManagerValueChanged() {
+    if (widget.liveDurationManager.isValid) {
+      startDurationTimer();
+    }
+  }
+
+  void startDurationTimer() {
+    ZegoUIKit().getNetworkTimeStamp().then((timestamp) {
+      beginDuration = DateTime.fromMillisecondsSinceEpoch(timestamp)
+          .difference(widget.liveDurationManager.notifier.value);
+
+      durationTimer?.cancel();
+      durationTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+        durationNotifier.value = beginDuration! + Duration(seconds: timer.tick);
+        widget.config.durationConfig.onDurationUpdate
+            ?.call(durationNotifier.value);
+      });
+    });
   }
 }

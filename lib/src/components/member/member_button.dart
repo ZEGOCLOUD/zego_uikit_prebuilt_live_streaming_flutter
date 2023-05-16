@@ -5,7 +5,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:flutter_screenutil_zego/flutter_screenutil_zego.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
@@ -13,8 +12,10 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/components/member/member_
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/host_manager.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/zego_uikit_prebuilt_live_streaming.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_inner_text.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/pk/src/pk_impl.dart';
 
+/// @nodoc
 class ZegoMemberButton extends StatefulWidget {
   const ZegoMemberButton({
     Key? key,
@@ -33,12 +34,13 @@ class ZegoMemberButton extends StatefulWidget {
   final ZegoLiveHostManager hostManager;
   final ZegoLiveConnectManager connectManager;
   final ZegoPopUpManager popUpManager;
-  final ZegoTranslationText translationText;
+  final ZegoInnerText translationText;
 
   @override
   State<ZegoMemberButton> createState() => _ZegoMemberButtonState();
 }
 
+/// @nodoc
 class _ZegoMemberButtonState extends State<ZegoMemberButton> {
   var redPointNotifier = ValueNotifier<bool>(false);
   var memberCountNotifier = ValueNotifier<int>(0);

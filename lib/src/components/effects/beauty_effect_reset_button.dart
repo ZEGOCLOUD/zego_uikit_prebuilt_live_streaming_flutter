@@ -2,12 +2,12 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:flutter_screenutil_zego/flutter_screenutil_zego.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
 
+/// @nodoc
 class ZegoBeautyEffectResetButton extends StatefulWidget {
   final ButtonIcon? icon;
   final Size? iconSize;
@@ -27,6 +27,7 @@ class ZegoBeautyEffectResetButton extends StatefulWidget {
       _ZegoBeautyEffectResetButtonState();
 }
 
+/// @nodoc
 class _ZegoBeautyEffectResetButtonState
     extends State<ZegoBeautyEffectResetButton> {
   @override

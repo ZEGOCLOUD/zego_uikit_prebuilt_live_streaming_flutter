@@ -2,16 +2,16 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:flutter_screenutil_zego/flutter_screenutil_zego.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/effects/effect_grid.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/zego_uikit_prebuilt_live_streaming.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_inner_text.dart';
 
+/// @nodoc
 class ZegoSoundEffectSheet extends StatefulWidget {
-  final ZegoTranslationText translationText;
+  final ZegoInnerText translationText;
   final bool rootNavigator;
 
   final List<VoiceChangerType> voiceChangerEffect;
@@ -34,6 +34,7 @@ class ZegoSoundEffectSheet extends StatefulWidget {
   State<ZegoSoundEffectSheet> createState() => _ZegoSoundEffectSheetState();
 }
 
+/// @nodoc
 class _ZegoSoundEffectSheetState extends State<ZegoSoundEffectSheet> {
   late ZegoEffectGridModel voiceChangerModel;
   late ZegoEffectGridModel reverbPresetModel;
@@ -241,7 +242,7 @@ class _ZegoSoundEffectSheetState extends State<ZegoSoundEffectSheet> {
 
 void showSoundEffectSheet(
   BuildContext context, {
-  required ZegoTranslationText translationText,
+  required ZegoInnerText translationText,
   required bool rootNavigator,
   required List<VoiceChangerType> voiceChangeEffect,
   required List<ReverbType> reverbEffect,

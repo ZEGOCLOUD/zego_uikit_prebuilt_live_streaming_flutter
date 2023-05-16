@@ -1,5 +1,6 @@
 part of 'pk_impl.dart';
 
+/// @nodoc
 extension ZegoLiveStreamingPKBattleManagerEventConv
     on ZegoLiveStreamingPKBattleManager {
   Stream<ZegoIncomingPKBattleRequestReceivedEvent>

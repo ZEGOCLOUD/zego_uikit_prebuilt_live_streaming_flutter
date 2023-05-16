@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:flutter_screenutil_zego/flutter_screenutil_zego.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
@@ -14,8 +13,10 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/connect/connect_manager.d
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/zego_uikit_prebuilt_live_streaming.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_inner_text.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/pk/src/pk_impl.dart';
 
+/// @nodoc
 class ZegoMemberListSheet extends StatefulWidget {
   const ZegoMemberListSheet({
     Key? key,
@@ -32,7 +33,7 @@ class ZegoMemberListSheet extends StatefulWidget {
   final ZegoLiveHostManager hostManager;
   final ZegoLiveConnectManager connectManager;
   final ZegoPopUpManager popUpManager;
-  final ZegoTranslationText translationText;
+  final ZegoInnerText translationText;
 
   final ZegoAvatarBuilder? avatarBuilder;
   final ZegoMemberListItemBuilder? itemBuilder;
@@ -41,6 +42,7 @@ class ZegoMemberListSheet extends StatefulWidget {
   State<ZegoMemberListSheet> createState() => _ZegoMemberListSheetState();
 }
 
+/// @nodoc
 class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
   @override
   void initState() {
@@ -500,6 +502,7 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
   }
 }
 
+/// @nodoc
 Future<void> showMemberListSheet({
   ZegoAvatarBuilder? avatarBuilder,
   ZegoMemberListItemBuilder? itemBuilder,
@@ -508,7 +511,7 @@ Future<void> showMemberListSheet({
   required ZegoLiveHostManager hostManager,
   required ZegoLiveConnectManager connectManager,
   required ZegoPopUpManager popUpManager,
-  required ZegoTranslationText translationText,
+  required ZegoInnerText translationText,
 }) async {
   final key = DateTime.now().millisecondsSinceEpoch;
   popUpManager.addAPopUpSheet(key);

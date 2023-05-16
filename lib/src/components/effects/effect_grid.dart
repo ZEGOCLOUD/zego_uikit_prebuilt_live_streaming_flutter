@@ -2,12 +2,9 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:flutter_screenutil_zego/flutter_screenutil_zego.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
-// Project imports:
-import 'package:zego_uikit_prebuilt_live_streaming/src/components/defines.dart';
-
+/// @nodoc
 class ZegoEffectGridItem<T> {
   String id;
   T effectType;
@@ -27,6 +24,7 @@ class ZegoEffectGridItem<T> {
   });
 }
 
+/// @nodoc
 class ZegoEffectGridModel {
   String title;
 
@@ -40,6 +38,7 @@ class ZegoEffectGridModel {
   });
 }
 
+/// @nodoc
 class ZegoEffectGrid extends StatefulWidget {
   const ZegoEffectGrid({
     Key? key,
@@ -62,6 +61,7 @@ class ZegoEffectGrid extends StatefulWidget {
   State<ZegoEffectGrid> createState() => _ZegoEffectGridState();
 }
 
+/// @nodoc
 class _ZegoEffectGridState extends State<ZegoEffectGrid> {
   TextStyle get gridItemTextStyle => TextStyle(
         fontSize: 24.r,

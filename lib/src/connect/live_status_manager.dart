@@ -13,7 +13,9 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/connect/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_defines.dart';
 
+/// @nodoc
 class ZegoLiveStatusManager {
   ZegoLiveConnectManager? connectManager;
   final ZegoLiveHostManager hostManager;
@@ -57,7 +59,9 @@ class ZegoLiveStatusManager {
 
       if (config.previewConfig.showPreviewForHost) {
         await ZegoUIKit().setRoomProperty(
-            RoomPropertyKey.liveStatus.text, LiveStatus.ended.index.toString());
+          RoomPropertyKey.liveStatus.text,
+          LiveStatus.notStart.index.toString(),
+        );
       } else {
         ZegoUIKit().setRoomProperty(
           RoomPropertyKey.liveStatus.text,
@@ -132,9 +136,8 @@ class ZegoLiveStatusManager {
     } else if (roomProperties.containsKey(RoomPropertyKey.liveStatus.text)) {
       /// live is start or end
       final liveStatusValue = roomProperties[RoomPropertyKey.liveStatus.text]!;
-      notifier.value = 1 == int.parse(liveStatusValue.value)
-          ? LiveStatus.living //  start: 1
-          : LiveStatus.ended; //  end: 0, empty, null or others
+      notifier.value = LiveStatus.values[
+          int.tryParse(liveStatusValue.value) ?? LiveStatus.notStart.index];
       ZegoLoggerService.logInfo(
         'update live status, value is $liveStatusValue, status is ${notifier.value}',
         tag: 'live streaming',

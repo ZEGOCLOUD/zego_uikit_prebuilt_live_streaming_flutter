@@ -11,6 +11,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/pk/src/pk_impl.dart';
 export 'defines.dart';
 export 'src/pk_impl.dart';
 
+/// @nodoc
 class ZegoUIKitPrebuiltLiveStreamingService {
   Future<ZegoLiveStreamingPKBattleResult> sendPKBattleRequest(
     String anotherHostUserID, {

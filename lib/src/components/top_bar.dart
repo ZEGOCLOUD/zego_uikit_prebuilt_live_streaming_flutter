@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:flutter_screenutil_zego/flutter_screenutil_zego.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
@@ -12,8 +11,9 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_manager
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_translation.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_inner_text.dart';
 
+/// @nodoc
 class ZegoTopBar extends StatefulWidget {
   final bool isPluginEnabled;
   final ZegoUIKitPrebuiltLiveStreamingConfig config;
@@ -23,7 +23,7 @@ class ZegoTopBar extends StatefulWidget {
 
   final ZegoLiveConnectManager connectManager;
   final ZegoPopUpManager popUpManager;
-  final ZegoTranslationText translationText;
+  final ZegoInnerText translationText;
 
   final ValueNotifier<bool>? isLeaveRequestingNotifier;
 
@@ -43,6 +43,7 @@ class ZegoTopBar extends StatefulWidget {
   State<ZegoTopBar> createState() => _ZegoTopBarState();
 }
 
+/// @nodoc
 class _ZegoTopBarState extends State<ZegoTopBar> {
   @override
   void initState() {

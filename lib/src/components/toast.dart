@@ -6,11 +6,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:flutter_screenutil_zego/flutter_screenutil_zego.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart' as styled_toast;
+import 'package:zego_uikit/zego_uikit.dart';
 
+/// @nodoc
 typedef ContextQuery = BuildContext Function();
 
+/// @nodoc
 class ZegoToast {
   ContextQuery? contextQuery;
 
@@ -43,20 +45,24 @@ class ZegoToast {
   }
 }
 
+/// @nodoc
 void showToast(String message) {
   ZegoToast.instance.show(message);
 }
 
+/// @nodoc
 void showDebugToast(String message) {
   if (kDebugMode) {
     ZegoToast.instance.show(message);
   }
 }
 
+/// @nodoc
 void showSuccess(String message) {
   ZegoToast.instance.show(message, backgroundColor: const Color(0xff55BC9E));
 }
 
+/// @nodoc
 void showError(String message) {
   ZegoToast.instance.show(message, backgroundColor: const Color(0xffBD5454));
 }

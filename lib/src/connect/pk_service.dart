@@ -1,6 +1,7 @@
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
 
+/// @nodoc
 class ZegoLiveStreamingPKService {
   void startWith(String roomID, String userID) {
     throw UnimplementedError();
@@ -27,6 +28,7 @@ class ZegoLiveStreamingPKService {
   }
 }
 
+/// @nodoc
 extension ZegoUIKitPKInvitation on ZegoLiveStreamingPKService {
   void sendInvitation(String userID) {
     throw UnimplementedError();
@@ -95,6 +97,7 @@ extension ZegoUIKitPKInvitation on ZegoLiveStreamingPKService {
   }
 }
 
+/// @nodoc
 class ZegoIncomingPKInvitationReceivedEvent {
   const ZegoIncomingPKInvitationReceivedEvent({
     required this.invitationID,
@@ -115,6 +118,7 @@ class ZegoIncomingPKInvitationReceivedEvent {
       'extendedData: $extendedData}';
 }
 
+/// @nodoc
 class ZegoIncomingPKInvitationCancelledEvent {
   const ZegoIncomingPKInvitationCancelledEvent({
     required this.invitationID,
@@ -132,6 +136,7 @@ class ZegoIncomingPKInvitationCancelledEvent {
       'extendedData: $extendedData}';
 }
 
+/// @nodoc
 class ZegoOutgoingPKInvitationAcceptedEvent {
   const ZegoOutgoingPKInvitationAcceptedEvent({
     required this.invitationID,
@@ -149,6 +154,7 @@ class ZegoOutgoingPKInvitationAcceptedEvent {
       'extendedData: $extendedData}';
 }
 
+/// @nodoc
 class ZegoOutgoingPKInvitationRejectedEvent {
   const ZegoOutgoingPKInvitationRejectedEvent({
     required this.invitationID,
@@ -166,6 +172,7 @@ class ZegoOutgoingPKInvitationRejectedEvent {
       'extendedData: $extendedData}';
 }
 
+/// @nodoc
 class ZegoIncomingPKInvitationTimeoutEvent {
   const ZegoIncomingPKInvitationTimeoutEvent({required this.invitationID});
 
@@ -175,6 +182,7 @@ class ZegoIncomingPKInvitationTimeoutEvent {
   String toString() => '{invitationID: $invitationID}';
 }
 
+/// @nodoc
 class ZegoOutgoingPKInvitationTimeoutEvent {
   const ZegoOutgoingPKInvitationTimeoutEvent({
     required this.invitationID,
@@ -188,18 +196,26 @@ class ZegoOutgoingPKInvitationTimeoutEvent {
   String toString() => '{invitationID: $invitationID, invitees: $invitees}';
 }
 
+/// @nodoc
 class ZegoIncomingPKInvitationAcceptedEvent {}
 
+/// @nodoc
 class ZegoIncomingPKInvitationRejectedEvent {}
 
+/// @nodoc
 class ZegoOutgoingPKInvitationSendedEvent {}
 
+/// @nodoc
 class ZegoOutgoingPKInvitationCanceledEvent {}
 
+/// @nodoc
 class ZegoPKStartedEvent {}
 
+/// @nodoc
 class ZegoPKEndedEvent {}
 
+/// @nodoc
 class ZegoPKViewAvaliableEvent {}
 
+/// @nodoc
 class ZegoPKRelayCDNStateUpdateEvent {}

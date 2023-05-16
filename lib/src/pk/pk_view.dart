@@ -6,13 +6,13 @@ import 'dart:core';
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:flutter_screenutil_zego/flutter_screenutil_zego.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/pk/src/pk_impl.dart';
 
+/// @nodoc
 class ZegoLiveStreamingPKBattleView extends StatefulWidget {
   const ZegoLiveStreamingPKBattleView({
     required this.constraints,
@@ -29,6 +29,7 @@ class ZegoLiveStreamingPKBattleView extends StatefulWidget {
       _ZegoLiveStreamingPKBattleViewState();
 }
 
+/// @nodoc
 class _ZegoLiveStreamingPKBattleViewState
     extends State<ZegoLiveStreamingPKBattleView> {
   List<StreamSubscription<dynamic>> subscriptions = [];

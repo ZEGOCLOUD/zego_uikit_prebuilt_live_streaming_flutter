@@ -4,7 +4,6 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:flutter_screenutil_zego/flutter_screenutil_zego.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
@@ -14,8 +13,9 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_sheet_m
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_translation.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_inner_text.dart';
 
+/// @nodoc
 class ZegoAudioVideoForeground extends StatelessWidget {
   final Size size;
   final ZegoUIKitUser? user;
@@ -24,7 +24,7 @@ class ZegoAudioVideoForeground extends StatelessWidget {
   final ZegoLiveHostManager hostManager;
   final ZegoLiveConnectManager connectManager;
   final ZegoPopUpManager popUpManager;
-  final ZegoTranslationText translationText;
+  final ZegoInnerText translationText;
 
   final bool showMicrophoneStateOnView;
   final bool showCameraStateOnView;

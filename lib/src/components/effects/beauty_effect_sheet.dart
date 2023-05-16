@@ -2,17 +2,17 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:flutter_screenutil_zego/flutter_screenutil_zego.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/effects/beauty_effect_reset_button.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/effects/effect_grid.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/zego_uikit_prebuilt_live_streaming.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_inner_text.dart';
 
+/// @nodoc
 class ZegoBeautyEffectSheet extends StatefulWidget {
-  final ZegoTranslationText translationText;
+  final ZegoInnerText translationText;
   final bool rootNavigator;
   final List<BeautyEffectType> beautyEffects;
 
@@ -27,18 +27,25 @@ class ZegoBeautyEffectSheet extends StatefulWidget {
   State<ZegoBeautyEffectSheet> createState() => _ZegoBeautyEffectSheetState();
 }
 
+/// @nodoc
 double get _besHeaderHeight => 98.r;
 
+/// @nodoc
 double get _besSliderHeight => 32.r;
 
+/// @nodoc
 double get _besSliderPadding => 43.r;
 
+/// @nodoc
 double get _besSheetTotalHeight => 317.r;
 
+/// @nodoc
 double get _besLineToSheetPadding => 36.r;
 
+/// @nodoc
 double get _besLineHeight => 1.r;
 
+/// @nodoc
 class _ZegoBeautyEffectSheetState extends State<ZegoBeautyEffectSheet> {
   late ZegoEffectGridModel beauty;
   var selectedIDNotifier = ValueNotifier<String>('');
@@ -229,9 +236,10 @@ class _ZegoBeautyEffectSheetState extends State<ZegoBeautyEffectSheet> {
   }
 }
 
+/// @nodoc
 void showBeautyEffectSheet(
   BuildContext context, {
-  required ZegoTranslationText translationText,
+  required ZegoInnerText translationText,
   required bool rootNavigator,
   required List<BeautyEffectType> beautyEffects,
 }) {

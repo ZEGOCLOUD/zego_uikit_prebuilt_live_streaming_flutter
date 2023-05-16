@@ -5,7 +5,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:flutter_screenutil_zego/flutter_screenutil_zego.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
@@ -13,8 +12,9 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/components/message/define
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/message/in_room_message_input_board.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/zego_uikit_prebuilt_live_streaming.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_inner_text.dart';
 
+/// @nodoc
 class ZegoInRoomMessageButton extends StatefulWidget {
   final ZegoLiveHostManager hostManager;
   final ButtonIcon? enabledIcon;
@@ -23,7 +23,7 @@ class ZegoInRoomMessageButton extends StatefulWidget {
   final Size? buttonSize;
   final Function(int)? onSheetPopUp;
   final Function(int)? onSheetPop;
-  final ZegoTranslationText translationText;
+  final ZegoInnerText translationText;
 
   const ZegoInRoomMessageButton({
     Key? key,
@@ -42,6 +42,7 @@ class ZegoInRoomMessageButton extends StatefulWidget {
       _ZegoInRoomMessageButtonState();
 }
 
+/// @nodoc
 class _ZegoInRoomMessageButtonState extends State<ZegoInRoomMessageButton> {
   var isMessageInputting = false;
   var chatEnableNotifier = ValueNotifier<bool>(true);

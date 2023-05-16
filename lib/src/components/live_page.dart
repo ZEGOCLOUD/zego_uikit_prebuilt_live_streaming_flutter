@@ -6,7 +6,7 @@ import 'dart:core';
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:flutter_screenutil_zego/flutter_screenutil_zego.dart';
+import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/audio_video_view_foreground.dart';
@@ -14,12 +14,16 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/components/live_page_surf
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/host_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/connect/live_duration_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/live_status_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/plugins.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_controller.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/pk/pk_view.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/zego_uikit_prebuilt_live_streaming.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/pk/src/pk_impl.dart';
 
+/// @nodoc
 /// user and sdk should be login and init before page enter
 class ZegoLivePage extends StatefulWidget {
   const ZegoLivePage({
@@ -32,6 +36,7 @@ class ZegoLivePage extends StatefulWidget {
     required this.config,
     required this.hostManager,
     required this.liveStatusManager,
+    required this.liveDurationManager,
     required this.popUpManager,
     this.plugins,
     this.controller,
@@ -49,6 +54,7 @@ class ZegoLivePage extends StatefulWidget {
 
   final ZegoLiveHostManager hostManager;
   final ZegoLiveStatusManager liveStatusManager;
+  final ZegoLiveDurationManager liveDurationManager;
   final ZegoPopUpManager popUpManager;
   final ZegoPrebuiltPlugins? plugins;
 
@@ -58,6 +64,7 @@ class ZegoLivePage extends StatefulWidget {
   State<ZegoLivePage> createState() => ZegoLivePageState();
 }
 
+/// @nodoc
 class ZegoLivePageState extends State<ZegoLivePage>
     with SingleTickerProviderStateMixin {
   /// had sort the host be first
@@ -81,7 +88,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
       config: widget.config,
       hostManager: widget.hostManager,
       liveStatusNotifier: widget.liveStatusManager.notifier,
-      translationText: widget.config.translationText,
+      translationText: widget.config.innerText,
       contextQuery: () {
         return context;
       },
@@ -164,6 +171,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
                             config: widget.config,
                             hostManager: widget.hostManager,
                             liveStatusManager: widget.liveStatusManager,
+                            liveDurationManager: widget.liveDurationManager,
                             popUpManager: widget.popUpManager,
                             connectManager: connectManager,
                             controller: widget.controller,
@@ -244,12 +252,12 @@ class ZegoLivePageState extends State<ZegoLivePage>
   Widget backgroundTips() {
     return ValueListenableBuilder(
       valueListenable: widget.liveStatusManager.notifier,
-      builder: (BuildContext context, LiveStatus value, Widget? child) {
-        return LiveStatus.living == value
+      builder: (BuildContext context, LiveStatus liveStatus, Widget? child) {
+        return LiveStatus.living == liveStatus
             ? Container()
             : Center(
                 child: Text(
-                  widget.config.translationText.noHostOnline,
+                  widget.config.innerText.noHostOnline,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 32.r,
@@ -489,7 +497,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
                 hostManager: widget.hostManager,
                 connectManager: connectManager,
                 popUpManager: widget.popUpManager,
-                translationText: widget.config.translationText,
+                translationText: widget.config.innerText,
                 isPluginEnabled: widget.plugins?.isEnabled ?? false,
                 //  only show if close
                 showMicrophoneStateOnView: !isMicrophoneEnabled,

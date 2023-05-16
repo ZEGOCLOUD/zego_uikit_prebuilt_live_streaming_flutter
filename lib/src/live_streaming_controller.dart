@@ -1,5 +1,7 @@
-// Package imports:
+// Flutter imports:
 import 'package:flutter/cupertino.dart';
+
+// Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
@@ -9,14 +11,23 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dar
 
 part 'package:zego_uikit_prebuilt_live_streaming/src/internal/controller_p.dart';
 
+/// Used to control the live streaming functionality.
+/// If the default live streaming UI and interactions do not meet your requirements, you can use this [ZegoUIKitPrebuiltLiveStreamingController] to actively control the business logic.
+/// This class is used by setting the [controller] parameter in the constructor of [ZegoUIKitPrebuiltLiveStreaming].
 class ZegoUIKitPrebuiltLiveStreamingController
     with ZegoUIKitPrebuiltLiveStreamingControllerPrivate {
+  /// This function is used to specify whether a certain user enters or exits full-screen mode during screen sharing.
+  /// You need to provide the user's ID [userID] to determine which user to perform the operation on.
+  /// By using a boolean value [isFullscreen], you can specify whether the user enters or exits full-screen mode.
   void showScreenSharingViewInFullscreenMode(String userID, bool isFullscreen) {
     screenSharingViewController.showScreenSharingViewInFullscreenMode(
         userID, isFullscreen);
   }
 
-  /// actively leave the current live
+  /// This function is used to end the Live Streaming.
+  /// You can pass the context [context] for any necessary pop-ups or page transitions.
+  /// By using the [showConfirmation] parameter, you can control whether to display a confirmation dialog to confirm ending the Live Streaming.
+  /// This function behaves the same as the close button in the calling interface's top right corner, and it is also affected by the [onLeaveConfirmation], [onLiveStreamingEnded] and [onLeaveLiveStreaming] settings in the config.
   Future<bool> leave(
     BuildContext context, {
     bool showConfirmation = false,

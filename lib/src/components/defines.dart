@@ -2,16 +2,19 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:flutter_screenutil_zego/flutter_screenutil_zego.dart';
+import 'package:zego_uikit/zego_uikit.dart';
 
-// size
+/// @nodoc
 Size get zegoLiveButtonSize => Size(72.r, 72.r);
 
+/// @nodoc
 Size get zegoLiveButtonIconSize => Size(40.r, 40.r);
 
+/// @nodoc
 SizedBox get zegoLiveButtonPadding =>
     SizedBox.fromSize(size: Size.fromRadius(8.r));
 
+/// @nodoc
 enum PopupItemValue {
   inviteConnect,
   kickCoHost,
@@ -19,6 +22,7 @@ enum PopupItemValue {
   cancel,
 }
 
+/// @nodoc
 class PopupItem {
   final PopupItemValue value;
   final String text;
@@ -26,6 +30,7 @@ class PopupItem {
   const PopupItem(this.value, this.text);
 }
 
+/// @nodoc
 bool isRTL(BuildContext context) {
   return Directionality.of(context) == TextDirection.rtl;
 }

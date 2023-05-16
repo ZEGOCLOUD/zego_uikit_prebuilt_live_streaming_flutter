@@ -1,6 +1,7 @@
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
 
+/// @nodoc
 class ZegoPopUpManager {
   final List<int> _popupSheetKeys = [];
 

@@ -9,6 +9,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/connect/host_manager.dart
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
 
+/// @nodoc
 class ZegoLeaveStreamingButton extends StatefulWidget {
   final ButtonIcon? icon;
 
@@ -39,6 +40,7 @@ class ZegoLeaveStreamingButton extends StatefulWidget {
       ZegoLeaveStreamingButtonState();
 }
 
+/// @nodoc
 class ZegoLeaveStreamingButtonState extends State<ZegoLeaveStreamingButton> {
   final hangupButtonClickableNotifier = ValueNotifier<bool>(true);
 

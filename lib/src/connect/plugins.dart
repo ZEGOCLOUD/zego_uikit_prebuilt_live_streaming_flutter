@@ -10,12 +10,14 @@ import 'package:zego_uikit/zego_uikit.dart';
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/toast.dart';
 
+/// @nodoc
 enum PluginNetworkState {
   unknown,
   offline,
   online,
 }
 
+/// @nodoc
 class ZegoPrebuiltPlugins {
   ZegoPrebuiltPlugins({
     required this.appID,
@@ -199,7 +201,7 @@ class ZegoPrebuiltPlugins {
     if (ZegoPluginAdapter().getPlugin(ZegoUIKitPluginType.beauty) != null) {
       await ZegoUIKit().getBeautyPlugin().uninit();
     }
-    
+
     for (final streamSubscription in subscriptions) {
       streamSubscription?.cancel();
     }
@@ -211,7 +213,7 @@ class ZegoPrebuiltPlugins {
     ZegoLoggerService.logInfo(
       'on user info update, '
       'target user($userID, $userName), '
-      'local user:(${localUser.toString()}) '
+      'local user:($localUser) '
       'initialized:$initialized, '
       'user state:${pluginUserStateNotifier.value}'
       'room state:${roomStateNotifier.value}',

@@ -1,11 +1,11 @@
 // Dart imports:
 import 'dart:core';
+import 'dart:math' as math; // import this
 
 // Flutter imports:
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:flutter_screenutil_zego/flutter_screenutil_zego.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
@@ -16,8 +16,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/connect/host_manager.dart
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
 
-import 'dart:math' as math; // import this
-
+/// @nodoc
 /// user should be login before page enter
 class ZegoPreviewPage extends StatefulWidget {
   const ZegoPreviewPage({
@@ -55,6 +54,7 @@ class ZegoPreviewPage extends StatefulWidget {
   State<ZegoPreviewPage> createState() => _ZegoPreviewPageState();
 }
 
+/// @nodoc
 class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
   @override
   void initState() {
@@ -198,7 +198,7 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ZegoBeautyEffectButton(
-              translationText: widget.liveStreamingConfig.translationText,
+              translationText: widget.liveStreamingConfig.innerText,
               rootNavigator: widget.liveStreamingConfig.rootNavigator,
               beautyEffects:
                   widget.liveStreamingConfig.effectConfig.beautyEffects,
@@ -226,7 +226,7 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
           checkPermissions(
             context: context,
             isShowDialog: true,
-            translationText: widget.liveStreamingConfig.translationText,
+            translationText: widget.liveStreamingConfig.innerText,
             rootNavigator: widget.liveStreamingConfig.rootNavigator,
           ).then((value) {
             if (!widget.liveStreamingPageReady.value) {
@@ -246,7 +246,7 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
             checkPermissions(
               context: context,
               isShowDialog: true,
-              translationText: widget.liveStreamingConfig.translationText,
+              translationText: widget.liveStreamingConfig.innerText,
               rootNavigator: widget.liveStreamingConfig.rootNavigator,
             ).then((value) {
               if (!widget.liveStreamingPageReady.value) {
@@ -274,8 +274,7 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
             child: Align(
               alignment: Alignment.center,
               child: Text(
-                widget.liveStreamingConfig.translationText
-                    .startLiveStreamingButton,
+                widget.liveStreamingConfig.innerText.startLiveStreamingButton,
                 style: TextStyle(
                   fontSize: 32.r,
                   fontWeight: FontWeight.w600,

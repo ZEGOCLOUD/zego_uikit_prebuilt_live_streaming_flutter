@@ -4,8 +4,10 @@ import 'package:flutter/services.dart';
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
 
+/// @nodoc
 typedef ZegoDefaultAction = void Function();
 
+/// @nodoc
 class ZegoLiveStreamingPKBattleEvents {
   void Function(
     ZegoIncomingPKBattleRequestReceivedEvent event,
@@ -53,11 +55,13 @@ class ZegoLiveStreamingPKBattleEvents {
   });
 }
 
+/// @nodoc
 enum ZegoPKBattleRequestSubType {
   start,
   stop,
 }
 
+/// @nodoc
 class ZegoIncomingPKBattleRequestReceivedEvent {
   const ZegoIncomingPKBattleRequestReceivedEvent({
     required this.anotherHost,
@@ -100,6 +104,7 @@ class ZegoIncomingPKBattleRequestCancelledEvent {
       'customData: $customData}';
 }
 
+/// @nodoc
 class ZegoOutgoingPKBattleRequestAcceptedEvent {
   const ZegoOutgoingPKBattleRequestAcceptedEvent({
     required this.requestID,
@@ -120,6 +125,7 @@ class ZegoOutgoingPKBattleRequestAcceptedEvent {
       'subType: $subType}';
 }
 
+/// @nodoc
 class ZegoOutgoingPKBattleRequestRejectedEvent {
   const ZegoOutgoingPKBattleRequestRejectedEvent({
     required this.requestID,
@@ -140,6 +146,7 @@ class ZegoOutgoingPKBattleRequestRejectedEvent {
       'subType: $subType}';
 }
 
+/// @nodoc
 class ZegoIncomingPKBattleRequestTimeoutEvent {
   const ZegoIncomingPKBattleRequestTimeoutEvent({
     required this.requestID,
@@ -156,6 +163,7 @@ class ZegoIncomingPKBattleRequestTimeoutEvent {
       'anotherHost: ${anotherHost.id}(${anotherHost.name})}';
 }
 
+/// @nodoc
 class ZegoOutgoingPKBattleRequestTimeoutEvent {
   const ZegoOutgoingPKBattleRequestTimeoutEvent({
     required this.requestID,
@@ -170,6 +178,7 @@ class ZegoOutgoingPKBattleRequestTimeoutEvent {
       'anotherHost: ${anotherHost.id}(${anotherHost.name})}';
 }
 
+/// @nodoc
 class ZegoLiveStreamingPKBattleResult {
   const ZegoLiveStreamingPKBattleResult({
     this.error,
@@ -181,6 +190,7 @@ class ZegoLiveStreamingPKBattleResult {
   String toString() => '{error: $error}';
 }
 
+/// @nodoc
 enum ZegoLiveStreamingPKBattleRejectCode {
   /// 0:
   /// the invited host rejects your PK request.

@@ -7,11 +7,12 @@ import 'package:permission_handler/permission_handler.dart';
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/dialogs.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_defines.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_translation.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_inner_text.dart';
 
+/// @nodoc
 Future<void> checkPermissions({
   required BuildContext context,
-  required ZegoTranslationText translationText,
+  required ZegoInnerText translationText,
   required bool rootNavigator,
   bool isShowDialog = false,
 }) async {
@@ -40,9 +41,10 @@ Future<void> checkPermissions({
   });
 }
 
+/// @nodoc
 Future<void> requestPermissions({
   required BuildContext context,
-  required ZegoTranslationText translationText,
+  required ZegoInnerText translationText,
   required bool rootNavigator,
   bool isShowDialog = false,
 }) async {
@@ -72,6 +74,7 @@ Future<void> requestPermissions({
   });
 }
 
+/// @nodoc
 Future<bool> showAppSettingsDialog({
   required BuildContext context,
   required ZegoDialogInfo dialogInfo,

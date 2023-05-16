@@ -2,9 +2,9 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:flutter_screenutil_zego/flutter_screenutil_zego.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
+/// @nodoc
 class ZegoInRoomLiveCommentingViewItem extends StatelessWidget {
   const ZegoInRoomLiveCommentingViewItem({
     Key? key,

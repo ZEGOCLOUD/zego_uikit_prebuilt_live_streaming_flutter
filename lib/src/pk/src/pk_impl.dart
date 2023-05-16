@@ -8,20 +8,26 @@ import 'package:flutter/services.dart';
 
 // Package imports:
 import 'package:zego_express_engine/zego_express_engine.dart';
+import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/dialogs.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_defines.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_inner_text.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/pk/pk_event_default_actions.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/zego_uikit_prebuilt_live_streaming.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/pk/pk_service.dart';
 
 part 'pk_event_conv.dart';
 
 part 'pk_utils.dart';
 
+/// @nodoc
 class ZegoLiveStreamingPKBattleManager {
-  late ZegoTranslationText translationText;
+  late ZegoInnerText translationText;
   late BuildContext Function() contextQuery;
   late ZegoUIKitPrebuiltLiveStreamingConfig config;
   late ZegoLiveHostManager hostManager;
@@ -54,7 +60,7 @@ class ZegoLiveStreamingPKBattleManager {
 
   void init({
     required ZegoUIKitPrebuiltLiveStreamingConfig config,
-    required ZegoTranslationText translationText,
+    required ZegoInnerText translationText,
     required BuildContext Function() contextQuery,
     required ZegoLiveHostManager hostManager,
     required ValueNotifier<LiveStatus> liveStatusNotifier,

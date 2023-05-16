@@ -4,7 +4,6 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:flutter_screenutil_zego/flutter_screenutil_zego.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
@@ -13,9 +12,10 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/connect/connect_manager.d
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_translation.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_inner_text.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/pk/pk_service.dart';
 
+/// @nodoc
 class ZegoCoHostControlButton extends StatefulWidget {
   const ZegoCoHostControlButton({
     Key? key,
@@ -32,7 +32,7 @@ class ZegoCoHostControlButton extends StatefulWidget {
 
   final ZegoLiveHostManager hostManager;
   final ZegoLiveConnectManager connectManager;
-  final ZegoTranslationText translationText;
+  final ZegoInnerText translationText;
 
   final ButtonIcon? requestCoHostButtonIcon;
   final ButtonIcon? cancelRequestCoHostButtonIcon;
@@ -46,6 +46,7 @@ class ZegoCoHostControlButton extends StatefulWidget {
       _ZegoCoHostControlButtonState();
 }
 
+/// @nodoc
 class _ZegoCoHostControlButtonState extends State<ZegoCoHostControlButton> {
   bool get hostExist =>
       widget.hostManager.notifier.value?.id.isNotEmpty ?? false;

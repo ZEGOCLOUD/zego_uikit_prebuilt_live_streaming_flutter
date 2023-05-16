@@ -1,3 +1,18 @@
+## 2.5.10
+- Update dependencies
+
+## 2.5.9
+- Update comments
+
+## 2.5.8
+- Update dependencies
+
+## 2.5.7
+- switch from local timing to server-based timing for the live broadcast. additionally, if the live starts again, the timer will reset.
+
+## 2.5.6
+- deprecate flutter_screenutil_zego package
+
 ## 2.5.5
 - supports specifying extend button position in the bottom bar by an index, allowing it to be positioned before the built-in button.
 

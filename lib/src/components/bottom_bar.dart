@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:flutter_screenutil_zego/flutter_screenutil_zego.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
@@ -18,8 +17,11 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/connect/connect_manager.d
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/zego_uikit_prebuilt_live_streaming.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_defines.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/pk/src/pk_impl.dart';
 
+/// @nodoc
 class ZegoBottomBar extends StatefulWidget {
   final ZegoUIKitPrebuiltLiveStreamingConfig config;
   final Size buttonSize;
@@ -49,6 +51,7 @@ class ZegoBottomBar extends StatefulWidget {
   State<ZegoBottomBar> createState() => _ZegoBottomBarState();
 }
 
+/// @nodoc
 class _ZegoBottomBarState extends State<ZegoBottomBar> {
   List<ZegoMenuBarButtonName> buttons = [];
   List<ZegoMenuBarExtendButton> extendButtons = [];
@@ -136,7 +139,7 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
           children: [
             zegoLiveButtonPadding,
             ZegoInRoomMessageButton(
-              translationText: widget.config.translationText,
+              translationText: widget.config.innerText,
               hostManager: widget.hostManager,
               onSheetPopUp: (int key) {
                 widget.popUpManager.addAPopUpSheet(key);
@@ -221,8 +224,8 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
     }
 
     /// sort
-    final entries = unsortedExtendIndexesWithButton.entries.toList();
-    entries.sort((a, b) => a.key.compareTo(b.key));
+    final entries = unsortedExtendIndexesWithButton.entries.toList()
+      ..sort((a, b) => a.key.compareTo(b.key));
     final sortedExtendIndexesWithButton = Map<int, Widget>.fromEntries(entries);
 
     /// insert
@@ -326,7 +329,7 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
             final textSize = getTextSize(
               widget.config.bottomMenuBarConfig.buttonStyle
                       ?.requestCoHostButtonText ??
-                  widget.config.translationText.requestCoHostButton,
+                  widget.config.innerText.requestCoHostButton,
               coHostButtonTextStyle,
             );
             buttonSize = Size(
@@ -340,7 +343,7 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
             final textSize = getTextSize(
               widget.config.bottomMenuBarConfig.buttonStyle
                       ?.cancelRequestCoHostButtonText ??
-                  widget.config.translationText.cancelRequestCoHostButton,
+                  widget.config.innerText.cancelRequestCoHostButton,
               coHostButtonTextStyle,
             );
             buttonSize = Size(
@@ -354,7 +357,7 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
             final textSize = getTextSize(
               widget.config.bottomMenuBarConfig.buttonStyle
                       ?.endCoHostButtonText ??
-                  widget.config.translationText.endCoHostButton,
+                  widget.config.innerText.endCoHostButton,
               coHostButtonTextStyle,
             );
             buttonSize = Size(
@@ -527,7 +530,7 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
         );
       case ZegoMenuBarButtonName.beautyEffectButton:
         return ZegoBeautyEffectButton(
-          translationText: widget.config.translationText,
+          translationText: widget.config.innerText,
           rootNavigator: widget.config.rootNavigator,
           beautyEffects: widget.config.effectConfig.beautyEffects,
           buttonSize: buttonSize,
@@ -539,7 +542,7 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
         );
       case ZegoMenuBarButtonName.soundEffectButton:
         return ZegoSoundEffectButton(
-          translationText: widget.config.translationText,
+          translationText: widget.config.innerText,
           rootNavigator: widget.config.rootNavigator,
           voiceChangeEffect: widget.config.effectConfig.voiceChangeEffect,
           reverbEffect: widget.config.effectConfig.reverbEffect,
@@ -554,7 +557,7 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
         return ZegoCoHostControlButton(
           hostManager: widget.hostManager,
           connectManager: widget.connectManager,
-          translationText: widget.config.translationText,
+          translationText: widget.config.innerText,
           requestCoHostButtonIcon: ButtonIcon(
             icon: widget.config.bottomMenuBarConfig.buttonStyle
                 ?.requestCoHostButtonIcon,
@@ -604,7 +607,7 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
       case ZegoMenuBarButtonName.chatButton:
         if (widget.config.bottomMenuBarConfig.showInRoomMessageButton) {
           return ZegoInRoomMessageButton(
-            translationText: widget.config.translationText,
+            translationText: widget.config.innerText,
             hostManager: widget.hostManager,
             onSheetPopUp: (int key) {
               widget.popUpManager.addAPopUpSheet(key);

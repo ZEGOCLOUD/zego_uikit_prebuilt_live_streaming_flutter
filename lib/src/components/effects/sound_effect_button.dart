@@ -2,14 +2,14 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:flutter_screenutil_zego/flutter_screenutil_zego.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/effects/sound_effect_sheet.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/zego_uikit_prebuilt_live_streaming.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_inner_text.dart';
 
+/// @nodoc
 class ZegoSoundEffectButton extends StatefulWidget {
   final List<VoiceChangerType> voiceChangeEffect;
   final List<ReverbType> reverbEffect;
@@ -17,7 +17,7 @@ class ZegoSoundEffectButton extends StatefulWidget {
   final Size? iconSize;
   final Size? buttonSize;
   final ButtonIcon? icon;
-  final ZegoTranslationText translationText;
+  final ZegoInnerText translationText;
   final bool rootNavigator;
 
   const ZegoSoundEffectButton({
@@ -35,6 +35,7 @@ class ZegoSoundEffectButton extends StatefulWidget {
   State<ZegoSoundEffectButton> createState() => _ZegoSoundEffectButtonState();
 }
 
+/// @nodoc
 class _ZegoSoundEffectButtonState extends State<ZegoSoundEffectButton> {
   var voiceChangerSelectedIDNotifier = ValueNotifier<String>('');
   var reverbSelectedIDNotifier = ValueNotifier<String>('');

@@ -5,15 +5,16 @@ import 'package:flutter/material.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
-import 'package:zego_uikit_prebuilt_live_streaming/zego_uikit_prebuilt_live_streaming.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_inner_text.dart';
 
+/// @nodoc
 class ZegoInRoomMessageInputBoard extends ModalRoute<String> {
   ZegoInRoomMessageInputBoard({
     required this.translationText,
     required this.rootNavigator,
   }) : super();
 
-  final ZegoTranslationText translationText;
+  final ZegoInnerText translationText;
   final bool rootNavigator;
 
   @override

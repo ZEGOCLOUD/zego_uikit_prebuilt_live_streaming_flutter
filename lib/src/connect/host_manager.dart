@@ -11,7 +11,9 @@ import 'package:zego_uikit/zego_uikit.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_defines.dart';
 
+/// @nodoc
 class ZegoLiveHostManager {
   ZegoLiveConnectManager? connectManager;
   final ZegoUIKitPrebuiltLiveStreamingConfig config;
@@ -49,7 +51,7 @@ class ZegoLiveHostManager {
 
     if (configIsHost) {
       ZegoLoggerService.logInfo(
-        'local user ${ZegoUIKit().getLocalUser().toString()} is host in config',
+        'local user ${ZegoUIKit().getLocalUser()} is host in config',
         tag: 'live streaming',
         subTag: 'host manager',
       );
@@ -109,9 +111,9 @@ class ZegoLiveHostManager {
       );
 
       final host = ZegoUIKit().getUser(pendingHostID);
-      if (host != null && !host.isEmpty()) {
+      if (!host.isEmpty()) {
         ZegoLoggerService.logInfo(
-          'host updated, ${host.toString()}',
+          'host updated, $host',
           tag: 'live streaming',
           subTag: 'host manager',
         );
@@ -189,12 +191,12 @@ class ZegoLiveHostManager {
       }
     } else if (notifier.value?.id != hostIDProperty.value) {
       ZegoLoggerService.logInfo(
-        'update host to be: ${hostIDProperty.toString()}',
+        'update host to be: $hostIDProperty',
         tag: 'live streaming',
         subTag: 'host manager',
       );
       final host = ZegoUIKit().getUser(hostIDProperty.value);
-      if ((host == null || host.isEmpty()) && hostIDProperty.value.isNotEmpty) {
+      if (host.isEmpty() && hostIDProperty.value.isNotEmpty) {
         ZegoLoggerService.logInfo(
           '$hostIDProperty user is not exist, host will be wait update util user list update',
           tag: 'live streaming',
@@ -202,7 +204,7 @@ class ZegoLiveHostManager {
         );
         pendingHostID = hostIDProperty.value;
       } else {
-        if (host?.id != notifier.value?.id &&
+        if (host.id != notifier.value?.id &&
             notifier.value?.id == ZegoUIKit().getLocalUser().id) {
           /// local host, change by new host, switch to audience
           connectManager?.updateAudienceConnectState(ConnectState.connecting);
@@ -221,7 +223,7 @@ class ZegoLiveHostManager {
   void updateHostValue(ZegoUIKitUser? host) {
     if (hostUpdateEnabledNotifier.value) {
       ZegoLoggerService.logInfo(
-        'host updated, ${host?.toString()}',
+        'host updated, $host',
         tag: 'live streaming',
         subTag: 'host manager',
       );
@@ -236,7 +238,7 @@ class ZegoLiveHostManager {
     } else {
       /// in host ready to end, host should not update, otherwise host condition will failed
       ZegoLoggerService.logInfo(
-        'host update disabled, ${host?.toString()}',
+        'host update disabled, $host',
         tag: 'live streaming',
         subTag: 'host manager',
       );

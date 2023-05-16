@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:permission_handler/permission_handler.dart';
+import 'package:zego_uikit/zego_uikit.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/dialogs.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/live_page.dart';
@@ -16,10 +18,18 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_manager
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/preview_page.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/toast.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/host_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/connect/live_duration_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/live_status_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/plugins.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/zego_uikit_prebuilt_live_streaming.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_controller.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_defines.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/pk/src/pk_impl.dart';
 
+/// Live Streaming Widget.
+/// You can embed this widget into any page of your project to integrate the functionality of a live streaming.
+/// You can refer to our [documentation](https://docs.zegocloud.com/article/14846),[documentation with cohosting](https://docs.zegocloud.com/article/14882)
+/// or our [sample code](https://github.com/ZEGOCLOUD/zego_uikit_prebuilt_live_streaming_example_flutter).
 class ZegoUIKitPrebuiltLiveStreaming extends StatefulWidget {
   const ZegoUIKitPrebuiltLiveStreaming({
     Key? key,
@@ -34,35 +44,46 @@ class ZegoUIKitPrebuiltLiveStreaming extends StatefulWidget {
     @Deprecated('Since 2.4.1') this.appDesignSize,
   }) : super(key: key);
 
-  /// you need to fill in the appID you obtained from console.zegocloud.com
+  /// You can create a project and obtain an appID from the [ZEGOCLOUD Admin Console](https://console.zegocloud.com).
   final int appID;
 
-  /// for Android/iOS
-  /// you need to fill in the appID you obtained from console.zegocloud.com
+  /// You can create a project and obtain an appSign from the [ZEGOCLOUD Admin Console](https://console.zegocloud.com).
   final String appSign;
 
-  /// local user info
+  /// The ID of the currently logged-in user.
+  /// It can be any valid string.
+  /// Typically, you would use the ID from your own user system, such as Firebase.
   final String userID;
+
+  /// The name of the currently logged-in user.
+  /// It can be any valid string.
+  /// Typically, you would use the name from your own user system, such as Firebase.
   final String userName;
 
   /// You can customize the liveName arbitrarily,
   /// just need to know: users who use the same liveName can talk with each other.
   final String liveID;
 
+  /// Initialize the configuration for the live-streaming.
   final ZegoUIKitPrebuiltLiveStreamingConfig config;
 
+  /// You can invoke the methods provided by [ZegoUIKitPrebuiltLiveStreaming] through the [controller].
   final ZegoUIKitPrebuiltLiveStreamingController? controller;
 
+  /// Callback when the page is destroyed.
   final VoidCallback? onDispose;
 
+  /// @nodoc
   @Deprecated('Since 2.4.1')
   final Size? appDesignSize;
 
+  /// @nodoc
   @override
   State<ZegoUIKitPrebuiltLiveStreaming> createState() =>
       _ZegoUIKitPrebuiltLiveStreamingState();
 }
 
+/// @nodoc
 class _ZegoUIKitPrebuiltLiveStreamingState
     extends State<ZegoUIKitPrebuiltLiveStreaming> with WidgetsBindingObserver {
   List<StreamSubscription<dynamic>?> subscriptions = [];
@@ -72,6 +93,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
   var startedByLocalNotifier = ValueNotifier<bool>(false);
   late final ZegoLiveHostManager hostManager;
   late final ZegoLiveStatusManager liveStatusManager;
+  late final ZegoLiveDurationManager liveDurationManager;
   ZegoPrebuiltPlugins? plugins;
 
   @override
@@ -81,8 +103,10 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     WidgetsBinding.instance?.addObserver(this);
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
-      log('version: zego_uikit_prebuilt_live_streaming: 2.5.5; $version');
+      log('version: zego_uikit_prebuilt_live_streaming: 2.5.10; $version');
     });
+
+    startedByLocalNotifier.addListener(onStartedByLocalValueChanged);
 
     if (!widget.config.previewConfig.showPreviewForHost) {
       startedByLocalNotifier.value = true;
@@ -90,6 +114,10 @@ class _ZegoUIKitPrebuiltLiveStreamingState
 
     hostManager = ZegoLiveHostManager(config: widget.config);
     liveStatusManager = ZegoLiveStatusManager(
+      hostManager: hostManager,
+      config: widget.config,
+    );
+    liveDurationManager = ZegoLiveDurationManager(
       hostManager: hostManager,
       config: widget.config,
     );
@@ -112,7 +140,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
         hostManager: hostManager,
         liveStatusNotifier: liveStatusManager.notifier,
         config: widget.config,
-        translationText: widget.config.translationText,
+        translationText: widget.config.innerText,
         startedByLocalNotifier: startedByLocalNotifier,
         contextQuery: () => context,
       );
@@ -134,13 +162,16 @@ class _ZegoUIKitPrebuiltLiveStreamingState
   void dispose() {
     super.dispose();
 
+    startedByLocalNotifier.removeListener(onStartedByLocalValueChanged);
     WidgetsBinding.instance?.removeObserver(this);
+
     ZegoLiveStreamingPKBattleManager().uninit();
 
     plugins?.uninit();
 
     hostManager.uninit();
     liveStatusManager.uninit();
+    liveDurationManager.uninit();
 
     uninitContext();
 
@@ -212,8 +243,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
       await showAppSettingsDialog(
         context: context,
         rootNavigator: widget.config.rootNavigator,
-        dialogInfo:
-            widget.config.translationText.cameraPermissionSettingDialogInfo,
+        dialogInfo: widget.config.innerText.cameraPermissionSettingDialogInfo,
       );
     }
     if (!isMicrophoneGranted) {
@@ -221,7 +251,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
         context: context,
         rootNavigator: widget.config.rootNavigator,
         dialogInfo:
-            widget.config.translationText.microphonePermissionSettingDialogInfo,
+            widget.config.innerText.microphonePermissionSettingDialogInfo,
       );
     }
   }
@@ -289,6 +319,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
 
     await hostManager.init();
     await liveStatusManager.init();
+    await liveDurationManager.init();
 
     readyNotifier.value = true;
   }
@@ -407,9 +438,14 @@ class _ZegoUIKitPrebuiltLiveStreamingState
       config: widget.config,
       hostManager: hostManager,
       liveStatusManager: liveStatusManager,
+      liveDurationManager: liveDurationManager,
       popUpManager: popUpManager,
       plugins: plugins,
       controller: widget.controller,
     );
+  }
+
+  void onStartedByLocalValueChanged() {
+    liveDurationManager.setValueByHost();
   }
 }
