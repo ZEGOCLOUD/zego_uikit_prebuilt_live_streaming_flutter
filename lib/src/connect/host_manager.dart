@@ -35,7 +35,7 @@ class ZegoLiveHostManager {
   int localHostPropertyUpdateTime = 0;
   bool configIsHost = false;
 
-  bool get isHost =>
+  bool get isLocalHost =>
       // if not receive room 'host' property yet, then checkout config
       (notifier.value == null && configIsHost) ||
       // if room 'host' property received, checkout notifier value
@@ -84,7 +84,7 @@ class ZegoLiveHostManager {
       subTag: 'host manager',
     );
 
-    if (isHost) {
+    if (isLocalHost) {
       ZegoLoggerService.logInfo(
         'host uninit host property',
         tag: 'live streaming',

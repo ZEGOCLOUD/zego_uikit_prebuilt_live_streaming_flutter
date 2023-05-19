@@ -1,4 +1,6 @@
 // Flutter imports:
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -44,14 +46,24 @@ class ZegoMemberListSheet extends StatefulWidget {
 
 /// @nodoc
 class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
+  List<String> agreeRequestingUserIDs = [];
+  List<StreamSubscription<dynamic>?> subscriptions = [];
+
   @override
   void initState() {
     super.initState();
+
+    subscriptions.add(
+        ZegoUIKit().getAudioVideoListStream().listen(onAudioVideoListUpdated));
   }
 
   @override
   void dispose() {
     super.dispose();
+
+    for (final subscription in subscriptions) {
+      subscription?.cancel();
+    }
   }
 
   @override
@@ -117,7 +129,7 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
         if (widget.hostManager.notifier.value != null) {
           sortUsers.add(widget.hostManager.notifier.value!);
         }
-        if (!widget.hostManager.isHost) {
+        if (!widget.hostManager.isLocalHost) {
           sortUsers.add(ZegoUIKit().getLocalUser());
         }
         sortUsers += coHostUsers;
@@ -263,7 +275,7 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
             pkBattleState == ZegoLiveStreamingPKBattleState.inPKBattle ||
                 pkBattleState == ZegoLiveStreamingPKBattleState.loading;
         if (needHideCoHostWidget) {
-          if (widget.hostManager.isHost) {
+          if (widget.hostManager.isLocalHost) {
             return hostControlItem(user);
           } else {
             return Container();
@@ -276,7 +288,7 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
                   (requestCoHostUser) => user.id == requestCoHostUser.id);
               if (-1 != index) {
                 return requestCoHostUserControlItem(user);
-              } else if (widget.hostManager.isHost) {
+              } else if (widget.hostManager.isLocalHost) {
                 return hostControlItem(user);
               }
 
@@ -320,16 +332,37 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
               end: Alignment.bottomRight,
             ),
             onPressed: () {
+              if (widget.connectManager.coHostCount.value +
+                      agreeRequestingUserIDs.length >=
+                  widget.connectManager.maxCoHostCount) {
+                widget.hostManager.config.onMaxCoHostReached
+                    ?.call(widget.hostManager.config.maxCoHostCount);
+
+                ZegoLoggerService.logInfo(
+                  'co-host max count had reached',
+                  tag: 'live streaming',
+                  subTag: 'member list',
+                );
+
+                return;
+              }
+              agreeRequestingUserIDs.add(user.id);
+
+              ZegoLoggerService.logInfo(
+                'agree requesting count:${agreeRequestingUserIDs.length}',
+                tag: 'live streaming',
+                subTag: 'member list',
+              );
               ZegoUIKit()
                   .getSignalingPlugin()
                   .acceptInvitation(inviterID: user.id, data: '')
                   .then((result) {
                 ZegoLoggerService.logInfo(
-                  'accept audience ${user.name} co-host request, '
-                  'result:$result',
+                  'accept audience ${user.name} co-host request, result:$result, ',
                   tag: 'live streaming',
                   subTag: 'member list',
                 );
+
                 if (result.error == null) {
                   widget.connectManager.removeRequestCoHostUsers(user);
                 } else {
@@ -352,7 +385,7 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
         final popupItems = <PopupItem>[];
 
         if (user.id != widget.hostManager.notifier.value?.id &&
-            isCoHost(user) &&
+            widget.connectManager.isCoHost(user) &&
             (widget.isPluginEnabled)) {
           popupItems.add(PopupItem(
             PopupItemValue.kickCoHost,
@@ -363,7 +396,7 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
         if (widget.isPluginEnabled &&
             //  not host
             user.id != widget.hostManager.notifier.value?.id &&
-            !isCoHost(user) &&
+            !widget.connectManager.isCoHost(user) &&
             !needHideCoHostWidget) {
           popupItems.add(PopupItem(
               PopupItemValue.inviteConnect,
@@ -405,6 +438,7 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
               context: context,
               user: user,
               popupItems: popupItems,
+              hostManager: widget.hostManager,
               connectManager: widget.connectManager,
               popUpManager: widget.popUpManager,
               translationText: widget.translationText,
@@ -499,6 +533,11 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
     return -1 !=
         widget.connectManager.requestCoHostUsersNotifier.value
             .indexWhere((requestCoHostUser) => userID == requestCoHostUser.id);
+  }
+
+  void onAudioVideoListUpdated(List<ZegoUIKitUser> users) {
+    agreeRequestingUserIDs.removeWhere(
+        (userID) => -1 != users.indexWhere((user) => user.id == userID));
   }
 }
 

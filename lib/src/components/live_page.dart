@@ -109,7 +109,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
           .listen(onTurnOnYourMicrophoneRequest));
 
     connectManager.init();
-    if (widget.hostManager.isHost) {
+    if (widget.hostManager.isLocalHost) {
       ZegoUIKit().setRoomProperty(
           RoomPropertyKey.liveStatus.text, LiveStatus.living.index.toString());
     }
@@ -137,7 +137,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
         onWillPop: () async {
           final canLeave = await widget.config.onLeaveConfirmation!(context);
           if (canLeave) {
-            if (widget.hostManager.isHost) {
+            if (widget.hostManager.isLocalHost) {
               /// live is ready to end, host will update if receive property notify
               /// so need to keep current host value, DISABLE local host value UPDATE
               widget.hostManager.hostUpdateEnabledNotifier.value = false;
@@ -555,7 +555,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
       audioVideoContainerHostHadSorted = false;
     }
 
-    if (!widget.hostManager.isHost) {
+    if (!widget.hostManager.isLocalHost) {
       ZegoLoggerService.logInfo(
         'audience, live streaming end by host, '
         'host: ${widget.hostManager.notifier.value}, '

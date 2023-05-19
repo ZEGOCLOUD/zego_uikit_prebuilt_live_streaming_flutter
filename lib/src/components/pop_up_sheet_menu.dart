@@ -11,6 +11,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/components/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/toast.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/connect/connect_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/connect/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_inner_text.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/pk/src/pk_impl.dart';
 
@@ -21,12 +22,14 @@ class ZegoPopUpSheetMenu extends StatefulWidget {
     required this.targetUser,
     required this.popupItems,
     required this.translationText,
+    required this.hostManager,
     required this.connectManager,
     this.onPressed,
   }) : super(key: key);
 
   final List<PopupItem> popupItems;
   final ZegoUIKitUser targetUser;
+  final ZegoLiveHostManager hostManager;
   final ZegoLiveConnectManager connectManager;
   final void Function(PopupItemValue)? onPressed;
   final ZegoInnerText translationText;
@@ -85,7 +88,22 @@ class _ZegoPopUpSheetMenuState extends State<ZegoPopUpSheetMenu> {
             final needHideCoHostWidget =
                 pkBattleState == ZegoLiveStreamingPKBattleState.inPKBattle ||
                     pkBattleState == ZegoLiveStreamingPKBattleState.loading;
-            if (needHideCoHostWidget) break;
+            if (needHideCoHostWidget) {
+              break;
+            }
+
+            if (widget.connectManager.isMaxCoHostReached) {
+              widget.hostManager.config.onMaxCoHostReached
+                  ?.call(widget.hostManager.config.maxCoHostCount);
+
+              ZegoLoggerService.logInfo(
+                'co-host max count had reached',
+                tag: 'live streaming',
+                subTag: 'pop-up sheet',
+              );
+
+              break;
+            }
 
             final targetUserIsInviting = widget
                 .connectManager.audienceIDsOfInvitingConnect
@@ -155,6 +173,7 @@ Future<void> showPopUpSheet({
   required ZegoInnerText translationText,
   required ZegoLiveConnectManager connectManager,
   required ZegoPopUpManager popUpManager,
+  required ZegoLiveHostManager hostManager,
 }) async {
   final key = DateTime.now().millisecondsSinceEpoch;
   popUpManager.addAPopUpSheet(key);
@@ -184,6 +203,7 @@ Future<void> showPopUpSheet({
             targetUser: user,
             popupItems: popupItems,
             translationText: translationText,
+            hostManager: hostManager,
             connectManager: connectManager,
           ),
         ),

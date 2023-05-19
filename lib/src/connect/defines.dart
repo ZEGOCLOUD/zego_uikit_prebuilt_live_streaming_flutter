@@ -47,9 +47,3 @@ enum ConnectState {
   connecting,
   connected,
 }
-
-/// @nodoc
-bool isCoHost(ZegoUIKitUser user) {
-  return ZegoUIKit().getCameraStateNotifier(user.id).value ||
-      ZegoUIKit().getMicrophoneStateNotifier(user.id).value;
-}

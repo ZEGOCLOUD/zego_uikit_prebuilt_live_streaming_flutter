@@ -77,7 +77,7 @@ class ZegoUIKitPrebuiltLiveStreamingController
       }
     }
 
-    if (hostManager?.isHost ?? false) {
+    if (hostManager?.isLocalHost ?? false) {
       /// live is ready to end, host will update if receive property notify
       /// so need to keep current host value, DISABLE local host value UPDATE
       hostManager?.hostUpdateEnabledNotifier.value = false;
@@ -97,7 +97,7 @@ class ZegoUIKitPrebuiltLiveStreamingController
       return 0 == result.errorCode;
     });
 
-    if (hostManager?.isHost ?? false) {
+    if (hostManager?.isLocalHost ?? false) {
       /// host end/leave live streaming
       if (prebuiltConfig?.onLiveStreamingEnded != null) {
         prebuiltConfig?.onLiveStreamingEnded?.call();

@@ -33,8 +33,18 @@ class ZegoLiveStatusManager {
   var notifier = ValueNotifier<LiveStatus>(LiveStatus.notStart);
   List<StreamSubscription<dynamic>?> subscriptions = [];
 
-  bool get isAudience =>
-      !hostManager.isHost && !isCoHost(ZegoUIKit().getLocalUser());
+  bool get isLocalAudience =>
+      !hostManager.isLocalHost && !isCoHost(ZegoUIKit().getLocalUser());
+
+  bool isCoHost(ZegoUIKitUser user) {
+    if (hostManager.notifier.value?.id == user.id) {
+      /// host also open camera/microphone
+      return false;
+    }
+
+    return ZegoUIKit().getCameraStateNotifier(user.id).value ||
+        ZegoUIKit().getMicrophoneStateNotifier(user.id).value;
+  }
 
   Future<void> init() async {
     ZegoLoggerService.logInfo(
@@ -45,11 +55,11 @@ class ZegoLiveStatusManager {
 
     notifier.addListener(onLiveStatusUpdated);
 
-    if (!hostManager.isHost) {
+    if (!hostManager.isLocalHost) {
       ZegoUIKit().stopPlayAllAudioVideo();
     }
 
-    if (hostManager.isHost) {
+    if (hostManager.isLocalHost) {
       ZegoLoggerService.logInfo(
         'host init live status to end and start play all audio video',
         tag: 'live streaming',
@@ -80,7 +90,7 @@ class ZegoLiveStatusManager {
 
     notifier.removeListener(onLiveStatusUpdated);
 
-    if (hostManager.isHost) {
+    if (hostManager.isLocalHost) {
       ZegoLoggerService.logInfo(
         'host uninit live status property to end',
         tag: 'live streaming',
@@ -153,7 +163,7 @@ class ZegoLiveStatusManager {
       notifier.value = LiveStatus.notStart;
     }
 
-    if (!hostManager.isHost) {
+    if (!hostManager.isLocalHost) {
       if (notifier.value == LiveStatus.living) {
         ZegoUIKit().startPlayAllAudioVideo();
       } else {
@@ -164,7 +174,7 @@ class ZegoLiveStatusManager {
       }
     }
 
-    if (LiveStatus.ended == notifier.value && !hostManager.isHost) {
+    if (LiveStatus.ended == notifier.value && !hostManager.isLocalHost) {
       ZegoLoggerService.logInfo(
         'live status is end, co-host switch to audience',
         tag: 'live streaming',

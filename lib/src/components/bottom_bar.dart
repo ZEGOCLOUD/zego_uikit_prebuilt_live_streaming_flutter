@@ -75,7 +75,7 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
       height: 124.r,
       child: Stack(
         children: [
-          if (widget.hostManager.isHost)
+          if (widget.hostManager.isLocalHost)
             rightToolbar(context)
           else
             ValueListenableBuilder(
@@ -102,7 +102,7 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
   }
 
   void updateButtonsByRole() {
-    if (widget.hostManager.isHost) {
+    if (widget.hostManager.isLocalHost) {
       buttons = widget.config.bottomMenuBarConfig.hostButtons;
       extendButtons = widget.config.bottomMenuBarConfig.hostExtendButtons;
     } else {
@@ -413,7 +413,7 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
     if (widget.config.plugins.isNotEmpty &&
         ConnectState.connected ==
             widget.connectManager.audienceLocalConnectStateNotifier.value) {
-      cameraDefaultOn = true;
+      cameraDefaultOn = widget.config.turnOnCameraWhenCohosted;
       microphoneDefaultOn = true;
     }
 

@@ -27,8 +27,11 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         turnOnCameraWhenJoining = true,
         turnOnMicrophoneWhenJoining = true,
         useSpeakerWhenJoining = true,
+        turnOnCameraWhenCohosted = true,
         markAsLargeRoom = false,
         rootNavigator = false,
+        videoConfig = ZegoPrebuiltVideoConfig(),
+        maxCoHostCount = 12,
         audioVideoViewConfig = ZegoPrebuiltAudioVideoViewConfig(
           showSoundWavesInAudioMode: true,
         ),
@@ -69,8 +72,11 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         turnOnCameraWhenJoining = false,
         turnOnMicrophoneWhenJoining = false,
         useSpeakerWhenJoining = true,
+        turnOnCameraWhenCohosted = true,
         markAsLargeRoom = false,
         rootNavigator = false,
+        videoConfig = ZegoPrebuiltVideoConfig(),
+        maxCoHostCount = 12,
         audioVideoViewConfig = ZegoPrebuiltAudioVideoViewConfig(
           showSoundWavesInAudioMode: true,
         ),
@@ -92,29 +98,33 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
     this.turnOnCameraWhenJoining = true,
     this.turnOnMicrophoneWhenJoining = true,
     this.useSpeakerWhenJoining = true,
+    this.turnOnCameraWhenCohosted = true,
     this.markAsLargeRoom = false,
     this.rootNavigator = false,
-    ZegoPrebuiltAudioVideoViewConfig? audioVideoViewConfig,
-    ZegoBottomMenuBarConfig? bottomMenuBarConfig,
-    ZegoMemberListConfig? memberListConfig,
-    ZegoInRoomMessageViewConfig? messageConfig,
-    ZegoEffectConfig? effectConfig,
-    ZegoLiveDurationConfig? durationConfig,
+    this.maxCoHostCount = 12,
+    this.layout,
+    this.background,
     this.confirmDialogInfo,
+    this.beautyConfig,
+    this.avatarBuilder,
+    this.startLiveButtonBuilder,
+    this.onMaxCoHostReached,
     this.onLeaveConfirmation,
     this.onLeaveLiveStreaming,
     this.onLiveStreamingEnded,
-    this.avatarBuilder,
-    this.startLiveButtonBuilder,
     this.onCameraTurnOnByOthersConfirmation,
     this.onMicrophoneTurnOnByOthersConfirmation,
-    this.background,
-    this.layout,
+    ZegoInnerText? translationText,
+    ZegoEffectConfig? effectConfig,
+    ZegoMemberListConfig? memberListConfig,
+    ZegoLiveDurationConfig? durationConfig,
+    ZegoPrebuiltVideoConfig? videoConfig,
+    ZegoInRoomMessageViewConfig? messageConfig,
+    ZegoBottomMenuBarConfig? bottomMenuBarConfig,
     ZegoLiveStreamingPreviewConfig? previewConfig,
     ZegoLiveStreamingPKBattleConfig? pkBattleConfig,
     ZegoLiveStreamingPKBattleEvents? pkBattleEvents,
-    ZegoInnerText? translationText,
-    this.beautyConfig,
+    ZegoPrebuiltAudioVideoViewConfig? audioVideoViewConfig,
   })  : audioVideoViewConfig =
             audioVideoViewConfig ?? ZegoPrebuiltAudioVideoViewConfig(),
         bottomMenuBarConfig = bottomMenuBarConfig ?? ZegoBottomMenuBarConfig(),
@@ -123,6 +133,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
             messageConfig ?? ZegoInRoomMessageViewConfig(),
         effectConfig = effectConfig ?? ZegoEffectConfig(),
         innerText = translationText ?? ZegoInnerText(),
+        videoConfig = videoConfig?? ZegoPrebuiltVideoConfig(),
         previewConfig = previewConfig ?? ZegoLiveStreamingPreviewConfig(),
         pkBattleConfig = pkBattleConfig ?? ZegoLiveStreamingPKBattleConfig(),
         pkBattleEvents = pkBattleEvents ?? ZegoLiveStreamingPKBattleEvents(),
@@ -162,6 +173,12 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   /// If this value is set to `false`, the system's default playback device, such as the earpiece or Bluetooth headset, will be used for audio playback.
   bool useSpeakerWhenJoining;
 
+  /// whether to enable the camera by default when you be co-host, the default value is true
+  bool turnOnCameraWhenCohosted;
+
+  /// configuration parameters for audio and video streaming, such as Resolution, Frame rate, Bit rate..
+  ZegoPrebuiltVideoConfig videoConfig;
+
   /// Configuration options for audio/video views.
   ZegoPrebuiltAudioVideoViewConfig audioVideoViewConfig;
 
@@ -182,25 +199,6 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   /// If not set, clicking the exit button will directly exit the live streaming.
   /// If set, a confirmation dialog will be displayed when clicking the exit button, and you will need to confirm the exit before actually exiting.
   ZegoDialogInfo? confirmDialogInfo;
-
-  /// Confirmation callback method before leaving the live streaming.
-  ///
-  /// If you want to perform more complex business logic before exiting the live streaming, such as updating some records to the backend, you can use the [onLeaveConfirmation] parameter to set it.
-  /// This parameter requires you to provide a callback method that returns an asynchronous result.
-  /// If you return true in the callback, the prebuilt page will quit and return to your previous page, otherwise it will be ignored.
-  Future<bool> Function(BuildContext context)? onLeaveConfirmation;
-
-  /// customize handling me removed from room
-  Future<void> Function(String)? onMeRemovedFromRoom;
-
-  /// This callback is triggered after leaving the live streaming.
-  /// You can perform business-related prompts or other actions in this callback.
-  VoidCallback? onLeaveLiveStreaming;
-
-  /// customize handling after end live streaming
-  VoidCallback? onLiveStreamingEnded;
-
-  void Function(ZegoLiveStreamingState state)? onLiveStreamingStateUpdate;
 
   /// Configuration options for modifying all text content on the UI.
   /// All visible text content on the UI can be modified using this single property.
@@ -264,22 +262,6 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   ///  that mean [toUserIDs] of [sendInRoomCommand] function is disabled if true
   bool markAsLargeRoom;
 
-  /// This callback method is called when someone requests to open your camera, typically when the host wants to open your camera.
-  /// This method requires returning an asynchronous result.
-  /// You can display a dialog in this callback to confirm whether to open the camera.
-  /// Alternatively, you can return `true` without any processing, indicating that when someone requests to open your camera, it can be directly opened.
-  /// By default, this method does nothing and returns `false`, indicating that others cannot open your camera.
-  Future<bool> Function(BuildContext context)?
-      onCameraTurnOnByOthersConfirmation;
-
-  /// This callback method is called when someone requests to open your microphone, typically when the host wants to open your microphone.
-  /// This method requires returning an asynchronous result.
-  /// You can display a dialog in this callback to confirm whether to open the microphone.
-  /// Alternatively, you can return `true` without any processing, indicating that when someone requests to open your microphone, it can be directly opened.
-  /// By default, this method does nothing and returns `false`, indicating that others cannot open your microphone.
-  Future<bool> Function(BuildContext context)?
-      onMicrophoneTurnOnByOthersConfirmation;
-
   /// The background of the live streaming.
   ///
   /// You can use any Widget as the background of the live streaming, such as a video, a GIF animation, an image, a web page, etc.
@@ -301,14 +283,76 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   ZegoLiveStreamingPreviewConfig previewConfig;
 
   /// cross room pk events
+  /// Please refer to our [documentation](https://docs.zegocloud.com/article/15580) and [sample code](https://github.com/ZEGOCLOUD/zego_uikit_prebuilt_live_streaming_example_flutter/tree/master/live_streaming_with_pkbattles) for usage instructions.
   ZegoLiveStreamingPKBattleEvents pkBattleEvents;
   ZegoLiveStreamingPKBattleConfig pkBattleConfig;
 
   /// Live Streaming timing configuration.
   ZegoLiveDurationConfig durationConfig;
 
-  ///
+  /// advance beauty config
   ZegoBeautyPluginConfig? beautyConfig;
+
+  /// Maximum number of co-hosts.
+  /// If exceeded, other audience members cannot become co-hosts.
+  /// The default value is 12.
+  int maxCoHostCount;
+
+  /// Confirmation callback method before leaving the live streaming.
+  ///
+  /// If you want to perform more complex business logic before exiting the live streaming, such as updating some records to the backend, you can use the [onLeaveConfirmation] parameter to set it.
+  /// This parameter requires you to provide a callback method that returns an asynchronous result.
+  /// If you return true in the callback, the prebuilt page will quit and return to your previous page, otherwise it will be ignored.
+  Future<bool> Function(BuildContext context)? onLeaveConfirmation;
+
+  /// customize handling me removed from room
+  Future<void> Function(String)? onMeRemovedFromRoom;
+
+  /// This callback is triggered after leaving the live streaming.
+  /// You can perform business-related prompts or other actions in this callback.
+  VoidCallback? onLeaveLiveStreaming;
+
+  /// customize handling after end live streaming
+  VoidCallback? onLiveStreamingEnded;
+
+  void Function(ZegoLiveStreamingState state)? onLiveStreamingStateUpdate;
+
+  /// This callback method is called when someone requests to open your camera, typically when the host wants to open your camera.
+  /// This method requires returning an asynchronous result.
+  /// You can display a dialog in this callback to confirm whether to open the camera.
+  /// Alternatively, you can return `true` without any processing, indicating that when someone requests to open your camera, it can be directly opened.
+  /// By default, this method does nothing and returns `false`, indicating that others cannot open your camera.
+  Future<bool> Function(BuildContext context)?
+      onCameraTurnOnByOthersConfirmation;
+
+  /// This callback method is called when someone requests to open your microphone, typically when the host wants to open your microphone.
+  /// This method requires returning an asynchronous result.
+  /// You can display a dialog in this callback to confirm whether to open the microphone.
+  /// Alternatively, you can return `true` without any processing, indicating that when someone requests to open your microphone, it can be directly opened.
+  /// By default, this method does nothing and returns `false`, indicating that others cannot open your microphone.
+  Future<bool> Function(BuildContext context)?
+      onMicrophoneTurnOnByOthersConfirmation;
+
+  /// This callback is triggered when the maximum number of co-hosts is reached.
+  void Function(int)? onMaxCoHostReached;
+}
+
+///  configuration parameters for audio and video streaming, such as Resolution, Frame rate, Bit rate..
+class ZegoPrebuiltVideoConfig {
+  /// Video configuration resolution and bitrate preset enumeration.
+  ZegoPresetResolution preset;
+
+  /// Frame rate, control the frame rate of the camera and the frame rate of the encoder.
+  int? fps;
+
+  /// Bit rate in kbps.
+  int? bitrate;
+
+  ZegoPrebuiltVideoConfig({
+    this.preset = ZegoPresetResolution.Preset360P,
+    this.bitrate,
+    this.fps,
+  });
 }
 
 /// Configuration options for audio/video views.

@@ -71,7 +71,7 @@ class _ZegoInRoomMessageButtonState extends State<ZegoInRoomMessageButton> {
       valueListenable: chatEnableNotifier,
       builder: (context, isChatEnabled, _) {
         var chatLocalEnabled = true;
-        if (!widget.hostManager.isHost) {
+        if (!widget.hostManager.isLocalHost) {
           chatLocalEnabled = isChatEnabled;
         }
 

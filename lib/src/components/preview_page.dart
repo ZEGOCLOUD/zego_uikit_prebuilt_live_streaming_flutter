@@ -60,7 +60,7 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
   void initState() {
     super.initState();
 
-    ZegoUIKit().turnCameraOn(widget.hostManager.isHost);
+    ZegoUIKit().turnCameraOn(widget.hostManager.isLocalHost);
   }
 
   @override

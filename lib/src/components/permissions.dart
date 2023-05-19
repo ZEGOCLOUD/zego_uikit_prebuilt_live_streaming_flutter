@@ -46,13 +46,17 @@ Future<void> requestPermissions({
   required BuildContext context,
   required ZegoInnerText translationText,
   required bool rootNavigator,
-  bool isShowDialog = false,
-}) async {
-  await [
+  List<Permission> permissions = const [
     Permission.camera,
     Permission.microphone,
-  ].request().then((Map<Permission, PermissionStatus> statuses) async {
-    if (statuses[Permission.camera] != PermissionStatus.granted) {
+  ],
+  bool isShowDialog = false,
+}) async {
+  await permissions
+      .request()
+      .then((Map<Permission, PermissionStatus> statuses) async {
+    if (permissions.contains(Permission.camera) &&
+        statuses[Permission.camera] != PermissionStatus.granted) {
       if (isShowDialog) {
         await showAppSettingsDialog(
           context: context,
@@ -62,7 +66,8 @@ Future<void> requestPermissions({
       }
     }
 
-    if (statuses[Permission.microphone] != PermissionStatus.granted) {
+    if (permissions.contains(Permission.microphone) &&
+        statuses[Permission.microphone] != PermissionStatus.granted) {
       if (isShowDialog) {
         await showAppSettingsDialog(
           context: context,

@@ -70,7 +70,7 @@ class ZegoLiveDurationManager {
         DateTime.fromMillisecondsSinceEpoch(int.tryParse(timestamp) ?? 0);
     notifier.value = serverValue;
     if (currentValue != serverValue) {
-      if (hostManager.isHost) {
+      if (hostManager.isLocalHost) {
         ZegoLoggerService.logInfo(
           'live duration value is not equal, host sync value:${notifier.value}',
           tag: 'live streaming',
@@ -92,7 +92,7 @@ class ZegoLiveDurationManager {
   void setValueByHost() {
     final roomProperties = ZegoUIKit().getRoomProperties();
 
-    if (!hostManager.isHost) {
+    if (!hostManager.isLocalHost) {
       ZegoLoggerService.logInfo(
         'try set value, but is not a host',
         tag: 'live streaming',
@@ -111,36 +111,36 @@ class ZegoLiveDurationManager {
       return;
     }
 
-    var updateFromRemote = true;
-    roomProperties.forEach((key, value) {
-      if (!value.updateFromRemote) {
-        updateFromRemote = false;
-      }
-    });
-    if (!updateFromRemote) {
-      ZegoLoggerService.logInfo(
-        'try set value, but room properties is not all update from remote',
-        tag: 'live streaming',
-        subTag: 'live duration manager',
-      );
-      return;
-    }
+    /// todo
+    // var updateFromRemote = true;
+    // roomProperties.forEach((key, value) {
+    //   if (!value.updateFromRemote) {
+    //     updateFromRemote = false;
+    //   }
+    // });
+    // if (!updateFromRemote) {
+    //   ZegoLoggerService.logInfo(
+    //     'try set value, but room properties is not all update from remote',
+    //     tag: 'live streaming',
+    //     subTag: 'live duration manager',
+    //   );
+    //   return;
+    // }
 
     subscription?.cancel();
 
-    ZegoUIKit().getNetworkTimeStamp().then((timestamp) {
-      notifier.value = DateTime.fromMillisecondsSinceEpoch(timestamp);
+    final networkTimestamp = ZegoUIKit().getNetworkTimeStamp();
+    notifier.value = DateTime.fromMillisecondsSinceEpoch(networkTimestamp);
 
-      ZegoLoggerService.logInfo(
-        'live duration value is not exist, host set value:${notifier.value}',
-        tag: 'live streaming',
-        subTag: 'live duration manager',
-      );
+    ZegoLoggerService.logInfo(
+      'live duration value is not exist, host set value:${notifier.value}',
+      tag: 'live streaming',
+      subTag: 'live duration manager',
+    );
 
-      ZegoUIKit().setRoomProperty(
-        RoomPropertyKey.liveDuration.text,
-        timestamp.toString(),
-      );
-    });
+    ZegoUIKit().setRoomProperty(
+      RoomPropertyKey.liveDuration.text,
+      networkTimestamp.toString(),
+    );
   }
 }

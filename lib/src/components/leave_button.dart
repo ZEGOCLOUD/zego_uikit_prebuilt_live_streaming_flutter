@@ -75,7 +75,7 @@ class ZegoLeaveStreamingButtonState extends State<ZegoLeaveStreamingButton> {
         final canLeave =
             await widget.config.onLeaveConfirmation?.call(context) ?? true;
         if (canLeave) {
-          if (widget.hostManager.isHost) {
+          if (widget.hostManager.isLocalHost) {
             /// live is ready to end, host will update if receive property notify
             /// so need to keep current host value, DISABLE local host value UPDATE
             widget.hostUpdateEnabledNotifier.value = false;
@@ -92,7 +92,7 @@ class ZegoLeaveStreamingButtonState extends State<ZegoLeaveStreamingButton> {
         return canLeave;
       },
       onPress: () async {
-        if (widget.hostManager.isHost) {
+        if (widget.hostManager.isLocalHost) {
           /// host end/leave live streaming
           if (widget.config.onLiveStreamingEnded != null) {
             widget.config.onLiveStreamingEnded!.call();

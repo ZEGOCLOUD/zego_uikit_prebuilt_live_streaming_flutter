@@ -227,16 +227,15 @@ class ZegoLivePageSurfaceState extends State<ZegoLivePageSurface>
   }
 
   void startDurationTimer() {
-    ZegoUIKit().getNetworkTimeStamp().then((timestamp) {
-      beginDuration = DateTime.fromMillisecondsSinceEpoch(timestamp)
-          .difference(widget.liveDurationManager.notifier.value);
+    final networkTimestamp = ZegoUIKit().getNetworkTimeStamp();
+    beginDuration = DateTime.fromMillisecondsSinceEpoch(networkTimestamp)
+        .difference(widget.liveDurationManager.notifier.value);
 
-      durationTimer?.cancel();
-      durationTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-        durationNotifier.value = beginDuration! + Duration(seconds: timer.tick);
-        widget.config.durationConfig.onDurationUpdate
-            ?.call(durationNotifier.value);
-      });
+    durationTimer?.cancel();
+    durationTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      durationNotifier.value = beginDuration! + Duration(seconds: timer.tick);
+      widget.config.durationConfig.onDurationUpdate
+          ?.call(durationNotifier.value);
     });
   }
 }

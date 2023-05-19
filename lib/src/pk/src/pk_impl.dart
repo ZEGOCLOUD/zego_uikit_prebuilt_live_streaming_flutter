@@ -51,7 +51,7 @@ class ZegoLiveStreamingPKBattleManager {
 
   bool get isLiving => liveStatusNotifier.value == LiveStatus.living;
 
-  bool get isHost => hostManager.isHost;
+  bool get isHost => hostManager.isLocalHost;
   String cachedRoomID = '';
   Completer<void>? stateTrancformCompleter;
 

@@ -3,6 +3,7 @@ import 'dart:async';
 
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
@@ -48,8 +49,25 @@ class ZegoLiveConnectManager {
   bool isInviteToJoinCoHostDlgVisible = false;
   bool isEndCoHostDialogVisible = false;
 
+  /// co-host total count
+  final coHostCount = ValueNotifier<int>(0);
+
+  int get maxCoHostCount => config.maxCoHostCount;
+
+  bool get isMaxCoHostReached => coHostCount.value >= config.maxCoHostCount;
+
   List<String> audienceIDsOfInvitingConnect = [];
   List<StreamSubscription<dynamic>?> subscriptions = [];
+
+  bool isCoHost(ZegoUIKitUser user) {
+    if (hostManager.notifier.value?.id == user.id) {
+      /// host also open camera/microphone
+      return false;
+    }
+
+    return ZegoUIKit().getCameraStateNotifier(user.id).value ||
+        ZegoUIKit().getMicrophoneStateNotifier(user.id).value;
+  }
 
   void init() {
     ZegoLoggerService.logInfo(
@@ -68,6 +86,8 @@ class ZegoLiveConnectManager {
       );
       updateAudienceConnectState(ConnectState.idle);
     }
+
+    initCoHostMixin();
   }
 
   void uninit() {
@@ -192,9 +212,9 @@ class ZegoLiveConnectManager {
     });
   }
 
-  void audienceEndConnect() {
+  void coHostEndConnect() {
     ZegoLoggerService.logInfo(
-      'audience end connect',
+      'co-host end connect',
       tag: 'live streaming',
       subTag: 'connect manager',
     );
@@ -216,7 +236,7 @@ class ZegoLiveConnectManager {
       subTag: 'connect manager',
     );
 
-    if (hostManager.isHost) {
+    if (hostManager.isLocalHost) {
       if (ZegoInvitationType.requestCoHost == invitationType) {
         final translation = translationText.receivedCoHostRequestDialogInfo;
         requestCoHostUsersNotifier.value =
@@ -235,10 +255,21 @@ class ZegoLiveConnectManager {
     }
   }
 
+  List<Permission> getCoHostPermissions() {
+    final permissions = <Permission>[];
+    if (config.turnOnCameraWhenCohosted) {
+      permissions.add(Permission.camera);
+    }
+
+    permissions.add(Permission.microphone);
+
+    return permissions;
+  }
+
   void onAudienceReceivedCoHostInvitation(ZegoUIKitUser host) {
     if (isInviteToJoinCoHostDlgVisible) {
       ZegoLoggerService.logInfo(
-        'invite to join co-host dialog is visibile',
+        'invite to join co-host dialog is visible',
         tag: 'live streaming',
         subTag: 'connect manager',
       );
@@ -251,6 +282,18 @@ class ZegoLiveConnectManager {
         tag: 'live streaming',
         subTag: 'connect manager',
       );
+      return;
+    }
+
+    if (isMaxCoHostReached) {
+      config.onMaxCoHostReached?.call(config.maxCoHostCount);
+
+      ZegoLoggerService.logInfo(
+        'co-host max count had reached, ignore current co-host invitation',
+        tag: 'live streaming',
+        subTag: 'connect manager',
+      );
+
       return;
     }
 
@@ -294,43 +337,57 @@ class ZegoLiveConnectManager {
       rightButtonCallback: () {
         isInviteToJoinCoHostDlgVisible = false;
 
-        ZegoLoggerService.logInfo(
-          'accept co-host invite',
-          tag: 'live streaming',
-          subTag: 'connect manager',
-        );
-        if (LiveStatus.living == liveStatusNotifier.value) {
-          ZegoUIKit()
-              .getSignalingPlugin()
-              .acceptInvitation(inviterID: host.id, data: '')
-              .then((result) {
+        do {
+          if (isMaxCoHostReached) {
+            config.onMaxCoHostReached?.call(config.maxCoHostCount);
+
             ZegoLoggerService.logInfo(
-              'accept co-host invite, result:$result',
+              'co-host max count had reached, ignore current accept co-host invite',
               tag: 'live streaming',
               subTag: 'connect manager',
             );
 
-            if (result.error != null) {
-              showError('${result.error}');
-              return;
-            }
+            break;
+          }
 
-            requestPermissions(
-              context: contextQuery(),
-              isShowDialog: true,
-              translationText: translationText,
-              rootNavigator: config.rootNavigator,
-            ).then((_) {
-              updateAudienceConnectState(ConnectState.connected);
-            });
-          });
-        } else {
           ZegoLoggerService.logInfo(
-            'accept co-host invite, not living now',
+            'accept co-host invite',
             tag: 'live streaming',
             subTag: 'connect manager',
           );
-        }
+          if (LiveStatus.living == liveStatusNotifier.value) {
+            ZegoUIKit()
+                .getSignalingPlugin()
+                .acceptInvitation(inviterID: host.id, data: '')
+                .then((result) {
+              ZegoLoggerService.logInfo(
+                'accept co-host invite, result:$result',
+                tag: 'live streaming',
+                subTag: 'connect manager',
+              );
+
+              if (result.error != null) {
+                showError('${result.error}');
+                return;
+              }
+
+              requestPermissions(
+                context: contextQuery(),
+                isShowDialog: true,
+                translationText: translationText,
+                rootNavigator: config.rootNavigator,
+              ).then((_) {
+                updateAudienceConnectState(ConnectState.connected);
+              });
+            });
+          } else {
+            ZegoLoggerService.logInfo(
+              'accept co-host invite, not living now',
+              tag: 'live streaming',
+              subTag: 'connect manager',
+            );
+          }
+        } while (false);
 
         Navigator.of(
           contextQuery(),
@@ -350,16 +407,18 @@ class ZegoLiveConnectManager {
       subTag: 'connect manager',
     );
 
-    if (hostManager.isHost) {
+    if (hostManager.isLocalHost) {
       audienceIDsOfInvitingConnect.remove(invitee.id);
     } else {
+      final permissions = getCoHostPermissions();
       requestPermissions(
         context: contextQuery(),
         isShowDialog: true,
         translationText: translationText,
         rootNavigator: config.rootNavigator,
+        permissions: permissions,
       ).then((value) {
-        ZegoUIKit().turnCameraOn(true);
+        ZegoUIKit().turnCameraOn(config.turnOnCameraWhenCohosted);
         ZegoUIKit().turnMicrophoneOn(true);
 
         updateAudienceConnectState(ConnectState.connected);
@@ -377,7 +436,7 @@ class ZegoLiveConnectManager {
       subTag: 'connect manager',
     );
 
-    if (hostManager.isHost) {
+    if (hostManager.isLocalHost) {
       requestCoHostUsersNotifier.value =
           List<ZegoUIKitUser>.from(requestCoHostUsersNotifier.value)
             ..removeWhere((user) => user.id == inviter.id);
@@ -394,7 +453,7 @@ class ZegoLiveConnectManager {
       subTag: 'connect manager',
     );
 
-    if (hostManager.isHost) {
+    if (hostManager.isLocalHost) {
       audienceIDsOfInvitingConnect.remove(invitee.id);
 
       showError(translationText.audienceRejectInvitationToast.replaceFirst(
@@ -417,7 +476,7 @@ class ZegoLiveConnectManager {
       subTag: 'connect manager',
     );
 
-    if (hostManager.isHost) {
+    if (hostManager.isLocalHost) {
       requestCoHostUsersNotifier.value =
           List<ZegoUIKitUser>.from(requestCoHostUsersNotifier.value)
             ..removeWhere((user) => user.id == inviter.id);
@@ -444,7 +503,7 @@ class ZegoLiveConnectManager {
       subTag: 'connect manager',
     );
 
-    if (hostManager.isHost) {
+    if (hostManager.isLocalHost) {
       for (final invitee in invitees) {
         audienceIDsOfInvitingConnect.remove(invitee.id);
       }
@@ -493,7 +552,7 @@ class ZegoLiveConnectManager {
           rootNavigator: config.rootNavigator,
         ).pop(true);
 
-        audienceEndConnect();
+        coHostEndConnect();
       },
     );
   }
@@ -516,6 +575,15 @@ class ZegoLiveConnectManager {
 
     switch (state) {
       case ConnectState.idle:
+        ZegoUIKit()
+            .getLocalUser()
+            .camera
+            .removeListener(onLocalCameraStateChanged);
+        ZegoUIKit()
+            .getLocalUser()
+            .microphone
+            .removeListener(onLocalMicrophoneStateChanged);
+
         ZegoUIKit().resetSoundEffect();
         ZegoUIKit().resetBeautyEffect();
 
@@ -543,11 +611,136 @@ class ZegoLiveConnectManager {
       case ConnectState.connecting:
         break;
       case ConnectState.connected:
-        ZegoUIKit().turnCameraOn(true);
+        ZegoUIKit().turnCameraOn(config.turnOnCameraWhenCohosted);
         ZegoUIKit().turnMicrophoneOn(true);
+
+        ZegoUIKit()
+            .getLocalUser()
+            .camera
+            .addListener(onLocalCameraStateChanged);
+        ZegoUIKit()
+            .getLocalUser()
+            .microphone
+            .addListener(onLocalMicrophoneStateChanged);
+
         break;
     }
 
     audienceLocalConnectStateNotifier.value = state;
+  }
+
+  void onLocalCameraStateChanged() {
+    if (!ZegoUIKit().getLocalUser().camera.value &&
+        !ZegoUIKit().getLocalUser().microphone.value) {
+      ZegoLoggerService.logInfo(
+        "co-host's camera and microphone are closed, update connect state to idle",
+        tag: 'live streaming',
+        subTag: 'connect manager',
+      );
+
+      updateAudienceConnectState(ConnectState.idle);
+    }
+  }
+
+  void onLocalMicrophoneStateChanged() {
+    if (!ZegoUIKit().getLocalUser().camera.value &&
+        !ZegoUIKit().getLocalUser().microphone.value) {
+      ZegoLoggerService.logInfo(
+        "co-host's camera and microphone are closed, update connect state to idle",
+        tag: 'live streaming',
+        subTag: 'connect manager',
+      );
+
+      updateAudienceConnectState(ConnectState.idle);
+    }
+  }
+}
+
+extension ZegoLiveConnectManagerCoHostCount on ZegoLiveConnectManager {
+  void initCoHostMixin() {
+    subscriptions
+      ..add(ZegoUIKit().getUserListStream().listen(onUserListUpdated))
+      ..add(ZegoUIKit().getUserJoinStream().listen(onUserJoinUpdated))
+      ..add(ZegoUIKit().getUserLeaveStream().listen(onUserLeaveUpdated))
+      ..add(ZegoUIKit()
+          .getAudioVideoListStream()
+          .listen(onAudioVideoListUpdated));
+  }
+
+  void onAudioVideoListUpdated(List<ZegoUIKitUser> users) {
+    coHostCount.value = users.where((user) => isCoHost(user)).length;
+
+    ZegoLoggerService.logInfo(
+      'audio video list changed, co-host count changed to ${coHostCount.value}',
+      tag: 'live streaming',
+      subTag: 'connect manager co-host count',
+    );
+
+    if (isMaxCoHostReached && hostManager.isLocalHost) {
+      final coHosts = List<ZegoUIKitUser>.from(users)
+        ..removeWhere((user) => hostManager.notifier.value?.id == user.id)
+        ..sort((left, right) {
+          return left.streamTimestamp.compareTo(right.streamTimestamp);
+        });
+
+      final kickCount = coHosts.length - config.maxCoHostCount;
+      final kickUsers = coHosts.sublist(0, kickCount);
+      ZegoLoggerService.logInfo(
+        'audio video list changed, max co-host count reach, '
+        'will kick $kickCount user in ${coHosts.length} by sort:$kickUsers',
+        tag: 'live streaming',
+        subTag: 'connect manager co-host count',
+      );
+
+      kickUsers.forEach((user) {
+        kickCoHost(user);
+      });
+    }
+  }
+
+  void onUserListUpdated(List<ZegoUIKitUser> users) {
+    coHostCount.value = users.where((user) => isCoHost(user)).length;
+
+    ZegoLoggerService.logInfo(
+      'user list changed, co-host count changed to ${coHostCount.value}',
+      tag: 'live streaming',
+      subTag: 'connect manager co-host count',
+    );
+  }
+
+  void onUserJoinUpdated(List<ZegoUIKitUser> users) {
+    users.forEach((user) {
+      user.camera.addListener(onUserCameraStateChanged);
+      user.microphone.addListener(onUserMicrophoneStateChanged);
+    });
+  }
+
+  void onUserLeaveUpdated(List<ZegoUIKitUser> users) {
+    users.forEach((user) {
+      user.camera.removeListener(onUserCameraStateChanged);
+      user.microphone.removeListener(onUserMicrophoneStateChanged);
+    });
+  }
+
+  void onUserCameraStateChanged() {
+    coHostCount.value =
+        ZegoUIKit().getAllUsers().where((user) => isCoHost(user)).length;
+
+    ZegoLoggerService.logInfo(
+      'user camera state changed, co-host count changed to ${coHostCount.value}',
+      tag: 'live streaming',
+      subTag: 'connect manager co-host count',
+    );
+  }
+
+  void onUserMicrophoneStateChanged() {
+    coHostCount.value =
+        ZegoUIKit().getAllUsers().where((user) => isCoHost(user)).length;
+
+    ZegoLoggerService.logInfo(
+      'user microphone state changed, co-host count changed to ${coHostCount.value}',
+      tag: 'live streaming',
+      subTag: 'connect manager co-host count',
+    );
   }
 }

@@ -1,3 +1,8 @@
+## 2.5.11
+- Support for limiting the maximum number of co-hosts.
+- Support for automatically disabling the camera for co-hosts by default.
+- Support for setting the video resolution.
+
 ## 2.5.10
 - Update dependencies
 

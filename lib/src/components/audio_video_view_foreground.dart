@@ -139,7 +139,7 @@ class ZegoAudioVideoForeground extends StatelessWidget {
     double maxWidth,
     double maxHeight,
   ) {
-    if (!hostManager.isHost ||
+    if (!hostManager.isLocalHost ||
         user == null ||
         user.id == hostManager.notifier.value?.id) {
       return Container();
@@ -171,6 +171,7 @@ class ZegoAudioVideoForeground extends StatelessWidget {
           context: context,
           user: user,
           popupItems: popupItems,
+          hostManager: hostManager,
           connectManager: connectManager,
           popUpManager: popUpManager,
           translationText: translationText,

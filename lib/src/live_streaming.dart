@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:permission_handler/permission_handler.dart';
+import 'package:zego_express_engine/zego_express_engine.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/dialogs.dart';
 
@@ -103,14 +104,8 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     WidgetsBinding.instance?.addObserver(this);
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
-      log('version: zego_uikit_prebuilt_live_streaming: 2.5.10; $version');
+      log('version: zego_uikit_prebuilt_live_streaming: 2.5.11; $version');
     });
-
-    startedByLocalNotifier.addListener(onStartedByLocalValueChanged);
-
-    if (!widget.config.previewConfig.showPreviewForHost) {
-      startedByLocalNotifier.value = true;
-    }
 
     hostManager = ZegoLiveHostManager(config: widget.config);
     liveStatusManager = ZegoLiveStatusManager(
@@ -156,6 +151,8 @@ class _ZegoUIKitPrebuiltLiveStreamingState
 
     initToast();
     initContext();
+
+    startedByLocalNotifier.addListener(onStartedByLocalValueChanged);
   }
 
   @override
@@ -211,12 +208,12 @@ class _ZegoUIKitPrebuiltLiveStreamingState
   Widget build(BuildContext context) {
     widget.config.onLeaveConfirmation ??= onLeaveConfirmation;
 
-    return hostManager.isHost
+    return hostManager.isLocalHost
         ? ValueListenableBuilder<ZegoUIKitUser?>(
             valueListenable: hostManager.notifier,
             builder: (context, host, _) {
               /// local is host, but host updated
-              if (hostManager.isHost) {
+              if (hostManager.isLocalHost) {
                 return ValueListenableBuilder<bool>(
                     valueListenable: startedByLocalNotifier,
                     builder: (context, isLiveStarted, _) {
@@ -276,6 +273,23 @@ class _ZegoUIKitPrebuiltLiveStreamingState
   }
 
   void onContextInit(_) {
+    ZegoLoggerService.logInfo(
+      'video config, preset:${widget.config.videoConfig.preset}, '
+      'bitrate:${widget.config.videoConfig.bitrate}, '
+      'fps: ${widget.config.videoConfig.fps}',
+      tag: 'live streaming',
+      subTag: 'prebuilt',
+    );
+    final videoConfig =
+        ZegoVideoConfig.preset(widget.config.videoConfig.preset);
+    if (null != widget.config.videoConfig.bitrate) {
+      videoConfig.bitrate = widget.config.videoConfig.bitrate!;
+    }
+    if (null != widget.config.videoConfig.fps) {
+      videoConfig.fps = widget.config.videoConfig.fps!;
+    }
+    ZegoUIKit().setVideoConfig(videoConfig);
+
     final useBeautyEffect = widget.config.bottomMenuBarConfig.hostButtons
             .contains(ZegoMenuBarButtonName.beautyEffectButton) ||
         widget.config.bottomMenuBarConfig.coHostButtons
@@ -322,6 +336,10 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     await liveDurationManager.init();
 
     readyNotifier.value = true;
+
+    if (!widget.config.previewConfig.showPreviewForHost) {
+      startedByLocalNotifier.value = true;
+    }
   }
 
   Future<void> uninitContext() async {
