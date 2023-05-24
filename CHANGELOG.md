@@ -1,4 +1,10 @@
-## 2.5.11
+## 2.7.0
+- supports in-app minimization.
+
+## 2.6.1
+- Update comments
+
+## 2.6.0
 - Support for limiting the maximum number of co-hosts.
 - Support for automatically disabling the camera for co-hosts by default.
 - Support for setting the video resolution.

@@ -1,5 +1,4 @@
 // Dart imports:
-import 'dart:async';
 import 'dart:core';
 
 // Flutter imports:
@@ -11,14 +10,16 @@ import 'package:zego_uikit/zego_uikit.dart';
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/bottom_bar.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/defines.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/duration_time_board.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/message/in_room_live_commenting_view.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/top_bar.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/connect/connect_manager.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/connect/host_manager.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/connect/live_duration_manager.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/connect/live_status_manager.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/connect/plugins.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect/connect_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect/host_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect/live_duration_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect/live_status_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect/plugins.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/core/minimizing/prebuilt_data.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_controller.dart';
 
@@ -27,6 +28,7 @@ class ZegoLivePageSurface extends StatefulWidget {
   const ZegoLivePageSurface({
     Key? key,
     required this.config,
+    required this.prebuiltData,
     required this.hostManager,
     required this.liveStatusManager,
     required this.liveDurationManager,
@@ -37,6 +39,7 @@ class ZegoLivePageSurface extends StatefulWidget {
   }) : super(key: key);
 
   final ZegoUIKitPrebuiltLiveStreamingConfig config;
+  final ZegoUIKitPrebuiltLiveStreamingData prebuiltData;
 
   final ZegoLiveHostManager hostManager;
   final ZegoLiveStatusManager liveStatusManager;
@@ -57,10 +60,6 @@ class ZegoLivePageSurfaceState extends State<ZegoLivePageSurface>
   late AnimationController _animationController;
   late Animation<Offset> _animation;
 
-  Timer? durationTimer;
-  Duration? beginDuration;
-  var durationNotifier = ValueNotifier<Duration>(Duration.zero);
-
   @override
   void initState() {
     super.initState();
@@ -73,27 +72,11 @@ class ZegoLivePageSurfaceState extends State<ZegoLivePageSurface>
       begin: Offset.zero,
       end: const Offset(1.0, 0.0),
     ).animate(_animationController);
-
-    if (widget.config.durationConfig.isVisible) {
-      ZegoLoggerService.logInfo(
-        'init duration',
-        tag: 'live',
-        subTag: 'prebuilt',
-      );
-
-      if (widget.liveDurationManager.isValid) {
-        startDurationTimer();
-      } else {
-        widget.liveDurationManager.notifier
-            .addListener(onLiveDurationManagerValueChanged);
-      }
-    }
   }
 
   @override
   void dispose() {
     _animationController.dispose();
-    durationTimer?.cancel();
 
     super.dispose();
   }
@@ -135,6 +118,7 @@ class ZegoLivePageSurfaceState extends State<ZegoLivePageSurface>
       top: 64.r,
       child: ZegoTopBar(
         config: widget.config,
+        prebuiltData: widget.prebuiltData,
         isPluginEnabled: widget.plugins?.isEnabled ?? false,
         hostManager: widget.hostManager,
         hostUpdateEnabledNotifier: widget.hostManager.hostUpdateEnabledNotifier,
@@ -152,6 +136,7 @@ class ZegoLivePageSurfaceState extends State<ZegoLivePageSurface>
       child: ZegoBottomBar(
         buttonSize: zegoLiveButtonSize,
         config: widget.config,
+        prebuiltData: widget.prebuiltData,
         hostManager: widget.hostManager,
         hostUpdateEnabledNotifier: widget.hostManager.hostUpdateEnabledNotifier,
         liveStatusNotifier: widget.liveStatusManager.notifier,
@@ -185,57 +170,10 @@ class ZegoLivePageSurfaceState extends State<ZegoLivePageSurface>
       left: 0,
       right: 0,
       top: 10,
-      child: ValueListenableBuilder<Duration>(
-        valueListenable: durationNotifier,
-        builder: (context, elapsedTime, _) {
-          if (!widget.liveDurationManager.isValid) {
-            return Container();
-          }
-
-          return elapsedTime.inSeconds <= 0
-              ? Container()
-              : Text(
-                  durationFormatString(elapsedTime),
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.white,
-                    decoration: TextDecoration.none,
-                    fontSize: 25.r,
-                  ),
-                );
-        },
+      child: LiveDurationTimeBoard(
+        config: widget.config.durationConfig,
+        manager: widget.liveDurationManager,
       ),
     );
-  }
-
-  String durationFormatString(Duration elapsedTime) {
-    final hours = elapsedTime.inHours;
-    final minutes = elapsedTime.inMinutes.remainder(60);
-    final seconds = elapsedTime.inSeconds.remainder(60);
-
-    final minutesFormatString =
-        '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
-    return hours > 0
-        ? '${hours.toString().padLeft(2, '0')}:'
-        : minutesFormatString;
-  }
-
-  void onLiveDurationManagerValueChanged() {
-    if (widget.liveDurationManager.isValid) {
-      startDurationTimer();
-    }
-  }
-
-  void startDurationTimer() {
-    final networkTimestamp = ZegoUIKit().getNetworkTimeStamp();
-    beginDuration = DateTime.fromMillisecondsSinceEpoch(networkTimestamp)
-        .difference(widget.liveDurationManager.notifier.value);
-
-    durationTimer?.cancel();
-    durationTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      durationNotifier.value = beginDuration! + Duration(seconds: timer.tick);
-      widget.config.durationConfig.onDurationUpdate
-          ?.call(durationNotifier.value);
-    });
   }
 }

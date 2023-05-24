@@ -12,7 +12,7 @@ export 'defines.dart';
 export 'src/pk_impl.dart';
 
 /// @nodoc
-class ZegoUIKitPrebuiltLiveStreamingService {
+class ZegoUIKitPrebuiltLiveStreamingPKService {
   Future<ZegoLiveStreamingPKBattleResult> sendPKBattleRequest(
     String anotherHostUserID, {
     int timeout = 60,
@@ -28,6 +28,8 @@ class ZegoUIKitPrebuiltLiveStreamingService {
   Future<ZegoLiveStreamingPKBattleResult> acceptIncomingPKBattleRequest(
     ZegoIncomingPKBattleRequestReceivedEvent event,
   ) async {
+    _pkImpl.pkBattleRequestReceivedEventInMinimizingNotifier.value = null;
+
     return _pkImpl.acceptIncomingPKBattleRequest(event);
   }
 
@@ -35,6 +37,8 @@ class ZegoUIKitPrebuiltLiveStreamingService {
     ZegoIncomingPKBattleRequestReceivedEvent event, {
     int? rejectCode,
   }) async {
+    _pkImpl.pkBattleRequestReceivedEventInMinimizingNotifier.value = null;
+
     return _pkImpl.rejectIncomingPKBattleRequest(event, rejectCode: rejectCode);
   }
 
@@ -82,13 +86,25 @@ class ZegoUIKitPrebuiltLiveStreamingService {
 
   bool get rootNavigator => _pkImpl.config.rootNavigator;
 
+  ValueNotifier<ZegoIncomingPKBattleRequestReceivedEvent?>
+      get pkBattleRequestReceivedEventInMinimizingNotifier =>
+          _pkImpl.pkBattleRequestReceivedEventInMinimizingNotifier;
+
+  void restorePKBattleRequestReceivedEventFromMinimizing() {
+    _pkImpl.restorePKBattleRequestReceivedEventFromMinimizing();
+  }
+
   // internal
-  factory ZegoUIKitPrebuiltLiveStreamingService() => instance;
+  factory ZegoUIKitPrebuiltLiveStreamingPKService() => instance;
 
-  ZegoUIKitPrebuiltLiveStreamingService._();
+  ZegoUIKitPrebuiltLiveStreamingPKService._();
 
-  static final ZegoUIKitPrebuiltLiveStreamingService instance =
-      ZegoUIKitPrebuiltLiveStreamingService._();
+  static final ZegoUIKitPrebuiltLiveStreamingPKService instance =
+      ZegoUIKitPrebuiltLiveStreamingPKService._();
   static final ZegoLiveStreamingPKBattleManager _pkImpl =
       ZegoLiveStreamingPKBattleManager();
 }
+
+@Deprecated('Since 2.6.1, Please User ZegoUIKitPrebuiltLiveStreamingPKService')
+typedef ZegoUIKitPrebuiltLiveStreamingService
+    = ZegoUIKitPrebuiltLiveStreamingPKService;

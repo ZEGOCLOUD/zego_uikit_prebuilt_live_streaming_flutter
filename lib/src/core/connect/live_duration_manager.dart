@@ -8,7 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
-import 'package:zego_uikit_prebuilt_live_streaming/src/connect/host_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
 
 /// @nodoc
@@ -16,6 +16,8 @@ class ZegoLiveDurationManager {
   final ZegoLiveHostManager hostManager;
   final ZegoUIKitPrebuiltLiveStreamingConfig config;
 
+  bool _initialized = false;
+  
   bool get isValid => notifier.value.millisecondsSinceEpoch > 0;
 
   ZegoLiveDurationManager({
@@ -33,6 +35,18 @@ class ZegoLiveDurationManager {
   bool isPropertyInited = false;
 
   Future<void> init() async {
+    if (_initialized) {
+      ZegoLoggerService.logInfo(
+        'had already init',
+        tag: 'live streaming',
+        subTag: 'seat manager',
+      );
+
+      return;
+    }
+
+    _initialized = true;
+
     ZegoLoggerService.logInfo(
       'init',
       tag: 'live streaming',
@@ -41,6 +55,18 @@ class ZegoLiveDurationManager {
   }
 
   Future<void> uninit() async {
+    if (!_initialized) {
+      ZegoLoggerService.logInfo(
+        'not init before',
+        tag: 'live streaming',
+        subTag: 'seat manager',
+      );
+
+      return;
+    }
+
+    _initialized = false;
+
     ZegoLoggerService.logInfo(
       'uninit',
       tag: 'live streaming',

@@ -178,229 +178,42 @@ extension ZegoLiveStreamingPKBattleManagerEventConv
     });
   }
 
+  void restorePKBattleRequestReceivedEventFromMinimizing() {
+    if (null == pkBattleRequestReceivedEventInMinimizingNotifier.value) {
+      ZegoLoggerService.logInfo(
+        'restore pk battle request from minimizing, event is null',
+        tag: 'ZegoLiveStreamingPKBattleService',
+        subTag: 'event',
+      );
+      return;
+    }
+
+    ZegoLoggerService.logInfo(
+      'restore pk battle request from minimizing',
+      tag: 'ZegoLiveStreamingPKBattleService',
+      subTag: 'event',
+    );
+    onIncomingPKBattleRequestReceivedEvent(
+      pkBattleRequestReceivedEventInMinimizingNotifier.value,
+    );
+  }
+
   void initEvent() {
     _subscriptions.addAll([
-      getIncomingPKBattleRequestReceivedEventStream().listen((event) async {
-        ZegoLoggerService.logInfo(
-          'onIncomingPKBattleRequestReceived, $event',
-          tag: 'ZegoLiveStreamingPKBattleService',
-          subTag: 'event',
-        );
-        if (!isLiving || !isHost) {
-          ZegoLoggerService.logInfo(
-            'onIncomingPKBattleRequestReceived, isLiving:$isLiving, '
-            'isHost:$isHost, auto reject with code '
-            '${ZegoLiveStreamingPKBattleRejectCode.hostStateError.index}',
-            tag: 'ZegoLiveStreamingPKBattleService',
-            subTag: 'event',
-          );
-          ZegoUIKit().getSignalingPlugin().refuseInvitation(
-              inviterID: event.anotherHost.id,
-              data: jsonEncode({
-                'sub_type': ZegoPKBattleRequestSubType.start.index,
-                'code':
-                    ZegoLiveStreamingPKBattleRejectCode.hostStateError.index,
-                'invitation_id': event.requestID,
-                'invitee_name': ZegoUIKit().getLocalUser().name,
-              }));
-          return;
-        }
-
-        if (state.value != ZegoLiveStreamingPKBattleState.idle) {
-          final ret = await ZegoUIKit().getSignalingPlugin().refuseInvitation(
-                inviterID: event.anotherHost.id,
-                data: jsonEncode({
-                  'sub_type': ZegoPKBattleRequestSubType.start.index,
-                  'code': ZegoLiveStreamingPKBattleRejectCode.busy.index,
-                  'invitation_id': event.requestID,
-                  'invitee_name': ZegoUIKit().getLocalUser().name,
-                }),
-              );
-
-          ((ret.error != null)
-                  ? ZegoLoggerService.logError
-                  : ZegoLoggerService.logInfo)
-              .call(
-            'onIncomingPKBattleRequestReceived, busy, auto reject, ret:$ret',
-            tag: 'ZegoLiveStreamingPKBattleService',
-            subTag: 'api',
-          );
-          return;
-        }
-
-        ZegoUIKitPrebuiltLiveStreamingService().pkBattleState.value =
-            ZegoLiveStreamingPKBattleState.waitingMyResponse;
-        void defaultAction() => ZegoLiveStreamingPKBattleDefaultActions
-            .onIncomingPKBattleRequestReceived(event);
-        void customAction() =>
-            config.pkBattleEvents.onIncomingPKBattleRequestReceived
-                ?.call(event, defaultAction);
-        (config.pkBattleEvents.onIncomingPKBattleRequestReceived != null)
-            ? customAction()
-            : defaultAction();
-      }),
-      getPKBattleEndedByAnotherHostEventStream().listen((event) {
-        ZegoLoggerService.logInfo(
-          'onPKBattleEndedByAnotherHost, $event',
-          tag: 'ZegoLiveStreamingPKBattleService',
-          subTag: 'event',
-        );
-        if (!isLiving ||
-            !isHost ||
-            (state.value != ZegoLiveStreamingPKBattleState.inPKBattle)) {
-          ZegoLoggerService.logInfo(
-            'onPKBattleEndedByAnotherHost, isLiving:$isLiving, '
-            'isHost:$isHost, state:${state.value.name}, ignore stop',
-            tag: 'ZegoLiveStreamingPKBattleService',
-            subTag: 'event',
-          );
-          ZegoUIKit().getSignalingPlugin().refuseInvitation(
-              inviterID: event.anotherHost.id,
-              data: jsonEncode({
-                'sub_type': ZegoPKBattleRequestSubType.stop.index,
-                'code':
-                    ZegoLiveStreamingPKBattleRejectCode.hostStateError.index,
-                'invitation_id': event.requestID,
-                'invitee_name': ZegoUIKit().getLocalUser().name,
-              }));
-          return;
-        }
-
-        void defaultAction() => ZegoLiveStreamingPKBattleDefaultActions
-            .onPKBattleEndedByAnotherHost(event);
-        void customAction() =>
-            config.pkBattleEvents.onPKBattleEndedByAnotherHost
-                ?.call(event, defaultAction);
-        (config.pkBattleEvents.onPKBattleEndedByAnotherHost != null)
-            ? customAction()
-            : defaultAction();
-      }),
-      getIncomingPKBattleRequestCancelledEventStream().listen((event) {
-        ZegoLoggerService.logInfo(
-          'onIncomingPKBattleRequestReceived, $event',
-          tag: 'ZegoLiveStreamingPKBattleService',
-          subTag: 'event',
-        );
-        // TODO add a inner dialog flag
-        if (ZegoUIKitPrebuiltLiveStreamingService().pkBattleState.value ==
-            ZegoLiveStreamingPKBattleState.waitingMyResponse) {
-          ZegoLoggerService.logInfo(
-            'onIncomingPKBattleRequestReceived, close inner dialog',
-            tag: 'ZegoLiveStreamingPKBattleService',
-            subTag: 'event',
-          );
-          Navigator.of(
-            context,
-            rootNavigator: config.rootNavigator,
-          ).pop();
-          ZegoUIKitPrebuiltLiveStreamingService().pkBattleState.value =
-              ZegoLiveStreamingPKBattleState.idle;
-        }
-        void defaultAction() => ZegoLiveStreamingPKBattleDefaultActions
-            .onIncomingPKBattleRequestCancelled(event);
-        void customAction() =>
-            config.pkBattleEvents.onIncomingPKBattleRequestCancelled
-                ?.call(event, defaultAction);
-        (config.pkBattleEvents.onIncomingPKBattleRequestCancelled != null)
-            ? customAction()
-            : defaultAction();
-      }),
-      getIncomingPKBattleRequestTimeoutEventStream().listen((event) {
-        ZegoLoggerService.logInfo(
-          'onIncomingPKBattleRequestTimeout, $event',
-          tag: 'ZegoLiveStreamingPKBattleService',
-          subTag: 'event',
-        );
-        // TODO add a inner dialog flag
-        if (ZegoUIKitPrebuiltLiveStreamingService().pkBattleState.value ==
-            ZegoLiveStreamingPKBattleState.waitingMyResponse) {
-          ZegoLoggerService.logInfo(
-            'onIncomingPKBattleRequestTimeout, closes inner dialog',
-            tag: 'ZegoLiveStreamingPKBattleService',
-            subTag: 'event',
-          );
-          Navigator.of(
-            context,
-            rootNavigator: config.rootNavigator,
-          ).pop();
-          ZegoUIKitPrebuiltLiveStreamingService().pkBattleState.value =
-              ZegoLiveStreamingPKBattleState.idle;
-        }
-        void defaultAction() => ZegoLiveStreamingPKBattleDefaultActions
-            .onIncomingPKBattleRequestTimeout(event);
-        void customAction() =>
-            config.pkBattleEvents.onIncomingPKBattleRequestTimeout
-                ?.call(event, defaultAction);
-        (config.pkBattleEvents.onIncomingPKBattleRequestTimeout != null)
-            ? customAction()
-            : defaultAction();
-      }),
-      getOutgoingPKBattleRequestAcceptedEventStream().listen((event) {
-        ZegoLoggerService.logInfo(
-          'onOutgoingPKBattleRequestAccepted, $event',
-          tag: 'ZegoLiveStreamingPKBattleService',
-          subTag: 'event',
-        );
-        waitingOutgoingPKBattleRequestID = '';
-        waitingOutgoingPKBattleRequestUserID = '';
-        void defaultAction() => ZegoLiveStreamingPKBattleDefaultActions
-            .onOutgoingPKBattleRequestAccepted(event);
-        void customAction() =>
-            config.pkBattleEvents.onOutgoingPKBattleRequestAccepted
-                ?.call(event, defaultAction);
-        (config.pkBattleEvents.onOutgoingPKBattleRequestAccepted != null)
-            ? customAction()
-            : defaultAction();
-      }),
-      getOutgoingPKBattleRequestRejectedEventStream().listen((event) {
-        var message = 'code: ${event.code}.';
-        if (event.code == ZegoLiveStreamingPKBattleRejectCode.busy.index) {
-          message = 'The host is busy.';
-        } else if (event.code ==
-            ZegoLiveStreamingPKBattleRejectCode.hostStateError.index) {
-          message =
-              "Failed to initiated the PK battle cause the host hasn't started a livestream.";
-        } else if (event.code ==
-            ZegoLiveStreamingPKBattleRejectCode.reject.index) {
-          message = 'The host rejected your request.';
-        }
-        ZegoLoggerService.logInfo(
-          'onOutgoingPKBattleRequestRejected, $event ($message)',
-          tag: 'ZegoLiveStreamingPKBattleService',
-          subTag: 'event',
-        );
-        waitingOutgoingPKBattleRequestID = '';
-        waitingOutgoingPKBattleRequestUserID = '';
-        state.value = ZegoLiveStreamingPKBattleState.idle;
-
-        void defaultAction() => ZegoLiveStreamingPKBattleDefaultActions
-            .onOutgoingPKBattleRequestRejected(event);
-        void customAction() =>
-            config.pkBattleEvents.onOutgoingPKBattleRequestRejected
-                ?.call(event, defaultAction);
-        (config.pkBattleEvents.onOutgoingPKBattleRequestRejected != null)
-            ? customAction()
-            : defaultAction();
-      }),
-      getOutgoingPKBattleRequestTimeoutEventStream().listen((event) {
-        ZegoLoggerService.logInfo(
-          'onOutgoingPKBattleRequestTimeout, $event',
-          tag: 'ZegoLiveStreamingPKBattleService',
-          subTag: 'event',
-        );
-        waitingOutgoingPKBattleRequestID = '';
-        waitingOutgoingPKBattleRequestUserID = '';
-        ZegoUIKitPrebuiltLiveStreamingService().pkBattleState.value =
-            ZegoLiveStreamingPKBattleState.idle;
-        void defaultAction() => ZegoLiveStreamingPKBattleDefaultActions
-            .onOutgoingPKBattleRequestTimeout(event);
-        void customAction() =>
-            config.pkBattleEvents.onOutgoingPKBattleRequestTimeout
-                ?.call(event, defaultAction);
-        (config.pkBattleEvents.onOutgoingPKBattleRequestTimeout != null)
-            ? customAction()
-            : defaultAction();
-      }),
+      getIncomingPKBattleRequestReceivedEventStream()
+          .listen(onIncomingPKBattleRequestReceivedEvent),
+      getPKBattleEndedByAnotherHostEventStream()
+          .listen(onPKBattleEndedByAnotherHostEvent),
+      getIncomingPKBattleRequestCancelledEventStream()
+          .listen(onIncomingPKBattleRequestCancelledEvent),
+      getIncomingPKBattleRequestTimeoutEventStream()
+          .listen(onIncomingPKBattleRequestTimeoutEvent),
+      getOutgoingPKBattleRequestAcceptedEventStream()
+          .listen(onOutgoingPKBattleRequestAcceptedEvent),
+      getOutgoingPKBattleRequestRejectedEventStream()
+          .listen(onOutgoingPKBattleRequestRejectedEvent),
+      getOutgoingPKBattleRequestTimeoutEventStream()
+          .listen(onOutgoingPKBattleRequestTimeoutEvent),
     ]);
   }
 
@@ -413,5 +226,253 @@ extension ZegoLiveStreamingPKBattleManagerEventConv
     for (final element in _subscriptions) {
       element.cancel();
     }
+  }
+
+  void onIncomingPKBattleRequestReceivedEvent(event) async {
+    ZegoLoggerService.logInfo(
+      'onIncomingPKBattleRequestReceived, $event',
+      tag: 'ZegoLiveStreamingPKBattleService',
+      subTag: 'event',
+    );
+
+    if (!isLiving || !isHost) {
+      ZegoLoggerService.logInfo(
+        'onIncomingPKBattleRequestReceived, isLiving:$isLiving, '
+        'isHost:$isHost, auto reject with code '
+        '${ZegoLiveStreamingPKBattleRejectCode.hostStateError.index}',
+        tag: 'ZegoLiveStreamingPKBattleService',
+        subTag: 'event',
+      );
+      ZegoUIKit().getSignalingPlugin().refuseInvitation(
+          inviterID: event.anotherHost.id,
+          data: jsonEncode({
+            'sub_type': ZegoPKBattleRequestSubType.start.index,
+            'code': ZegoLiveStreamingPKBattleRejectCode.hostStateError.index,
+            'invitation_id': event.requestID,
+            'invitee_name': ZegoUIKit().getLocalUser().name,
+          }));
+      return;
+    }
+
+    if (state.value != ZegoLiveStreamingPKBattleState.idle) {
+      final ret = await ZegoUIKit().getSignalingPlugin().refuseInvitation(
+            inviterID: event.anotherHost.id,
+            data: jsonEncode({
+              'sub_type': ZegoPKBattleRequestSubType.start.index,
+              'code': ZegoLiveStreamingPKBattleRejectCode.busy.index,
+              'invitation_id': event.requestID,
+              'invitee_name': ZegoUIKit().getLocalUser().name,
+            }),
+          );
+
+      ((ret.error != null)
+              ? ZegoLoggerService.logError
+              : ZegoLoggerService.logInfo)
+          .call(
+        'onIncomingPKBattleRequestReceived, busy, auto reject, ret:$ret',
+        tag: 'ZegoLiveStreamingPKBattleService',
+        subTag: 'api',
+      );
+      return;
+    }
+
+    /// check if minimizing
+    pkBattleRequestReceivedEventInMinimizingNotifier.value = null;
+    if (PrebuiltLiveStreamingMiniOverlayPageState.minimizing ==
+        ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine().state()) {
+      ZegoLoggerService.logInfo(
+        'is minimizing now, cache the event:$event',
+        tag: 'ZegoLiveStreamingPKBattleService',
+        subTag: 'event',
+      );
+
+      pkBattleRequestReceivedEventInMinimizingNotifier.value = event;
+      return;
+    }
+
+    ZegoUIKitPrebuiltLiveStreamingPKService().pkBattleState.value =
+        ZegoLiveStreamingPKBattleState.waitingMyResponse;
+    void defaultAction() => ZegoLiveStreamingPKBattleDefaultActions
+        .onIncomingPKBattleRequestReceived(event);
+    void customAction() =>
+        config.pkBattleEvents.onIncomingPKBattleRequestReceived
+            ?.call(event, defaultAction);
+    (config.pkBattleEvents.onIncomingPKBattleRequestReceived != null)
+        ? customAction()
+        : defaultAction();
+  }
+
+  void onPKBattleEndedByAnotherHostEvent(event) {
+    ZegoLoggerService.logInfo(
+      'onPKBattleEndedByAnotherHost, $event',
+      tag: 'ZegoLiveStreamingPKBattleService',
+      subTag: 'event',
+    );
+    if (!isLiving ||
+        !isHost ||
+        (state.value != ZegoLiveStreamingPKBattleState.inPKBattle)) {
+      ZegoLoggerService.logInfo(
+        'onPKBattleEndedByAnotherHost, isLiving:$isLiving, '
+        'isHost:$isHost, state:${state.value.name}, ignore stop',
+        tag: 'ZegoLiveStreamingPKBattleService',
+        subTag: 'event',
+      );
+      ZegoUIKit().getSignalingPlugin().refuseInvitation(
+          inviterID: event.anotherHost.id,
+          data: jsonEncode({
+            'sub_type': ZegoPKBattleRequestSubType.stop.index,
+            'code': ZegoLiveStreamingPKBattleRejectCode.hostStateError.index,
+            'invitation_id': event.requestID,
+            'invitee_name': ZegoUIKit().getLocalUser().name,
+          }));
+      return;
+    }
+
+    void defaultAction() =>
+        ZegoLiveStreamingPKBattleDefaultActions.onPKBattleEndedByAnotherHost(
+            event);
+    void customAction() => config.pkBattleEvents.onPKBattleEndedByAnotherHost
+        ?.call(event, defaultAction);
+    (config.pkBattleEvents.onPKBattleEndedByAnotherHost != null)
+        ? customAction()
+        : defaultAction();
+  }
+
+  void onIncomingPKBattleRequestCancelledEvent(event) {
+    ZegoLoggerService.logInfo(
+      'onIncomingPKBattleRequestReceived, $event',
+      tag: 'ZegoLiveStreamingPKBattleService',
+      subTag: 'event',
+    );
+
+    // TODO add a inner dialog flag
+    if (ZegoUIKitPrebuiltLiveStreamingPKService().pkBattleState.value ==
+        ZegoLiveStreamingPKBattleState.waitingMyResponse) {
+      ZegoLoggerService.logInfo(
+        'onIncomingPKBattleRequestReceived, close inner dialog',
+        tag: 'ZegoLiveStreamingPKBattleService',
+        subTag: 'event',
+      );
+      Navigator.of(
+        context,
+        rootNavigator: config.rootNavigator,
+      ).pop();
+      ZegoUIKitPrebuiltLiveStreamingPKService().pkBattleState.value =
+          ZegoLiveStreamingPKBattleState.idle;
+    }
+
+    pkBattleRequestReceivedEventInMinimizingNotifier.value = null;
+
+    void defaultAction() => ZegoLiveStreamingPKBattleDefaultActions
+        .onIncomingPKBattleRequestCancelled(event);
+    void customAction() =>
+        config.pkBattleEvents.onIncomingPKBattleRequestCancelled
+            ?.call(event, defaultAction);
+    (config.pkBattleEvents.onIncomingPKBattleRequestCancelled != null)
+        ? customAction()
+        : defaultAction();
+  }
+
+  void onIncomingPKBattleRequestTimeoutEvent(event) {
+    ZegoLoggerService.logInfo(
+      'onIncomingPKBattleRequestTimeout, $event',
+      tag: 'ZegoLiveStreamingPKBattleService',
+      subTag: 'event',
+    );
+
+    // TODO add a inner dialog flag
+    if (ZegoUIKitPrebuiltLiveStreamingPKService().pkBattleState.value ==
+        ZegoLiveStreamingPKBattleState.waitingMyResponse) {
+      ZegoLoggerService.logInfo(
+        'onIncomingPKBattleRequestTimeout, closes inner dialog',
+        tag: 'ZegoLiveStreamingPKBattleService',
+        subTag: 'event',
+      );
+      Navigator.of(
+        context,
+        rootNavigator: config.rootNavigator,
+      ).pop();
+      ZegoUIKitPrebuiltLiveStreamingPKService().pkBattleState.value =
+          ZegoLiveStreamingPKBattleState.idle;
+    }
+
+    pkBattleRequestReceivedEventInMinimizingNotifier.value = null;
+
+    void defaultAction() => ZegoLiveStreamingPKBattleDefaultActions
+        .onIncomingPKBattleRequestTimeout(event);
+    void customAction() =>
+        config.pkBattleEvents.onIncomingPKBattleRequestTimeout
+            ?.call(event, defaultAction);
+    (config.pkBattleEvents.onIncomingPKBattleRequestTimeout != null)
+        ? customAction()
+        : defaultAction();
+  }
+
+  void onOutgoingPKBattleRequestAcceptedEvent(event) {
+    ZegoLoggerService.logInfo(
+      'onOutgoingPKBattleRequestAccepted, $event',
+      tag: 'ZegoLiveStreamingPKBattleService',
+      subTag: 'event',
+    );
+    waitingOutgoingPKBattleRequestID = '';
+    waitingOutgoingPKBattleRequestUserID = '';
+    void defaultAction() => ZegoLiveStreamingPKBattleDefaultActions
+        .onOutgoingPKBattleRequestAccepted(event);
+    void customAction() =>
+        config.pkBattleEvents.onOutgoingPKBattleRequestAccepted
+            ?.call(event, defaultAction);
+    (config.pkBattleEvents.onOutgoingPKBattleRequestAccepted != null)
+        ? customAction()
+        : defaultAction();
+  }
+
+  void onOutgoingPKBattleRequestRejectedEvent(event) {
+    var message = 'code: ${event.code}.';
+    if (event.code == ZegoLiveStreamingPKBattleRejectCode.busy.index) {
+      message = 'The host is busy.';
+    } else if (event.code ==
+        ZegoLiveStreamingPKBattleRejectCode.hostStateError.index) {
+      message =
+          "Failed to initiated the PK battle cause the host hasn't started a livestream.";
+    } else if (event.code == ZegoLiveStreamingPKBattleRejectCode.reject.index) {
+      message = 'The host rejected your request.';
+    }
+    ZegoLoggerService.logInfo(
+      'onOutgoingPKBattleRequestRejected, $event ($message)',
+      tag: 'ZegoLiveStreamingPKBattleService',
+      subTag: 'event',
+    );
+    waitingOutgoingPKBattleRequestID = '';
+    waitingOutgoingPKBattleRequestUserID = '';
+    state.value = ZegoLiveStreamingPKBattleState.idle;
+
+    void defaultAction() => ZegoLiveStreamingPKBattleDefaultActions
+        .onOutgoingPKBattleRequestRejected(event);
+    void customAction() =>
+        config.pkBattleEvents.onOutgoingPKBattleRequestRejected
+            ?.call(event, defaultAction);
+    (config.pkBattleEvents.onOutgoingPKBattleRequestRejected != null)
+        ? customAction()
+        : defaultAction();
+  }
+
+  void onOutgoingPKBattleRequestTimeoutEvent(event) {
+    ZegoLoggerService.logInfo(
+      'onOutgoingPKBattleRequestTimeout, $event',
+      tag: 'ZegoLiveStreamingPKBattleService',
+      subTag: 'event',
+    );
+    waitingOutgoingPKBattleRequestID = '';
+    waitingOutgoingPKBattleRequestUserID = '';
+    ZegoUIKitPrebuiltLiveStreamingPKService().pkBattleState.value =
+        ZegoLiveStreamingPKBattleState.idle;
+    void defaultAction() => ZegoLiveStreamingPKBattleDefaultActions
+        .onOutgoingPKBattleRequestTimeout(event);
+    void customAction() =>
+        config.pkBattleEvents.onOutgoingPKBattleRequestTimeout
+            ?.call(event, defaultAction);
+    (config.pkBattleEvents.onOutgoingPKBattleRequestTimeout != null)
+        ? customAction()
+        : defaultAction();
   }
 }

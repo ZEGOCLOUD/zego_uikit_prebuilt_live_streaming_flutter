@@ -12,7 +12,7 @@ import 'package:zego_uikit/zego_uikit.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/effects/beauty_effect_button.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/permissions.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/connect/host_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
 
@@ -48,7 +48,7 @@ class ZegoPreviewPage extends StatefulWidget {
 
   final ValueNotifier<bool> liveStreamingPageReady;
 
-  final ZegoLiveStreamingPreviewConfig config;
+  final ZegoUIKitPrebuiltLiveStreamingConfig config;
 
   @override
   State<ZegoPreviewPage> createState() => _ZegoPreviewPageState();
@@ -105,6 +105,10 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
                   ),
                   topBar(),
                   bottomBar(),
+                  foreground(
+                    constraints.maxWidth,
+                    constraints.maxHeight,
+                  ),
                 ],
               );
             },
@@ -112,6 +116,10 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
         },
       ),
     );
+  }
+
+  Widget foreground(double width, double height) {
+    return widget.config.foreground ?? Container();
   }
 
   Widget background(double height) {
@@ -151,7 +159,7 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
                 ).pop();
               },
               icon: ButtonIcon(
-                icon: widget.config.pageBackIcon ??
+                icon: widget.config.previewConfig.pageBackIcon ??
                     (isRTL(context)
                         ? Transform(
                             alignment: Alignment.center,
@@ -170,7 +178,7 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
               buttonSize: buttonSize,
               iconSize: iconSize,
               icon: ButtonIcon(
-                icon: widget.config.switchCameraIcon ??
+                icon: widget.config.previewConfig.switchCameraIcon ??
                     PrebuiltLiveStreamingImage.asset(
                         PrebuiltLiveStreamingIconUrls.previewFlipCamera),
                 backgroundColor: Colors.transparent,
@@ -204,9 +212,9 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
                   widget.liveStreamingConfig.effectConfig.beautyEffects,
               buttonSize: buttonSize,
               iconSize: iconSize,
-              icon: widget.config.beautyEffectIcon != null
+              icon: widget.config.previewConfig.beautyEffectIcon != null
                   ? ButtonIcon(
-                      icon: widget.config.beautyEffectIcon,
+                      icon: widget.config.previewConfig.beautyEffectIcon,
                     )
                   : null,
             ),

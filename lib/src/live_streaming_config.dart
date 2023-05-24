@@ -35,6 +35,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         audioVideoViewConfig = ZegoPrebuiltAudioVideoViewConfig(
           showSoundWavesInAudioMode: true,
         ),
+        topMenuBarConfig = ZegoTopMenuBarConfig(),
         bottomMenuBarConfig = ZegoBottomMenuBarConfig(
           audienceButtons: plugins?.isEmpty ?? true
               ? []
@@ -80,6 +81,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         audioVideoViewConfig = ZegoPrebuiltAudioVideoViewConfig(
           showSoundWavesInAudioMode: true,
         ),
+        topMenuBarConfig = ZegoTopMenuBarConfig(),
         bottomMenuBarConfig = ZegoBottomMenuBarConfig(
           audienceButtons: plugins?.isEmpty ?? true
               ? []
@@ -103,6 +105,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
     this.rootNavigator = false,
     this.maxCoHostCount = 12,
     this.layout,
+    this.foreground,
     this.background,
     this.confirmDialogInfo,
     this.beautyConfig,
@@ -120,6 +123,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
     ZegoLiveDurationConfig? durationConfig,
     ZegoPrebuiltVideoConfig? videoConfig,
     ZegoInRoomMessageViewConfig? messageConfig,
+    ZegoTopMenuBarConfig? topMenuBarConfig,
     ZegoBottomMenuBarConfig? bottomMenuBarConfig,
     ZegoLiveStreamingPreviewConfig? previewConfig,
     ZegoLiveStreamingPKBattleConfig? pkBattleConfig,
@@ -127,13 +131,14 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
     ZegoPrebuiltAudioVideoViewConfig? audioVideoViewConfig,
   })  : audioVideoViewConfig =
             audioVideoViewConfig ?? ZegoPrebuiltAudioVideoViewConfig(),
+        topMenuBarConfig = topMenuBarConfig ?? ZegoTopMenuBarConfig(),
         bottomMenuBarConfig = bottomMenuBarConfig ?? ZegoBottomMenuBarConfig(),
         memberListConfig = memberListConfig ?? ZegoMemberListConfig(),
         inRoomMessageViewConfig =
             messageConfig ?? ZegoInRoomMessageViewConfig(),
         effectConfig = effectConfig ?? ZegoEffectConfig(),
         innerText = translationText ?? ZegoInnerText(),
-        videoConfig = videoConfig?? ZegoPrebuiltVideoConfig(),
+        videoConfig = videoConfig ?? ZegoPrebuiltVideoConfig(),
         previewConfig = previewConfig ?? ZegoLiveStreamingPreviewConfig(),
         pkBattleConfig = pkBattleConfig ?? ZegoLiveStreamingPKBattleConfig(),
         pkBattleEvents = pkBattleEvents ?? ZegoLiveStreamingPKBattleEvents(),
@@ -181,6 +186,10 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
 
   /// Configuration options for audio/video views.
   ZegoPrebuiltAudioVideoViewConfig audioVideoViewConfig;
+
+  /// Configuration options for the top menu bar (toolbar).
+  /// You can use these options to customize the appearance and behavior of the top menu bar.
+  ZegoTopMenuBarConfig topMenuBarConfig;
 
   /// Configuration options for the bottom menu bar (toolbar).
   /// You can use these options to customize the appearance and behavior of the bottom menu bar.
@@ -261,6 +270,9 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   ///  sendInRoomCommand will sending to everyone in the room if true
   ///  that mean [toUserIDs] of [sendInRoomCommand] function is disabled if true
   bool markAsLargeRoom;
+
+  /// The foreground of the live streaming.
+  Widget? foreground;
 
   /// The background of the live streaming.
   ///
@@ -401,6 +413,17 @@ class ZegoPrebuiltAudioVideoViewConfig {
     this.useVideoViewAspectFill = true,
     this.foregroundBuilder,
     this.backgroundBuilder,
+  });
+}
+
+/// Configuration options for the top menu bar (toolbar).
+class ZegoTopMenuBarConfig {
+  /// These buttons will displayed on the menu bar, order by the list
+  /// only support [minimizingButton] right now
+  List<ZegoMenuBarButtonName> buttons;
+
+  ZegoTopMenuBarConfig({
+    this.buttons = const [],
   });
 }
 

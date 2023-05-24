@@ -12,8 +12,9 @@ import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/dialogs.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/connect/defines.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/connect/host_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect/defines.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect/host_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/core/minimizing/mini_overlay_machine.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_defines.dart';
@@ -28,12 +29,16 @@ part 'pk_utils.dart';
 /// @nodoc
 class ZegoLiveStreamingPKBattleManager {
   late ZegoInnerText translationText;
-  late BuildContext Function() contextQuery;
+  BuildContext Function()? contextQuery;
   late ZegoUIKitPrebuiltLiveStreamingConfig config;
   late ZegoLiveHostManager hostManager;
   late ValueNotifier<LiveStatus> liveStatusNotifier;
   late ValueNotifier<bool> startedByLocalNotifier;
   ZegoLiveStreamingPKBattleStreamCreator? streamCreator;
+
+  /// When the UI is minimized, and the host receives a pk battle request.
+  final pkBattleRequestReceivedEventInMinimizingNotifier =
+      ValueNotifier<ZegoIncomingPKBattleRequestReceivedEvent?>(null);
 
   ValueNotifier<ZegoLiveStreamingPKBattleState> state = ValueNotifier(
     ZegoLiveStreamingPKBattleState.idle,
@@ -47,7 +52,7 @@ class ZegoLiveStreamingPKBattleManager {
   String waitingOutgoingPKBattleRequestUserID = '';
   String waitingOutgoingPKBattleRequestID = '';
 
-  BuildContext get context => contextQuery();
+  BuildContext get context => contextQuery!();
 
   bool get isLiving => liveStatusNotifier.value == LiveStatus.living;
 
@@ -61,7 +66,6 @@ class ZegoLiveStreamingPKBattleManager {
   void init({
     required ZegoUIKitPrebuiltLiveStreamingConfig config,
     required ZegoInnerText translationText,
-    required BuildContext Function() contextQuery,
     required ZegoLiveHostManager hostManager,
     required ValueNotifier<LiveStatus> liveStatusNotifier,
     required ValueNotifier<bool> startedByLocalNotifier,
@@ -73,7 +77,6 @@ class ZegoLiveStreamingPKBattleManager {
     );
     this.config = config;
     this.translationText = translationText;
-    this.contextQuery = contextQuery;
     this.hostManager = hostManager;
     this.liveStatusNotifier = liveStatusNotifier;
     this.startedByLocalNotifier = startedByLocalNotifier;
@@ -89,7 +92,10 @@ class ZegoLiveStreamingPKBattleManager {
   }
 
   Future<void> uninit() async {
-    if (!inited) return;
+    if (!inited) {
+      return;
+    }
+
     ZegoLoggerService.logInfo(
       'uninit',
       tag: 'ZegoLiveStreamingPKBattleService',
@@ -708,11 +714,11 @@ class ZegoLiveStreamingPKBattleManager {
       // audience
       if (!isHost) {
         /// hide invite join co-host dialog
-        if (hostManager.connectManager?.isInviteToJoinCoHostDlgVisible ??
+        if (hostManager.connectManager?.isInvitedToJoinCoHostDlgVisible ??
             false) {
-          hostManager.connectManager!.isInviteToJoinCoHostDlgVisible = false;
+          hostManager.connectManager!.isInvitedToJoinCoHostDlgVisible = false;
           Navigator.of(
-            contextQuery(),
+            contextQuery!(),
             rootNavigator: config.rootNavigator,
           ).pop();
         }
@@ -721,7 +727,7 @@ class ZegoLiveStreamingPKBattleManager {
         if (hostManager.connectManager?.isEndCoHostDialogVisible ?? false) {
           hostManager.connectManager!.isEndCoHostDialogVisible = false;
           Navigator.of(
-            contextQuery(),
+            contextQuery!(),
             rootNavigator: config.rootNavigator,
           ).pop();
         }

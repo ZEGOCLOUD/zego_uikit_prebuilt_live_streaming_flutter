@@ -12,10 +12,12 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/components/leave_button.d
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/message/disable_chat_button.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/message/in_room_message_button.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_manager.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/connect/co_host_control_button.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/connect/connect_manager.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/connect/defines.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/connect/host_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect/co_host_control_button.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect/connect_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect/defines.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect/host_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/core/minimizing/mini_button.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/core/minimizing/prebuilt_data.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_defines.dart';
@@ -24,6 +26,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/pk/src/pk_impl.dart';
 /// @nodoc
 class ZegoBottomBar extends StatefulWidget {
   final ZegoUIKitPrebuiltLiveStreamingConfig config;
+  final ZegoUIKitPrebuiltLiveStreamingData prebuiltData;
   final Size buttonSize;
 
   final ZegoLiveHostManager hostManager;
@@ -38,6 +41,7 @@ class ZegoBottomBar extends StatefulWidget {
   const ZegoBottomBar({
     Key? key,
     required this.config,
+    required this.prebuiltData,
     required this.buttonSize,
     required this.hostManager,
     required this.hostUpdateEnabledNotifier,
@@ -629,6 +633,10 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
         }
       case ZegoMenuBarButtonName.expanding:
         return Expanded(child: Container());
+      case ZegoMenuBarButtonName.minimizingButton:
+        return ZegoUIKitPrebuiltLiveStreamingMinimizingButton(
+          prebuiltData: widget.prebuiltData,
+        );
     }
   }
 }

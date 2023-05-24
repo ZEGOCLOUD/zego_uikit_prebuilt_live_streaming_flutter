@@ -10,8 +10,8 @@ import 'package:zego_uikit/zego_uikit.dart';
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/member/member_list_sheet.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_manager.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/connect/connect_manager.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/connect/host_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect/connect_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_inner_text.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/pk/src/pk_impl.dart';
 
@@ -54,6 +54,7 @@ class _ZegoMemberButtonState extends State<ZegoMemberButton> {
     userListSubscription =
         ZegoUIKit().getUserListStream().listen(onUserListUpdated);
 
+    onRequestCoHostUsersUpdated();
     widget.connectManager.requestCoHostUsersNotifier
         .addListener(onRequestCoHostUsersUpdated);
   }

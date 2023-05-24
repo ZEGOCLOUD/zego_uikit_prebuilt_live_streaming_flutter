@@ -10,6 +10,8 @@ import 'package:zego_uikit/zego_uikit.dart';
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/toast.dart';
 
+import '../minimizing/mini_overlay_machine.dart';
+
 /// @nodoc
 enum PluginNetworkState {
   unknown,
@@ -74,6 +76,16 @@ class ZegoPrebuiltPlugins {
   }
 
   Future<void> init() async {
+    if (initialized) {
+      ZegoLoggerService.logInfo(
+        'plugins had init',
+        tag: 'live streaming',
+        subTag: 'plugin',
+      );
+
+      return;
+    }
+
     ZegoLoggerService.logInfo(
       'plugins init',
       tag: 'live streaming',
@@ -183,6 +195,14 @@ class ZegoPrebuiltPlugins {
   }
 
   Future<void> uninit() async {
+    if (!initialized) {
+      ZegoLoggerService.logInfo(
+        'is not init before',
+        tag: 'live streaming',
+        subTag: 'plugin',
+      );
+    }
+
     ZegoLoggerService.logInfo(
       'uninit',
       tag: 'live streaming',
@@ -193,11 +213,21 @@ class ZegoPrebuiltPlugins {
     roomHasInitLogin = false;
     tryReLogging = false;
 
-    if (ZegoPluginAdapter().getPlugin(ZegoUIKitPluginType.signaling) != null) {
-      await ZegoUIKit().getSignalingPlugin().leaveRoom();
-      await ZegoUIKit().getSignalingPlugin().logout();
-      await ZegoUIKit().getSignalingPlugin().uninit();
+    if (PrebuiltLiveStreamingMiniOverlayPageState.minimizing ==
+        ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine().state()) {
+      ZegoLoggerService.logInfo(
+        'to minimizing, not need to leave room, logout and uninit',
+        tag: 'live streaming',
+        subTag: 'plugin',
+      );
+    } else {
+      if (ZegoPluginAdapter().getPlugin(ZegoUIKitPluginType.signaling) != null) {
+        await ZegoUIKit().getSignalingPlugin().leaveRoom();
+        await ZegoUIKit().getSignalingPlugin().logout();
+        await ZegoUIKit().getSignalingPlugin().uninit();
+      }
     }
+
     if (ZegoPluginAdapter().getPlugin(ZegoUIKitPluginType.beauty) != null) {
       await ZegoUIKit().getBeautyPlugin().uninit();
     }

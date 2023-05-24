@@ -12,16 +12,17 @@ import 'package:zego_uikit/zego_uikit.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/audio_video_view_foreground.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/live_page_surface.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_manager.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/connect/connect_manager.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/connect/host_manager.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/connect/live_duration_manager.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/connect/live_status_manager.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/connect/plugins.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect/host_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect/live_duration_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect/live_status_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect/plugins.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/core/core_managers.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/core/minimizing/prebuilt_data.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_controller.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/pk/pk_service.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/pk/pk_view.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/pk/src/pk_impl.dart';
 
 /// @nodoc
 /// user and sdk should be login and init before page enter
@@ -34,6 +35,7 @@ class ZegoLivePage extends StatefulWidget {
     required this.userName,
     required this.liveID,
     required this.config,
+    required this.prebuiltData,
     required this.hostManager,
     required this.liveStatusManager,
     required this.liveDurationManager,
@@ -51,6 +53,7 @@ class ZegoLivePage extends StatefulWidget {
   final String liveID;
 
   final ZegoUIKitPrebuiltLiveStreamingConfig config;
+  final ZegoUIKitPrebuiltLiveStreamingData prebuiltData;
 
   final ZegoLiveHostManager hostManager;
   final ZegoLiveStatusManager liveStatusManager;
@@ -71,8 +74,6 @@ class ZegoLivePageState extends State<ZegoLivePage>
   bool audioVideoContainerHostHadSorted = false;
   List<StreamSubscription<dynamic>?> subscriptions = [];
 
-  late final ZegoLiveConnectManager connectManager;
-
   bool get isLiving =>
       LiveStatus.living == widget.liveStatusManager.notifier.value;
 
@@ -83,19 +84,6 @@ class ZegoLivePageState extends State<ZegoLivePage>
   @override
   void initState() {
     super.initState();
-
-    connectManager = ZegoLiveConnectManager(
-      config: widget.config,
-      hostManager: widget.hostManager,
-      liveStatusNotifier: widget.liveStatusManager.notifier,
-      translationText: widget.config.innerText,
-      contextQuery: () {
-        return context;
-      },
-    );
-
-    widget.hostManager.setConnectManger(connectManager);
-    widget.liveStatusManager.setConnectManger(connectManager);
 
     widget.hostManager.notifier.addListener(onHostManagerUpdated);
     widget.liveStatusManager.notifier.addListener(onLiveStatusUpdated);
@@ -108,12 +96,15 @@ class ZegoLivePageState extends State<ZegoLivePage>
           .getTurnOnYourMicrophoneRequestStream()
           .listen(onTurnOnYourMicrophoneRequest));
 
-    connectManager.init();
+    ZegoLiveStreamingManagers().updateContextQuery(() => context);
+
     if (widget.hostManager.isLocalHost) {
       ZegoUIKit().setRoomProperty(
           RoomPropertyKey.liveStatus.text, LiveStatus.living.index.toString());
     }
     correctConfigValue();
+
+    checkFromMinimizing();
   }
 
   @override
@@ -126,7 +117,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
       subscription?.cancel();
     }
 
-    connectManager.uninit();
+    ZegoLiveStreamingManagers().updateContextQuery(null);
   }
 
   @override
@@ -173,9 +164,15 @@ class ZegoLivePageState extends State<ZegoLivePage>
                             liveStatusManager: widget.liveStatusManager,
                             liveDurationManager: widget.liveDurationManager,
                             popUpManager: widget.popUpManager,
-                            connectManager: connectManager,
+                            connectManager:
+                                ZegoLiveStreamingManagers().connectManager!,
                             controller: widget.controller,
                             plugins: widget.plugins,
+                            prebuiltData: widget.prebuiltData,
+                          ),
+                          foreground(
+                            constraints.maxWidth,
+                            constraints.maxHeight,
                           ),
                         ],
                       );
@@ -219,6 +216,50 @@ class ZegoLivePageState extends State<ZegoLivePage>
         }
       },
     );
+  }
+
+  void checkFromMinimizing() {
+    if (!widget.prebuiltData.isPrebuiltFromMinimizing) {
+      return;
+    }
+
+    /// update callback
+    widget.liveStatusManager.onLiveStatusUpdated();
+
+    if (null !=
+        ZegoLiveStreamingManagers()
+            .connectManager!
+            .inviterOfInvitedToJoinCoHostInMinimizing) {
+      ZegoLoggerService.logInfo(
+        'exist a invite to join co-host when minimizing, show now',
+        tag: 'live streaming',
+        subTag: 'live page',
+      );
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ZegoLiveStreamingManagers()
+            .connectManager!
+            .onAudienceReceivedCoHostInvitation(
+              ZegoLiveStreamingManagers()
+                  .connectManager!
+                  .inviterOfInvitedToJoinCoHostInMinimizing!,
+            );
+      });
+    }
+
+    if (null !=
+        ZegoUIKitPrebuiltLiveStreamingPKService()
+            .pkBattleRequestReceivedEventInMinimizingNotifier
+            .value) {
+      ZegoLoggerService.logInfo(
+        'exist a pk battle request when minimizing, show now',
+        tag: 'live streaming',
+        subTag: 'live page',
+      );
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ZegoUIKitPrebuiltLiveStreamingPKService()
+            .restorePKBattleRequestReceivedEventFromMinimizing();
+      });
+    }
   }
 
   void correctConfigValue() {
@@ -270,10 +311,14 @@ class ZegoLivePageState extends State<ZegoLivePage>
     );
   }
 
+  Widget foreground(double width, double height) {
+    return widget.config.foreground ?? Container();
+  }
+
   List<Widget> background(double width, double height) {
     if (widget.config.background != null) {
+      /// full screen
       return [
-        /// full screen
         Positioned(
           top: 0,
           left: 0,
@@ -495,7 +540,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
                 size: size,
                 user: user,
                 hostManager: widget.hostManager,
-                connectManager: connectManager,
+                connectManager: ZegoLiveStreamingManagers().connectManager!,
                 popUpManager: widget.popUpManager,
                 translationText: widget.config.innerText,
                 isPluginEnabled: widget.plugins?.isEnabled ?? false,

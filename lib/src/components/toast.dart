@@ -9,6 +9,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart' as styled_toast;
 import 'package:zego_uikit/zego_uikit.dart';
 
+// Project imports:
+import 'package:zego_uikit_prebuilt_live_streaming/src/core/minimizing/mini_overlay_machine.dart';
+
 /// @nodoc
 typedef ContextQuery = BuildContext Function();
 
@@ -47,11 +50,21 @@ class ZegoToast {
 
 /// @nodoc
 void showToast(String message) {
+  if (PrebuiltLiveStreamingMiniOverlayPageState.minimizing ==
+      ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine().state()) {
+    return;
+  }
+
   ZegoToast.instance.show(message);
 }
 
 /// @nodoc
 void showDebugToast(String message) {
+  if (PrebuiltLiveStreamingMiniOverlayPageState.minimizing ==
+      ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine().state()) {
+    return;
+  }
+
   if (kDebugMode) {
     ZegoToast.instance.show(message);
   }
@@ -59,10 +72,20 @@ void showDebugToast(String message) {
 
 /// @nodoc
 void showSuccess(String message) {
+  if (PrebuiltLiveStreamingMiniOverlayPageState.minimizing ==
+      ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine().state()) {
+    return;
+  }
+
   ZegoToast.instance.show(message, backgroundColor: const Color(0xff55BC9E));
 }
 
 /// @nodoc
 void showError(String message) {
+  if (PrebuiltLiveStreamingMiniOverlayPageState.minimizing ==
+      ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine().state()) {
+    return;
+  }
+
   ZegoToast.instance.show(message, backgroundColor: const Color(0xffBD5454));
 }

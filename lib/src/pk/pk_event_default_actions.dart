@@ -11,10 +11,11 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/pk/pk_service.dart';
 /// @nodoc
 class ZegoLiveStreamingPKBattleDefaultActions {
   static BuildContext get context =>
-      ZegoUIKitPrebuiltLiveStreamingService().context;
+      ZegoUIKitPrebuiltLiveStreamingPKService().context;
 
   static bool get rootNavigator =>
-      ZegoUIKitPrebuiltLiveStreamingService().rootNavigator;
+      ZegoUIKitPrebuiltLiveStreamingPKService().rootNavigator;
+
 
   static Future<void> onIncomingPKBattleRequestReceived(
       ZegoIncomingPKBattleRequestReceivedEvent event) async {
@@ -23,6 +24,7 @@ class ZegoLiveStreamingPKBattleDefaultActions {
       tag: 'ZegoLiveStreamingPKBattleService',
       subTag: 'event',
     );
+
     // TODO add a showing requestReceived dialog flag
     await showLiveDialog(
       context: context,
@@ -31,7 +33,7 @@ class ZegoLiveStreamingPKBattleDefaultActions {
       content: '${event.anotherHost.name} sends a PK battle request to you.',
       leftButtonText: 'Reject',
       leftButtonCallback: () {
-        ZegoUIKitPrebuiltLiveStreamingService()
+        ZegoUIKitPrebuiltLiveStreamingPKService()
             .rejectIncomingPKBattleRequest(event);
         Navigator.of(
           context,
@@ -40,7 +42,7 @@ class ZegoLiveStreamingPKBattleDefaultActions {
       },
       rightButtonText: 'Accept',
       rightButtonCallback: () {
-        ZegoUIKitPrebuiltLiveStreamingService()
+        ZegoUIKitPrebuiltLiveStreamingPKService()
             .acceptIncomingPKBattleRequest(event);
         Navigator.of(
           context,
@@ -75,7 +77,7 @@ class ZegoLiveStreamingPKBattleDefaultActions {
       tag: 'ZegoLiveStreamingPKBattleService',
       subTag: 'event',
     );
-    ZegoUIKitPrebuiltLiveStreamingService()
+    ZegoUIKitPrebuiltLiveStreamingPKService()
         .stopPKBattle(triggeredByAotherHost: true);
 
     // TODO add a showing ok dialog flag
@@ -96,7 +98,7 @@ class ZegoLiveStreamingPKBattleDefaultActions {
       subTag: 'event',
     );
 
-    ZegoUIKitPrebuiltLiveStreamingService().startPKBattleWith(
+    ZegoUIKitPrebuiltLiveStreamingPKService().startPKBattleWith(
       anotherHostLiveID: event.anotherHostLiveID,
       anotherHostUserID: event.anotherHost.id,
       anotherHostUserName: event.anotherHost.name,

@@ -51,8 +51,14 @@ enum ZegoMenuBarButtonName {
 
   /// Button for switching between front and rear cameras.
   switchCameraButton,
+
+  ///
   switchAudioOutputButton,
+
+  ///
   leaveButton,
+
+  ///
   coHostControlButton,
 
   /// Button for controlling the display or hiding of the beauty effect adjustment panel.
@@ -72,6 +78,10 @@ enum ZegoMenuBarButtonName {
 
   /// Button to open/hide the chat UI.
   chatButton,
+
+  /// Button for minimizing the current [ZegoUIKitPrebuiltLiveStreaming] widget within the app.
+  /// When clicked, the [ZegoUIKitPrebuiltLiveStreaming] widget will shrink into a small draggable widget within the app.
+  minimizingButton,
 
   /// Used in toolbar layout, similar to the [Expanded] widget in Flutter.
   /// It is used to expand the spacing between buttons.

@@ -8,15 +8,19 @@ import 'package:zego_uikit/zego_uikit.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/components.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/leave_button.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_manager.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/connect/connect_manager.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/connect/host_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect/connect_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect/host_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/core/minimizing/mini_button.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/core/minimizing/prebuilt_data.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_inner_text.dart';
 
 /// @nodoc
 class ZegoTopBar extends StatefulWidget {
   final bool isPluginEnabled;
   final ZegoUIKitPrebuiltLiveStreamingConfig config;
+  final ZegoUIKitPrebuiltLiveStreamingData prebuiltData;
 
   final ZegoLiveHostManager hostManager;
   final ValueNotifier<bool> hostUpdateEnabledNotifier;
@@ -31,6 +35,7 @@ class ZegoTopBar extends StatefulWidget {
     Key? key,
     required this.isPluginEnabled,
     required this.config,
+    required this.prebuiltData,
     required this.hostManager,
     required this.hostUpdateEnabledNotifier,
     required this.connectManager,
@@ -68,6 +73,8 @@ class _ZegoTopBarState extends State<ZegoTopBar> {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
+              minimizingButton(),
+              SizedBox(width: 20.r),
               ZegoMemberButton(
                 avatarBuilder: widget.config.avatarBuilder,
                 itemBuilder: widget.config.memberListConfig.itemBuilder,
@@ -77,14 +84,25 @@ class _ZegoTopBarState extends State<ZegoTopBar> {
                 popUpManager: widget.popUpManager,
                 translationText: widget.translationText,
               ),
-              SizedBox(width: 33.r),
+              SizedBox(width: 20.r),
               closeButton(),
-              SizedBox(width: 34.r),
+              SizedBox(width: 33.r),
             ],
           ),
         ],
       ),
     );
+  }
+
+  Widget minimizingButton() {
+    return widget.config.topMenuBarConfig.buttons
+            .contains(ZegoMenuBarButtonName.minimizingButton)
+        ? ZegoUIKitPrebuiltLiveStreamingMinimizingButton(
+            prebuiltData: widget.prebuiltData,
+            buttonSize: Size(52.r, 52.r),
+            iconSize: Size(24.r, 24.r),
+          )
+        : Container();
   }
 
   Widget closeButton() {
