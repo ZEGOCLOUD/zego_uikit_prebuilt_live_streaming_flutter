@@ -1,3 +1,9 @@
+## 2.8.0
+- add a "removeCoHost" method to the controller that allows the host remove a co-host.
+- add a "makeAudienceCoHost" method to the controller that allows the host invite an audience to be a co-host.
+- supports PK in-app minimization.
+- support foreground in config，if you need to nest some widgets in [ZegoUIKitPrebuiltLiveStreaming], please use [foreground] nesting, otherwise these widgets will be lost when you minimize and restore the [ZegoUIKitPrebuiltLiveStreaming]
+
 ## 2.7.0
 - supports in-app minimization.
 

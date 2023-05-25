@@ -1,12 +1,12 @@
 // Flutter imports:
 // Project imports:
 import 'package:flutter/cupertino.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect/connect_manager.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect/host_manager.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect/live_duration_manager.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect/live_status_manager.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect/plugins.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/core/minimizing/prebuilt_data.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/core/live_duration_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/core/live_status_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/core/plugins.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/prebuilt_data.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/zego_uikit_prebuilt_live_streaming.dart';
 
 class ZegoLiveStreamingManagers {
@@ -93,7 +93,7 @@ class ZegoLiveStreamingManagers {
     connectManager?.contextQuery = contextQuery;
   }
 
-  void unintPluginAndManagers() {
+  Future<void> unintPluginAndManagers() async {
     ZegoLoggerService.logInfo(
       'uninit plugin and managers',
       tag: 'audio room',
@@ -112,12 +112,12 @@ class ZegoLiveStreamingManagers {
 
     _initialized = false;
 
-    ZegoLiveStreamingPKBattleManager().uninit();
+    await ZegoLiveStreamingPKBattleManager().uninit();
 
-    plugins?.uninit();
-    hostManager?.uninit();
-    liveStatusManager?.uninit();
-    liveDurationManager?.uninit();
+    await plugins?.uninit();
+    await hostManager?.uninit();
+    await liveStatusManager?.uninit();
+    await liveDurationManager?.uninit();
 
     connectManager?.uninit();
 

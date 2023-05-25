@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_inner_text.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/pk/defines.dart';
@@ -83,6 +84,8 @@ class ZegoUIKitPrebuiltLiveStreamingPKService {
   ZegoUIKitUser? get anotherHost => _pkImpl.anotherHost;
 
   BuildContext get context => _pkImpl.context;
+
+  ZegoInnerText get innerText => _pkImpl.config.innerText;
 
   bool get rootNavigator => _pkImpl.config.rootNavigator;
 

@@ -6,11 +6,14 @@ mixin ZegoUIKitPrebuiltLiveStreamingControllerPrivate {
 
   ZegoUIKitPrebuiltLiveStreamingConfig? _prebuiltConfig;
   ZegoLiveHostManager? _hostManager;
+  ZegoLiveConnectManager? _connectManager;
 
   final ValueNotifier<bool> isLeaveRequestingNotifier =
       ValueNotifier<bool>(false);
 
   ZegoUIKitPrebuiltLiveStreamingConfig? get prebuiltConfig => _prebuiltConfig;
+
+  ZegoLiveConnectManager? get connectManager => _connectManager;
 
   ZegoLiveHostManager? get hostManager => _hostManager;
 
@@ -20,6 +23,7 @@ mixin ZegoUIKitPrebuiltLiveStreamingControllerPrivate {
   void initByPrebuilt({
     required ZegoUIKitPrebuiltLiveStreamingConfig prebuiltConfig,
     required ZegoLiveHostManager hostManager,
+    required ZegoLiveConnectManager connectManager,
   }) {
     ZegoLoggerService.logInfo(
       'init by prebuilt',
@@ -29,6 +33,7 @@ mixin ZegoUIKitPrebuiltLiveStreamingControllerPrivate {
 
     _prebuiltConfig = prebuiltConfig;
     _hostManager = hostManager;
+    _connectManager = connectManager;
   }
 
   /// DO NOT CALL
@@ -45,5 +50,6 @@ mixin ZegoUIKitPrebuiltLiveStreamingControllerPrivate {
 
     _prebuiltConfig = null;
     _hostManager = null;
+    _connectManager = null;
   }
 }

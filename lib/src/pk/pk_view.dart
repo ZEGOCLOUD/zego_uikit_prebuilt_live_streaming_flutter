@@ -17,12 +17,22 @@ class ZegoLiveStreamingPKBattleView extends StatefulWidget {
   const ZegoLiveStreamingPKBattleView({
     required this.constraints,
     required this.config,
+    required this.foregroundBuilder,
+    required this.backgroundBuilder,
+    required this.avatarConfig,
+    this.withAspectRatio = true,
     Key? key,
   }) : super(key: key);
 
   final BoxConstraints constraints;
 
   final ZegoUIKitPrebuiltLiveStreamingConfig config;
+
+  final ZegoAudioVideoViewForegroundBuilder? foregroundBuilder;
+  final ZegoAudioVideoViewBackgroundBuilder? backgroundBuilder;
+  final ZegoAvatarConfig? avatarConfig;
+
+  final bool withAspectRatio;
 
   @override
   State<ZegoLiveStreamingPKBattleView> createState() =>
@@ -85,47 +95,45 @@ class _ZegoLiveStreamingPKBattleViewState
         if (pkBattleState != ZegoLiveStreamingPKBattleState.inPKBattle) {
           return const SizedBox.shrink();
         } else {
-          return ConstrainedBox(
-            constraints: widget.constraints,
-            child: AspectRatio(
-              aspectRatio: 16.0 / 18.0,
-              child: SizedBox(
-                width: widget.constraints.maxWidth,
-                height: widget.constraints.maxHeight,
-                child: Builder(builder: (context) {
-                  if (pkManager.isHost) {
-                    return Row(children: [
-                      Expanded(
-                        child: ZegoAudioVideoView(
-                          user: ZegoUIKit().getLocalUser(),
-                          foregroundBuilder: widget
-                              .config.audioVideoViewConfig.foregroundBuilder,
-                          backgroundBuilder: widget
-                              .config.audioVideoViewConfig.backgroundBuilder,
-                          avatarConfig: ZegoAvatarConfig(
+          final audioVideoViews = SizedBox(
+            width: widget.constraints.maxWidth,
+            height: widget.constraints.maxHeight,
+            child: Builder(builder: (context) {
+              if (pkManager.isHost) {
+                return Row(children: [
+                  Expanded(
+                    child: ZegoAudioVideoView(
+                      user: ZegoUIKit().getLocalUser(),
+                      foregroundBuilder:
+                          widget.config.audioVideoViewConfig.foregroundBuilder,
+                      backgroundBuilder:
+                          widget.config.audioVideoViewConfig.backgroundBuilder,
+                      avatarConfig: widget.avatarConfig ??
+                          ZegoAvatarConfig(
                             showInAudioMode: widget.config.audioVideoViewConfig
                                 .showAvatarInAudioMode,
                             showSoundWavesInAudioMode: widget.config
                                 .audioVideoViewConfig.showSoundWavesInAudioMode,
                             builder: widget.config.avatarBuilder,
                           ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Builder(builder: (context) {
-                          return ValueListenableBuilder(
-                            valueListenable: rightUserHeartBeatBrokenNotifier,
-                            builder: (context, bool heartBeatBroken, _) {
-                              if (heartBeatBroken) {
-                                return hostReconnecting(left: false);
-                              } else {
-                                return ZegoAudioVideoView(
-                                  user: pkManager.anotherHost,
-                                  foregroundBuilder: widget.config
-                                      .audioVideoViewConfig.foregroundBuilder,
-                                  backgroundBuilder: widget.config
-                                      .audioVideoViewConfig.backgroundBuilder,
-                                  avatarConfig: ZegoAvatarConfig(
+                    ),
+                  ),
+                  Expanded(
+                    child: Builder(builder: (context) {
+                      return ValueListenableBuilder(
+                        valueListenable: rightUserHeartBeatBrokenNotifier,
+                        builder: (context, bool heartBeatBroken, _) {
+                          if (heartBeatBroken) {
+                            return hostReconnecting(left: false);
+                          } else {
+                            return ZegoAudioVideoView(
+                              user: pkManager.anotherHost,
+                              foregroundBuilder: widget.config
+                                  .audioVideoViewConfig.foregroundBuilder,
+                              backgroundBuilder: widget.config
+                                  .audioVideoViewConfig.backgroundBuilder,
+                              avatarConfig: widget.avatarConfig ??
+                                  ZegoAvatarConfig(
                                     showInAudioMode: widget
                                         .config
                                         .audioVideoViewConfig
@@ -136,19 +144,27 @@ class _ZegoLiveStreamingPKBattleViewState
                                         .showSoundWavesInAudioMode,
                                     builder: widget.config.avatarBuilder,
                                   ),
-                                );
-                              }
-                            },
-                          );
-                        }),
-                      ),
-                    ]);
-                  } else {
-                    return audienceView();
-                  }
-                }),
-              ),
-            ),
+                            );
+                          }
+                        },
+                      );
+                    }),
+                  ),
+                ]);
+              } else {
+                return audienceView();
+              }
+            }),
+          );
+
+          return ConstrainedBox(
+            constraints: widget.constraints,
+            child: widget.withAspectRatio
+                ? AspectRatio(
+                    aspectRatio: 16.0 / 18.0,
+                    child: audioVideoViews,
+                  )
+                : audioVideoViews,
           );
         }
       },
@@ -325,12 +341,14 @@ class _ZegoLiveStreamingPKBattleViewState
   }
 
   Widget avatar(ZegoUIKitUser? user, double maxWidth, double maxHeight) {
-    final avatarConfig = ZegoAvatarConfig(
-      showInAudioMode: widget.config.audioVideoViewConfig.showAvatarInAudioMode,
-      showSoundWavesInAudioMode:
-          widget.config.audioVideoViewConfig.showSoundWavesInAudioMode,
-      builder: widget.config.avatarBuilder,
-    );
+    final avatarConfig = widget.avatarConfig ??
+        ZegoAvatarConfig(
+          showInAudioMode:
+              widget.config.audioVideoViewConfig.showAvatarInAudioMode,
+          showSoundWavesInAudioMode:
+              widget.config.audioVideoViewConfig.showSoundWavesInAudioMode,
+          builder: widget.config.avatarBuilder,
+        );
 
     final screenSize = MediaQuery.of(context).size;
     final isSmallView = maxHeight < screenSize.height / 2;

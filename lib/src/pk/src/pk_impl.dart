@@ -12,9 +12,9 @@ import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/dialogs.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect/defines.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect/host_manager.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/core/minimizing/mini_overlay_machine.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/core/defines.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/mini_overlay_machine.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_defines.dart';
@@ -28,7 +28,7 @@ part 'pk_utils.dart';
 
 /// @nodoc
 class ZegoLiveStreamingPKBattleManager {
-  late ZegoInnerText translationText;
+  late ZegoInnerText innerText;
   BuildContext Function()? contextQuery;
   late ZegoUIKitPrebuiltLiveStreamingConfig config;
   late ZegoLiveHostManager hostManager;
@@ -76,7 +76,7 @@ class ZegoLiveStreamingPKBattleManager {
       subTag: 'api',
     );
     this.config = config;
-    this.translationText = translationText;
+    this.innerText = translationText;
     this.hostManager = hostManager;
     this.liveStatusNotifier = liveStatusNotifier;
     this.startedByLocalNotifier = startedByLocalNotifier;
@@ -636,7 +636,10 @@ class ZegoLiveStreamingPKBattleManager {
 
     // audience stop watch pk
     if (propertiesData.deleteProperties.containsKey('pk_room')) {
-      if (isHost) return;
+      if (isHost) {
+        return;
+      }
+
       ZegoUIKit()
           .muteUserAudioVideo(hostManager.notifier.value?.id ?? '', false);
       ZegoUIKit().stopPlayMixAudioVideo(streamCreator!.mixerID);
@@ -744,12 +747,14 @@ class ZegoLiveStreamingPKBattleManager {
                 .connectManager?.audienceLocalConnectStateNotifier.value) {
           hostManager.connectManager
               ?.updateAudienceConnectState(ConnectState.idle);
+
+          final dialogInfo = innerText.coHostEndCauseByHostStartPK;
           showLiveDialog(
             context: context,
             rootNavigator: config.rootNavigator,
-            title: 'Host Start PK Battle',
-            content: 'Your co-hosting ended',
-            rightButtonText: 'OK',
+            title: dialogInfo.title,
+            content: dialogInfo.message,
+            rightButtonText: dialogInfo.confirmButtonName,
           );
         }
 

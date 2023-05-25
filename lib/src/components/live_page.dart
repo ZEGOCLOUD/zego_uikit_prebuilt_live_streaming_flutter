@@ -12,12 +12,12 @@ import 'package:zego_uikit/zego_uikit.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/audio_video_view_foreground.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/live_page_surface.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_manager.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect/host_manager.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect/live_duration_manager.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect/live_status_manager.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect/plugins.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/core/live_duration_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/core/live_status_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/core/plugins.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/core_managers.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/core/minimizing/prebuilt_data.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/prebuilt_data.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_controller.dart';
@@ -211,7 +211,19 @@ class ZegoLivePageState extends State<ZegoLivePage>
           return Positioned(
             top: widget.config.pkBattleConfig.pKBattleViewTopPadding ?? 164.r,
             child: ZegoLiveStreamingPKBattleView(
-                constraints: constraints, config: widget.config),
+              constraints: constraints,
+              config: widget.config,
+              foregroundBuilder: widget.config.audioVideoViewConfig.foregroundBuilder,
+              backgroundBuilder: widget
+                  .config.audioVideoViewConfig.backgroundBuilder,
+              avatarConfig: ZegoAvatarConfig(
+                showInAudioMode: widget.config.audioVideoViewConfig
+                    .showAvatarInAudioMode,
+                showSoundWavesInAudioMode: widget.config
+                    .audioVideoViewConfig.showSoundWavesInAudioMode,
+                builder: widget.config.avatarBuilder,
+              ),
+            ),
           );
         }
       },

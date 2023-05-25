@@ -11,9 +11,9 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/components/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_sheet_menu.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/toast.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect/connect_manager.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect/defines.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect/host_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/core/defines.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_inner_text.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/pk/src/pk_impl.dart';
@@ -28,14 +28,14 @@ class ZegoMemberListSheet extends StatefulWidget {
     required this.hostManager,
     required this.connectManager,
     required this.popUpManager,
-    required this.translationText,
+    required this.innerText,
   }) : super(key: key);
 
   final bool isPluginEnabled;
   final ZegoLiveHostManager hostManager;
   final ZegoLiveConnectManager connectManager;
   final ZegoPopUpManager popUpManager;
-  final ZegoInnerText translationText;
+  final ZegoInnerText innerText;
 
   final ZegoAvatarBuilder? avatarBuilder;
   final ZegoMemberListItemBuilder? itemBuilder;
@@ -198,7 +198,7 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
               stream: ZegoUIKit().getUserListStream(),
               builder: (context, snapshot) {
                 return Text(
-                  '${widget.translationText.memberListTitle} '
+                  '${widget.innerText.memberListTitle} '
                   '(${ZegoUIKit().getAllUsers().length})',
                   style: TextStyle(
                     fontSize: 36.0.r,
@@ -218,13 +218,13 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
       builder: (context, host, _) {
         final extensions = <String>[];
         if (ZegoUIKit().getLocalUser().id == user.id) {
-          extensions.add(widget.translationText.memberListRoleYou);
+          extensions.add(widget.innerText.memberListRoleYou);
         }
         if (host?.id == user.id) {
-          extensions.add(widget.translationText.memberListRoleHost);
+          extensions.add(widget.innerText.memberListRoleHost);
         } else if (ZegoUIKit().getCameraStateNotifier(user.id).value ||
             ZegoUIKit().getMicrophoneStateNotifier(user.id).value) {
-          extensions.add(widget.translationText.memberListRoleCoHost);
+          extensions.add(widget.innerText.memberListRoleCoHost);
         }
 
         final extensionTextStyle = TextStyle(
@@ -304,7 +304,7 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
     return Row(
       children: [
         controlButton(
-            text: widget.translationText.disagreeButton,
+            text: widget.innerText.disagreeButton,
             backgroundColor: const Color(0xffA7A6B7),
             onPressed: () {
               ZegoUIKit()
@@ -325,7 +325,7 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
             }),
         SizedBox(width: 12.r),
         controlButton(
-            text: widget.translationText.agreeButton,
+            text: widget.innerText.agreeButton,
             gradient: const LinearGradient(
               colors: [Color(0xffA754FF), Color(0xff510DF1)],
               begin: Alignment.topLeft,
@@ -389,7 +389,7 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
             (widget.isPluginEnabled)) {
           popupItems.add(PopupItem(
             PopupItemValue.kickCoHost,
-            widget.translationText.removeCoHostButton,
+            widget.innerText.removeCoHostButton,
           ));
         }
 
@@ -400,15 +400,15 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
             !needHideCoHostWidget) {
           popupItems.add(PopupItem(
               PopupItemValue.inviteConnect,
-              widget.translationText.inviteCoHostButton
-                  .replaceFirst(widget.translationText.param_1, user.name)));
+              widget.innerText.inviteCoHostButton
+                  .replaceFirst(widget.innerText.param_1, user.name)));
         }
 
         if (user.id != widget.hostManager.notifier.value?.id) {
           popupItems.add(PopupItem(
               PopupItemValue.kickOutAttendance,
-              widget.translationText.removeUserMenuDialogButton
-                  .replaceFirst(widget.translationText.param_1, user.name)));
+              widget.innerText.removeUserMenuDialogButton
+                  .replaceFirst(widget.innerText.param_1, user.name)));
         }
 
         if (popupItems.isEmpty) {
@@ -417,7 +417,7 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
 
         popupItems.add(PopupItem(
           PopupItemValue.cancel,
-          widget.translationText.cancelMenuDialogButton,
+          widget.innerText.cancelMenuDialogButton,
         ));
 
         return ZegoTextIconButton(
@@ -441,7 +441,7 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
               hostManager: widget.hostManager,
               connectManager: widget.connectManager,
               popUpManager: widget.popUpManager,
-              translationText: widget.translationText,
+              translationText: widget.innerText,
             );
           },
         );
@@ -583,7 +583,7 @@ Future<void> showMemberListSheet({
               hostManager: hostManager,
               connectManager: connectManager,
               popUpManager: popUpManager,
-              translationText: translationText,
+              innerText: translationText,
             ),
           ),
         ),

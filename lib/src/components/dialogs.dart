@@ -24,7 +24,7 @@ Future<bool> showLiveDialog({
     title,
     content,
     [
-      if (leftButtonText != null)
+      if (leftButtonText?.isNotEmpty ?? false)
         CupertinoDialogAction(
           onPressed: leftButtonCallback ??
               () => Navigator.of(
@@ -32,7 +32,7 @@ Future<bool> showLiveDialog({
                     rootNavigator: rootNavigator,
                   ).pop(false),
           child: Text(
-            leftButtonText,
+            leftButtonText!,
             style: TextStyle(
               fontSize: 32.r,
               color: Colors.white,

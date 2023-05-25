@@ -6,6 +6,7 @@ import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/dialogs.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_inner_text.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/pk/pk_service.dart';
 
 /// @nodoc
@@ -16,6 +17,8 @@ class ZegoLiveStreamingPKBattleDefaultActions {
   static bool get rootNavigator =>
       ZegoUIKitPrebuiltLiveStreamingPKService().rootNavigator;
 
+  static ZegoInnerText get innerText =>
+      ZegoUIKitPrebuiltLiveStreamingPKService().innerText;
 
   static Future<void> onIncomingPKBattleRequestReceived(
       ZegoIncomingPKBattleRequestReceivedEvent event) async {
@@ -25,13 +28,16 @@ class ZegoLiveStreamingPKBattleDefaultActions {
       subTag: 'event',
     );
 
+    final dialogInfo = innerText.incomingPKBattleRequestReceived;
+
     // TODO add a showing requestReceived dialog flag
     await showLiveDialog(
       context: context,
       rootNavigator: rootNavigator,
-      title: 'PK Battle Request',
-      content: '${event.anotherHost.name} sends a PK battle request to you.',
-      leftButtonText: 'Reject',
+      title: dialogInfo.title,
+      content: dialogInfo.message
+          .replaceFirst(innerText.param_1, event.anotherHost.name),
+      leftButtonText: dialogInfo.cancelButtonName,
       leftButtonCallback: () {
         ZegoUIKitPrebuiltLiveStreamingPKService()
             .rejectIncomingPKBattleRequest(event);
@@ -40,7 +46,7 @@ class ZegoLiveStreamingPKBattleDefaultActions {
           rootNavigator: rootNavigator,
         ).pop();
       },
-      rightButtonText: 'Accept',
+      rightButtonText: dialogInfo.confirmButtonName,
       rightButtonCallback: () {
         ZegoUIKitPrebuiltLiveStreamingPKService()
             .acceptIncomingPKBattleRequest(event);
@@ -64,7 +70,7 @@ class ZegoLiveStreamingPKBattleDefaultActions {
   static void onIncomingPKBattleRequestTimeout(
       ZegoIncomingPKBattleRequestTimeoutEvent event) {
     ZegoLoggerService.logInfo(
-      'onIncomingPKBattleRequestTimeoutt, running default action',
+      'onIncomingPKBattleRequestTimeout, running default action',
       tag: 'ZegoLiveStreamingPKBattleService',
       subTag: 'event',
     );
@@ -80,13 +86,14 @@ class ZegoLiveStreamingPKBattleDefaultActions {
     ZegoUIKitPrebuiltLiveStreamingPKService()
         .stopPKBattle(triggeredByAotherHost: true);
 
-    // TODO add a showing ok dialog flag
+    final dialogInfo = innerText.pkBattleEndedCauseByAnotherHost;
     showLiveDialog(
       context: context,
       rootNavigator: rootNavigator,
-      title: 'PK Battle Ended',
-      content: '${event.anotherHost.name} ended the PK Battle.',
-      rightButtonText: 'OK',
+      title: dialogInfo.title,
+      content: dialogInfo.message
+        .replaceFirst(innerText.param_1, event.anotherHost.name),
+      rightButtonText: dialogInfo.confirmButtonName,
     );
   }
 
@@ -113,25 +120,23 @@ class ZegoLiveStreamingPKBattleDefaultActions {
       subTag: 'event',
     );
 
-    var content = 'code: ${event.code}.';
-    var title = 'PK Battle Initiate Failed';
+    var dialogInfo = innerText.outgoingPKBattleRequestRejectedCauseByError;
     if (event.code == ZegoLiveStreamingPKBattleRejectCode.busy.index) {
-      content = 'The host is busy.';
+      dialogInfo = innerText.outgoingPKBattleRequestRejectedCauseByBusy;
     } else if (event.code ==
         ZegoLiveStreamingPKBattleRejectCode.hostStateError.index) {
-      content = 'You can only initiate the PK battle when '
-          'the host has started a livestream.';
+      dialogInfo =
+          innerText.outgoingPKBattleRequestRejectedCauseByLocalHostStateError;
     } else if (event.code == ZegoLiveStreamingPKBattleRejectCode.reject.index) {
-      title = 'PK Battle Rejected';
-      content = 'The host rejected your request.';
+      dialogInfo = innerText.outgoingPKBattleRequestRejectedCauseByReject;
     }
 
     showLiveDialog(
       context: context,
       rootNavigator: rootNavigator,
-      title: title,
-      content: content,
-      rightButtonText: 'OK',
+      title: dialogInfo.title,
+      content: dialogInfo.message,
+      rightButtonText: dialogInfo.confirmButtonName,
     );
   }
 

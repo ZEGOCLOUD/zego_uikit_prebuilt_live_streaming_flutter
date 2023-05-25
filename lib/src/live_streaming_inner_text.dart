@@ -44,11 +44,11 @@ class ZegoInnerText {
   String cancelMenuDialogButton;
 
   /// The text of button which host invite the audience to become a co-host.
-  /// The **default value** is *"Invite %0 to co-host"*.
+  /// The **default value** is *"Invite %0 to co-host"*, where %0 will be replaced with the corresponding username.
   String inviteCoHostButton;
 
   /// The text of button which host kick out audience or co-host from the live stream.
-  /// The **default value** is *"Remove %0 from the room"*.
+  /// The **default value** is *"Remove %0 from the room"*, where %0 will be replaced with the corresponding username.
   String removeUserMenuDialogButton;
 
   /// Background prompt text when the host is not present.
@@ -93,7 +93,7 @@ class ZegoInnerText {
 
   /// Notification for the audience's rejection of the host's co-hosting invitation.
   /// Leave it blank if you don't want any notification to appear.
-  /// The **default value** is *"%0 refused to be a co-host."*.
+  /// The **default value** is *"%0 refused to be a co-host."*, where %0 will be replaced with the corresponding username.
   String audienceRejectInvitationToast;
 
   /// Notification for the repeated co-hosting invitation.
@@ -106,10 +106,10 @@ class ZegoInnerText {
 
   /// Info for camera permission request dialog.
   /// The **default values** are:
-  /// - Title: "'Can not use Camera!'"
-  /// - Message: "'Please enable camera access in the system settings!'"
-  /// - Cancel button name: "'Cancel'"
-  /// - Confirm button name: "'Settings'"
+  /// - Title: "Can not use Camera!"
+  /// - Message: "Please enable camera access in the system settings!"
+  /// - Cancel button name: "Cancel"
+  /// - Confirm button name: "Settings"
   ZegoDialogInfo cameraPermissionSettingDialogInfo;
 
   /// Info for microphone permission request dialog.
@@ -122,18 +122,18 @@ class ZegoInnerText {
 
   /// The dialog info for the host when receiving a request from an audience to join co-hosting.
   /// The **default values** are:
-  /// - Title: "'Can not use Microphone!'"
-  /// - Message: "Please enable microphone access in the system settings!'"
-  /// - Cancel button name: "'Cancel'"
-  /// - Confirm button name: "'Settings'"
+  /// - Title: "Can not use Microphone!"
+  /// - Message: "Please enable microphone access in the system settings!"
+  /// - Cancel button name: "Cancel"
+  /// - Confirm button name: "Settings"
   ZegoDialogInfo receivedCoHostRequestDialogInfo;
 
   /// The dialog info for the audience when receiving an invitation from the host to join co-hosting.
   /// The **default values** are:
-  /// - Title: "'Invitation'"
-  /// - Message: "'The host is inviting you to co-host.'"
-  /// - Cancel button name: "'Disagree'"
-  /// - Confirm button name: "'Agree'"
+  /// - Title: "Invitation"
+  /// - Message: "The host is inviting you to co-host."
+  /// - Cancel button name: "Disagree"
+  /// - Confirm button name: "Agree"
   ZegoDialogInfo receivedCoHostInvitationDialogInfo;
 
   /// The dialog info for the co-host when ending the co-hosting session.
@@ -250,6 +250,62 @@ class ZegoInnerText {
   /// Beauty effect：None
   String beautyEffectTypeNoneTitle;
 
+  /// The dialog info for the local host receives a PK invitation
+  /// The **default values** are:
+  /// - Title: "PK Battle Request"
+  /// - Message: "%0 sends a PK battle request to you.", where %0 will be replaced with the corresponding username.
+  /// - Cancel button name: "Reject"
+  /// - Confirm button name: "Accept"
+  ZegoDialogInfo incomingPKBattleRequestReceived;
+
+  /// The dialog info for the co-host is terminated cause by host start PK
+  /// The **default values** are:
+  /// - Title: "Host Start PK Battle"
+  /// - Message: "Your co-hosting ended."
+  /// - Cancel button name: ""
+  /// - Confirm button name: "OK"
+  ZegoDialogInfo coHostEndCauseByHostStartPK;
+
+  /// The dialog info for the remote host end the PK
+  /// The **default values** are:
+  /// - Title: "PK Battle Ended"
+  /// - Message: "%0 ended the PK Battle.", where %0 will be replaced with the corresponding username.
+  /// - Cancel button name: ""
+  /// - Confirm button name: "OK"
+  ZegoDialogInfo pkBattleEndedCauseByAnotherHost;
+
+  /// The dialog info for the pk invitation failed cause by other error happen
+  /// The **default values** are:
+  /// - Title: "PK Battle Initiate Failed"
+  /// - Message: "code: %0.", where %0 will be replaced with the corresponding error code.
+  /// - Cancel button name: ""
+  /// - Confirm button name: "OK"
+  ZegoDialogInfo outgoingPKBattleRequestRejectedCauseByError;
+
+  /// The dialog info for the pk invitation failed cause by the remote host was busy
+  /// The **default values** are:
+  /// - Title: "PK Battle Initiate Failed"
+  /// - Message: "The host is busy."
+  /// - Cancel button name: ""
+  /// - Confirm button name: "OK"
+  ZegoDialogInfo outgoingPKBattleRequestRejectedCauseByBusy;
+
+  /// The dialog info for the pk invitation failed cause by the status of the local host was wrong
+  /// The **default values** are:
+  /// - Title: "PK Battle Initiate Failed"
+  /// - Message: "You can only initiate the PK battle when the host has started a livestream."
+  /// - Cancel button name: ""
+  /// - Confirm button name: "OK"
+  ZegoDialogInfo outgoingPKBattleRequestRejectedCauseByLocalHostStateError;
+
+  /// The dialog info for the pk invitation failed cause by the remote host refused
+  /// The **default values** are:
+  /// - Title: "PK Battle Initiate Failed"
+  /// - Message: "The host rejected your request."
+  /// - Cancel button name: ""
+  /// - Confirm button name: "OK"
+  ZegoDialogInfo outgoingPKBattleRequestRejectedCauseByReject;
+
   ZegoInnerText({
     String? disagreeButton,
     String? agreeButton,
@@ -312,6 +368,13 @@ class ZegoInnerText {
     String? beautyEffectTypeSmoothTitle,
     String? beautyEffectTypeSharpenTitle,
     String? beautyEffectTypeNoneTitle,
+    ZegoDialogInfo? incomingPKBattleRequestReceived,
+    ZegoDialogInfo? coHostEndCauseByHostStartPK,
+    ZegoDialogInfo? pkBattleEndedCauseByAnotherHost,
+    ZegoDialogInfo? outgoingPKBattleRequestRejectedCauseByError,
+    ZegoDialogInfo? outgoingPKBattleRequestRejectedCauseByBusy,
+    ZegoDialogInfo? outgoingPKBattleRequestRejectedCauseByLocalHostStateError,
+    ZegoDialogInfo? outgoingPKBattleRequestRejectedCauseByReject,
   })  : disagreeButton = disagreeButton ?? 'Disagree',
         agreeButton = agreeButton ?? 'Agree',
         startLiveStreamingButton = startLiveStreamingButton ?? 'Start',
@@ -420,7 +483,61 @@ class ZegoInnerText {
             beautyEffectTypeSmoothTitle ?? 'Smoothing',
         beautyEffectTypeSharpenTitle =
             beautyEffectTypeSharpenTitle ?? 'Sharpening',
-        beautyEffectTypeNoneTitle = beautyEffectTypeNoneTitle ?? 'None';
+        beautyEffectTypeNoneTitle = beautyEffectTypeNoneTitle ?? 'None',
+        incomingPKBattleRequestReceived = incomingPKBattleRequestReceived ??
+            ZegoDialogInfo(
+              title: 'PK Battle Request',
+              message: '%0 sends a PK battle request to you.',
+              cancelButtonName: 'Reject',
+              confirmButtonName: 'Accept',
+            ),
+        coHostEndCauseByHostStartPK = coHostEndCauseByHostStartPK ??
+            ZegoDialogInfo(
+              title: 'Host Start PK Battle',
+              message: 'Your co-hosting ended.',
+              cancelButtonName: '',
+              confirmButtonName: 'OK',
+            ),
+        pkBattleEndedCauseByAnotherHost = pkBattleEndedCauseByAnotherHost ??
+            ZegoDialogInfo(
+              title: 'PK Battle Ended',
+              message: '%0 ended the PK Battle.',
+              cancelButtonName: '',
+              confirmButtonName: 'OK',
+            ),
+        outgoingPKBattleRequestRejectedCauseByError =
+            outgoingPKBattleRequestRejectedCauseByError ??
+                ZegoDialogInfo(
+                  title: 'PK Battle Initiate Failed',
+                  message: 'code: %0.',
+                  cancelButtonName: '',
+                  confirmButtonName: 'OK',
+                ),
+        outgoingPKBattleRequestRejectedCauseByBusy =
+            outgoingPKBattleRequestRejectedCauseByBusy ??
+                ZegoDialogInfo(
+                  title: 'PK Battle Initiate Failed',
+                  message: 'The host is busy.',
+                  cancelButtonName: '',
+                  confirmButtonName: 'OK',
+                ),
+        outgoingPKBattleRequestRejectedCauseByLocalHostStateError =
+            outgoingPKBattleRequestRejectedCauseByLocalHostStateError ??
+                ZegoDialogInfo(
+                  title: 'PK Battle Initiate Failed',
+                  message:
+                      'You can only initiate the PK battle when the host has started a livestream.',
+                  cancelButtonName: '',
+                  confirmButtonName: 'OK',
+                ),
+        outgoingPKBattleRequestRejectedCauseByReject =
+            outgoingPKBattleRequestRejectedCauseByReject ??
+                ZegoDialogInfo(
+                  title: 'PK Battle Rejected',
+                  message: 'The host rejected your request.',
+                  cancelButtonName: '',
+                  confirmButtonName: 'OK',
+                );
 }
 
 /// @nodoc

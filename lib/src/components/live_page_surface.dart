@@ -14,12 +14,12 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/components/duration_time_
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/message/in_room_live_commenting_view.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/top_bar.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect/connect_manager.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect/host_manager.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect/live_duration_manager.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect/live_status_manager.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect/plugins.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/core/minimizing/prebuilt_data.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/core/live_duration_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/core/live_status_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/core/plugins.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/prebuilt_data.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_controller.dart';
 

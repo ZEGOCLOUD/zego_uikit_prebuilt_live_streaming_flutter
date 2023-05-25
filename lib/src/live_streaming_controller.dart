@@ -5,9 +5,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
-import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect/host_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
+
+import 'core/connect_manager.dart';
 
 part 'package:zego_uikit_prebuilt_live_streaming/src/internal/controller_p.dart';
 
@@ -126,5 +128,55 @@ class ZegoUIKitPrebuiltLiveStreamingController
     );
 
     return result;
+  }
+
+  /// remove co-host, make co-host to be a audience
+  Future<bool> removeCoHost(ZegoUIKitUser coHost) async {
+    if (null == hostManager || null == connectManager) {
+      ZegoLoggerService.logInfo(
+        'kick co-host, param is invalid, hostManager:$hostManager, connectManager:$connectManager',
+        tag: 'live streaming',
+        subTag: 'controller',
+      );
+
+      return false;
+    }
+
+    if (!hostManager!.isLocalHost) {
+      ZegoLoggerService.logInfo(
+        'kick co-host, local is not a host',
+        tag: 'live streaming',
+        subTag: 'controller',
+      );
+
+      return false;
+    }
+
+    return connectManager!.kickCoHost(coHost);
+  }
+
+  /// invite audience to be a co-host
+  Future<void> makeAudienceCoHost(ZegoUIKitUser invitee) async {
+    if (null == hostManager || null == connectManager) {
+      ZegoLoggerService.logInfo(
+        'kick co-host, param is invalid, hostManager:$hostManager, connectManager:$connectManager',
+        tag: 'live streaming',
+        subTag: 'controller',
+      );
+
+      return;
+    }
+
+    if (!hostManager!.isLocalHost) {
+      ZegoLoggerService.logInfo(
+        'kick co-host, local is not a host',
+        tag: 'live streaming',
+        subTag: 'controller',
+      );
+
+      return;
+    }
+
+    return connectManager!.inviteAudienceConnect(invitee);
   }
 }

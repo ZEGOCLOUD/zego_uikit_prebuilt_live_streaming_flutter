@@ -19,12 +19,11 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_manager
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/preview_page.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/toast.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/core_managers.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/core/minimizing/mini_overlay_machine.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/core/minimizing/prebuilt_data.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/mini_overlay_machine.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/prebuilt_data.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_controller.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_defines.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/pk/src/pk_impl.dart';
 
 /// Live Streaming Widget.
 /// You can embed this widget into any page of your project to integrate the functionality of a live streaming.
@@ -102,7 +101,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     WidgetsBinding.instance?.addObserver(this);
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
-      log('version: zego_uikit_prebuilt_live_streaming: 2.7.0; $version');
+      log('version: zego_uikit_prebuilt_live_streaming: 2.8.0; $version');
     });
 
     isFromMinimizing = PrebuiltLiveStreamingMiniOverlayPageState.idle !=
@@ -138,6 +137,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     widget.controller?.initByPrebuilt(
       prebuiltConfig: widget.config,
       hostManager: ZegoLiveStreamingManagers().hostManager!,
+      connectManager: ZegoLiveStreamingManagers().connectManager!,
     );
 
     initToast();

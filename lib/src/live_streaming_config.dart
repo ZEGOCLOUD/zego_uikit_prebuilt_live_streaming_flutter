@@ -272,6 +272,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   bool markAsLargeRoom;
 
   /// The foreground of the live streaming.
+  /// If you need to nest some widgets in [ZegoUIKitPrebuiltLiveStreaming], please use [foreground] nesting, otherwise these widgets will be lost when you minimize and restore the [ZegoUIKitPrebuiltLiveStreaming]
   Widget? foreground;
 
   /// The background of the live streaming.
