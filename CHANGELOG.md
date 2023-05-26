@@ -1,3 +1,6 @@
+## 2.8.1
+- fix some user login status issues when used `zego_uikit_prebuilt_live_streaming` with `zego_zimkit`
+
 ## 2.8.0
 - add a "removeCoHost" method to the controller that allows the host remove a co-host.
 - add a "makeAudienceCoHost" method to the controller that allows the host invite an audience to be a co-host.

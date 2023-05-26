@@ -86,12 +86,17 @@ class ZegoPrebuiltPlugins {
       return;
     }
 
+    initialized = true;
+
+    pluginUserStateNotifier.value =
+        ZegoUIKit().getSignalingPlugin().getConnectionState();
+    roomStateNotifier.value = ZegoUIKit().getSignalingPlugin().getRoomState();
+
     ZegoLoggerService.logInfo(
-      'plugins init',
+      'plugins init, user state:${pluginUserStateNotifier.value}, room state:${roomStateNotifier.value}',
       tag: 'live streaming',
       subTag: 'plugin',
     );
-    initialized = true;
 
     await ZegoUIKit()
         .getSignalingPlugin()
@@ -221,7 +226,8 @@ class ZegoPrebuiltPlugins {
         subTag: 'plugin',
       );
     } else {
-      if (ZegoPluginAdapter().getPlugin(ZegoUIKitPluginType.signaling) != null) {
+      if (ZegoPluginAdapter().getPlugin(ZegoUIKitPluginType.signaling) !=
+          null) {
         await ZegoUIKit().getSignalingPlugin().leaveRoom();
         await ZegoUIKit().getSignalingPlugin().logout();
         await ZegoUIKit().getSignalingPlugin().uninit();
