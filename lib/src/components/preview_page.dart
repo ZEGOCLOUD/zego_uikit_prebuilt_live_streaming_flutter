@@ -72,7 +72,7 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: ScreenUtilInit(
+      body: ZegoScreenUtilInit(
         designSize: const Size(750, 1334),
         minTextAdapt: true,
         splitScreenMode: true,
@@ -85,12 +85,12 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
                   ZegoAudioVideoContainer(
                     layout: ZegoLayout.pictureInPicture(
                       smallViewPosition: ZegoViewPosition.bottomRight,
-                      smallViewSize: Size(139.5.w, 248.0.h),
+                      smallViewSize: Size(139.5.zW, 248.0.zH),
                       smallViewMargin: EdgeInsets.only(
-                        left: 24.r,
-                        top: 144.r,
-                        right: 24.r,
-                        bottom: 144.r,
+                        left: 24.zR,
+                        top: 144.zR,
+                        right: 24.zR,
+                        bottom: 144.zR,
                       ),
                     ),
                     foregroundBuilder: audioVideoViewForeground,
@@ -127,7 +127,7 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
       top: 0,
       left: 0,
       child: Container(
-        width: 750.w,
+        width: 750.zW,
         height: height,
         decoration: BoxDecoration(
           image: DecorationImage(
@@ -141,13 +141,13 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
   }
 
   Widget topBar() {
-    final buttonSize = Size(88.r, 88.r);
-    final iconSize = Size(56.r, 56.r);
+    final buttonSize = Size(88.zR, 88.zR);
+    final iconSize = Size(56.zR, 56.zR);
 
     return Align(
       alignment: Alignment.topCenter,
       child: Padding(
-        padding: EdgeInsets.only(left: 0.r, top: 0, right: 10.r, bottom: 0.r),
+        padding: EdgeInsets.only(left: 0.zR, top: 0, right: 10.zR, bottom: 0.zR),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
@@ -195,13 +195,13 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
   }
 
   Widget bottomBar() {
-    final buttonSize = Size(88.r, 88.r);
-    final iconSize = Size(56.r, 56.r);
+    final buttonSize = Size(88.zR, 88.zR);
+    final iconSize = Size(56.zR, 56.zR);
 
     return Align(
       alignment: Alignment.bottomCenter,
       child: Padding(
-        padding: EdgeInsets.only(left: 89.r, top: 0, right: 89.r, bottom: 97.r),
+        padding: EdgeInsets.only(left: 89.zR, top: 0, right: 89.zR, bottom: 97.zR),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -218,10 +218,10 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
                     )
                   : null,
             ),
-            SizedBox(width: 48.r),
+            SizedBox(width: 48.zR),
             startButton(),
-            SizedBox(width: 48.r),
-            SizedBox(width: 88.r, height: 88.r),
+            SizedBox(width: 48.zR),
+            SizedBox(width: 88.zR, height: 88.zR),
           ],
         ),
       ),
@@ -270,10 +270,10 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
             });
           },
           child: Container(
-            width: 300.r,
-            height: 88.r,
+            width: 300.zR,
+            height: 88.zR,
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(44.r),
+                borderRadius: BorderRadius.circular(44.zR),
                 gradient: const LinearGradient(
                   colors: [Color(0xffA754FF), Color(0xff510DF1)],
                   begin: Alignment.topLeft,
@@ -284,7 +284,7 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
               child: Text(
                 widget.liveStreamingConfig.innerText.startLiveStreamingButton,
                 style: TextStyle(
-                  fontSize: 32.r,
+                  fontSize: 32.zR,
                   fontWeight: FontWeight.w600,
                   color: Colors.white,
                 ),

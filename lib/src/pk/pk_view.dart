@@ -185,7 +185,7 @@ class _ZegoLiveStreamingPKBattleViewState
                 'Host is reconnecting…',
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 24.sp,
+                  fontSize: 24.zSP,
                 ),
               ),
             ),
@@ -352,7 +352,7 @@ class _ZegoLiveStreamingPKBattleViewState
 
     final screenSize = MediaQuery.of(context).size;
     final isSmallView = maxHeight < screenSize.height / 2;
-    final avatarSize = isSmallView ? Size(110.r, 110.r) : Size(258.r, 258.r);
+    final avatarSize = isSmallView ? Size(110.zR, 110.zR) : Size(258.zR, 258.zR);
 
     return Positioned(
       top: (maxHeight - avatarSize.height) / 2,

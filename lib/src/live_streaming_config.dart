@@ -423,8 +423,13 @@ class ZegoTopMenuBarConfig {
   /// only support [minimizingButton] right now
   List<ZegoMenuBarButtonName> buttons;
 
+  /// You can listen to the event of clicking on the host information in the top left corner.
+  /// for example, if you want to display a popup or dialog with host information after it is clicked.
+  void Function(ZegoUIKitUser host)? onHostAvatarClicked;
+
   ZegoTopMenuBarConfig({
     this.buttons = const [],
+    this.onHostAvatarClicked,
   });
 }
 
@@ -673,10 +678,15 @@ class ZegoMemberListConfig {
   /// Custom member list item view.
   ZegoMemberListItemBuilder? itemBuilder;
 
+  /// You can listen to the user click event on the member list,
+  /// for example, if you want to display specific information about a member after they are clicked.
+  void Function(ZegoUIKitUser user)? onClicked;
+
   ZegoMemberListConfig({
     this.showMicrophoneState = true,
     this.showCameraState = true,
     this.itemBuilder,
+    this.onClicked,
   });
 }
 
@@ -700,12 +710,20 @@ class ZegoInRoomMessageViewConfig {
   /// The opacity of chat message list items, default value is 0.5.
   double opacity;
 
+  /// The width of chat message list view
+  double? width;
+
+  /// The height of chat message list view
+  double? height;
+
   /// Use this to customize the style and content of each chat message list item.
   /// For example, you can modify the background color, opacity, border radius, or add additional information like the sender's level or role.
   ZegoInRoomMessageItemBuilder? itemBuilder;
 
   ZegoInRoomMessageViewConfig({
     this.itemBuilder,
+    this.width,
+    this.height,
     this.opacity = 0.5,
   });
 }

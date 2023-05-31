@@ -140,7 +140,7 @@ class _ZegoPopUpSheetMenuState extends State<ZegoPopUpSheetMenu> {
       },
       child: Container(
         width: double.infinity,
-        height: 100.r,
+        height: 100.zR,
         decoration: BoxDecoration(
           border: (index == (widget.popupItems.length - 1))
               ? null
@@ -155,7 +155,7 @@ class _ZegoPopUpSheetMenuState extends State<ZegoPopUpSheetMenu> {
           child: Text(
             popupItem.text,
             style: TextStyle(
-              fontSize: 28.r,
+              fontSize: 28.zR,
               fontWeight: FontWeight.w400,
               color: Colors.white,
             ),
@@ -186,8 +186,8 @@ Future<void> showPopUpSheet({
     useRootNavigator: connectManager.config.rootNavigator,
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.only(
-        topLeft: Radius.circular(32.0.r),
-        topRight: Radius.circular(32.0.r),
+        topLeft: Radius.circular(32.0.zR),
+        topRight: Radius.circular(32.0.zR),
       ),
     ),
     isDismissible: true,
@@ -197,7 +197,7 @@ Future<void> showPopUpSheet({
         padding: MediaQuery.of(context).viewInsets,
         duration: const Duration(milliseconds: 50),
         child: Container(
-          height: (popupItems.length * 101).r,
+          height: (popupItems.length * 101).zR,
           padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
           child: ZegoPopUpSheetMenu(
             targetUser: user,

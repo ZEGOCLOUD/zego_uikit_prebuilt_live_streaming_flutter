@@ -227,7 +227,7 @@ class ZegoUIKitPrebuiltLiveStreamingMiniOverlayPageState
   }
 
   Widget minimizingPKUsersWidget(BoxConstraints constraints) {
-    final spacing = 5.r;
+    final spacing = 5.zR;
     return Stack(
       children: [
         ...pkBackground(),
@@ -343,7 +343,7 @@ class ZegoUIKitPrebuiltLiveStreamingMiniOverlayPageState
                 .durationConfig ??
             ZegoLiveDurationConfig(),
         manager: ZegoLiveStreamingManagers().liveDurationManager!,
-        fontSize: 15.r,
+        fontSize: 15.zR,
       ),
     );
   }
@@ -432,8 +432,8 @@ class ZegoUIKitPrebuiltLiveStreamingMiniOverlayPageState
                         shape: BoxShape.circle,
                         color: Colors.red,
                       ),
-                      width: 15.r,
-                      height: 15.r,
+                      width: 15.zR,
+                      height: 15.zR,
                     );
                   }
                 });

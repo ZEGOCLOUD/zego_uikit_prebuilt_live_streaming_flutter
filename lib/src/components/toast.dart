@@ -25,7 +25,7 @@ class ZegoToast {
   static final ZegoToast instance = ZegoToast._internal();
 
   TextStyle get textStyle => TextStyle(
-        fontSize: 28.r,
+        fontSize: 28.zR,
         color: Colors.white,
         fontWeight: FontWeight.w500,
       );

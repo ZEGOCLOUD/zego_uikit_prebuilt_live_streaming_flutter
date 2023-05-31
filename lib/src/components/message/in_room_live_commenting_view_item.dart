@@ -34,10 +34,10 @@ class ZegoInRoomLiveCommentingViewItem extends StatelessWidget {
         Card(
           color: messageBackgroundColor,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(26.r)),
+            borderRadius: BorderRadius.all(Radius.circular(26.zR)),
           ),
           child: Padding(
-            padding: EdgeInsets.fromLTRB(20.r, 10.r, 20.r, 10.r),
+            padding: EdgeInsets.fromLTRB(20.zR, 10.zR, 20.zR, 10.zR),
             child: RichText(
               maxLines: maxLines,
               overflow: TextOverflow.ellipsis,
@@ -47,16 +47,16 @@ class ZegoInRoomLiveCommentingViewItem extends StatelessWidget {
                   TextSpan(
                     text: user.name,
                     style: TextStyle(
-                      fontSize: 26.r,
+                      fontSize: 26.zR,
                       color: messageNameColor,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                  WidgetSpan(child: SizedBox(width: 10.r)),
+                  WidgetSpan(child: SizedBox(width: 10.zR)),
                   TextSpan(
                     text: isHorizontal ? message : '\n$message',
                     style: TextStyle(
-                      fontSize: 26.r,
+                      fontSize: 26.zR,
                       fontWeight: FontWeight.w400,
                       color: Colors.white,
                     ),
@@ -76,27 +76,27 @@ class ZegoInRoomLiveCommentingViewItem extends StatelessWidget {
     return TextSpan(children: [
       WidgetSpan(
         child: Transform.translate(
-          offset: Offset(0, 0.r),
+          offset: Offset(0, 0.zR),
           child: ConstrainedBox(
             constraints: BoxConstraints(
-              maxWidth: 34.r + prefix!.length * 12.r,
-              minWidth: 34.r,
-              minHeight: 36.r,
-              maxHeight: 36.r,
+              maxWidth: 34.zR + prefix!.length * 12.zR,
+              minWidth: 34.zR,
+              minHeight: 36.zR,
+              maxHeight: 36.zR,
             ),
             child: Container(
               decoration: BoxDecoration(
                 color: messageHostColor,
-                borderRadius: BorderRadius.all(Radius.circular(20.r)),
+                borderRadius: BorderRadius.all(Radius.circular(20.zR)),
               ),
               child: Padding(
-                padding: EdgeInsets.fromLTRB(12.r, 4.r, 12.r, 4.r),
+                padding: EdgeInsets.fromLTRB(12.zR, 4.zR, 12.zR, 4.zR),
                 child: Center(
                   child: Text(
                     prefix!,
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 20.r,
+                      fontSize: 20.zR,
                     ),
                   ),
                 ),
@@ -105,7 +105,7 @@ class ZegoInRoomLiveCommentingViewItem extends StatelessWidget {
           ),
         ),
       ),
-      WidgetSpan(child: SizedBox(width: 10.r)),
+      WidgetSpan(child: SizedBox(width: 10.zR)),
     ]);
   }
 }

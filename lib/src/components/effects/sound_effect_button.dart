@@ -42,8 +42,8 @@ class _ZegoSoundEffectButtonState extends State<ZegoSoundEffectButton> {
 
   @override
   Widget build(BuildContext context) {
-    final containerSize = widget.buttonSize ?? Size(96.r, 96.r);
-    final sizeBoxSize = widget.iconSize ?? Size(56.r, 56.r);
+    final containerSize = widget.buttonSize ?? Size(96.zR, 96.zR);
+    final sizeBoxSize = widget.iconSize ?? Size(56.zR, 56.zR);
     return GestureDetector(
       onTap: () async {
         showSoundEffectSheet(

@@ -28,22 +28,22 @@ class ZegoBeautyEffectSheet extends StatefulWidget {
 }
 
 /// @nodoc
-double get _besHeaderHeight => 98.r;
+double get _besHeaderHeight => 98.zR;
 
 /// @nodoc
-double get _besSliderHeight => 32.r;
+double get _besSliderHeight => 32.zR;
 
 /// @nodoc
-double get _besSliderPadding => 43.r;
+double get _besSliderPadding => 43.zR;
 
 /// @nodoc
-double get _besSheetTotalHeight => 317.r;
+double get _besSheetTotalHeight => 317.zR;
 
 /// @nodoc
-double get _besLineToSheetPadding => 36.r;
+double get _besLineToSheetPadding => 36.zR;
 
 /// @nodoc
-double get _besLineHeight => 1.r;
+double get _besLineHeight => 1.zR;
 
 /// @nodoc
 class _ZegoBeautyEffectSheetState extends State<ZegoBeautyEffectSheet> {
@@ -114,14 +114,14 @@ class _ZegoBeautyEffectSheetState extends State<ZegoBeautyEffectSheet> {
                     _besHeaderHeight -
                     _besLineHeight -
                     _besLineToSheetPadding -
-                    (2 * 5.r),
+                    (2 * 5.zR),
                 child: ListView(
                   children: [
                     ZegoEffectGrid(
                       model: beauty,
                       isSpaceEvenly: true,
                       withBorderColor: true,
-                      buttonSize: Size(150.r, 133.r),
+                      buttonSize: Size(150.zR, 133.zR),
                     ),
                   ],
                 ),
@@ -163,12 +163,12 @@ class _ZegoBeautyEffectSheetState extends State<ZegoBeautyEffectSheet> {
   Widget sheet({required Widget child, required double height}) {
     return Container(
       height: height,
-      padding: EdgeInsets.symmetric(vertical: 5.r, horizontal: 10.r),
+      padding: EdgeInsets.symmetric(vertical: 5.zR, horizontal: 10.zR),
       decoration: BoxDecoration(
         color: ZegoUIKitDefaultTheme.viewBackgroundColor,
         borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(32.0.r),
-          topRight: Radius.circular(32.0.r),
+          topLeft: Radius.circular(32.0.zR),
+          topRight: Radius.circular(32.0.zR),
         ),
       ),
       child: child,
@@ -188,17 +188,17 @@ class _ZegoBeautyEffectSheetState extends State<ZegoBeautyEffectSheet> {
               ).pop();
             },
             child: SizedBox(
-              width: 70.r,
-              height: 70.r,
+              width: 70.zR,
+              height: 70.zR,
               child: PrebuiltLiveStreamingImage.asset(
                   PrebuiltLiveStreamingIconUrls.back),
             ),
           ),
-          SizedBox(width: 10.r),
+          SizedBox(width: 10.zR),
           Text(
             widget.translationText.beautyEffectTitle,
             style: TextStyle(
-              fontSize: 36.0.r,
+              fontSize: 36.0.zR,
               color: const Color(0xffffffff),
               decoration: TextDecoration.none,
             ),
@@ -206,7 +206,7 @@ class _ZegoBeautyEffectSheetState extends State<ZegoBeautyEffectSheet> {
           Expanded(child: Container()),
           ZegoBeautyEffectResetButton(
             buttonSize: Size(_besHeaderHeight, _besHeaderHeight),
-            iconSize: Size(38.r, 38.r),
+            iconSize: Size(38.zR, 38.zR),
             onPressed: () {
               beauty.selectedID.value = '';
 

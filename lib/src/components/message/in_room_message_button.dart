@@ -107,8 +107,8 @@ class _ZegoInRoomMessageButtonState extends State<ZegoInRoomMessageButton> {
                 }
               : null,
           icon: buttonIcon,
-          iconSize: widget.iconSize ?? Size(72.r, 72.r),
-          buttonSize: widget.buttonSize ?? Size(96.r, 96.r),
+          iconSize: widget.iconSize ?? Size(72.zR, 72.zR),
+          buttonSize: widget.buttonSize ?? Size(96.zR, 96.zR),
         );
       },
     );

@@ -12,7 +12,6 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_manager
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_sheet_menu.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/toast.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect_manager.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/core/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_inner_text.dart';
@@ -71,10 +70,10 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
     return LayoutBuilder(builder: (context, constraints) {
       return Column(
         children: [
-          header(98.h),
-          Container(height: 1.r, color: Colors.white.withOpacity(0.15)),
+          header(98.zH),
+          Container(height: 1.zR, color: Colors.white.withOpacity(0.15)),
           SizedBox(
-            height: constraints.maxHeight - 1.r - 98.h,
+            height: constraints.maxHeight - 1.zR - 98.zH,
             child: StreamBuilder<List<ZegoUIKitUser>>(
                 stream: ZegoUIKit().getAudioVideoListStream(),
                 builder: (context, snapshot) {
@@ -156,16 +155,22 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
             return ValueListenableBuilder(
               valueListenable: ZegoUIKitUserPropertiesNotifier(user),
               builder: (context, _, __) {
-                return Container(
-                  margin: EdgeInsets.only(bottom: 36.r),
-                  child: Row(
-                    children: [
-                      avatarItem(context, user, widget.avatarBuilder),
-                      SizedBox(width: 24.r),
-                      userNameItem(user),
-                      const Expanded(child: SizedBox()),
-                      controlsItem(user),
-                    ],
+                return GestureDetector(
+                  onTap: () {
+                    widget.hostManager.config.memberListConfig.onClicked
+                        ?.call(user);
+                  },
+                  child: Container(
+                    margin: EdgeInsets.only(bottom: 36.zR),
+                    child: Row(
+                      children: [
+                        avatarItem(context, user, widget.avatarBuilder),
+                        SizedBox(width: 24.zR),
+                        userNameItem(user),
+                        const Expanded(child: SizedBox()),
+                        controlsItem(user),
+                      ],
+                    ),
                   ),
                 );
               },
@@ -187,13 +192,13 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
               ).pop();
             },
             child: SizedBox(
-              width: 70.r,
-              height: 70.r,
+              width: 70.zR,
+              height: 70.zR,
               child: PrebuiltLiveStreamingImage.asset(
                   PrebuiltLiveStreamingIconUrls.back),
             ),
           ),
-          SizedBox(width: 10.r),
+          SizedBox(width: 10.zR),
           StreamBuilder<List<ZegoUIKitUser>>(
               stream: ZegoUIKit().getUserListStream(),
               builder: (context, snapshot) {
@@ -201,7 +206,7 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
                   '${widget.innerText.memberListTitle} '
                   '(${ZegoUIKit().getAllUsers().length})',
                   style: TextStyle(
-                    fontSize: 36.0.r,
+                    fontSize: 36.0.zR,
                     color: const Color(0xffffffff),
                     decoration: TextDecoration.none,
                   ),
@@ -228,16 +233,16 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
         }
 
         final extensionTextStyle = TextStyle(
-          fontSize: 32.0.r,
+          fontSize: 32.0.zR,
           color: const Color(0xffA7A6B7),
           decoration: TextDecoration.none,
         );
-        var nameConstraintSize = Size(240.r, 40.r);
+        var nameConstraintSize = Size(240.zR, 40.zR);
         if (extensions.isNotEmpty && isUserInRequestCoHost(user.id)) {
           //  ellipsis name if overflow
           nameConstraintSize = Size(
               nameConstraintSize.width -
-                  5.r -
+                  5.zR -
                   getTextSize(extensions.join(','), extensionTextStyle).width,
               nameConstraintSize.height);
         }
@@ -250,13 +255,13 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
                 user.name,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  fontSize: 32.0.r,
+                  fontSize: 32.0.zR,
                   color: const Color(0xffffffff),
                   decoration: TextDecoration.none,
                 ),
               ),
             ),
-            SizedBox(width: 5.r),
+            SizedBox(width: 5.zR),
             Text(
               extensions.isEmpty ? '' : "(${extensions.join(",")})",
               style: extensionTextStyle,
@@ -323,7 +328,7 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
                 }
               });
             }),
-        SizedBox(width: 12.r),
+        SizedBox(width: 12.zR),
         controlButton(
             text: widget.innerText.agreeButton,
             gradient: const LinearGradient(
@@ -421,8 +426,8 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
         ));
 
         return ZegoTextIconButton(
-          buttonSize: Size(60.r, 60.r),
-          iconSize: Size(60.r, 60.r),
+          buttonSize: Size(60.zR, 60.zR),
+          iconSize: Size(60.zR, 60.zR),
           icon: ButtonIcon(
             icon: PrebuiltLiveStreamingImage.asset(
                 PrebuiltLiveStreamingIconUrls.memberMore),
@@ -451,10 +456,10 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
 
   Widget popupMenuWidget(String text) {
     return Container(
-      width: 630.r,
-      height: 98.r,
+      width: 630.zR,
+      height: 98.zR,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(44.r),
+        borderRadius: BorderRadius.circular(44.zR),
         gradient: const LinearGradient(
           colors: [Color(0xffA754FF), Color(0xff510DF1)],
           begin: Alignment.topLeft,
@@ -466,7 +471,7 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
           text,
           style: TextStyle(
             color: Colors.white,
-            fontSize: 28.r,
+            fontSize: 28.zR,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -481,20 +486,20 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
     Gradient? gradient,
   }) {
     return ConstrainedBox(
-      constraints: BoxConstraints.loose(Size(165.r, 64.r)),
+      constraints: BoxConstraints.loose(Size(165.zR, 64.zR)),
       child: GestureDetector(
         onTap: onPressed,
         child: Container(
           decoration: BoxDecoration(
             color: backgroundColor,
-            borderRadius: BorderRadius.circular(32.r),
+            borderRadius: BorderRadius.circular(32.zR),
             gradient: gradient,
           ),
           child: Align(
             child: Text(
               text,
               style: TextStyle(
-                fontSize: 28.r,
+                fontSize: 28.zR,
                 fontWeight: FontWeight.w500,
                 color: Colors.white,
               ),
@@ -511,16 +516,16 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
     ZegoAvatarBuilder? builder,
   ) {
     return Container(
-      width: 92.r,
-      height: 92.r,
+      width: 92.zR,
+      height: 92.zR,
       decoration:
           const BoxDecoration(color: Color(0xffDBDDE3), shape: BoxShape.circle),
       child: Center(
-        child: builder?.call(context, Size(92.r, 92.r), user, {}) ??
+        child: builder?.call(context, Size(92.zR, 92.zR), user, {}) ??
             Text(
               user.name.isNotEmpty ? user.name.characters.first : '',
               style: TextStyle(
-                fontSize: 32.0.r,
+                fontSize: 32.0.zR,
                 color: const Color(0xff222222),
                 decoration: TextDecoration.none,
               ),
@@ -562,8 +567,8 @@ Future<void> showMemberListSheet({
     useRootNavigator: hostManager.config.rootNavigator,
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.only(
-        topLeft: Radius.circular(32.0.r),
-        topRight: Radius.circular(32.0.r),
+        topLeft: Radius.circular(32.0.zR),
+        topRight: Radius.circular(32.0.zR),
       ),
     ),
     isDismissible: true,

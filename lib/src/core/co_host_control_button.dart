@@ -62,7 +62,7 @@ class _ZegoCoHostControlButtonState extends State<ZegoCoHostControlButton> {
 
   TextStyle get buttonTextStyle => TextStyle(
         color: Colors.white,
-        fontSize: 26.r,
+        fontSize: 26.zR,
         fontWeight: FontWeight.w500,
       );
 
@@ -113,9 +113,9 @@ class _ZegoCoHostControlButtonState extends State<ZegoCoHostControlButton> {
       icon: null != widget.requestCoHostButtonIcon?.icon
           ? widget.requestCoHostButtonIcon
           : buttonIcon,
-      buttonSize: Size(330.r, 72.r),
-      iconSize: Size(48.r, 48.r),
-      iconTextSpacing: 12.r,
+      buttonSize: Size(330.zR, 72.zR),
+      iconSize: Size(48.zR, 48.zR),
+      iconTextSpacing: 12.zR,
       text: widget.requestCoHostButtonText ??
           widget.translationText.requestCoHostButton,
       textStyle: buttonTextStyle,
@@ -150,9 +150,9 @@ class _ZegoCoHostControlButtonState extends State<ZegoCoHostControlButton> {
       icon: null != widget.cancelRequestCoHostButtonIcon?.icon
           ? widget.cancelRequestCoHostButtonIcon
           : buttonIcon,
-      buttonSize: Size(330.r, 72.r),
-      iconSize: Size(48.r, 48.r),
-      iconTextSpacing: 12.r,
+      buttonSize: Size(330.zR, 72.zR),
+      iconSize: Size(48.zR, 48.zR),
+      iconTextSpacing: 12.zR,
       text: widget.cancelRequestCoHostButtonText ??
           widget.translationText.cancelRequestCoHostButton,
       textStyle: buttonTextStyle,
@@ -171,10 +171,10 @@ class _ZegoCoHostControlButtonState extends State<ZegoCoHostControlButton> {
       icon: null != widget.endCoHostButtonIcon?.icon
           ? widget.endCoHostButtonIcon
           : buttonIcon,
-      buttonRadius: 72.r / 2,
-      buttonSize: Size(168.r, 72.r),
-      iconSize: Size(48.r, 48.r),
-      iconTextSpacing: 12.r,
+      buttonRadius: 72.zR / 2,
+      buttonSize: Size(168.zR, 72.zR),
+      iconSize: Size(48.zR, 48.zR),
+      iconTextSpacing: 12.zR,
       text:
           widget.endCoHostButtonText ?? widget.translationText.endCoHostButton,
       textStyle: buttonTextStyle,

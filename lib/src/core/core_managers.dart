@@ -65,7 +65,7 @@ class ZegoLiveStreamingManagers {
         liveStatusNotifier:
             ZegoLiveStreamingManagers().liveStatusManager!.notifier,
         config: prebuiltData.config,
-        translationText: prebuiltData.config.innerText,
+        innerText: prebuiltData.config.innerText,
         startedByLocalNotifier: startedByLocalNotifier,
       );
     }

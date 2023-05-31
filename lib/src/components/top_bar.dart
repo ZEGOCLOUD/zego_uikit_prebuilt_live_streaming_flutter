@@ -64,17 +64,17 @@ class _ZegoTopBarState extends State<ZegoTopBar> {
   Widget build(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(color: Colors.transparent),
-      height: 80.r,
+      height: 80.zR,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          avatar(),
+          hostAvatar(),
           const Expanded(child: SizedBox()),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               minimizingButton(),
-              SizedBox(width: 20.r),
+              SizedBox(width: 20.zR),
               ZegoMemberButton(
                 avatarBuilder: widget.config.avatarBuilder,
                 itemBuilder: widget.config.memberListConfig.itemBuilder,
@@ -84,9 +84,9 @@ class _ZegoTopBarState extends State<ZegoTopBar> {
                 popUpManager: widget.popUpManager,
                 translationText: widget.translationText,
               ),
-              SizedBox(width: 20.r),
+              SizedBox(width: 20.zR),
               closeButton(),
-              SizedBox(width: 33.r),
+              SizedBox(width: 33.zR),
             ],
           ),
         ],
@@ -99,16 +99,16 @@ class _ZegoTopBarState extends State<ZegoTopBar> {
             .contains(ZegoMenuBarButtonName.minimizingButton)
         ? ZegoUIKitPrebuiltLiveStreamingMinimizingButton(
             prebuiltData: widget.prebuiltData,
-            buttonSize: Size(52.r, 52.r),
-            iconSize: Size(24.r, 24.r),
+            buttonSize: Size(52.zR, 52.zR),
+            iconSize: Size(24.zR, 24.zR),
           )
         : Container();
   }
 
   Widget closeButton() {
     return ZegoLeaveStreamingButton(
-      buttonSize: Size(52.r, 52.r),
-      iconSize: Size(24.r, 24.r),
+      buttonSize: Size(52.zR, 52.zR),
+      iconSize: Size(24.zR, 24.zR),
       icon: ButtonIcon(
         icon: const Icon(Icons.close, color: Colors.white),
         backgroundColor: ZegoUIKitDefaultTheme.buttonBackgroundColor,
@@ -120,7 +120,7 @@ class _ZegoTopBarState extends State<ZegoTopBar> {
     );
   }
 
-  Widget avatar() {
+  Widget hostAvatar() {
     return ValueListenableBuilder<ZegoUIKitUser?>(
       valueListenable: widget.hostManager.notifier,
       builder: (context, host, _) {
@@ -130,37 +130,42 @@ class _ZegoTopBarState extends State<ZegoTopBar> {
 
         return Row(
           children: [
-            SizedBox(width: 32.r),
-            SizedBox(
-              height: 68.r,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: ZegoUIKitDefaultTheme.buttonBackgroundColor,
-                  borderRadius: BorderRadius.circular(68.r),
-                ),
-                child: Row(
-                  children: [
-                    SizedBox(width: 6.r),
-                    ZegoAvatar(
-                      user: host,
-                      avatarSize: Size(56.r, 56.r),
-                      showSoundLevel: false,
-                      avatarBuilder: widget.config.avatarBuilder,
+            SizedBox(width: 32.zR),
+            GestureDetector(
+                onTap: () {
+                  widget.config.topMenuBarConfig.onHostAvatarClicked
+                      ?.call(host);
+                },
+                child: SizedBox(
+                  height: 68.zR,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: ZegoUIKitDefaultTheme.buttonBackgroundColor,
+                      borderRadius: BorderRadius.circular(68.zR),
                     ),
-                    SizedBox(width: 12.r),
-                    Text(
-                      host.name,
-                      style: TextStyle(
-                        fontSize: 24.r,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w400,
-                      ),
+                    child: Row(
+                      children: [
+                        SizedBox(width: 6.zR),
+                        ZegoAvatar(
+                          user: host,
+                          avatarSize: Size(56.zR, 56.zR),
+                          showSoundLevel: false,
+                          avatarBuilder: widget.config.avatarBuilder,
+                        ),
+                        SizedBox(width: 12.zR),
+                        Text(
+                          host.name,
+                          style: TextStyle(
+                            fontSize: 24.zR,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                        SizedBox(width: 24.zR),
+                      ],
                     ),
-                    SizedBox(width: 24.r),
-                  ],
-                ),
-              ),
-            ),
+                  ),
+                )),
           ],
         );
       },

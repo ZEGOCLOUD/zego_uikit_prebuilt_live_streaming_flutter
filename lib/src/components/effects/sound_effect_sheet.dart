@@ -51,18 +51,18 @@ class _ZegoSoundEffectSheetState extends State<ZegoSoundEffectSheet> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        header(98.r),
-        Container(height: 1.r, color: Colors.white.withOpacity(0.15)),
-        SizedBox(height: 36.r),
+        header(98.zR),
+        Container(height: 1.zR, color: Colors.white.withOpacity(0.15)),
+        SizedBox(height: 36.zR),
         SizedBox(
-          height: 600.r - 98.r - 36.r - 1.r,
+          height: 600.zR - 98.zR - 36.zR - 1.zR,
           child: ListView(
             children: [
               ZegoEffectGrid(
                 model: voiceChangerModel,
                 isSpaceEvenly: false,
               ),
-              SizedBox(height: 36.r),
+              SizedBox(height: 36.zR),
               ZegoEffectGrid(
                 model: reverbPresetModel,
                 isSpaceEvenly: false,
@@ -88,17 +88,17 @@ class _ZegoSoundEffectSheetState extends State<ZegoSoundEffectSheet> {
               ).pop();
             },
             child: SizedBox(
-              width: 70.r,
-              height: 70.r,
+              width: 70.zR,
+              height: 70.zR,
               child: PrebuiltLiveStreamingImage.asset(
                   PrebuiltLiveStreamingIconUrls.back),
             ),
           ),
-          SizedBox(width: 10.r),
+          SizedBox(width: 10.zR),
           Text(
             widget.translationText.audioEffectTitle,
             style: TextStyle(
-              fontSize: 36.0.r,
+              fontSize: 36.0.zR,
               color: const Color(0xffffffff),
               decoration: TextDecoration.none,
             ),
@@ -269,7 +269,7 @@ void showSoundEffectSheet(
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
           child: SizedBox(
-            height: 600.r,
+            height: 600.zR,
             child: ZegoSoundEffectSheet(
               translationText: translationText,
               rootNavigator: rootNavigator,

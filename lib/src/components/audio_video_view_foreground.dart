@@ -56,8 +56,8 @@ class ZegoAudioVideoForeground extends StatelessWidget {
             bottom: 0,
             right: 0,
             child: Container(
-              margin: EdgeInsets.all(3.r),
-              padding: EdgeInsets.all(3.r),
+              margin: EdgeInsets.all(3.zR),
+              padding: EdgeInsets.all(3.zR),
               decoration: BoxDecoration(
                 color: Colors.black.withOpacity(0.2),
                 borderRadius: const BorderRadius.all(Radius.circular(4)),
@@ -100,7 +100,7 @@ class ZegoAudioVideoForeground extends StatelessWidget {
               user?.name ?? '',
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                fontSize: 22.0.r,
+                fontSize: 22.0.zR,
                 color: const Color(0xffffffff),
                 decoration: TextDecoration.none,
               ),
@@ -115,8 +115,8 @@ class ZegoAudioVideoForeground extends StatelessWidget {
     }
 
     return SizedBox(
-      width: 20.r,
-      height: 33.r,
+      width: 20.zR,
+      height: 33.zR,
       child: ZegoMicrophoneStateIcon(targetUser: user),
     );
   }
@@ -127,8 +127,8 @@ class ZegoAudioVideoForeground extends StatelessWidget {
     }
 
     return SizedBox(
-      width: 20.r,
-      height: 33.r,
+      width: 20.zR,
+      height: 33.zR,
       child: ZegoCameraStateIcon(targetUser: user),
     );
   }
@@ -182,12 +182,12 @@ class ZegoAudioVideoForeground extends StatelessWidget {
         //  need for click
         width: maxWidth,
         height: maxHeight * 0.33,
-        padding: EdgeInsets.all(5.r),
+        padding: EdgeInsets.all(5.zR),
         child: Align(
           alignment: Alignment.topRight,
           child: ZegoTextIconButton(
-            buttonSize: Size(28.r, 28.r),
-            iconSize: Size(28.r, 28.r),
+            buttonSize: Size(28.zR, 28.zR),
+            iconSize: Size(28.zR, 28.zR),
             icon: ButtonIcon(
               backgroundColor: Colors.black.withOpacity(0.6),
               icon: PrebuiltLiveStreamingImage.asset(

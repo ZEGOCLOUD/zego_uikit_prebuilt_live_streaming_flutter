@@ -1,3 +1,14 @@
+## 2.8.4
+- Added click event to the host avatar which at the top left corner.
+- Added click event to the item of member list .
+
+## 2.8.3
+- support config size to message list
+- Update dependencies
+
+## 2.8.2
+- fix the issue of conflict with extension key of the `flutter_screenutil` package.
+
 ## 2.8.1
 - fix some user login status issues when used `zego_uikit_prebuilt_live_streaming` with `zego_zimkit`
 

@@ -69,7 +69,7 @@ enum ZegoMenuBarButtonName {
   /// Typically, only the host and co-hosts will be speaking, so this button is usually displayed on their toolbars.
   soundEffectButton,
 
-  /// Button to disable/enable chat in the live audio room.
+  /// Button to disable/enable chat in the live streaming.
   /// This will apply to everyone in the room except the host.
   enableChatButton,
 

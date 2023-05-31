@@ -12,15 +12,15 @@ import 'package:zego_uikit/zego_uikit.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/audio_video_view_foreground.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/live_page_surface.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/core/core_managers.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/live_duration_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/live_status_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/plugins.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/core/core_managers.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/prebuilt_data.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_controller.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/prebuilt_data.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/pk/pk_service.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/pk/pk_view.dart';
 
@@ -141,7 +141,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
           }
           return canLeave;
         },
-        child: ScreenUtilInit(
+        child: ZegoScreenUtilInit(
           designSize: const Size(750, 1334),
           minTextAdapt: true,
           splitScreenMode: true,
@@ -209,18 +209,19 @@ class ZegoLivePageState extends State<ZegoLivePage>
           );
         } else {
           return Positioned(
-            top: widget.config.pkBattleConfig.pKBattleViewTopPadding ?? 164.r,
+            top: widget.config.pkBattleConfig.pKBattleViewTopPadding ?? 164.zR,
             child: ZegoLiveStreamingPKBattleView(
               constraints: constraints,
               config: widget.config,
-              foregroundBuilder: widget.config.audioVideoViewConfig.foregroundBuilder,
-              backgroundBuilder: widget
-                  .config.audioVideoViewConfig.backgroundBuilder,
+              foregroundBuilder:
+                  widget.config.audioVideoViewConfig.foregroundBuilder,
+              backgroundBuilder:
+                  widget.config.audioVideoViewConfig.backgroundBuilder,
               avatarConfig: ZegoAvatarConfig(
-                showInAudioMode: widget.config.audioVideoViewConfig
-                    .showAvatarInAudioMode,
-                showSoundWavesInAudioMode: widget.config
-                    .audioVideoViewConfig.showSoundWavesInAudioMode,
+                showInAudioMode:
+                    widget.config.audioVideoViewConfig.showAvatarInAudioMode,
+                showSoundWavesInAudioMode: widget
+                    .config.audioVideoViewConfig.showSoundWavesInAudioMode,
                 builder: widget.config.avatarBuilder,
               ),
             ),
@@ -313,7 +314,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
                   widget.config.innerText.noHostOnline,
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 32.r,
+                    fontSize: 32.zR,
                     fontWeight: FontWeight.w400,
                     color: Colors.white,
                   ),
@@ -483,12 +484,12 @@ class ZegoLivePageState extends State<ZegoLivePage>
         return ZegoLayout.pictureInPicture(
             smallViewPosition: ZegoViewPosition.bottomRight,
             isSmallViewDraggable: false,
-            smallViewSize: Size(139.5.w, 248.0.h),
+            smallViewSize: Size(139.5.zW, 248.0.zH),
             smallViewMargin: EdgeInsets.only(
-              left: 24.r,
-              top: 144.r,
-              right: 24.r,
-              bottom: 144.r,
+              left: 24.zR,
+              top: 144.zR,
+              right: 24.zR,
+              bottom: 144.zR,
             ),
             showNewScreenSharingViewInFullscreenMode: true,
             showScreenSharingFullscreenModeToggleButtonRules:

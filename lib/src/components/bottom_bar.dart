@@ -16,11 +16,11 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/core/co_host_control_butt
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/mini_button.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/prebuilt_data.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_defines.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/mini_button.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/prebuilt_data.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/pk/src/pk_impl.dart';
 
 /// @nodoc
@@ -76,7 +76,7 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
   Widget build(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(color: Colors.transparent),
-      height: 124.r,
+      height: 124.zR,
       child: Stack(
         children: [
           if (widget.hostManager.isLocalHost)
@@ -136,7 +136,7 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
 
     if (widget.config.bottomMenuBarConfig.showInRoomMessageButton) {
       return SizedBox(
-        height: 124.r,
+        height: 124.zR,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -322,10 +322,10 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
     /// co-host button
     final coHostButtonTextStyle = TextStyle(
       color: Colors.white,
-      fontSize: 26.r,
+      fontSize: 26.zR,
       fontWeight: FontWeight.w500,
     );
-    final iconTextSpacing = 20.r;
+    final iconTextSpacing = 20.zR;
     switch (type) {
       case ZegoMenuBarButtonName.coHostControlButton:
         switch (widget.connectManager.audienceLocalConnectStateNotifier.value) {

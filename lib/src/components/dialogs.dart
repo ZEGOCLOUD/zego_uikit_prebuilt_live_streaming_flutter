@@ -34,7 +34,7 @@ Future<bool> showLiveDialog({
           child: Text(
             leftButtonText!,
             style: TextStyle(
-              fontSize: 32.r,
+              fontSize: 32.zR,
               color: Colors.white,
               fontWeight: FontWeight.w500,
             ),
@@ -49,7 +49,7 @@ Future<bool> showLiveDialog({
         child: Text(
           rightButtonText,
           style: TextStyle(
-            fontSize: 32.r,
+            fontSize: 32.zR,
             color: Colors.white,
             fontWeight: FontWeight.w500,
           ),
@@ -57,12 +57,12 @@ Future<bool> showLiveDialog({
       ),
     ],
     titleStyle: TextStyle(
-      fontSize: 32.0.r,
+      fontSize: 32.0.zR,
       fontWeight: FontWeight.w600,
       color: Colors.white,
     ),
     contentStyle: TextStyle(
-      fontSize: 28.0.r,
+      fontSize: 28.0.zR,
       fontWeight: FontWeight.w400,
       color: Colors.white,
     ),

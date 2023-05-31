@@ -19,9 +19,9 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/live_duration_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/live_status_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/plugins.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/prebuilt_data.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_controller.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/prebuilt_data.dart';
 
 /// @nodoc
 class ZegoLivePageSurface extends StatefulWidget {
@@ -115,7 +115,7 @@ class ZegoLivePageSurfaceState extends State<ZegoLivePageSurface>
     return Positioned(
       left: 0,
       right: 0,
-      top: 64.r,
+      top: 64.zR,
       child: ZegoTopBar(
         config: widget.config,
         prebuiltData: widget.prebuiltData,
@@ -148,11 +148,21 @@ class ZegoLivePageSurfaceState extends State<ZegoLivePageSurface>
   }
 
   Widget messageList() {
+    var listSize = Size(
+      widget.config.inRoomMessageViewConfig.width ?? 540.zR,
+      widget.config.inRoomMessageViewConfig.height ?? 400.zR,
+    );
+    if (listSize.width < 54.zR) {
+      listSize = Size(54.zR, listSize.height);
+    }
+    if (listSize.height < 40.zR) {
+      listSize = Size(listSize.width, 40.zR);
+    }
     return Positioned(
-      left: 32.r,
-      bottom: 124.r,
+      left: 32.zR,
+      bottom: 124.zR,
       child: ConstrainedBox(
-        constraints: BoxConstraints.loose(Size(540.r, 400.r)),
+        constraints: BoxConstraints.loose(listSize),
         child: ZegoInRoomLiveCommentingView(
           itemBuilder: widget.config.inRoomMessageViewConfig.itemBuilder,
           opacity: widget.config.inRoomMessageViewConfig.opacity,

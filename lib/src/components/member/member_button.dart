@@ -86,17 +86,17 @@ class _ZegoMemberButtonState extends State<ZegoMemberButton> {
       child: Stack(
         children: [
           Container(
-            width: 106.r,
-            height: 56.r,
+            width: 106.zR,
+            height: 56.zR,
             decoration: BoxDecoration(
               color: ZegoUIKitDefaultTheme.buttonBackgroundColor,
-              borderRadius: BorderRadius.all(Radius.circular(28.r)),
+              borderRadius: BorderRadius.all(Radius.circular(28.zR)),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 icon(),
-                SizedBox(width: 6.r),
+                SizedBox(width: 6.zR),
                 memberCount(),
               ],
             ),
@@ -133,8 +133,8 @@ class _ZegoMemberButtonState extends State<ZegoMemberButton> {
                     shape: BoxShape.circle,
                     color: Colors.red,
                   ),
-                  width: 20.r,
-                  height: 20.r,
+                  width: 20.zR,
+                  height: 20.zR,
                 );
               },
             ),
@@ -146,8 +146,8 @@ class _ZegoMemberButtonState extends State<ZegoMemberButton> {
 
   Widget icon() {
     return SizedBox(
-      width: 48.r,
-      height: 48.r,
+      width: 48.zR,
+      height: 48.zR,
       child: const Icon(
         Icons.person,
         color: Colors.white,
@@ -157,7 +157,7 @@ class _ZegoMemberButtonState extends State<ZegoMemberButton> {
 
   Widget memberCount() {
     return SizedBox(
-      height: 56.r,
+      height: 56.zR,
       child: Center(
         child: ValueListenableBuilder<int>(
           valueListenable: memberCountNotifier,
@@ -166,7 +166,7 @@ class _ZegoMemberButtonState extends State<ZegoMemberButton> {
               memberCount.toString(),
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 24.r,
+                fontSize: 24.zR,
                 fontWeight: FontWeight.w400,
               ),
             );

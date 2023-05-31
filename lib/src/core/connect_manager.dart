@@ -757,17 +757,17 @@ extension ZegoLiveConnectManagerCoHostCount on ZegoLiveConnectManager {
   }
 
   void onUserJoinUpdated(List<ZegoUIKitUser> users) {
-    users.forEach((user) {
+    for (final user in users) {
       user.camera.addListener(onUserCameraStateChanged);
       user.microphone.addListener(onUserMicrophoneStateChanged);
-    });
+    }
   }
 
   void onUserLeaveUpdated(List<ZegoUIKitUser> users) {
-    users.forEach((user) {
+    for (final user in users) {
       user.camera.removeListener(onUserCameraStateChanged);
       user.microphone.removeListener(onUserMicrophoneStateChanged);
-    });
+    }
   }
 
   void onUserCameraStateChanged() {

@@ -14,11 +14,11 @@ import 'package:zego_uikit/zego_uikit.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/dialogs.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/mini_overlay_machine.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_inner_text.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/mini_overlay_machine.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/pk/pk_event_default_actions.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/pk/pk_service.dart';
 
@@ -58,14 +58,14 @@ class ZegoLiveStreamingPKBattleManager {
 
   bool get isHost => hostManager.isLocalHost;
   String cachedRoomID = '';
-  Completer<void>? stateTrancformCompleter;
+  Completer<void>? stateTransformCompleter;
 
   bool inited = false;
   List<StreamSubscription<dynamic>> subscriptions = [];
 
   void init({
     required ZegoUIKitPrebuiltLiveStreamingConfig config,
-    required ZegoInnerText translationText,
+    required ZegoInnerText innerText,
     required ZegoLiveHostManager hostManager,
     required ValueNotifier<LiveStatus> liveStatusNotifier,
     required ValueNotifier<bool> startedByLocalNotifier,
@@ -76,7 +76,7 @@ class ZegoLiveStreamingPKBattleManager {
       subTag: 'api',
     );
     this.config = config;
-    this.innerText = translationText;
+    this.innerText = innerText;
     this.hostManager = hostManager;
     this.liveStatusNotifier = liveStatusNotifier;
     this.startedByLocalNotifier = startedByLocalNotifier;

@@ -79,7 +79,7 @@ class CallDurationTimeBoardState extends State<LiveDurationTimeBoard> {
                 style: TextStyle(
                   color: Colors.white,
                   decoration: TextDecoration.none,
-                  fontSize: widget.fontSize ?? 25.r,
+                  fontSize: widget.fontSize ?? 25.zR,
                 ),
               );
       },
