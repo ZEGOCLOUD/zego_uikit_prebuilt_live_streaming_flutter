@@ -8,6 +8,7 @@ import 'package:zego_uikit/zego_uikit.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/effects/beauty_effect_reset_button.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/effects/effect_grid.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_inner_text.dart';
 
 /// @nodoc
@@ -15,12 +16,14 @@ class ZegoBeautyEffectSheet extends StatefulWidget {
   final ZegoInnerText translationText;
   final bool rootNavigator;
   final List<BeautyEffectType> beautyEffects;
+  final ZegoEffectConfig effectConfig;
 
   const ZegoBeautyEffectSheet({
     Key? key,
     required this.translationText,
     required this.rootNavigator,
     required this.beautyEffects,
+    required this.effectConfig,
   }) : super(key: key);
 
   @override
@@ -52,6 +55,9 @@ class _ZegoBeautyEffectSheetState extends State<ZegoBeautyEffectSheet> {
   var selectedEffectTypeNotifier =
       ValueNotifier<BeautyEffectType>(BeautyEffectType.none);
 
+  String faceBeautyIconPath(String name) =>
+      'assets/icons/face_beauty_$name.png';
+
   @override
   void initState() {
     super.initState();
@@ -67,8 +73,28 @@ class _ZegoBeautyEffectSheetState extends State<ZegoBeautyEffectSheet> {
               id: effect.index.toString(),
               effectType: effect,
               icon: ButtonIcon(
-                icon: PrebuiltLiveStreamingImage.asset(
-                    'assets/icons/face_beauty_${effect.name}.png'),
+                icon: ColorFiltered(
+                  colorFilter: ColorFilter.mode(
+                    widget.effectConfig.normalIconColor ??
+                        const Color(0xffCCCCCC),
+                    BlendMode.srcATop,
+                  ),
+                  child: PrebuiltLiveStreamingImage.asset(
+                    faceBeautyIconPath(effect.name),
+                  ),
+                ),
+              ),
+              selectIcon: ButtonIcon(
+                icon: ColorFiltered(
+                  colorFilter: ColorFilter.mode(
+                    widget.effectConfig.selectedIconColor ??
+                        const Color(0xffA653FF),
+                    BlendMode.srcATop,
+                  ),
+                  child: PrebuiltLiveStreamingImage.asset(
+                    faceBeautyIconPath(effect.name),
+                  ),
+                ),
               ),
               iconText: beautyEffectTypeText(effect),
               onPressed: () {
@@ -122,6 +148,12 @@ class _ZegoBeautyEffectSheetState extends State<ZegoBeautyEffectSheet> {
                       isSpaceEvenly: true,
                       withBorderColor: true,
                       buttonSize: Size(150.zR, 133.zR),
+                      selectedIconBorderColor:
+                          widget.effectConfig.selectedIconBorderColor,
+                      normalIconBorderColor:
+                          widget.effectConfig.normalIconBorderColor,
+                      selectedTextStyle: widget.effectConfig.selectedTextStyle,
+                      normalTextStyle: widget.effectConfig.normalTextStyle,
                     ),
                   ],
                 ),
@@ -157,6 +189,12 @@ class _ZegoBeautyEffectSheetState extends State<ZegoBeautyEffectSheet> {
       effectType: selectedEffectTypeNotifier.value,
       thumpHeight: height,
       defaultValue: selectedEffectValue,
+      textStyle: widget.effectConfig.sliderTextStyle,
+      textBackgroundColor: widget.effectConfig.sliderTextBackgroundColor,
+      activeTrackColor: widget.effectConfig.sliderActiveTrackColor,
+      inactiveTrackColor: widget.effectConfig.sliderInactiveTrackColor,
+      thumbColor: widget.effectConfig.sliderThumbColor,
+      thumbRadius: widget.effectConfig.sliderThumbRadius,
     );
   }
 
@@ -165,7 +203,8 @@ class _ZegoBeautyEffectSheetState extends State<ZegoBeautyEffectSheet> {
       height: height,
       padding: EdgeInsets.symmetric(vertical: 5.zR, horizontal: 10.zR),
       decoration: BoxDecoration(
-        color: ZegoUIKitDefaultTheme.viewBackgroundColor,
+        color: widget.effectConfig.backgroundColor ??
+            ZegoUIKitDefaultTheme.viewBackgroundColor,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(32.0.zR),
           topRight: Radius.circular(32.0.zR),
@@ -190,23 +229,27 @@ class _ZegoBeautyEffectSheetState extends State<ZegoBeautyEffectSheet> {
             child: SizedBox(
               width: 70.zR,
               height: 70.zR,
-              child: PrebuiltLiveStreamingImage.asset(
-                  PrebuiltLiveStreamingIconUrls.back),
+              child: widget.effectConfig.backIcon ??
+                  PrebuiltLiveStreamingImage.asset(
+                    PrebuiltLiveStreamingIconUrls.back,
+                  ),
             ),
           ),
           SizedBox(width: 10.zR),
           Text(
             widget.translationText.beautyEffectTitle,
-            style: TextStyle(
-              fontSize: 36.0.zR,
-              color: const Color(0xffffffff),
-              decoration: TextDecoration.none,
-            ),
+            style: widget.effectConfig.headerTitleTextStyle ??
+                TextStyle(
+                  fontSize: 36.0.zR,
+                  color: const Color(0xffffffff),
+                  decoration: TextDecoration.none,
+                ),
           ),
           Expanded(child: Container()),
           ZegoBeautyEffectResetButton(
-            buttonSize: Size(_besHeaderHeight, _besHeaderHeight),
+            icon: ButtonIcon(icon: widget.effectConfig.resetIcon),
             iconSize: Size(38.zR, 38.zR),
+            buttonSize: Size(_besHeaderHeight, _besHeaderHeight),
             onPressed: () {
               beauty.selectedID.value = '';
 
@@ -241,6 +284,7 @@ void showBeautyEffectSheet(
   BuildContext context, {
   required ZegoInnerText translationText,
   required bool rootNavigator,
+  required ZegoEffectConfig effectConfig,
   required List<BeautyEffectType> beautyEffects,
 }) {
   showModalBottomSheet(
@@ -260,6 +304,7 @@ void showBeautyEffectSheet(
             translationText: translationText,
             rootNavigator: rootNavigator,
             beautyEffects: beautyEffects,
+            effectConfig: effectConfig,
           ),
         ),
       );

@@ -28,6 +28,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         turnOnMicrophoneWhenJoining = true,
         useSpeakerWhenJoining = true,
         turnOnCameraWhenCohosted = true,
+        stopCoHostingWhenMicCameraOff = true,
         markAsLargeRoom = false,
         rootNavigator = false,
         videoConfig = ZegoPrebuiltVideoConfig(),
@@ -74,6 +75,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         turnOnMicrophoneWhenJoining = false,
         useSpeakerWhenJoining = true,
         turnOnCameraWhenCohosted = true,
+        stopCoHostingWhenMicCameraOff = true,
         markAsLargeRoom = false,
         rootNavigator = false,
         videoConfig = ZegoPrebuiltVideoConfig(),
@@ -101,6 +103,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
     this.turnOnMicrophoneWhenJoining = true,
     this.useSpeakerWhenJoining = true,
     this.turnOnCameraWhenCohosted = true,
+    this.stopCoHostingWhenMicCameraOff = true,
     this.markAsLargeRoom = false,
     this.rootNavigator = false,
     this.maxCoHostCount = 12,
@@ -181,6 +184,11 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   /// whether to enable the camera by default when you be co-host, the default value is true
   bool turnOnCameraWhenCohosted;
 
+  /// controls whether to automatically stop co-hosting when both the camera and microphone are turned off.
+  /// If the value is set to true, the user will stop co-hosting automatically when both camera and microphone are off.
+  /// If the value is set to false, the user will keep co-hosting until manually stop co-hosting by clicking the "End" button.
+  bool stopCoHostingWhenMicCameraOff;
+
   /// configuration parameters for audio and video streaming, such as Resolution, Frame rate, Bit rate..
   ZegoPrebuiltVideoConfig videoConfig;
 
@@ -220,9 +228,8 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   ZegoLayout? layout;
 
   /// same as Flutter's Navigator's param
-  /// If `rootNavigator` is set to true, the state from the furthest instance of
-  /// this class is given instead. Useful for pushing contents above all
-  /// subsequent instances of [Navigator].
+  /// If `rootNavigator` is set to true, the state from the furthest instance of this class is given instead.
+  /// Useful for pushing contents above all subsequent instances of [Navigator].
   bool rootNavigator;
 
   /// Use this to customize the avatar, and replace the default avatar with it.
@@ -318,14 +325,16 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   /// If you return true in the callback, the prebuilt page will quit and return to your previous page, otherwise it will be ignored.
   Future<bool> Function(BuildContext context)? onLeaveConfirmation;
 
-  /// customize handling me removed from room
+  /// This callback is triggered when local user removed from live streaming
   Future<void> Function(String)? onMeRemovedFromRoom;
 
-  /// This callback is triggered after leaving the live streaming.
+  /// This callback is triggered after leaving the live streaming(host would not trigger this callback).
   /// You can perform business-related prompts or other actions in this callback.
+  /// The default behavior is to return to the previous page. If you override this callback, you must perform the page navigation yourself, otherwise the user will remain on the live streaming page.
   VoidCallback? onLeaveLiveStreaming;
 
-  /// customize handling after end live streaming
+  /// This callback method is called when live streaming ended(all users in live streaming will received).
+  /// The default behavior is to return to the previous page. If you override this callback, you must perform the page navigation yourself, otherwise the user will remain on the live streaming page.
   VoidCallback? onLiveStreamingEnded;
 
   void Function(ZegoLiveStreamingState state)? onLiveStreamingStateUpdate;
@@ -658,19 +667,21 @@ class ZegoBottomMenuBarButtonStyle {
 /// For example, suppose you have implemented a `CustomMemberListItem` component that can render a member list item view based on the user information. You can set it up like this:
 ///
 /// ZegoMemberListConfig(
-///   showMicrophoneState: true,
-///   showCameraState: false,
 ///   itemBuilder: (BuildContext context, Size size, ZegoUIKitUser user, Map<String, dynamic> extraInfo) {
 ///     return CustomMemberListItem(user: user);
 ///   },
 /// );
 ///
-/// In this example, we set `showMicrophoneState` to true, so the microphone state will be displayed in the member list item.
-/// `showCameraState` is set to false, so the camera state will not be displayed.
-/// Finally, we pass the builder function of the custom view, `CustomMemberListItem`, to the `itemBuilder` property so that the member list item will be rendered using the custom component.
+/// In this example, we pass the builder function of the custom view, `CustomMemberListItem`, to the `itemBuilder` property so that the member list item will be rendered using the custom component.
+///
+/// In addition, you can listen for item click events through [onClicked].
 class ZegoMemberListConfig {
+  @Deprecated('Since 2.10.2, not support')
+
   /// Whether to show the microphone state of the member. Defaults to true, which means it will be shown.
   bool showMicrophoneState;
+
+  @Deprecated('Since 2.10.2, not support')
 
   /// Whether to show the camera state of the member. Defaults to true, which means it will be shown.
   bool showCameraState;
@@ -683,8 +694,8 @@ class ZegoMemberListConfig {
   void Function(ZegoUIKitUser user)? onClicked;
 
   ZegoMemberListConfig({
-    this.showMicrophoneState = true,
-    this.showCameraState = true,
+    @Deprecated('Since 2.10.2, not support') this.showMicrophoneState = true,
+    @Deprecated('Since 2.10.2, not support') this.showCameraState = true,
     this.itemBuilder,
     this.onClicked,
   });
@@ -706,10 +717,9 @@ class ZegoMemberListConfig {
 ///   },
 ///   opacity: 0.8,
 /// );
+///
+/// Of course, we also provide a range of styles for you to customize, such as display size, background color, font style, and so on.
 class ZegoInRoomMessageViewConfig {
-  /// The opacity of chat message list items, default value is 0.5.
-  double opacity;
-
   /// The width of chat message list view
   double? width;
 
@@ -720,16 +730,56 @@ class ZegoInRoomMessageViewConfig {
   /// For example, you can modify the background color, opacity, border radius, or add additional information like the sender's level or role.
   ZegoInRoomMessageItemBuilder? itemBuilder;
 
+  /// The opacity of the background color for chat message list items, default value of 0.5.
+  /// If you set the [backgroundColor], the [opacity] setting will be overridden.
+  double opacity;
+
+  /// The background of chat message list items
+  /// If you set the [backgroundColor], the [opacity] setting will be overridden.
+  /// You can use `backgroundColor.withOpacity(0.5)` to set the opacity of the background color.
+  Color? backgroundColor;
+
+  /// The max lines of chat message list items, default value is 3.
+  int? maxLines;
+
+  /// The name text style of chat message list items
+  TextStyle? nameTextStyle;
+
+  /// The message text style of chat message list items
+  TextStyle? messageTextStyle;
+
+  /// The border radius of chat message list items
+  BorderRadiusGeometry? borderRadius;
+
+  /// The paddings of chat message list items
+  EdgeInsetsGeometry? paddings;
+
   ZegoInRoomMessageViewConfig({
-    this.itemBuilder,
     this.width,
     this.height,
+    this.itemBuilder,
     this.opacity = 0.5,
+    this.maxLines,
+    this.nameTextStyle,
+    this.messageTextStyle,
+    this.backgroundColor,
+    this.borderRadius,
+    this.paddings,
   });
 }
 
 /// Configuration options for voice changer, beauty effects and reverberation effects.
 /// This class is used for the [effectConfig] property in [ZegoUIKitPrebuiltLiveAudioRoomConfig].
+///
+/// If you want to replace icons and colors to sheet or slider, some of our widgets also provide modification options.
+///
+/// Example:
+///
+/// ZegoEffectConfig(
+///   backgroundColor: Colors.black.withOpacity(0.5),
+///   backIcon: Icon(Icons.arrow_back),
+///   sliderTextBackgroundColor: Colors.black.withOpacity(0.5),
+/// );
 class ZegoEffectConfig {
   /// List of beauty effects types.
   /// If you don't want a certain effect, simply remove it from the list.
@@ -742,6 +792,54 @@ class ZegoEffectConfig {
   /// List of revert effects types.
   /// If you don't want a certain effect, simply remove it from the list.
   List<ReverbType> reverbEffect;
+
+  /// the background color of the sheet.
+  Color? backgroundColor;
+
+  /// the text style of the head title sheet.
+  TextStyle? headerTitleTextStyle;
+
+  /// back button icon on the left side of the title.
+  Widget? backIcon;
+
+  /// reset button icon on the right side of the title.
+  Widget? resetIcon;
+
+  /// color of the icons in the normal (unselected) state.
+  Color? normalIconColor;
+
+  /// color of the icons in the highlighted (selected) state.
+  Color? selectedIconColor;
+
+  /// border color of the icons in the normal (unselected) state.
+  Color? normalIconBorderColor;
+
+  /// border color of the icons in the highlighted (selected) state.
+  Color? selectedIconBorderColor;
+
+  /// text-style of buttons in the highlighted (selected) state.
+  TextStyle? selectedTextStyle;
+
+  /// text-style of buttons in the normal (unselected) state.
+  TextStyle? normalTextStyle;
+
+  /// the style of the text displayed on the Slider's thumb
+  TextStyle? sliderTextStyle;
+
+  /// the background color of the text displayed on the Slider's thumb.
+  Color? sliderTextBackgroundColor;
+
+  ///  the color of the track that is active when sliding the Slider.
+  Color? sliderActiveTrackColor;
+
+  /// the color of the track that is inactive when sliding the Slider.
+  Color? sliderInactiveTrackColor;
+
+  /// the color of the Slider's thumb.
+  Color? sliderThumbColor;
+
+  /// the radius of the Slider's thumb.
+  double? sliderThumbRadius;
 
   ZegoEffectConfig({
     this.beautyEffects = const [
@@ -777,6 +875,20 @@ class ZegoEffectConfig {
       ReverbType.popular,
       ReverbType.gramophone,
     ],
+    this.backgroundColor,
+    this.headerTitleTextStyle,
+    this.backIcon,
+    this.resetIcon,
+    this.selectedIconBorderColor,
+    this.normalIconBorderColor,
+    this.selectedTextStyle,
+    this.normalTextStyle,
+    this.sliderTextStyle,
+    this.sliderTextBackgroundColor,
+    this.sliderActiveTrackColor,
+    this.sliderInactiveTrackColor,
+    this.sliderThumbColor,
+    this.sliderThumbRadius,
   });
 
   /// @nodoc
@@ -862,7 +974,7 @@ class ZegoLiveDurationConfig {
 
   /// Call timing callback function, called every second.
   ///
-  /// Example: Set to automatically hang up after 5 minutes.
+  /// Example: Set to automatically leave after 5 minutes.
   /// ..durationConfig.isVisible = true
   /// ..durationConfig.onDurationUpdate = (Duration duration) {
   ///   if (duration.inSeconds >= 5 * 60) {

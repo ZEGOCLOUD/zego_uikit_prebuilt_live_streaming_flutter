@@ -1,6 +1,7 @@
 // Flutter imports:
 // Project imports:
 import 'package:flutter/cupertino.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/live_duration_manager.dart';
@@ -18,8 +19,10 @@ class ZegoLiveStreamingManagers {
       ZegoLiveStreamingManagers._internal();
 
   void initPluginAndManagers(
+    ZegoPopUpManager popUpManager,
     ZegoUIKitPrebuiltLiveStreamingData prebuiltData,
     ValueNotifier<bool> startedByLocalNotifier,
+    BuildContext Function()? contextQuery,
   ) {
     if (_initialized) {
       ZegoLoggerService.logInfo(
@@ -46,7 +49,6 @@ class ZegoLiveStreamingManagers {
     );
     liveDurationManager = ZegoLiveDurationManager(
       hostManager: hostManager!,
-      config: prebuiltData.config,
     );
 
     if (prebuiltData.config.plugins.isNotEmpty) {
@@ -67,14 +69,17 @@ class ZegoLiveStreamingManagers {
         config: prebuiltData.config,
         innerText: prebuiltData.config.innerText,
         startedByLocalNotifier: startedByLocalNotifier,
+        contextQuery: contextQuery,
       );
     }
 
     connectManager = ZegoLiveConnectManager(
       config: prebuiltData.config,
       hostManager: hostManager!,
+      popUpManager: popUpManager,
       liveStatusNotifier: liveStatusManager!.notifier,
       translationText: prebuiltData.config.innerText,
+      contextQuery: contextQuery,
     );
     connectManager!.init();
 

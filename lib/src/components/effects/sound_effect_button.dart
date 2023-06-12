@@ -7,6 +7,7 @@ import 'package:zego_uikit/zego_uikit.dart';
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/effects/sound_effect_sheet.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_inner_text.dart';
 
 /// @nodoc
@@ -20,12 +21,15 @@ class ZegoSoundEffectButton extends StatefulWidget {
   final ZegoInnerText translationText;
   final bool rootNavigator;
 
+  final ZegoEffectConfig effectConfig;
+
   const ZegoSoundEffectButton({
     Key? key,
     required this.translationText,
     required this.rootNavigator,
     required this.voiceChangeEffect,
     required this.reverbEffect,
+    required this.effectConfig,
     this.iconSize,
     this.buttonSize,
     this.icon,
@@ -54,6 +58,7 @@ class _ZegoSoundEffectButtonState extends State<ZegoSoundEffectButton> {
           voiceChangerSelectedIDNotifier: voiceChangerSelectedIDNotifier,
           reverbEffect: widget.reverbEffect,
           reverbSelectedIDNotifier: reverbSelectedIDNotifier,
+          effectConfig: widget.effectConfig,
         );
       },
       child: Container(
@@ -67,7 +72,8 @@ class _ZegoSoundEffectButtonState extends State<ZegoSoundEffectButton> {
           size: sizeBoxSize,
           child: widget.icon?.icon ??
               PrebuiltLiveStreamingImage.asset(
-                  PrebuiltLiveStreamingIconUrls.toolbarSoundEffect),
+                PrebuiltLiveStreamingIconUrls.toolbarSoundEffect,
+              ),
         ),
       ),
     );

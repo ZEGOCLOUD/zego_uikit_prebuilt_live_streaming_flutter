@@ -14,31 +14,39 @@ Future<void> checkPermissions({
   required BuildContext context,
   required ZegoInnerText translationText,
   required bool rootNavigator,
+  List<Permission> permissions = const [
+    Permission.camera,
+    Permission.microphone,
+  ],
   bool isShowDialog = false,
 }) async {
-  await Permission.camera.status.then((status) async {
-    if (status != PermissionStatus.granted) {
-      if (isShowDialog) {
-        await showAppSettingsDialog(
-          context: context,
-          dialogInfo: translationText.cameraPermissionSettingDialogInfo,
-          rootNavigator: rootNavigator,
-        );
+  if (permissions.contains(Permission.camera)) {
+    await Permission.camera.status.then((status) async {
+      if (status != PermissionStatus.granted) {
+        if (isShowDialog) {
+          await showAppSettingsDialog(
+            context: context,
+            dialogInfo: translationText.cameraPermissionSettingDialogInfo,
+            rootNavigator: rootNavigator,
+          );
+        }
       }
-    }
-  });
+    });
+  }
 
-  await Permission.microphone.status.then((status) async {
-    if (status != PermissionStatus.granted) {
-      if (isShowDialog) {
-        await showAppSettingsDialog(
-          context: context,
-          dialogInfo: translationText.microphonePermissionSettingDialogInfo,
-          rootNavigator: rootNavigator,
-        );
+  if (permissions.contains(Permission.microphone)) {
+    await Permission.microphone.status.then((status) async {
+      if (status != PermissionStatus.granted) {
+        if (isShowDialog) {
+          await showAppSettingsDialog(
+            context: context,
+            dialogInfo: translationText.microphonePermissionSettingDialogInfo,
+            rootNavigator: rootNavigator,
+          );
+        }
       }
-    }
-  });
+    });
+  }
 }
 
 /// @nodoc

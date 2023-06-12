@@ -490,8 +490,16 @@ class ZegoUIKitPrebuiltLiveStreamingMiniOverlayPageState
         return GestureDetector(
           onTap: activeUser.id == ZegoUIKit().getLocalUser().id
               ? () {
-                  ZegoUIKit().turnMicrophoneOn(!isMicrophoneEnabled,
-                      userID: activeUser.id);
+                  ZegoUIKit().turnMicrophoneOn(
+                    !isMicrophoneEnabled,
+                    userID: activeUser.id,
+                    muteMode:
+                        !(ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine()
+                                .prebuiltData
+                                ?.config
+                                .stopCoHostingWhenMicCameraOff ??
+                            true),
+                  );
                 }
               : null,
           child: Container(

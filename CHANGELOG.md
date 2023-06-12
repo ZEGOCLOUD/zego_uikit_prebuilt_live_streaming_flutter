@@ -1,10 +1,35 @@
+## 2.10.4
+- Support custom color of solid color icon in basic beauty.
+
+## 2.10.3
+- Update dependencies
+
+## 2.10.2
+- Update dependencies
+
+## 2.10.1
+- Update dependencies
+
+## 2.10.0
+- Support controls whether to automatically stop co-hosting when both the camera and microphone are turned off by `stopCoHostingWhenMicCameraOff`.
+
+## 2.9.1
+- Update dependencies
+
+## 2.9.0
+- Support custom in-room message style, which can be set using `ZegoInRoomMessageViewConfig`.
+- Support custom basic beauty style, which can be set using `ZegoEffectConfig`.
+
+## 2.8.5
+- Support to enter the livestream as a co-host.
+
 ## 2.8.4
 - Added click event to the host avatar which at the top left corner.
-- Added click event to the item of member list .
+- Added click event to the item of member list.
 
 ## 2.8.3
-- support config size to message list
-- Update dependencies
+- support config view size for message list.
+- Update dependencies.
 
 ## 2.8.2
 - fix the issue of conflict with extension key of the `flutter_screenutil` package.

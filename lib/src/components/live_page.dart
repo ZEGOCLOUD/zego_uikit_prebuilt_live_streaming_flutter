@@ -667,7 +667,10 @@ class ZegoLivePageState extends State<ZegoLivePage>
       subTag: 'live page',
     );
     if (canMicrophoneTurnOnByOthers) {
-      ZegoUIKit().turnMicrophoneOn(true);
+      ZegoUIKit().turnMicrophoneOn(
+        true,
+        muteMode: !widget.config.stopCoHostingWhenMicCameraOff,
+      );
     }
   }
 }

@@ -39,8 +39,11 @@ class _ZegoBeautyEffectResetButtonState
         widget.onPressed?.call();
       },
       icon: ButtonIcon(
-        icon: PrebuiltLiveStreamingImage.asset(
-            PrebuiltLiveStreamingIconUrls.effectReset),
+        icon: widget.icon?.icon ??
+            PrebuiltLiveStreamingImage.asset(
+              PrebuiltLiveStreamingIconUrls.effectReset,
+            ),
+        backgroundColor: widget.icon?.backgroundColor,
       ),
       iconSize: widget.iconSize ?? Size(38.zR, 38.zR),
       buttonSize: widget.buttonSize ?? Size(40.zR, 40.zR),

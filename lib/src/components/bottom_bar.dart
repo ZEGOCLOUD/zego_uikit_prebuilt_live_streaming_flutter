@@ -246,7 +246,25 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
 
   List<Widget> getDisplayButtons(BuildContext context) {
     final buttonList = sortDisplayButtons(
-      getDefaultButtons(context),
+      getDefaultButtons(
+        context,
+        cameraDefaultValueFunc: widget.prebuiltData.isPrebuiltFromMinimizing
+            ? () {
+                /// if is minimizing, take the local device state
+                return ZegoUIKit()
+                    .getCameraStateNotifier(ZegoUIKit().getLocalUser().id)
+                    .value;
+              }
+            : null,
+        microphoneDefaultValueFunc: widget.prebuiltData.isPrebuiltFromMinimizing
+            ? () {
+                /// if is minimizing, take the local device state
+                return ZegoUIKit()
+                    .getMicrophoneStateNotifier(ZegoUIKit().getLocalUser().id)
+                    .value;
+              }
+            : null,
+      ),
       extendButtons,
     );
 
@@ -432,9 +450,11 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
         return ValueListenableBuilder(
           valueListenable: ZegoLiveStreamingPKBattleManager().state,
           builder: (context, pkBattleState, _) {
-            final needUserMuteMode =
+            final inPKMode =
                 pkBattleState == ZegoLiveStreamingPKBattleState.inPKBattle ||
                     pkBattleState == ZegoLiveStreamingPKBattleState.loading;
+            final needUserMuteMode =
+                (!widget.config.stopCoHostingWhenMicCameraOff) || inPKMode;
             return ZegoToggleMicrophoneButton(
               buttonSize: buttonSize,
               iconSize: iconSize,
@@ -536,7 +556,7 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
         return ZegoBeautyEffectButton(
           translationText: widget.config.innerText,
           rootNavigator: widget.config.rootNavigator,
-          beautyEffects: widget.config.effectConfig.beautyEffects,
+          effectConfig: widget.config.effectConfig,
           buttonSize: buttonSize,
           iconSize: iconSize,
           icon: ButtonIcon(
@@ -556,6 +576,7 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
             icon: widget
                 .config.bottomMenuBarConfig.buttonStyle?.soundEffectButtonIcon,
           ),
+          effectConfig: widget.config.effectConfig,
         );
       case ZegoMenuBarButtonName.coHostControlButton:
         return ZegoCoHostControlButton(

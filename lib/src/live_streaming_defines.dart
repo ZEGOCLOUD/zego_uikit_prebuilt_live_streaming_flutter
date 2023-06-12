@@ -18,13 +18,18 @@ enum ZegoLiveStreamingRole {
 
 /// Live streaming state
 ///
+/// When the live streaming is in preview mode, the [ZegoLiveStreamingState] is [idle].
+/// When the live streaming is ongoing, the [ZegoLiveStreamingState] becomes [living].
+/// When the live streaming is in PK mode, the [ZegoLiveStreamingState] becomes [inPKBattle].
+/// When the live streaming is ended, the [ZegoLiveStreamingState] becomes [ended], and after the [ended] state, the [ZegoLiveStreamingState] immediately becomes [idle] (ended means the live streaming has [ended], [idle] means either not started or already ended).
+///
 ///           ┌─→ PK ───┐
 ///           │         ↓
 /// idle ─> living ─> ended ⌍
 ///  ↑                  │
 ///  └──────────────────┘
 enum ZegoLiveStreamingState {
-  /// Idle state
+  /// Idle state, live streaming not started or ended
   idle,
 
   /// Live streaming in progress

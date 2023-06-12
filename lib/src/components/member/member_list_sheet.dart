@@ -90,11 +90,6 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
     });
   }
 
-  bool isStreamPlaying(String userID) {
-    return -1 !=
-        ZegoUIKit().getAudioVideoList().indexWhere((user) => userID == user.id);
-  }
-
   Widget memberListView() {
     return ZegoMemberList(
       showCameraState: false,
@@ -107,7 +102,7 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
         /// co-host
         final coHostUsers = <ZegoUIKitUser>[];
         remoteUsers.removeWhere((remoteUser) {
-          if (isStreamPlaying(remoteUser.id)) {
+          if (widget.connectManager.isCoHost(remoteUser)) {
             coHostUsers.add(remoteUser);
             return true;
           }
@@ -227,8 +222,7 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
         }
         if (host?.id == user.id) {
           extensions.add(widget.innerText.memberListRoleHost);
-        } else if (ZegoUIKit().getCameraStateNotifier(user.id).value ||
-            ZegoUIKit().getMicrophoneStateNotifier(user.id).value) {
+        } else if (widget.connectManager.isCoHost(user)) {
           extensions.add(widget.innerText.memberListRoleCoHost);
         }
 

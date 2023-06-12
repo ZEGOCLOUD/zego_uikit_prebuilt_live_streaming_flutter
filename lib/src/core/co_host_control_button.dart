@@ -120,7 +120,7 @@ class _ZegoCoHostControlButtonState extends State<ZegoCoHostControlButton> {
           widget.translationText.requestCoHostButton,
       textStyle: buttonTextStyle,
       verticalLayout: false,
-      onWillPressed: () {
+      onWillPressed: () async {
         return checkHostExist() && checkLiving();
       },
       onPressed: (

@@ -48,6 +48,10 @@ class ZegoEffectGrid extends StatefulWidget {
     this.iconSize,
     this.withBorderColor = false,
     this.itemSpacing,
+    this.selectedIconBorderColor,
+    this.normalIconBorderColor,
+    this.selectedTextStyle,
+    this.normalTextStyle,
   }) : super(key: key);
 
   final ZegoEffectGridModel model;
@@ -56,6 +60,18 @@ class ZegoEffectGrid extends StatefulWidget {
   final Size? iconSize;
   final bool isSpaceEvenly;
   final double? itemSpacing;
+
+  /// border color of the icons in the highlighted (selected) state.
+  final Color? selectedIconBorderColor;
+
+  /// border color of the icons in the normal (unselected) state.
+  final Color? normalIconBorderColor;
+
+  /// text-style of buttons in the highlighted (selected) state.
+  final TextStyle? selectedTextStyle;
+
+  /// text-style of buttons in the normal (unselected) state.
+  final TextStyle? normalTextStyle;
 
   @override
   State<ZegoEffectGrid> createState() => _ZegoEffectGridState();
@@ -146,6 +162,23 @@ class _ZegoEffectGridState extends State<ZegoEffectGrid> {
   }
 
   Widget gridItem(ZegoEffectGridItem item, Size buttonSize) {
+    final selectedIconBorderColor =
+        widget.selectedIconBorderColor ?? const Color(0xffA653FF);
+    final normalIconBorderColor =
+        widget.normalIconBorderColor ?? Colors.transparent;
+    final selectedTextStyle = widget.selectedTextStyle ??
+        TextStyle(
+          color: const Color(0xffA653FF),
+          fontSize: 24.zR,
+          fontWeight: FontWeight.w500,
+        );
+    final normalTextStyle = widget.normalTextStyle ??
+        TextStyle(
+          color: const Color(0xffCCCCCC),
+          fontSize: 24.zR,
+          fontWeight: FontWeight.w500,
+        );
+
     return ZegoTextIconButton(
       onPressed: () {
         widget.model.selectedID.value = item.id;
@@ -161,17 +194,13 @@ class _ZegoEffectGridState extends State<ZegoEffectGrid> {
           : item.icon,
       iconBorderColor: widget.withBorderColor
           ? (item.id == widget.model.selectedID.value
-              ? const Color(0xffA653FF)
-              : Colors.transparent)
-          : Colors.transparent,
+              ? selectedIconBorderColor
+              : normalIconBorderColor)
+          : normalIconBorderColor,
       text: item.iconText,
-      textStyle: TextStyle(
-        color: item.id == widget.model.selectedID.value
-            ? const Color(0xffA653FF)
-            : const Color(0xffCCCCCC),
-        fontSize: 24.zR,
-        fontWeight: FontWeight.w500,
-      ),
+      textStyle: item.id == widget.model.selectedID.value
+          ? selectedTextStyle
+          : normalTextStyle,
       softWrap: false,
     );
   }

@@ -164,8 +164,7 @@ class ZegoLivePageSurfaceState extends State<ZegoLivePageSurface>
       child: ConstrainedBox(
         constraints: BoxConstraints.loose(listSize),
         child: ZegoInRoomLiveCommentingView(
-          itemBuilder: widget.config.inRoomMessageViewConfig.itemBuilder,
-          opacity: widget.config.inRoomMessageViewConfig.opacity,
+          config: widget.config.inRoomMessageViewConfig,
         ),
       ),
     );

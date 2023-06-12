@@ -6,16 +6,15 @@ import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/message/in_room_live_commenting_view_item.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
 
 /// @nodoc
 class ZegoInRoomLiveCommentingView extends StatefulWidget {
-  final ZegoInRoomMessageItemBuilder? itemBuilder;
-  final double opacity;
+  final ZegoInRoomMessageViewConfig? config;
 
   const ZegoInRoomLiveCommentingView({
     Key? key,
-    this.itemBuilder,
-    this.opacity = 0.5,
+    this.config,
   }) : super(key: key);
 
   @override
@@ -33,12 +32,12 @@ class _ZegoInRoomLiveCommentingViewState
       child: ZegoInRoomMessageView(
         historyMessages: ZegoUIKit().getInRoomMessages(),
         stream: ZegoUIKit().getInRoomMessageListStream(),
-        itemBuilder: widget.itemBuilder ??
+        itemBuilder: widget.config?.itemBuilder ??
             (BuildContext context, ZegoInRoomMessage message, _) {
               return ZegoInRoomLiveCommentingViewItem(
                 user: message.user,
                 message: message.message,
-                opacity: widget.opacity,
+                config: widget.config,
               );
             },
       ),

@@ -101,7 +101,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     WidgetsBinding.instance?.addObserver(this);
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
-      log('version: zego_uikit_prebuilt_live_streaming: 2.8.4; $version');
+      log('version: zego_uikit_prebuilt_live_streaming: 2.10.5; $version');
     });
 
     isFromMinimizing = PrebuiltLiveStreamingMiniOverlayPageState.idle !=
@@ -121,13 +121,18 @@ class _ZegoUIKitPrebuiltLiveStreamingState
 
     if (!isFromMinimizing) {
       ZegoLiveStreamingManagers().initPluginAndManagers(
+        popUpManager,
         prebuiltData,
         startedByLocalNotifier,
+        () {
+          return context;
+        },
       );
+    } else {
+      ZegoLiveStreamingManagers().updateContextQuery(() {
+        return context;
+      });
     }
-    ZegoLiveStreamingManagers().updateContextQuery(() {
-      return context;
-    });
 
     ZegoLiveStreamingManagers().plugins?.init();
 
@@ -412,31 +417,6 @@ class _ZegoUIKitPrebuiltLiveStreamingState
       tag: 'live streaming',
       subTag: 'prebuilt',
     );
-
-    /// hide co-host end request dialog
-    if (ZegoLiveStreamingManagers().connectManager?.isEndCoHostDialogVisible ??
-        false) {
-      ZegoLiveStreamingManagers().connectManager!.isEndCoHostDialogVisible =
-          false;
-      Navigator.of(
-        context,
-        rootNavigator: widget.config.rootNavigator,
-      ).pop();
-    }
-
-    /// hide invite join co-host dialog
-    if (ZegoLiveStreamingManagers()
-            .connectManager
-            ?.isInvitedToJoinCoHostDlgVisible ??
-        false) {
-      ZegoLiveStreamingManagers()
-          .connectManager!
-          .isInvitedToJoinCoHostDlgVisible = false;
-      Navigator.of(
-        context,
-        rootNavigator: widget.config.rootNavigator,
-      ).pop();
-    }
 
     ///more button, member list, chat dialog
     popUpManager.autoPop(context, widget.config.rootNavigator);

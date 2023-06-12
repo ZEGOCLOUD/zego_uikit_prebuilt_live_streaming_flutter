@@ -4,6 +4,7 @@ import 'dart:math' as math; // import this
 
 // Flutter imports:
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
@@ -60,7 +61,9 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
   void initState() {
     super.initState();
 
-    ZegoUIKit().turnCameraOn(widget.hostManager.isLocalHost);
+    if (widget.config.turnOnCameraWhenJoining) {
+      ZegoUIKit().turnCameraOn(widget.hostManager.isLocalHost);
+    }
   }
 
   @override
@@ -147,7 +150,12 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
     return Align(
       alignment: Alignment.topCenter,
       child: Padding(
-        padding: EdgeInsets.only(left: 0.zR, top: 0, right: 10.zR, bottom: 0.zR),
+        padding: EdgeInsets.only(
+          left: 0.zR,
+          top: 0,
+          right: 10.zR,
+          bottom: 0.zR,
+        ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
@@ -165,10 +173,12 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
                             alignment: Alignment.center,
                             transform: Matrix4.rotationY(math.pi),
                             child: PrebuiltLiveStreamingImage.asset(
-                                PrebuiltLiveStreamingIconUrls.pageBack),
+                              PrebuiltLiveStreamingIconUrls.pageBack,
+                            ),
                           )
                         : PrebuiltLiveStreamingImage.asset(
-                            PrebuiltLiveStreamingIconUrls.pageBack)),
+                            PrebuiltLiveStreamingIconUrls.pageBack,
+                          )),
               ),
               iconSize: iconSize,
               buttonSize: buttonSize,
@@ -201,15 +211,19 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
     return Align(
       alignment: Alignment.bottomCenter,
       child: Padding(
-        padding: EdgeInsets.only(left: 89.zR, top: 0, right: 89.zR, bottom: 97.zR),
+        padding: EdgeInsets.only(
+          left: 89.zR,
+          top: 0,
+          right: 89.zR,
+          bottom: 97.zR,
+        ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ZegoBeautyEffectButton(
               translationText: widget.liveStreamingConfig.innerText,
               rootNavigator: widget.liveStreamingConfig.rootNavigator,
-              beautyEffects:
-                  widget.liveStreamingConfig.effectConfig.beautyEffects,
+              effectConfig: widget.liveStreamingConfig.effectConfig,
               buttonSize: buttonSize,
               iconSize: iconSize,
               icon: widget.config.previewConfig.beautyEffectIcon != null
@@ -229,30 +243,42 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
   }
 
   Widget startButton() {
+    final permissions = <Permission>[];
+    if (widget.config.turnOnCameraWhenJoining) {
+      permissions.add(Permission.camera);
+    }
+    if (widget.config.turnOnMicrophoneWhenJoining) {
+      permissions.add(Permission.microphone);
+    }
+
     return widget.liveStreamingConfig.startLiveButtonBuilder?.call(context,
             () async {
           checkPermissions(
             context: context,
+            permissions: permissions,
             isShowDialog: true,
             translationText: widget.liveStreamingConfig.innerText,
             rootNavigator: widget.liveStreamingConfig.rootNavigator,
-          ).then((value) {
-            if (!widget.liveStreamingPageReady.value) {
-              ZegoLoggerService.logInfo(
-                'live streaming page is waiting room login',
-                tag: 'live streaming',
-                subTag: 'preview page',
-              );
-              return;
-            }
+          ).then(
+            (value) {
+              if (!widget.liveStreamingPageReady.value) {
+                ZegoLoggerService.logInfo(
+                  'live streaming page is waiting room login',
+                  tag: 'live streaming',
+                  subTag: 'preview page',
+                );
+                return;
+              }
 
-            widget.startedNotifier.value = true;
-          });
+              widget.startedNotifier.value = true;
+            },
+          );
         }) ??
         GestureDetector(
           onTap: () async {
             checkPermissions(
               context: context,
+              permissions: permissions,
               isShowDialog: true,
               translationText: widget.liveStreamingConfig.innerText,
               rootNavigator: widget.liveStreamingConfig.rootNavigator,

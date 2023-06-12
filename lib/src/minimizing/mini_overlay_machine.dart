@@ -9,6 +9,7 @@ import 'package:statemachine/statemachine.dart' as sm;
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
+import 'package:zego_uikit_prebuilt_live_streaming/src/core/core_managers.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/prebuilt_data.dart';
 
 /// @nodoc
@@ -46,7 +47,8 @@ class ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine {
     return _durationNotifier;
   }
 
-  void listenStateChanged(PrebuiltLiveStreamingMiniOverlayMachineStateChanged listener) {
+  void listenStateChanged(
+      PrebuiltLiveStreamingMiniOverlayMachineStateChanged listener) {
     _onStateChangedListeners.add(listener);
 
     ZegoLoggerService.logInfo(
@@ -86,9 +88,10 @@ class ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine {
       }
     });
 
-    _stateIdle = _machine
-        .newState(PrebuiltLiveStreamingMiniOverlayPageState.idle); //  default state;
-    _stateLiving = _machine.newState(PrebuiltLiveStreamingMiniOverlayPageState.living);
+    _stateIdle = _machine.newState(
+        PrebuiltLiveStreamingMiniOverlayPageState.idle); //  default state;
+    _stateLiving =
+        _machine.newState(PrebuiltLiveStreamingMiniOverlayPageState.living);
     _stateMinimizing =
         _machine.newState(PrebuiltLiveStreamingMiniOverlayPageState.minimizing);
   }
@@ -106,12 +109,16 @@ class ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine {
     switch (state) {
       case PrebuiltLiveStreamingMiniOverlayPageState.idle:
         _prebuiltData = null;
+        kickOutSubscription?.cancel();
+
         _stateIdle.enter();
 
         stopDurationTimer();
         break;
       case PrebuiltLiveStreamingMiniOverlayPageState.living:
         _prebuiltData = null;
+        kickOutSubscription?.cancel();
+
         _stateLiving.enter();
         break;
       case PrebuiltLiveStreamingMiniOverlayPageState.minimizing:
@@ -122,6 +129,10 @@ class ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine {
         );
         assert(null != prebuiltData);
         _prebuiltData = prebuiltData;
+
+        kickOutSubscription = ZegoUIKit()
+            .getMeRemovedFromRoomStream()
+            .listen(onMeRemovedFromRoom);
 
         _stateMinimizing.enter();
 
@@ -151,6 +162,24 @@ class ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine {
     _durationTimer = null;
   }
 
+  Future<void> onMeRemovedFromRoom(String fromUserID) async {
+    ZegoLoggerService.logInfo(
+      'local user removed by $fromUserID',
+      tag: 'live audio room',
+      subTag: 'mini overlay page',
+    );
+    changeState(PrebuiltLiveStreamingMiniOverlayPageState.idle);
+
+    ZegoLiveStreamingManagers().unintPluginAndManagers();
+
+    await ZegoUIKit().resetSoundEffect();
+    await ZegoUIKit().resetBeautyEffect();
+    // await ZegoUIKit().leaveRoom(); //  kick-out will leave in zego_uikit
+
+    _prebuiltData?.controller?.uninitByPrebuilt();
+    _prebuiltData?.config.onMeRemovedFromRoom?.call(fromUserID);
+  }
+
   /// private variables
 
   ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine._internal() {
@@ -167,6 +196,8 @@ class ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine {
   late sm.State<PrebuiltLiveStreamingMiniOverlayPageState> _stateIdle;
   late sm.State<PrebuiltLiveStreamingMiniOverlayPageState> _stateLiving;
   late sm.State<PrebuiltLiveStreamingMiniOverlayPageState> _stateMinimizing;
+
+  StreamSubscription<dynamic>? kickOutSubscription;
 
   ZegoUIKitPrebuiltLiveStreamingData? _prebuiltData;
 

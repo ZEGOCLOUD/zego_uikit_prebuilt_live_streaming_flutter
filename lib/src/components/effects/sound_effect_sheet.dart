@@ -7,6 +7,7 @@ import 'package:zego_uikit/zego_uikit.dart';
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/effects/effect_grid.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_inner_text.dart';
 
 /// @nodoc
@@ -20,6 +21,8 @@ class ZegoSoundEffectSheet extends StatefulWidget {
   final List<ReverbType> reverbEffect;
   final ValueNotifier<String> reverbSelectedIDNotifier;
 
+  final ZegoEffectConfig effectConfig;
+
   const ZegoSoundEffectSheet({
     Key? key,
     required this.translationText,
@@ -28,6 +31,7 @@ class ZegoSoundEffectSheet extends StatefulWidget {
     required this.voiceChangerSelectedIDNotifier,
     required this.reverbEffect,
     required this.reverbSelectedIDNotifier,
+    required this.effectConfig,
   }) : super(key: key);
 
   @override
@@ -38,6 +42,12 @@ class ZegoSoundEffectSheet extends StatefulWidget {
 class _ZegoSoundEffectSheetState extends State<ZegoSoundEffectSheet> {
   late ZegoEffectGridModel voiceChangerModel;
   late ZegoEffectGridModel reverbPresetModel;
+
+  String voiceChangerIconPath(String name) =>
+      'assets/icons/voice_changer_$name.png';
+
+  String reverbPresetIconPath(String name) =>
+      'assets/icons/reverb_preset_$name.png';
 
   @override
   void initState() {
@@ -61,12 +71,25 @@ class _ZegoSoundEffectSheetState extends State<ZegoSoundEffectSheet> {
               ZegoEffectGrid(
                 model: voiceChangerModel,
                 isSpaceEvenly: false,
+                withBorderColor: true,
+                selectedIconBorderColor:
+                    widget.effectConfig.selectedIconBorderColor,
+                normalIconBorderColor:
+                    widget.effectConfig.normalIconBorderColor,
+                selectedTextStyle: widget.effectConfig.selectedTextStyle,
+                normalTextStyle: widget.effectConfig.normalTextStyle,
               ),
               SizedBox(height: 36.zR),
               ZegoEffectGrid(
                 model: reverbPresetModel,
                 isSpaceEvenly: false,
                 withBorderColor: true,
+                selectedIconBorderColor:
+                    widget.effectConfig.selectedIconBorderColor,
+                normalIconBorderColor:
+                    widget.effectConfig.normalIconBorderColor,
+                selectedTextStyle: widget.effectConfig.selectedTextStyle,
+                normalTextStyle: widget.effectConfig.normalTextStyle,
               ),
             ],
           ),
@@ -90,18 +113,21 @@ class _ZegoSoundEffectSheetState extends State<ZegoSoundEffectSheet> {
             child: SizedBox(
               width: 70.zR,
               height: 70.zR,
-              child: PrebuiltLiveStreamingImage.asset(
-                  PrebuiltLiveStreamingIconUrls.back),
+              child: widget.effectConfig.backIcon ??
+                  PrebuiltLiveStreamingImage.asset(
+                    PrebuiltLiveStreamingIconUrls.back,
+                  ),
             ),
           ),
           SizedBox(width: 10.zR),
           Text(
             widget.translationText.audioEffectTitle,
-            style: TextStyle(
-              fontSize: 36.0.zR,
-              color: const Color(0xffffffff),
-              decoration: TextDecoration.none,
-            ),
+            style: widget.effectConfig.headerTitleTextStyle ??
+                TextStyle(
+                  fontSize: 36.0.zR,
+                  color: const Color(0xffffffff),
+                  decoration: TextDecoration.none,
+                ),
           ),
         ],
       ),
@@ -127,12 +153,28 @@ class _ZegoSoundEffectSheetState extends State<ZegoSoundEffectSheet> {
               id: effect.index.toString(),
               effectType: effect,
               icon: ButtonIcon(
-                icon: PrebuiltLiveStreamingImage.asset(
-                    'assets/icons/voice_changer_${effect.name}.png'),
+                icon: ColorFiltered(
+                  colorFilter: ColorFilter.mode(
+                    widget.effectConfig.normalIconColor ??
+                        const Color(0xffCCCCCC),
+                    BlendMode.srcATop,
+                  ),
+                  child: PrebuiltLiveStreamingImage.asset(
+                    voiceChangerIconPath(effect.name),
+                  ),
+                ),
               ),
               selectIcon: ButtonIcon(
-                icon: PrebuiltLiveStreamingImage.asset(
-                    'assets/icons/voice_changer_${effect.name}_selected.png'),
+                icon: ColorFiltered(
+                  colorFilter: ColorFilter.mode(
+                    widget.effectConfig.selectedIconColor ??
+                        const Color(0xffA653FF),
+                    BlendMode.srcATop,
+                  ),
+                  child: PrebuiltLiveStreamingImage.asset(
+                    voiceChangerIconPath(effect.name),
+                  ),
+                ),
               ),
               iconText: voiceChangerTypeText(effect),
               onPressed: () {
@@ -167,7 +209,8 @@ class _ZegoSoundEffectSheetState extends State<ZegoSoundEffectSheet> {
               effectType: effect,
               icon: ButtonIcon(
                 icon: PrebuiltLiveStreamingImage.asset(
-                    'assets/icons/reverb_preset_${effect.name}.png'),
+                  reverbPresetIconPath(effect.name),
+                ),
               ),
               iconText: reverbTypeText(effect),
               onPressed: () {
@@ -248,10 +291,12 @@ void showSoundEffectSheet(
   required List<ReverbType> reverbEffect,
   required ValueNotifier<String> voiceChangerSelectedIDNotifier,
   required ValueNotifier<String> reverbSelectedIDNotifier,
+  required ZegoEffectConfig effectConfig,
 }) {
   showModalBottomSheet(
     barrierColor: ZegoUIKitDefaultTheme.viewBarrierColor,
-    backgroundColor: ZegoUIKitDefaultTheme.viewBackgroundColor,
+    backgroundColor: effectConfig.backgroundColor ??
+        ZegoUIKitDefaultTheme.viewBackgroundColor,
     context: context,
     useRootNavigator: rootNavigator,
     shape: const RoundedRectangleBorder(
@@ -277,6 +322,7 @@ void showSoundEffectSheet(
               voiceChangerSelectedIDNotifier: voiceChangerSelectedIDNotifier,
               reverbEffect: reverbEffect,
               reverbSelectedIDNotifier: reverbSelectedIDNotifier,
+              effectConfig: effectConfig,
             ),
           ),
         ),

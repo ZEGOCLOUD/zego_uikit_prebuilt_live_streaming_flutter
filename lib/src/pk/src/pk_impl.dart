@@ -69,6 +69,7 @@ class ZegoLiveStreamingPKBattleManager {
     required ZegoLiveHostManager hostManager,
     required ValueNotifier<LiveStatus> liveStatusNotifier,
     required ValueNotifier<bool> startedByLocalNotifier,
+    required BuildContext Function()? contextQuery,
   }) {
     ZegoLoggerService.logInfo(
       'init',
@@ -80,6 +81,7 @@ class ZegoLiveStreamingPKBattleManager {
     this.hostManager = hostManager;
     this.liveStatusNotifier = liveStatusNotifier;
     this.startedByLocalNotifier = startedByLocalNotifier;
+    this.contextQuery = contextQuery;
 
     initEvent();
     subscriptions.addAll([

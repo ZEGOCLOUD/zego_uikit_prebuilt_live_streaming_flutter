@@ -12,6 +12,7 @@ import 'package:zego_uikit/zego_uikit.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/dialogs.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/permissions.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/toast.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
@@ -24,6 +25,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/mini_overlay_m
 class ZegoLiveConnectManager {
   ZegoLiveConnectManager({
     required this.hostManager,
+    required this.popUpManager,
     required this.liveStatusNotifier,
     required this.config,
     required this.translationText,
@@ -35,6 +37,7 @@ class ZegoLiveConnectManager {
   BuildContext Function()? contextQuery;
 
   final ZegoLiveHostManager hostManager;
+  final ZegoPopUpManager popUpManager;
   final ValueNotifier<LiveStatus> liveStatusNotifier;
   final ZegoUIKitPrebuiltLiveStreamingConfig config;
   final ZegoInnerText translationText;
@@ -73,8 +76,11 @@ class ZegoLiveConnectManager {
       return false;
     }
 
-    return ZegoUIKit().getCameraStateNotifier(user.id).value ||
-        ZegoUIKit().getMicrophoneStateNotifier(user.id).value;
+    return user.camera.value ||
+        (user.microphone.value ||
+
+            /// if mic is in mute mode, same as open state
+            user.microphoneMuteMode.value);
   }
 
   void init() {
@@ -104,7 +110,28 @@ class ZegoLiveConnectManager {
         tag: 'live streaming',
         subTag: 'connect manager',
       );
+
       updateAudienceConnectState(ConnectState.idle);
+    } else if (ZegoLiveStreamingRole.coHost == config.role) {
+      ZegoLoggerService.logInfo(
+        "config's role is co-host, connect state default to be connected",
+        tag: 'live streaming',
+        subTag: 'connect manager',
+      );
+
+      final permissions = getCoHostPermissions();
+      requestPermissions(
+        context: contextQuery!(),
+        isShowDialog: true,
+        translationText: translationText,
+        rootNavigator: config.rootNavigator,
+        permissions: permissions,
+      ).then((value) {
+        ZegoUIKit().turnCameraOn(config.turnOnCameraWhenCohosted);
+        ZegoUIKit().turnMicrophoneOn(true);
+
+        updateAudienceConnectState(ConnectState.connected);
+      });
     }
 
     initCoHostMixin();
@@ -344,6 +371,9 @@ class ZegoLiveConnectManager {
       final translation = translationText.receivedCoHostInvitationDialogInfo;
       isInvitedToJoinCoHostDlgVisible = true;
 
+      final key = DateTime.now().millisecondsSinceEpoch;
+      popUpManager.addAPopUpSheet(key);
+
       /// not in minimizing
       showLiveDialog(
         context: contextQuery!(),
@@ -416,11 +446,13 @@ class ZegoLiveConnectManager {
                   return;
                 }
 
+                final permissions = getCoHostPermissions();
                 requestPermissions(
                   context: contextQuery!(),
                   isShowDialog: true,
                   translationText: translationText,
                   rootNavigator: config.rootNavigator,
+                  permissions: permissions,
                 ).then((_) {
                   updateAudienceConnectState(ConnectState.connected);
                 });
@@ -439,7 +471,9 @@ class ZegoLiveConnectManager {
             rootNavigator: config.rootNavigator,
           ).pop();
         },
-      );
+      ).whenComplete(() {
+        popUpManager.removeAPopUpSheet(key);
+      });
     }
   }
 
@@ -576,6 +610,9 @@ class ZegoLiveConnectManager {
       return;
     }
 
+    final key = DateTime.now().millisecondsSinceEpoch;
+    popUpManager.addAPopUpSheet(key);
+
     isEndCoHostDialogVisible = true;
     showLiveDialog(
       context: contextQuery!(),
@@ -602,7 +639,9 @@ class ZegoLiveConnectManager {
 
         coHostEndConnect();
       },
-    );
+    ).whenComplete(() {
+      popUpManager.removeAPopUpSheet(key);
+    });
   }
 
   void updateAudienceConnectState(ConnectState state) {
@@ -679,7 +718,10 @@ class ZegoLiveConnectManager {
 
   void onLocalCameraStateChanged() {
     if (!ZegoUIKit().getLocalUser().camera.value &&
-        !ZegoUIKit().getLocalUser().microphone.value) {
+        (!ZegoUIKit().getLocalUser().microphone.value &&
+
+            /// if mic is in mute mode, same as open state
+            !ZegoUIKit().getLocalUser().microphoneMuteMode.value)) {
       ZegoLoggerService.logInfo(
         "co-host's camera and microphone are closed, update connect state to idle",
         tag: 'live streaming',
@@ -692,7 +734,10 @@ class ZegoLiveConnectManager {
 
   void onLocalMicrophoneStateChanged() {
     if (!ZegoUIKit().getLocalUser().camera.value &&
-        !ZegoUIKit().getLocalUser().microphone.value) {
+        (!ZegoUIKit().getLocalUser().microphone.value &&
+
+            /// if mic is in mute mode, same as open state
+            !ZegoUIKit().getLocalUser().microphoneMuteMode.value)) {
       ZegoLoggerService.logInfo(
         "co-host's camera and microphone are closed, update connect state to idle",
         tag: 'live streaming',
