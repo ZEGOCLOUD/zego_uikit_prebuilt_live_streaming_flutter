@@ -2,6 +2,7 @@
 import 'dart:async';
 import 'dart:core';
 import 'dart:developer';
+import 'dart:io' show Platform;
 
 // Flutter imports:
 import 'package:flutter/material.dart';
@@ -26,8 +27,10 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/mini_overlay_m
 import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/prebuilt_data.dart';
 
 /// Live Streaming Widget.
+///
 /// You can embed this widget into any page of your project to integrate the functionality of a live streaming.
-/// You can refer to our [documentation](https://docs.zegocloud.com/article/14846),[documentation with cohosting](https://docs.zegocloud.com/article/14882)
+///
+/// You can refer to our [documentation](https://docs.zegocloud.com/article/14846), [documentation with cohosting](https://docs.zegocloud.com/article/14882)
 /// or our [sample code](https://github.com/ZEGOCLOUD/zego_uikit_prebuilt_live_streaming_example_flutter).
 class ZegoUIKitPrebuiltLiveStreaming extends StatefulWidget {
   const ZegoUIKitPrebuiltLiveStreaming({
@@ -101,7 +104,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     WidgetsBinding.instance?.addObserver(this);
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
-      log('version: zego_uikit_prebuilt_live_streaming: 2.10.5; $version');
+      log('version: zego_uikit_prebuilt_live_streaming: 2.12.1; $version');
     });
 
     isFromMinimizing = PrebuiltLiveStreamingMiniOverlayPageState.idle !=
@@ -259,15 +262,19 @@ class _ZegoUIKitPrebuiltLiveStreamingState
       await showAppSettingsDialog(
         context: context,
         rootNavigator: widget.config.rootNavigator,
+        popUpManager: popUpManager,
         dialogInfo: widget.config.innerText.cameraPermissionSettingDialogInfo,
+        kickOutNotifier: ZegoLiveStreamingManagers().kickOutNotifier,
       );
     }
     if (!isMicrophoneGranted) {
       await showAppSettingsDialog(
         context: context,
         rootNavigator: widget.config.rootNavigator,
+        popUpManager: popUpManager,
         dialogInfo:
             widget.config.innerText.microphonePermissionSettingDialogInfo,
+        kickOutNotifier: ZegoLiveStreamingManagers().kickOutNotifier,
       );
     }
   }
@@ -308,6 +315,15 @@ class _ZegoUIKitPrebuiltLiveStreamingState
       videoConfig.fps = widget.config.videoConfig.fps!;
     }
     ZegoUIKit().setVideoConfig(videoConfig);
+
+    if (ZegoPluginAdapter().getPlugin(ZegoUIKitPluginType.beauty) != null) {
+      var type = ZegoVideoBufferType.CVPixelBuffer;
+      if (Platform.isAndroid) {
+        type = ZegoVideoBufferType.GLTexture2D;
+      }
+      ZegoUIKit().enableCustomVideoProcessing(
+          true, ZegoCustomVideoProcessConfig(type));
+    }
 
     final useBeautyEffect = widget.config.bottomMenuBarConfig.hostButtons
             .contains(ZegoMenuBarButtonName.beautyEffectButton) ||
@@ -418,6 +434,8 @@ class _ZegoUIKitPrebuiltLiveStreamingState
       subTag: 'prebuilt',
     );
 
+    ZegoLiveStreamingManagers().kickOutNotifier.value = true;
+
     ///more button, member list, chat dialog
     popUpManager.autoPop(context, widget.config.rootNavigator);
 
@@ -444,6 +462,8 @@ class _ZegoUIKitPrebuiltLiveStreamingState
       hostManager: ZegoLiveStreamingManagers().hostManager!,
       liveStreamingPageReady: readyNotifier,
       config: widget.config,
+      popUpManager: popUpManager,
+      kickOutNotifier: ZegoLiveStreamingManagers().kickOutNotifier,
     );
   }
 
@@ -467,7 +487,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
 
   void onStartedByLocalValueChanged() {
     if (!isFromMinimizing) {
-      ZegoLiveStreamingManagers().liveDurationManager!.setValueByHost();
+      ZegoLiveStreamingManagers().liveDurationManager!.setRoomPropertyByHost();
     }
   }
 }

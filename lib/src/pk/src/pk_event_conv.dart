@@ -194,7 +194,7 @@ extension ZegoLiveStreamingPKBattleManagerEventConv
       subTag: 'event',
     );
     onIncomingPKBattleRequestReceivedEvent(
-      pkBattleRequestReceivedEventInMinimizingNotifier.value,
+      pkBattleRequestReceivedEventInMinimizingNotifier.value!,
     );
   }
 
@@ -228,7 +228,8 @@ extension ZegoLiveStreamingPKBattleManagerEventConv
     }
   }
 
-  void onIncomingPKBattleRequestReceivedEvent(event) async {
+  void onIncomingPKBattleRequestReceivedEvent(
+      ZegoIncomingPKBattleRequestReceivedEvent event) async {
     ZegoLoggerService.logInfo(
       'onIncomingPKBattleRequestReceived, $event',
       tag: 'ZegoLiveStreamingPKBattleService',
@@ -254,6 +255,32 @@ extension ZegoLiveStreamingPKBattleManagerEventConv
       return;
     }
 
+    // When have already invited someone and are waiting for their response,
+    // if receive an invitation from him, it is also considered as their agreement.
+    final shouldAutoAccept = (state.value ==
+            ZegoLiveStreamingPKBattleState.waitingAnotherHostResponse) &&
+        (event.anotherHost.id == waitingOutgoingPKBattleRequestUserID);
+    final alreadyInPKBattle = event.anotherHost.id == anotherHost?.id;
+    if (shouldAutoAccept || alreadyInPKBattle) {
+      final ret = await ZegoUIKit().getSignalingPlugin().acceptInvitation(
+            inviterID: event.anotherHost.id,
+            data: jsonEncode({
+              'sub_type': ZegoPKBattleRequestSubType.start.index,
+              'invitee_name': ZegoUIKit().getLocalUser().name,
+              'live_id': ZegoUIKit().getRoom().id,
+            }),
+          );
+      ((ret.error != null)
+              ? ZegoLoggerService.logError
+              : ZegoLoggerService.logInfo)
+          .call(
+        'onIncomingPKBattleRequestReceived, auto accept, ret:$ret',
+        tag: 'ZegoLiveStreamingPKBattleService',
+        subTag: 'event',
+      );
+      return;
+    }
+
     if (state.value != ZegoLiveStreamingPKBattleState.idle) {
       final ret = await ZegoUIKit().getSignalingPlugin().refuseInvitation(
             inviterID: event.anotherHost.id,
@@ -271,7 +298,7 @@ extension ZegoLiveStreamingPKBattleManagerEventConv
           .call(
         'onIncomingPKBattleRequestReceived, busy, auto reject, ret:$ret',
         tag: 'ZegoLiveStreamingPKBattleService',
-        subTag: 'api',
+        subTag: 'event',
       );
       return;
     }
@@ -290,6 +317,8 @@ extension ZegoLiveStreamingPKBattleManagerEventConv
       return;
     }
 
+    ZegoLiveStreamingPKBattleManager()
+        .cachedIncomingPKBattleRequestReceivedEvent = event;
     ZegoUIKitPrebuiltLiveStreamingPKService().pkBattleState.value =
         ZegoLiveStreamingPKBattleState.waitingMyResponse;
     void defaultAction() => ZegoLiveStreamingPKBattleDefaultActions
@@ -338,25 +367,31 @@ extension ZegoLiveStreamingPKBattleManagerEventConv
         : defaultAction();
   }
 
-  void onIncomingPKBattleRequestCancelledEvent(event) {
+  void onIncomingPKBattleRequestCancelledEvent(
+      ZegoIncomingPKBattleRequestCancelledEvent event) {
     ZegoLoggerService.logInfo(
-      'onIncomingPKBattleRequestReceived, $event',
+      'onIncomingPKBattleRequestCancelled, $event',
       tag: 'ZegoLiveStreamingPKBattleService',
       subTag: 'event',
     );
-
-    // TODO add a inner dialog flag
+    if (cachedIncomingPKBattleRequestReceivedEvent?.anotherHost.id ==
+        event.anotherHost.id) {
+      cachedIncomingPKBattleRequestReceivedEvent = null;
+    }
     if (ZegoUIKitPrebuiltLiveStreamingPKService().pkBattleState.value ==
         ZegoLiveStreamingPKBattleState.waitingMyResponse) {
       ZegoLoggerService.logInfo(
-        'onIncomingPKBattleRequestReceived, close inner dialog',
+        'onIncomingPKBattleRequestCancelled, close inner dialog',
         tag: 'ZegoLiveStreamingPKBattleService',
         subTag: 'event',
       );
-      Navigator.of(
-        context,
-        rootNavigator: config.rootNavigator,
-      ).pop();
+      if (showingRequestReceivedDialog) {
+        showingRequestReceivedDialog = false;
+        Navigator.of(
+          context,
+          rootNavigator: config.rootNavigator,
+        ).pop();
+      }
       ZegoUIKitPrebuiltLiveStreamingPKService().pkBattleState.value =
           ZegoLiveStreamingPKBattleState.idle;
     }
@@ -373,14 +408,17 @@ extension ZegoLiveStreamingPKBattleManagerEventConv
         : defaultAction();
   }
 
-  void onIncomingPKBattleRequestTimeoutEvent(event) {
+  void onIncomingPKBattleRequestTimeoutEvent(
+      ZegoIncomingPKBattleRequestTimeoutEvent event) {
     ZegoLoggerService.logInfo(
       'onIncomingPKBattleRequestTimeout, $event',
       tag: 'ZegoLiveStreamingPKBattleService',
       subTag: 'event',
     );
-
-    // TODO add a inner dialog flag
+    if (cachedIncomingPKBattleRequestReceivedEvent?.anotherHost.id ==
+        event.anotherHost.id) {
+      cachedIncomingPKBattleRequestReceivedEvent = null;
+    }
     if (ZegoUIKitPrebuiltLiveStreamingPKService().pkBattleState.value ==
         ZegoLiveStreamingPKBattleState.waitingMyResponse) {
       ZegoLoggerService.logInfo(
@@ -388,10 +426,13 @@ extension ZegoLiveStreamingPKBattleManagerEventConv
         tag: 'ZegoLiveStreamingPKBattleService',
         subTag: 'event',
       );
-      Navigator.of(
-        context,
-        rootNavigator: config.rootNavigator,
-      ).pop();
+      if (showingRequestReceivedDialog) {
+        showingRequestReceivedDialog = false;
+        Navigator.of(
+          context,
+          rootNavigator: config.rootNavigator,
+        ).pop();
+      }
       ZegoUIKitPrebuiltLiveStreamingPKService().pkBattleState.value =
           ZegoLiveStreamingPKBattleState.idle;
     }

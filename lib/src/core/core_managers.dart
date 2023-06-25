@@ -80,6 +80,7 @@ class ZegoLiveStreamingManagers {
       liveStatusNotifier: liveStatusManager!.notifier,
       translationText: prebuiltData.config.innerText,
       contextQuery: contextQuery,
+      kickOutNotifier: kickOutNotifier,
     );
     connectManager!.init();
 
@@ -90,7 +91,7 @@ class ZegoLiveStreamingManagers {
   void updateContextQuery(BuildContext Function()? contextQuery) {
     ZegoLoggerService.logInfo(
       'update context query',
-      tag: 'audio room',
+      tag: 'live streaming',
       subTag: 'core manager',
     );
 
@@ -101,14 +102,14 @@ class ZegoLiveStreamingManagers {
   Future<void> unintPluginAndManagers() async {
     ZegoLoggerService.logInfo(
       'uninit plugin and managers',
-      tag: 'audio room',
+      tag: 'live streaming',
       subTag: 'core manager',
     );
 
     if (!_initialized) {
       ZegoLoggerService.logInfo(
         'had not init',
-        tag: 'audio room',
+        tag: 'live streaming',
         subTag: 'core manager',
       );
 
@@ -141,4 +142,6 @@ class ZegoLiveStreamingManagers {
   ZegoPrebuiltPlugins? plugins;
 
   ZegoLiveConnectManager? connectManager;
+
+  final kickOutNotifier = ValueNotifier<bool>(false);
 }

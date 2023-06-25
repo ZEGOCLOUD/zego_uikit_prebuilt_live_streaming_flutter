@@ -63,8 +63,13 @@ class _ZegoTopBarState extends State<ZegoTopBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(color: Colors.transparent),
-      height: 80.zR,
+      margin: widget.config.topMenuBarConfig.margin,
+      padding: widget.config.topMenuBarConfig.padding,
+      decoration: BoxDecoration(
+        color: widget.config.topMenuBarConfig.backgroundColor ??
+            Colors.transparent,
+      ),
+      height: widget.config.topMenuBarConfig.height ?? 80.zR,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

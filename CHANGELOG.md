@@ -1,3 +1,28 @@
+## 2.12.1
+- Optimizing timing function.
+
+## 2.12.0
+- Support auto start pk when hosts invite each other
+
+## 2.11.3
+- Fix the issue of the beauty effect not working
+
+## 2.11.2
+- compatible with `inRoomMessageViewConfig`
+
+## 2.11.1
+- Update comments
+
+## 2.11.0
+- Support local message sending callback, you can listen by using `onLocalMessageSend` in `inRoomMessageConfig`.
+
+## 2.10.7
+- Fixed the issue where users were kicked out when both camera and microphone permissions were not denied but the permission dialog could not be dismissed.
+- Custom styles for the top and bottom toolbars now support margin.
+
+## 2.10.6
+- Support for setting the style of the top and bottom toolbars by allowing customization of padding, background color, and height.
+
 ## 2.10.4
 - Support custom color of solid color icon in basic beauty.
 

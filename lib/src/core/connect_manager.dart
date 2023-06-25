@@ -29,6 +29,7 @@ class ZegoLiveConnectManager {
     required this.liveStatusNotifier,
     required this.config,
     required this.translationText,
+    required this.kickOutNotifier,
     this.contextQuery,
   }) {
     listenStream();
@@ -41,6 +42,7 @@ class ZegoLiveConnectManager {
   final ValueNotifier<LiveStatus> liveStatusNotifier;
   final ZegoUIKitPrebuiltLiveStreamingConfig config;
   final ZegoInnerText translationText;
+  final ValueNotifier<bool> kickOutNotifier;
 
   bool _initialized = false;
 
@@ -126,6 +128,8 @@ class ZegoLiveConnectManager {
         translationText: translationText,
         rootNavigator: config.rootNavigator,
         permissions: permissions,
+        popUpManager: popUpManager,
+        kickOutNotifier: kickOutNotifier,
       ).then((value) {
         ZegoUIKit().turnCameraOn(config.turnOnCameraWhenCohosted);
         ZegoUIKit().turnMicrophoneOn(true);
@@ -453,6 +457,8 @@ class ZegoLiveConnectManager {
                   translationText: translationText,
                   rootNavigator: config.rootNavigator,
                   permissions: permissions,
+                  popUpManager: popUpManager,
+                  kickOutNotifier: kickOutNotifier,
                 ).then((_) {
                   updateAudienceConnectState(ConnectState.connected);
                 });
@@ -497,6 +503,8 @@ class ZegoLiveConnectManager {
         translationText: translationText,
         rootNavigator: config.rootNavigator,
         permissions: permissions,
+        popUpManager: popUpManager,
+        kickOutNotifier: kickOutNotifier,
       ).then((value) {
         ZegoUIKit().turnCameraOn(config.turnOnCameraWhenCohosted);
         ZegoUIKit().turnMicrophoneOn(true);

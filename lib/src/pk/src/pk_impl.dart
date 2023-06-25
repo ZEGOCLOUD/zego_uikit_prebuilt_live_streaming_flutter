@@ -52,6 +52,11 @@ class ZegoLiveStreamingPKBattleManager {
   String waitingOutgoingPKBattleRequestUserID = '';
   String waitingOutgoingPKBattleRequestID = '';
 
+  bool showingRequestReceivedDialog = false;
+
+  ZegoIncomingPKBattleRequestReceivedEvent?
+      cachedIncomingPKBattleRequestReceivedEvent;
+
   BuildContext get context => contextQuery!();
 
   bool get isLiving => liveStatusNotifier.value == LiveStatus.living;
@@ -154,6 +159,33 @@ class ZegoLiveStreamingPKBattleManager {
       error = null;
     }
 
+    // When you have already received an invitation, if you then send an invitation to the other party,
+    // it is also considered that both parties agree to engage in a competition.
+    if ((state.value == ZegoLiveStreamingPKBattleState.waitingMyResponse) &&
+        (cachedIncomingPKBattleRequestReceivedEvent?.anotherHost.id ==
+            anotherHostUserID)) {
+      if (showingRequestReceivedDialog) {
+        showingRequestReceivedDialog = false;
+        Navigator.of(
+          context,
+          rootNavigator: config.rootNavigator,
+        ).pop();
+      }
+      final ret = await acceptIncomingPKBattleRequest(
+          cachedIncomingPKBattleRequestReceivedEvent!);
+
+      ((ret.error != null)
+              ? ZegoLoggerService.logError
+              : ZegoLoggerService.logInfo)
+          .call(
+        'sendPKBattleRequest, auto accept, ret:$ret',
+        tag: 'ZegoLiveStreamingPKBattleService',
+        subTag: 'api',
+      );
+
+      return ret;
+    }
+
     if (error != null) {
       ZegoLoggerService.logError(
         'sendPKBattleRequest, code:${error.code}, message:${error.message}',
@@ -242,7 +274,7 @@ class ZegoLiveStreamingPKBattleManager {
     ((ret.error == null)
         ? ZegoLoggerService.logInfo
         : ZegoLoggerService.logError)(
-      'sendPKBattleRequest, ret:$ret',
+      'cancelPKBattleRequest, ret:$ret',
       tag: 'ZegoLiveStreamingPKBattleService',
       subTag: 'api',
     );
@@ -276,6 +308,8 @@ class ZegoLiveStreamingPKBattleManager {
       tag: 'ZegoLiveStreamingPKBattleService',
       subTag: 'api',
     );
+    // As long as respond to the any request, the cache can be cleared.
+    cachedIncomingPKBattleRequestReceivedEvent = null;
     if (state.value == ZegoLiveStreamingPKBattleState.waitingMyResponse) {
       state.value = ZegoLiveStreamingPKBattleState.idle;
     }
@@ -308,6 +342,8 @@ class ZegoLiveStreamingPKBattleManager {
       tag: 'ZegoLiveStreamingPKBattleService',
       subTag: 'api',
     );
+    // As long as respond to the any request, the cache can be cleared.
+    cachedIncomingPKBattleRequestReceivedEvent = null;
     final ret = await ZegoUIKit().getSignalingPlugin().acceptInvitation(
         inviterID: event.anotherHost.id,
         data: jsonEncode({
@@ -619,7 +655,7 @@ class ZegoLiveStreamingPKBattleManager {
   }
 
   ZegoUIKitUser? get anotherHost {
-    if (state.value == ZegoLiveStreamingPKBattleState.inPKBattle) {
+    if (streamCreator != null) {
       return ZegoUIKitUser(
           id: streamCreator!.anotherHostUserID,
           name: streamCreator!.anotherHostUserName);

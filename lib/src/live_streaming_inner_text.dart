@@ -4,7 +4,9 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_defines.da
 /// Control the text on the UI.
 /// Modify the values of the corresponding properties to modify the text on the UI.
 /// You can also change it to other languages.
-/// This class is used for the ZegoUIKitPrebuiltLiveStreamingConfig.innerText property.
+///
+/// This class is used for the [ZegoUIKitPrebuiltLiveStreamingConfig.innerText] property.
+///
 /// **Note that the placeholder %0 in the text will be replaced with the corresponding username.**
 class ZegoInnerText {
   /// %0: is a string placeholder, represents the first parameter of prompt

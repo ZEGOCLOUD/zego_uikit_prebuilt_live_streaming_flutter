@@ -94,7 +94,10 @@ class ZegoLivePageState extends State<ZegoLivePage>
           .listen(onTurnOnYourCameraRequest))
       ..add(ZegoUIKit()
           .getTurnOnYourMicrophoneRequestStream()
-          .listen(onTurnOnYourMicrophoneRequest));
+          .listen(onTurnOnYourMicrophoneRequest))
+      ..add(ZegoUIKit()
+          .getInRoomLocalMessageStream()
+          .listen(onInRoomLocalMessageFinished));
 
     ZegoLiveStreamingManagers().updateContextQuery(() => context);
 
@@ -672,5 +675,9 @@ class ZegoLivePageState extends State<ZegoLivePage>
         muteMode: !widget.config.stopCoHostingWhenMicCameraOff,
       );
     }
+  }
+
+  void onInRoomLocalMessageFinished(ZegoInRoomMessage message) {
+    widget.config.inRoomMessageConfig.onLocalMessageSend?.call(message);
   }
 }

@@ -44,9 +44,15 @@ class CallDurationTimeBoardState extends State<LiveDurationTimeBoard> {
       );
 
       if (widget.manager.isValid) {
-        startDurationTimer();
+        startDurationTimerByNetworkTime();
       } else {
-        widget.manager.notifier.addListener(onLiveDurationManagerValueChanged);
+        ZegoLoggerService.logInfo(
+          'manager notifier value is null, wait...',
+          tag: 'live streaming',
+          subTag: 'duration time board',
+        );
+
+        widget.manager.notifier.addListener(startDurationTimerByNetworkTime);
       }
     }
   }
@@ -98,16 +104,48 @@ class CallDurationTimeBoardState extends State<LiveDurationTimeBoard> {
         : minutesFormatString;
   }
 
-  void onLiveDurationManagerValueChanged() {
+  void startDurationTimerByNetworkTime() {
     if (widget.manager.isValid) {
-      startDurationTimer();
+      final networkTimeNow = ZegoUIKit().getNetworkTime();
+      if (null == networkTimeNow.value) {
+        ZegoLoggerService.logInfo(
+          'network time is null, wait...',
+          tag: 'live streaming',
+          subTag: 'duration time board',
+        );
+
+        ZegoUIKit()
+            .getNetworkTime()
+            .addListener(waitNetworkTimeUpdateForStartDurationTimer);
+      } else {
+        startDurationTimer(networkTimeNow.value!);
+      }
     }
   }
 
-  void startDurationTimer() {
-    final networkTimestamp = ZegoUIKit().getNetworkTimeStamp();
-    beginDuration = DateTime.fromMillisecondsSinceEpoch(networkTimestamp)
-        .difference(widget.manager.notifier.value);
+  void waitNetworkTimeUpdateForStartDurationTimer() {
+    ZegoUIKit()
+        .getNetworkTime()
+        .removeListener(waitNetworkTimeUpdateForStartDurationTimer);
+
+    final networkTimeNow = ZegoUIKit().getNetworkTime();
+    ZegoLoggerService.logInfo(
+      'network time update:$networkTimeNow',
+      tag: 'live streaming',
+      subTag: 'duration time board',
+    );
+
+    startDurationTimer(networkTimeNow.value!);
+  }
+
+  void startDurationTimer(DateTime networkTimeNow) {
+    ZegoLoggerService.logInfo(
+      'start duration timer, network time is $networkTimeNow, live begin time is ${widget.manager.notifier.value}',
+      tag: 'live streaming',
+      subTag: 'duration time board',
+    );
+
+    beginDuration = networkTimeNow.difference(widget.manager.notifier.value);
 
     durationTimer?.cancel();
     durationTimer = Timer.periodic(const Duration(seconds: 1), (timer) {

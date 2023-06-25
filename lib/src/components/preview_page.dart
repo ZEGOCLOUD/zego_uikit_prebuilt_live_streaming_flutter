@@ -13,6 +13,7 @@ import 'package:zego_uikit/zego_uikit.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/effects/beauty_effect_button.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/permissions.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
@@ -32,6 +33,8 @@ class ZegoPreviewPage extends StatefulWidget {
     required this.startedNotifier,
     required this.liveStreamingPageReady,
     required this.config,
+    required this.popUpManager,
+    required this.kickOutNotifier,
   }) : super(key: key);
 
   final int appID;
@@ -50,6 +53,9 @@ class ZegoPreviewPage extends StatefulWidget {
   final ValueNotifier<bool> liveStreamingPageReady;
 
   final ZegoUIKitPrebuiltLiveStreamingConfig config;
+
+  final ZegoPopUpManager popUpManager;
+  final ValueNotifier<bool> kickOutNotifier;
 
   @override
   State<ZegoPreviewPage> createState() => _ZegoPreviewPageState();
@@ -259,6 +265,8 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
             isShowDialog: true,
             translationText: widget.liveStreamingConfig.innerText,
             rootNavigator: widget.liveStreamingConfig.rootNavigator,
+            popUpManager: widget.popUpManager,
+            kickOutNotifier: widget.kickOutNotifier,
           ).then(
             (value) {
               if (!widget.liveStreamingPageReady.value) {
@@ -282,6 +290,8 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
               isShowDialog: true,
               translationText: widget.liveStreamingConfig.innerText,
               rootNavigator: widget.liveStreamingConfig.rootNavigator,
+              popUpManager: widget.popUpManager,
+              kickOutNotifier: widget.kickOutNotifier,
             ).then((value) {
               if (!widget.liveStreamingPageReady.value) {
                 ZegoLoggerService.logInfo(

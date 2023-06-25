@@ -21,13 +21,13 @@ class ZegoLiveDurationManager {
   ZegoLiveDurationManager({
     required this.hostManager,
   }) {
-    subscription =
+    roomPropertySubscription =
         ZegoUIKit().getRoomPropertiesStream().listen(onRoomPropertiesUpdated);
   }
 
   /// internal variables
   var notifier = ValueNotifier<DateTime>(DateTime(0));
-  StreamSubscription<dynamic>? subscription;
+  StreamSubscription<dynamic>? roomPropertySubscription;
 
   bool isPropertyInited = false;
 
@@ -69,7 +69,7 @@ class ZegoLiveDurationManager {
       tag: 'live streaming',
       subTag: 'live duration manager',
     );
-    subscription?.cancel();
+    roomPropertySubscription?.cancel();
   }
 
   void onRoomPropertiesUpdated(Map<String, RoomProperty> updatedProperties) {
@@ -81,18 +81,19 @@ class ZegoLiveDurationManager {
     );
 
     if (roomProperties.containsKey(RoomPropertyKey.liveDuration.text)) {
-      trySyncValue(roomProperties);
+      trySyncValueByRoomProperties(roomProperties);
     }
   }
 
-  void trySyncValue(Map<String, RoomProperty> roomProperties) {
-    final timestamp = roomProperties[RoomPropertyKey.liveDuration.text]!.value;
+  void trySyncValueByRoomProperties(Map<String, RoomProperty> roomProperties) {
+    final propertyTimestamp =
+        roomProperties[RoomPropertyKey.liveDuration.text]!.value;
 
-    final currentValue = notifier.value;
-    final serverValue =
-        DateTime.fromMillisecondsSinceEpoch(int.tryParse(timestamp) ?? 0);
-    notifier.value = serverValue;
-    if (currentValue != serverValue) {
+    final currentDateTime = notifier.value;
+    final serverDateTime = DateTime.fromMillisecondsSinceEpoch(
+        int.tryParse(propertyTimestamp) ?? 0);
+    notifier.value = serverDateTime;
+    if (currentDateTime != serverDateTime) {
       if (hostManager.isLocalHost) {
         ZegoLoggerService.logInfo(
           'live duration value is not equal, host sync value:${notifier.value}',
@@ -100,8 +101,8 @@ class ZegoLiveDurationManager {
           subTag: 'live duration manager',
         );
 
-        ZegoUIKit()
-            .setRoomProperty(RoomPropertyKey.liveDuration.text, timestamp);
+        ZegoUIKit().setRoomProperty(
+            RoomPropertyKey.liveDuration.text, propertyTimestamp);
       }
     } else {
       ZegoLoggerService.logInfo(
@@ -112,7 +113,7 @@ class ZegoLiveDurationManager {
     }
   }
 
-  void setValueByHost() {
+  void setRoomPropertyByHost() {
     final roomProperties = ZegoUIKit().getRoomProperties();
 
     if (!hostManager.isLocalHost) {
@@ -150,10 +151,42 @@ class ZegoLiveDurationManager {
     //   return;
     // }
 
-    subscription?.cancel();
+    /// ignore room property update event, because had updated from local
+    roomPropertySubscription?.cancel();
 
-    final networkTimestamp = ZegoUIKit().getNetworkTimeStamp();
-    notifier.value = DateTime.fromMillisecondsSinceEpoch(networkTimestamp);
+    final networkTimeNow = ZegoUIKit().getNetworkTime();
+    if (null == networkTimeNow.value) {
+      ZegoLoggerService.logInfo(
+        'network time is null, wait..',
+        tag: 'live streaming',
+        subTag: 'live duration manager',
+      );
+
+      ZegoUIKit()
+          .getNetworkTime()
+          .addListener(waitNetworkTimeUpdatedForSetProperty);
+    } else {
+      setPropertyByNetworkTime(networkTimeNow.value!);
+    }
+  }
+
+  void waitNetworkTimeUpdatedForSetProperty() {
+    ZegoUIKit()
+        .getNetworkTime()
+        .removeListener(waitNetworkTimeUpdatedForSetProperty);
+
+    final networkTimeNow = ZegoUIKit().getNetworkTime();
+    ZegoLoggerService.logInfo(
+      'network time update:$networkTimeNow',
+      tag: 'live streaming',
+      subTag: 'live duration manager',
+    );
+
+    setPropertyByNetworkTime(networkTimeNow.value!);
+  }
+
+  void setPropertyByNetworkTime(DateTime networkTimeNow) {
+    notifier.value = networkTimeNow;
 
     ZegoLoggerService.logInfo(
       'live duration value is not exist, host set value:${notifier.value}',
@@ -163,7 +196,7 @@ class ZegoLiveDurationManager {
 
     ZegoUIKit().setRoomProperty(
       RoomPropertyKey.liveDuration.text,
-      networkTimestamp.toString(),
+      networkTimeNow.millisecondsSinceEpoch.toString(),
     );
   }
 }

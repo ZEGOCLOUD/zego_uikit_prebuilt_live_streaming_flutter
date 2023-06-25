@@ -10,7 +10,8 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_inner_text
 import 'package:zego_uikit_prebuilt_live_streaming/src/pk/defines.dart';
 
 /// Configuration for initializing the Live Streaming
-/// This class is used as the [config] parameter for the constructor of [ZegoUIKitPrebuiltLiveStreaming].
+///
+/// This class is used as the [ZegoUIKitPrebuiltLiveStreaming.config] parameter for the constructor of [ZegoUIKitPrebuiltLiveStreaming].
 class ZegoUIKitPrebuiltLiveStreamingConfig {
   /// Default initialization parameters for the host.
   /// If a configuration item does not meet your expectations, you can directly override its value.
@@ -44,7 +45,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
               : const [ZegoMenuBarButtonName.coHostControlButton],
         ),
         memberListConfig = ZegoMemberListConfig(),
-        inRoomMessageViewConfig = ZegoInRoomMessageViewConfig(),
+        inRoomMessageConfig = ZegoInRoomMessageConfig(),
         effectConfig = ZegoEffectConfig(),
         innerText = ZegoInnerText(),
         confirmDialogInfo = ZegoDialogInfo(
@@ -59,6 +60,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         durationConfig = ZegoLiveDurationConfig();
 
   /// Default initialization parameters for the audience.
+  ///
   /// If a configuration item does not meet your expectations, you can directly override its value.
   ///
   /// Example:
@@ -90,7 +92,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
               : const [ZegoMenuBarButtonName.coHostControlButton],
         ),
         memberListConfig = ZegoMemberListConfig(),
-        inRoomMessageViewConfig = ZegoInRoomMessageViewConfig(),
+        inRoomMessageConfig = ZegoInRoomMessageConfig(),
         effectConfig = ZegoEffectConfig(),
         innerText = ZegoInnerText(),
         previewConfig = ZegoLiveStreamingPreviewConfig(),
@@ -125,7 +127,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
     ZegoMemberListConfig? memberListConfig,
     ZegoLiveDurationConfig? durationConfig,
     ZegoPrebuiltVideoConfig? videoConfig,
-    ZegoInRoomMessageViewConfig? messageConfig,
+    ZegoInRoomMessageConfig? messageConfig,
     ZegoTopMenuBarConfig? topMenuBarConfig,
     ZegoBottomMenuBarConfig? bottomMenuBarConfig,
     ZegoLiveStreamingPreviewConfig? previewConfig,
@@ -137,8 +139,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         topMenuBarConfig = topMenuBarConfig ?? ZegoTopMenuBarConfig(),
         bottomMenuBarConfig = bottomMenuBarConfig ?? ZegoBottomMenuBarConfig(),
         memberListConfig = memberListConfig ?? ZegoMemberListConfig(),
-        inRoomMessageViewConfig =
-            messageConfig ?? ZegoInRoomMessageViewConfig(),
+        inRoomMessageConfig = messageConfig ?? ZegoInRoomMessageConfig(),
         effectConfig = effectConfig ?? ZegoEffectConfig(),
         innerText = translationText ?? ZegoInnerText(),
         videoConfig = videoConfig ?? ZegoPrebuiltVideoConfig(),
@@ -177,6 +178,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   bool turnOnMicrophoneWhenJoining;
 
   /// Whether to use the speaker to play audio when joining the live streaming.
+  ///
   /// The default value is `true`.
   /// If this value is set to `false`, the system's default playback device, such as the earpiece or Bluetooth headset, will be used for audio playback.
   bool useSpeakerWhenJoining;
@@ -185,6 +187,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   bool turnOnCameraWhenCohosted;
 
   /// controls whether to automatically stop co-hosting when both the camera and microphone are turned off.
+  ///
   /// If the value is set to true, the user will stop co-hosting automatically when both camera and microphone are off.
   /// If the value is set to false, the user will keep co-hosting until manually stop co-hosting by clicking the "End" button.
   bool stopCoHostingWhenMicCameraOff;
@@ -196,28 +199,52 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   ZegoPrebuiltAudioVideoViewConfig audioVideoViewConfig;
 
   /// Configuration options for the top menu bar (toolbar).
+  ///
   /// You can use these options to customize the appearance and behavior of the top menu bar.
   ZegoTopMenuBarConfig topMenuBarConfig;
 
   /// Configuration options for the bottom menu bar (toolbar).
+  ///
   /// You can use these options to customize the appearance and behavior of the bottom menu bar.
   ZegoBottomMenuBarConfig bottomMenuBarConfig;
 
   /// Configuration related to the bottom member list, including displaying the member list, member list styles, and more.
   ZegoMemberListConfig memberListConfig;
 
-  /// configs about message view
-  ZegoInRoomMessageViewConfig inRoomMessageViewConfig;
+  /// configs about message
+  ZegoInRoomMessageConfig inRoomMessageConfig;
+
+  @Deprecated('Since 2.10.7, please use inRoomMessageConfig instead')
+  ZegoInRoomMessageConfig get inRoomMessageViewConfig => inRoomMessageConfig;
+
+  @Deprecated('Since 2.10.7, please use inRoomMessageConfig instead')
+  set inRoomMessageViewConfig(ZegoInRoomMessageConfig config) =>
+      inRoomMessageConfig = config;
 
   /// You can use it to modify your voice, apply beauty effects, and control reverb.
   ZegoEffectConfig effectConfig;
 
   /// Confirmation dialog information when leaving the live streaming.
+  ///
   /// If not set, clicking the exit button will directly exit the live streaming.
+  ///
   /// If set, a confirmation dialog will be displayed when clicking the exit button, and you will need to confirm the exit before actually exiting.
+  ///
+  /// Sample Code:
+  ///
+  /// ```dart
+  ///  ..confirmDialogInfo = ZegoDialogInfo(
+  ///    title: 'Leave confirm',
+  ///    message: 'Do you want to end?',
+  ///    cancelButtonName: 'Cancel',
+  ///    confirmButtonName: 'Confirm',
+  ///  )
+  /// ```
+  ///<img src="https://doc.oa.zego.im/Pics/ZegoUIKit/live/live_confirm.gif" width=50%/>
   ZegoDialogInfo? confirmDialogInfo;
 
   /// Configuration options for modifying all text content on the UI.
+  ///
   /// All visible text content on the UI can be modified using this single property.
   ZegoInnerText innerText;
 
@@ -228,6 +255,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   ZegoLayout? layout;
 
   /// same as Flutter's Navigator's param
+  ///
   /// If `rootNavigator` is set to true, the state from the furthest instance of this class is given instead.
   /// Useful for pushing contents above all subsequent instances of [Navigator].
   bool rootNavigator;
@@ -237,7 +265,6 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   /// Example：
   ///
   /// ```dart
-  ///
   ///  // eg:
   ///  avatarBuilder: (BuildContext context, Size size, ZegoUIKitUser? user, Map extraInfo) {
   ///    return user != null
@@ -246,21 +273,21 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   ///              shape: BoxShape.circle,
   ///              image: DecorationImage(
   ///                image: NetworkImage(
-  ///                  'https://your_server/app/avatar/${user.id}.png',
+  ///                  'https://robohash.org/01.png',
   ///                ),
   ///              ),
   ///            ),
   ///          )
   ///        : const SizedBox();
   ///  },
-  ///
   /// ```
-  ///
+  /// <img src="https://storage.zego.im/sdk-doc/Pics/zegocloud/api/flutter/live/avatar_builder.png" width=50%/>
   ZegoAvatarBuilder? avatarBuilder;
 
-  /// customize your start call button
+  /// Customize your start call button
   /// you MUST call startLive function on your custom button
   ///
+  ///```dart
   /// ..startLiveButtonBuilder =
   ///   (BuildContext context, VoidCallback startLive) {
   ///     return ElevatedButton(
@@ -271,14 +298,17 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   ///       child: Text("START"),
   ///     );
   ///   }
+  /// ```
   ZegoStartLiveButtonBuilder? startLiveButtonBuilder;
 
-  ///  mark is large room or not
+  ///  Mark is large room or not
+  ///
   ///  sendInRoomCommand will sending to everyone in the room if true
   ///  that mean [toUserIDs] of [sendInRoomCommand] function is disabled if true
   bool markAsLargeRoom;
 
   /// The foreground of the live streaming.
+  ///
   /// If you need to nest some widgets in [ZegoUIKitPrebuiltLiveStreaming], please use [foreground] nesting, otherwise these widgets will be lost when you minimize and restore the [ZegoUIKitPrebuiltLiveStreaming]
   Widget? foreground;
 
@@ -288,8 +318,6 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   /// If you need to dynamically change the background content, you will need to implement the logic for dynamic modification within the Widget you return.
   ///
   /// ```dart
-  ///
-  ///  // eg:
   /// ..background = Container(
   ///     decoration: const BoxDecoration(
   ///       image: DecorationImage(
@@ -303,17 +331,33 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   ZegoLiveStreamingPreviewConfig previewConfig;
 
   /// cross room pk events
+  ///
   /// Please refer to our [documentation](https://docs.zegocloud.com/article/15580) and [sample code](https://github.com/ZEGOCLOUD/zego_uikit_prebuilt_live_streaming_example_flutter/tree/master/live_streaming_with_pkbattles) for usage instructions.
   ZegoLiveStreamingPKBattleEvents pkBattleEvents;
   ZegoLiveStreamingPKBattleConfig pkBattleConfig;
 
   /// Live Streaming timing configuration.
+  ///
+  /// To calculate the livestream duration, do the following:
+  /// 1. Set the [ZegoLiveDurationConfig.isVisible] property of [ZegoLiveDurationConfig] to display the current timer. (It is displayed by default)
+  /// 2. Assuming that the livestream duration is 5 minutes, the livestream will automatically end when the time is up (refer to the following code). You will be notified of the end of the livestream duration through [ZegoLiveDurationConfig.onDurationUpdate]. To end the livestream, you can call the [ZegoUIKitPrebuiltLiveStreamingController.leave()] method.
+  ///
+  /// ```dart
+  ///  ..durationConfig.isVisible = true
+  ///  ..durationConfig.onDurationUpdate = (Duration duration) {
+  ///    if (duration.inSeconds >= 5 * 60) {
+  ///      liveController?.leave(context);
+  ///    }
+  ///  }
+  /// ```
+  ///<img src = "https://doc.oa.zego.im/Pics/ZegoUIKit/Flutter/live/live_duration.jpeg" width=50% />
   ZegoLiveDurationConfig durationConfig;
 
   /// advance beauty config
   ZegoBeautyPluginConfig? beautyConfig;
 
   /// Maximum number of co-hosts.
+  ///
   /// If exceeded, other audience members cannot become co-hosts.
   /// The default value is 12.
   int maxCoHostCount;
@@ -321,36 +365,81 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   /// Confirmation callback method before leaving the live streaming.
   ///
   /// If you want to perform more complex business logic before exiting the live streaming, such as updating some records to the backend, you can use the [onLeaveConfirmation] parameter to set it.
+  ///
   /// This parameter requires you to provide a callback method that returns an asynchronous result.
+  ///
   /// If you return true in the callback, the prebuilt page will quit and return to your previous page, otherwise it will be ignored.
+  ///
+  /// Sample Code:
+  ///
+  /// ```dart
+  /// ..onLeaveConfirmation = (context) async {
+  ///   return await showDialog(
+  ///     context: context,
+  ///     barrierDismissible: false,
+  ///     builder: (BuildContext context) {
+  ///       return AlertDialog(
+  ///         backgroundColor: Colors.blue[900]!.withOpacity(0.9),
+  ///         title: const Text('This is your custom dialog',
+  ///             style: TextStyle(color: Colors.white70)),
+  ///         content: const Text('You can customize this dialog as you like',
+  ///             style: TextStyle(color: Colors.white70)),
+  ///         actions: [
+  ///           ElevatedButton(
+  ///             child: const Text('Cancel',
+  ///                 style: TextStyle(color: Colors.white70)),
+  ///             onPressed: () => Navigator.of(context).pop(false),
+  ///           ),
+  ///           ElevatedButton(
+  ///             child: const Text('Exit'),
+  ///             onPressed: () => Navigator.of(context).pop(true),
+  ///           ),
+  ///         ],
+  ///       );
+  ///     },
+  ///   );
+  /// }
+  /// ```
+  /// <img src="https://doc.oa.zego.im/Pics/ZegoUIKit/live/live_custom_confirm.gif" width=40%/>
   Future<bool> Function(BuildContext context)? onLeaveConfirmation;
 
   /// This callback is triggered when local user removed from live streaming
   Future<void> Function(String)? onMeRemovedFromRoom;
 
   /// This callback is triggered after leaving the live streaming(host would not trigger this callback).
+  ///
   /// You can perform business-related prompts or other actions in this callback.
+  ///
   /// The default behavior is to return to the previous page. If you override this callback, you must perform the page navigation yourself, otherwise the user will remain on the live streaming page.
   VoidCallback? onLeaveLiveStreaming;
 
   /// This callback method is called when live streaming ended(all users in live streaming will received).
+  ///
   /// The default behavior is to return to the previous page. If you override this callback, you must perform the page navigation yourself, otherwise the user will remain on the live streaming page.
   VoidCallback? onLiveStreamingEnded;
 
   void Function(ZegoLiveStreamingState state)? onLiveStreamingStateUpdate;
 
   /// This callback method is called when someone requests to open your camera, typically when the host wants to open your camera.
+  ///
   /// This method requires returning an asynchronous result.
+  ///
   /// You can display a dialog in this callback to confirm whether to open the camera.
+  ///
   /// Alternatively, you can return `true` without any processing, indicating that when someone requests to open your camera, it can be directly opened.
+  ///
   /// By default, this method does nothing and returns `false`, indicating that others cannot open your camera.
   Future<bool> Function(BuildContext context)?
       onCameraTurnOnByOthersConfirmation;
 
   /// This callback method is called when someone requests to open your microphone, typically when the host wants to open your microphone.
+  ///
   /// This method requires returning an asynchronous result.
+  ///
   /// You can display a dialog in this callback to confirm whether to open the microphone.
+  ///
   /// Alternatively, you can return `true` without any processing, indicating that when someone requests to open your microphone, it can be directly opened.
+  ///
   /// By default, this method does nothing and returns `false`, indicating that others cannot open your microphone.
   Future<bool> Function(BuildContext context)?
       onMicrophoneTurnOnByOthersConfirmation;
@@ -378,40 +467,52 @@ class ZegoPrebuiltVideoConfig {
 }
 
 /// Configuration options for audio/video views.
-/// This class is used for the [audioVideoViewConfig] property of [ZegoUIKitPrebuiltLiveStreamingConfig].
+///
+/// This class is used for the [ZegoUIKitPrebuiltLiveStreamingConfig.audioVideoViewConfig] property.
 ///
 /// These options allow you to customize the display effects of the audio/video views, such as showing microphone status and usernames.
+///
 /// If you need to customize the foreground or background of the audio/video view, you can use foregroundBuilder and backgroundBuilder.
+///
 /// If you want to hide user avatars or sound waveforms in audio mode, you can set showAvatarInAudioMode and showSoundWavesInAudioMode to false.
 class ZegoPrebuiltAudioVideoViewConfig {
   /// Whether to mirror the displayed video captured by the camera.
+  ///
   /// This mirroring effect only applies to the front-facing camera.
   /// Set it to true to enable mirroring, which flips the image horizontally.
   bool isVideoMirror;
 
   /// Whether to display the username on the audio/video view.
+  ///
   /// Set it to false if you don't want to show the username on the audio/video view.
   bool showUserNameOnView;
 
   /// Video view mode.
+  ///
   /// Set it to true if you want the video view to scale proportionally to fill the entire view, potentially resulting in partial cropping.
+  ///
   /// Set it to false if you want the video view to scale proportionally, potentially resulting in black borders.
   bool useVideoViewAspectFill;
 
   /// Whether to display user avatars in audio mode.
+  ///
   /// Set it to false if you don't want to show user avatars in audio mode.
   bool showAvatarInAudioMode;
 
   /// Whether to display sound waveforms in audio mode.
+  ///
   /// Set it to false if you don't want to show sound waveforms in audio mode.
   bool showSoundWavesInAudioMode;
 
   /// You can customize the foreground of the audio/video view, which refers to the widget positioned on top of the view.
+  ///
   /// You can return any widget, and we will place it at the top of the audio/video view.
   ZegoAudioVideoViewForegroundBuilder? foregroundBuilder;
 
   /// Background for the audio/video windows in a Live Streaming.
+  ///
   /// You can use any widget as the background for the audio/video windows. This can be a video, a GIF animation, an image, a web page, or any other widget.
+  ///
   /// If you need to dynamically change the background content, you should implement the logic for dynamic modification within the widget you return.
   ZegoAudioVideoViewBackgroundBuilder? backgroundBuilder;
 
@@ -433,17 +534,40 @@ class ZegoTopMenuBarConfig {
   List<ZegoMenuBarButtonName> buttons;
 
   /// You can listen to the event of clicking on the host information in the top left corner.
-  /// for example, if you want to display a popup or dialog with host information after it is clicked.
+  /// For example, if you want to display a popup or dialog with host information after it is clicked.
+  ///
+  /// ```dart
+  /// ..topMenuBarConfig.onHostAvatarClicked = (host) {
+  ///   // do your own things.
+  ///
+  /// }
+  /// ```
   void Function(ZegoUIKitUser host)? onHostAvatarClicked;
+
+  /// padding for the top menu bar.
+  EdgeInsetsGeometry? padding;
+
+  /// margin for the top menu bar.
+  EdgeInsetsGeometry? margin;
+
+  /// background color for the top menu bar.
+  Color? backgroundColor;
+
+  /// height for the top menu bar.
+  double? height;
 
   ZegoTopMenuBarConfig({
     this.buttons = const [],
     this.onHostAvatarClicked,
+    this.padding,
+    this.backgroundColor,
+    this.height,
   });
 }
 
 /// Configuration options for the bottom menu bar (toolbar).
-/// You can use the [ZegoUIKitPrebuiltLiveStreamingConfig].[bottomMenuBarConfig] property to set the properties inside this class.
+///
+/// You can use the [ZegoUIKitPrebuiltLiveStreamingConfig.bottomMenuBarConfig] property to set the properties inside this class.
 class ZegoBottomMenuBarConfig {
   /// Whether to display the room message button.
   bool showInRoomMessageButton;
@@ -481,6 +605,18 @@ class ZegoBottomMenuBarConfig {
   /// Button style for the bottom menu bar.
   ZegoBottomMenuBarButtonStyle? buttonStyle;
 
+  /// padding for the bottom menu bar.
+  EdgeInsetsGeometry? padding;
+
+  /// margin for the bottom menu bar.
+  EdgeInsetsGeometry? margin;
+
+  /// background color for the bottom menu bar.
+  Color? backgroundColor;
+
+  /// height for the bottom menu bar.
+  double? height;
+
   ZegoBottomMenuBarConfig({
     this.showInRoomMessageButton = true,
     this.hostButtons = const [
@@ -504,17 +640,23 @@ class ZegoBottomMenuBarConfig {
     this.audienceExtendButtons = const [],
     this.maxCount = 5,
     this.buttonStyle,
+    this.padding,
+    this.backgroundColor,
+    this.height,
   });
 }
 
 /// Extension buttons for the bottom toolbar.
+///
 /// If the built-in buttons do not meet your requirements, you can define your own button to implement custom functionality.
 ///
 /// For example:
+///
 /// In this example, an IconButton with a "+" icon is defined as an extension button.
 /// Its index is set to 2, indicating that it will be inserted after the built-in buttons and previous extension buttons in the bottom toolbar.
 /// When the button is clicked, the callback function will be triggered.
 ///
+///```dart
 /// hostExtendButtons = [
 ///   ZegoMenuBarExtendButton(
 ///    index: 2,
@@ -526,16 +668,21 @@ class ZegoBottomMenuBarConfig {
 ///    ),
 ///  ),
 /// ]
+/// ```
 class ZegoMenuBarExtendButton extends StatelessWidget {
   /// Index of buttons within the entire bottom toolbar, including both built-in buttons and extension buttons.
   ///
-  /// For example, if it's for the host, the index refers to the array index of [hostButtons + hostExtendButtons].
+  /// For example, if it's for the host, the index refers to the array index of [hostButtons] + [hostExtendButtons].
+  ///
   /// If this index is set, the corresponding button will be placed at the specified position in the array of buttons for the corresponding role.
+  ///
   /// If this index is not set, the button will be placed after the built-in buttons.
+  ///
   /// The index starts from 0, and -1 indicates that the button will be placed after the built-in buttons by default.
   ///
-  /// Definition of built-in buttons: an array of type List<ZegoMenuBarButtonName>.
-  /// Definition of extension buttons: an array of type List<ZegoMenuBarExtendButton>.
+  /// Definition of built-in buttons: an array of type List<[ZegoMenuBarButtonName]>.
+  ///
+  /// Definition of extension buttons: an array of type List<[ZegoMenuBarExtendButton]>.
   final int index;
 
   /// button widget
@@ -554,14 +701,19 @@ class ZegoMenuBarExtendButton extends StatelessWidget {
 }
 
 /// Button style for the bottom toolbar, allowing customization of button icons or text.
-/// You can use the [ZegoUIKitPrebuiltLiveStreamingConfig].[bottomMenuBarConfig].[buttonStyle] property to set the properties inside this class.
 ///
-/// Example
+/// You can use the [ZegoUIKitPrebuiltLiveStreamingConfig.bottomMenuBarConfig] -> [ZegoBottomMenuBarConfig.buttonStyle] property to set the properties inside this class.
+///
+/// Example:
+/// ```dart
 /// ZegoBottomMenuBarButtonStyle(
-///   chatEnabledButtonIcon: Icon(Icons.chat), // Customize the enabled chat button icon
-///   chatDisabledButtonIcon: Icon(Icons.chat_disabled), // Customize the disabled chat button icon
+///   // Customize the enabled chat button icon
+///   chatEnabledButtonIcon: const Icon(Icons.chat),
+///   // Customize the disabled chat button icon
+///   chatDisabledButtonIcon: const Icon(Icons.chat_disabled),
 ///   // Customize other button icons...
 /// );
+/// ```
 class ZegoBottomMenuBarButtonStyle {
   /// Icon for enabling chat.
   Widget? chatEnabledButtonIcon;
@@ -660,19 +812,22 @@ class ZegoBottomMenuBarButtonStyle {
 }
 
 /// Configuration for the member list.
-/// You can use the [ZegoUIKitPrebuiltLiveStreamingConfig].[memberListConfig] property to set the properties inside this class.
 ///
-/// If you want to use a custom member list item view, you can set the `itemBuilder` property in `ZegoMemberListConfig`
-/// and pass your custom view's builder function to it.
+/// You can use the [ZegoUIKitPrebuiltLiveStreamingConfig.memberListConfig] property to set the properties inside this class.
+///
+/// If you want to use a custom member list item view, you can set the [ZegoMemberListConfig.itemBuilder] property, and pass your custom view's builder function to it.
+///
 /// For example, suppose you have implemented a `CustomMemberListItem` component that can render a member list item view based on the user information. You can set it up like this:
 ///
+///```dart
 /// ZegoMemberListConfig(
 ///   itemBuilder: (BuildContext context, Size size, ZegoUIKitUser user, Map<String, dynamic> extraInfo) {
 ///     return CustomMemberListItem(user: user);
 ///   },
 /// );
+///```
 ///
-/// In this example, we pass the builder function of the custom view, `CustomMemberListItem`, to the `itemBuilder` property so that the member list item will be rendered using the custom component.
+/// In this example, we pass the builder function of the custom view, `CustomMemberListItem`, to the [itemBuilder] property so that the member list item will be rendered using the custom component.
 ///
 /// In addition, you can listen for item click events through [onClicked].
 class ZegoMemberListConfig {
@@ -702,13 +857,14 @@ class ZegoMemberListConfig {
 }
 
 /// Control options for the bottom-left message list.
-/// This class is used for the [inRoomMessageViewConfig] property of [ZegoUIKitPrebuiltLiveStreamingConfig].
 ///
-/// If you want to customize chat messages, you can specify the [itemBuilder] in [ZegoInRoomMessageViewConfig].
+/// This class is used for the [ZegoUIKitPrebuiltLiveStreamingConfig.inRoomMessageConfig] property.
+///
+/// If you want to customize chat messages, you can specify the [ZegoInRoomMessageConfig.itemBuilder].
 ///
 /// Example:
-///
-/// ZegoInRoomMessageViewConfig(
+/// ```dart
+/// ZegoInRoomMessageConfig(
 ///   itemBuilder: (BuildContext context, ZegoRoomMessage message) {
 ///     return ListTile(
 ///       title: Text(message.message),
@@ -717,18 +873,21 @@ class ZegoMemberListConfig {
 ///   },
 ///   opacity: 0.8,
 /// );
-///
+///```
 /// Of course, we also provide a range of styles for you to customize, such as display size, background color, font style, and so on.
-class ZegoInRoomMessageViewConfig {
+class ZegoInRoomMessageConfig {
+  /// Local message sending callback, This callback method is called when a message is sent successfully or fails to send.
+  void Function(ZegoInRoomMessage message)? onLocalMessageSend;
+
+  /// Use this to customize the style and content of each chat message list item.
+  /// For example, you can modify the background color, opacity, border radius, or add additional information like the sender's level or role.
+  ZegoInRoomMessageItemBuilder? itemBuilder;
+
   /// The width of chat message list view
   double? width;
 
   /// The height of chat message list view
   double? height;
-
-  /// Use this to customize the style and content of each chat message list item.
-  /// For example, you can modify the background color, opacity, border radius, or add additional information like the sender's level or role.
-  ZegoInRoomMessageItemBuilder? itemBuilder;
 
   /// The opacity of the background color for chat message list items, default value of 0.5.
   /// If you set the [backgroundColor], the [opacity] setting will be overridden.
@@ -754,7 +913,7 @@ class ZegoInRoomMessageViewConfig {
   /// The paddings of chat message list items
   EdgeInsetsGeometry? paddings;
 
-  ZegoInRoomMessageViewConfig({
+  ZegoInRoomMessageConfig({
     this.width,
     this.height,
     this.itemBuilder,
@@ -765,21 +924,28 @@ class ZegoInRoomMessageViewConfig {
     this.backgroundColor,
     this.borderRadius,
     this.paddings,
+    this.onLocalMessageSend,
   });
 }
 
+@Deprecated('Since 2.10.7, please use ZegoInRoomMessageConfig instead')
+typedef ZegoInRoomMessageViewConfig = ZegoInRoomMessageConfig;
+
 /// Configuration options for voice changer, beauty effects and reverberation effects.
-/// This class is used for the [effectConfig] property in [ZegoUIKitPrebuiltLiveAudioRoomConfig].
+///
+/// This class is used for the [ZegoUIKitPrebuiltLiveStreamingConfig.effectConfig] property.
 ///
 /// If you want to replace icons and colors to sheet or slider, some of our widgets also provide modification options.
 ///
 /// Example:
 ///
+/// ```dart
 /// ZegoEffectConfig(
 ///   backgroundColor: Colors.black.withOpacity(0.5),
 ///   backIcon: Icon(Icons.arrow_back),
 ///   sliderTextBackgroundColor: Colors.black.withOpacity(0.5),
 /// );
+/// ```
 class ZegoEffectConfig {
   /// List of beauty effects types.
   /// If you don't want a certain effect, simply remove it from the list.
@@ -908,29 +1074,31 @@ class ZegoEffectConfig {
   bool get isSupportReverb => reverbEffect.isNotEmpty;
 }
 
-/// used to configure the parameters related to PK battles
-/// This class is used for the [pkBattleConfig] property of [ZegoUIKitPrebuiltLiveStreamingConfig].
+/// Used to configure the parameters related to PK battles
+///
+/// This class is used for the [ZegoUIKitPrebuiltLiveStreamingConfig.pkBattleConfig] property.
 class ZegoLiveStreamingPKBattleConfig {
   /// The distance that the pkBattleEvents's top edge is inset from the top of the stack.
   /// default is 164.r
   double? pKBattleViewTopPadding;
 
   /// When the connected host gets offline due to exceptions, SDK defaults to show "Host is reconnecting".
-  /// To customize the content that displays when the connected host gets offline, use the [hostReconnectingBuilder].
+  /// To customize the content that displays when the connected host gets offline.
   ZegoLiveStreamingPKBattleHostReconnectingBuilder? hostReconnectingBuilder;
 
-  /// To overlay custom components on the PKBattleView, use the [pkBattleViewForegroundBuilder].
+  /// To overlay custom components on the PKBattleView.
   ZegoLiveStreamingPKBattleViewBuilder? pkBattleViewForegroundBuilder;
 
-  /// To add custom components on the top edge of the PKBattleView, use the [pkBattleViewTopBuilder].
+  /// To add custom components on the top edge of the PKBattleView.
   ZegoLiveStreamingPKBattleViewBuilder? pkBattleViewTopBuilder;
 
-  /// To add custom components on the bottom edge of the PKBattleView, use the [pkBattleViewBottomBuilder].
+  /// To add custom components on the bottom edge of the PKBattleView.
   ZegoLiveStreamingPKBattleViewBuilder? pkBattleViewBottomBuilder;
 }
 
-/// used to configure the parameters related to the preview of the live streaming.
-/// This class is used for the [previewConfig] property of [ZegoUIKitPrebuiltLiveStreamingConfig].
+/// Used to configure the parameters related to the preview of the live streaming.
+///
+/// This class is used for the [ZegoUIKitPrebuiltLiveStreamingConfig.previewConfig] property.
 class ZegoLiveStreamingPreviewConfig {
   /// Whether to show the preview page for the host. The default value is true.
   bool showPreviewForHost;
@@ -938,25 +1106,31 @@ class ZegoLiveStreamingPreviewConfig {
   /// The icon for the page back button.
   ///
   /// You can customize the icon for the page back button as shown in the example below:
+  /// ```dart
   /// ZegoLiveStreamingPreviewConfig(
   ///   pageBackIcon: Icon(Icons.arrow_back),
   /// );
+  /// ```
   Widget? pageBackIcon;
 
   /// The icon for the beauty effect button.
   ///
   /// You can customize the icon for the beauty effect button as shown in the example below:
+  /// ```dart
   /// ZegoLiveStreamingPreviewConfig(
   ///   beautyEffectIcon: Icon(Icons.face),
   /// );
+  /// ```
   Widget? beautyEffectIcon;
 
   /// The icon for the switch camera button.
   ///
   /// You can customize the icon for the switch camera button as shown in the example below:
+  /// ```dart
   /// ZegoLiveStreamingPreviewConfig(
   ///   switchCameraIcon: Icon(Icons.switch_camera),
   /// );
+  /// ```
   Widget? switchCameraIcon;
 
   ZegoLiveStreamingPreviewConfig({
@@ -975,12 +1149,14 @@ class ZegoLiveDurationConfig {
   /// Call timing callback function, called every second.
   ///
   /// Example: Set to automatically leave after 5 minutes.
+  ///```dart
   /// ..durationConfig.isVisible = true
   /// ..durationConfig.onDurationUpdate = (Duration duration) {
   ///   if (duration.inSeconds >= 5 * 60) {
   ///     liveController?.leave(context);
   ///   }
   /// }
+  /// ```
   void Function(Duration)? onDurationUpdate;
 
   ZegoLiveDurationConfig({

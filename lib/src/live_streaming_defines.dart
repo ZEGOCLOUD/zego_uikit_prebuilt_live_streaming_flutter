@@ -18,16 +18,18 @@ enum ZegoLiveStreamingRole {
 
 /// Live streaming state
 ///
-/// When the live streaming is in preview mode, the [ZegoLiveStreamingState] is [idle].
-/// When the live streaming is ongoing, the [ZegoLiveStreamingState] becomes [living].
-/// When the live streaming is in PK mode, the [ZegoLiveStreamingState] becomes [inPKBattle].
-/// When the live streaming is ended, the [ZegoLiveStreamingState] becomes [ended], and after the [ended] state, the [ZegoLiveStreamingState] immediately becomes [idle] (ended means the live streaming has [ended], [idle] means either not started or already ended).
+/// - When the live streaming is in preview mode, the [ZegoLiveStreamingState] is [idle].
+/// - When the live streaming is ongoing, the [ZegoLiveStreamingState] becomes [living].
+/// - When the live streaming is in PK mode, the [ZegoLiveStreamingState] becomes [inPKBattle].
+/// - When the live streaming is ended, the [ZegoLiveStreamingState] becomes [ended], and after the [ended] state, the [ZegoLiveStreamingState] immediately becomes [idle] (ended means the live streaming has [ended], [idle] means either not started or already ended).
 ///
+///```
 ///           ┌─→ PK ───┐
 ///           │         ↓
 /// idle ─> living ─> ended ⌍
 ///  ↑                  │
 ///  └──────────────────┘
+/// ```
 enum ZegoLiveStreamingState {
   /// Idle state, live streaming not started or ended
   idle,
@@ -42,11 +44,12 @@ enum ZegoLiveStreamingState {
   ended,
 }
 
-/// This enum type is used in ZegoUIKitPrebuiltLiveStreamingConfig.bottomMenuBarConfig.
+/// This enum type is used in [ZegoUIKitPrebuiltLiveStreamingConfig.bottomMenuBarConfig].
+///
 /// Please note that these buttons are not role-specific and can be added to anyone's toolbar.
 /// The Live Streaming SDK simply defaults to defining which buttons can be displayed on the corresponding role's toolbar.
 ///
-/// For example, if you don't want co-hosts to control their own microphone, you can exclude the toggleMicrophoneButton from ZegoBottomMenuBarConfig.coHostButtons.
+/// For example, if you don't want co-hosts to control their own microphone, you can exclude the toggleMicrophoneButton from [ZegoBottomMenuBarConfig.coHostButtons].
 enum ZegoMenuBarButtonName {
   /// Button for controlling the camera switch.
   toggleCameraButton,
@@ -67,14 +70,17 @@ enum ZegoMenuBarButtonName {
   coHostControlButton,
 
   /// Button for controlling the display or hiding of the beauty effect adjustment panel.
+  ///
   /// Typically, only the host and co-hosts will be open the camera, so this button is usually displayed on their toolbars.
   beautyEffectButton,
 
   /// Button for controlling the display or hiding of the sound effect adjustment panel.
+  ///
   /// Typically, only the host and co-hosts will be speaking, so this button is usually displayed on their toolbars.
   soundEffectButton,
 
   /// Button to disable/enable chat in the live streaming.
+  ///
   /// This will apply to everyone in the room except the host.
   enableChatButton,
 
@@ -85,10 +91,12 @@ enum ZegoMenuBarButtonName {
   chatButton,
 
   /// Button for minimizing the current [ZegoUIKitPrebuiltLiveStreaming] widget within the app.
+  ///
   /// When clicked, the [ZegoUIKitPrebuiltLiveStreaming] widget will shrink into a small draggable widget within the app.
   minimizingButton,
 
   /// Used in toolbar layout, similar to the [Expanded] widget in Flutter.
+  ///
   /// It is used to expand the spacing between buttons.
   /// Please note that if you are using [index] with [ZegoMenuBarExtendButton], this [expanding] also occupies a position.
   expanding,
@@ -96,6 +104,7 @@ enum ZegoMenuBarButtonName {
 
 /// Dialog information.
 /// Used to control whether certain features display a dialog, such as whether to show a confirmation dialog when request camera permission.
+///
 /// This class is used for setting some text in ZegoInnerText.
 class ZegoDialogInfo {
   /// Dialog title
@@ -118,7 +127,7 @@ class ZegoDialogInfo {
   });
 }
 
-/// a callback function for customizing the start live button
+/// A callback function for customizing the start live button
 /// It should return a Widget that represents the custom start live button.
 typedef ZegoStartLiveButtonBuilder = Widget Function(
   BuildContext context,
@@ -128,15 +137,13 @@ typedef ZegoStartLiveButtonBuilder = Widget Function(
 );
 
 /// This function should return a Widget that is used to customize the UI displayed when the host reconnects in a PK battle.
+///
 /// You can use this callback to customize the UI content to be displayed.
 ///
-/// Parameters:
-/// [context]: The BuildContext object.
-/// [host]: An optional parameter that represents the information of the current host. If there is no host currently, it will be null.
-/// [extraInfo]: A Map object that contains custom information for the PK battle.
-///
-/// Return:
-/// A Widget object that represents the custom component for the PK Battle View.
+/// - [context] is the BuildContext object.
+/// - [host] is an optional parameter that represents the information of the current host. If there is no host currently, it will be null.
+/// - [extraInfo] is a Map object that contains custom information for the PK battle.
+/// - Return a Widget object that represents the custom component for the PK Battle View.
 typedef ZegoLiveStreamingPKBattleHostReconnectingBuilder = Widget Function(
   BuildContext context,
   ZegoUIKitUser? host,
@@ -145,13 +152,10 @@ typedef ZegoLiveStreamingPKBattleHostReconnectingBuilder = Widget Function(
 
 /// This typedef defines a callback function for building custom components for the PK Battle view.
 ///
-/// Parameters:
-/// - [context]: A BuildContext object.
-/// - [hosts]: A list of ZegoUIKitUser objects representing all the hosts in the PK Battle. Each ZegoUIKitUser object represents a host in the PK Battle.
-/// - [extraInfo]: A Map object containing custom information for the PK Battle.
-///
-/// Return Value:
-/// A Widget object representing the custom component for the PK Battle view.
+/// - [context] is a BuildContext object.
+/// - [hosts] is a list of ZegoUIKitUser objects representing all the hosts in the PK Battle. Each ZegoUIKitUser object represents a host in the PK Battle.
+/// - [extraInfo] is a Map object containing custom information for the PK Battle.
+/// - Return a Widget object representing the custom component for the PK Battle view.
 typedef ZegoLiveStreamingPKBattleViewBuilder = Widget Function(
   BuildContext context,
   List<ZegoUIKitUser?> hosts,

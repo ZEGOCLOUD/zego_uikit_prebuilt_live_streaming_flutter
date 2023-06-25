@@ -75,8 +75,13 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(color: Colors.transparent),
-      height: 124.zR,
+      margin: widget.config.topMenuBarConfig.margin,
+      padding: widget.config.bottomMenuBarConfig.padding,
+      decoration: BoxDecoration(
+        color: widget.config.bottomMenuBarConfig.backgroundColor ??
+            Colors.transparent,
+      ),
+      height: widget.config.bottomMenuBarConfig.height ?? 124.zR,
       child: Stack(
         children: [
           if (widget.hostManager.isLocalHost)

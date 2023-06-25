@@ -30,7 +30,7 @@ class ZegoLiveStreamingPKBattleDefaultActions {
 
     final dialogInfo = innerText.incomingPKBattleRequestReceived;
 
-    // TODO add a showing requestReceived dialog flag
+    ZegoLiveStreamingPKBattleManager().showingRequestReceivedDialog = true;
     await showLiveDialog(
       context: context,
       rootNavigator: rootNavigator,
@@ -39,6 +39,7 @@ class ZegoLiveStreamingPKBattleDefaultActions {
           .replaceFirst(innerText.param_1, event.anotherHost.name),
       leftButtonText: dialogInfo.cancelButtonName,
       leftButtonCallback: () {
+        ZegoLiveStreamingPKBattleManager().showingRequestReceivedDialog = false;
         ZegoUIKitPrebuiltLiveStreamingPKService()
             .rejectIncomingPKBattleRequest(event);
         Navigator.of(
@@ -48,6 +49,7 @@ class ZegoLiveStreamingPKBattleDefaultActions {
       },
       rightButtonText: dialogInfo.confirmButtonName,
       rightButtonCallback: () {
+        ZegoLiveStreamingPKBattleManager().showingRequestReceivedDialog = false;
         ZegoUIKitPrebuiltLiveStreamingPKService()
             .acceptIncomingPKBattleRequest(event);
         Navigator.of(
@@ -92,7 +94,7 @@ class ZegoLiveStreamingPKBattleDefaultActions {
       rootNavigator: rootNavigator,
       title: dialogInfo.title,
       content: dialogInfo.message
-        .replaceFirst(innerText.param_1, event.anotherHost.name),
+          .replaceFirst(innerText.param_1, event.anotherHost.name),
       rightButtonText: dialogInfo.confirmButtonName,
     );
   }
