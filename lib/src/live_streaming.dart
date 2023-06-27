@@ -104,7 +104,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     WidgetsBinding.instance?.addObserver(this);
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
-      log('version: zego_uikit_prebuilt_live_streaming: 2.12.1; $version');
+      log('version: zego_uikit_prebuilt_live_streaming: 2.12.3; $version');
     });
 
     isFromMinimizing = PrebuiltLiveStreamingMiniOverlayPageState.idle !=
@@ -186,6 +186,8 @@ class _ZegoUIKitPrebuiltLiveStreamingState
       ZegoLiveStreamingManagers().unintPluginAndManagers();
 
       uninitContext();
+
+      widget.controller?.uninitByPrebuilt();
     } else {
       ZegoLoggerService.logInfo(
         'mini machine state is minimizing, room will not be leave',
@@ -201,8 +203,6 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     }
 
     widget.onDispose?.call();
-
-    widget.controller?.uninitByPrebuilt();
   }
 
   @override

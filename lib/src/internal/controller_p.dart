@@ -11,12 +11,6 @@ mixin ZegoUIKitPrebuiltLiveStreamingControllerPrivate {
   final ValueNotifier<bool> isLeaveRequestingNotifier =
       ValueNotifier<bool>(false);
 
-  ZegoUIKitPrebuiltLiveStreamingConfig? get prebuiltConfig => _prebuiltConfig;
-
-  ZegoLiveConnectManager? get connectManager => _connectManager;
-
-  ZegoLiveHostManager? get hostManager => _hostManager;
-
   /// DO NOT CALL
   /// Call Inside By Prebuilt
   /// prebuilt assign value to internal variables

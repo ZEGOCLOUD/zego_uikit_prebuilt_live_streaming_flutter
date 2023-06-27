@@ -731,7 +731,8 @@ class ZegoLiveConnectManager {
             /// if mic is in mute mode, same as open state
             !ZegoUIKit().getLocalUser().microphoneMuteMode.value)) {
       ZegoLoggerService.logInfo(
-        "co-host's camera and microphone are closed, update connect state to idle",
+        "co-host's camera and microphone are closed, update connect state to idle, "
+        'local user:${ZegoUIKit().getLocalUser()} ',
         tag: 'live streaming',
         subTag: 'connect manager',
       );
@@ -747,7 +748,8 @@ class ZegoLiveConnectManager {
             /// if mic is in mute mode, same as open state
             !ZegoUIKit().getLocalUser().microphoneMuteMode.value)) {
       ZegoLoggerService.logInfo(
-        "co-host's camera and microphone are closed, update connect state to idle",
+        "co-host's camera and microphone are closed, update connect state to idle, "
+        'local user:${ZegoUIKit().getLocalUser()} ',
         tag: 'live streaming',
         subTag: 'connect manager',
       );

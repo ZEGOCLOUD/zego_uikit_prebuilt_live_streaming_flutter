@@ -29,7 +29,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         turnOnMicrophoneWhenJoining = true,
         useSpeakerWhenJoining = true,
         turnOnCameraWhenCohosted = true,
-        stopCoHostingWhenMicCameraOff = true,
+        stopCoHostingWhenMicCameraOff = false,
         markAsLargeRoom = false,
         rootNavigator = false,
         videoConfig = ZegoPrebuiltVideoConfig(),
@@ -77,7 +77,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         turnOnMicrophoneWhenJoining = false,
         useSpeakerWhenJoining = true,
         turnOnCameraWhenCohosted = true,
-        stopCoHostingWhenMicCameraOff = true,
+        stopCoHostingWhenMicCameraOff = false,
         markAsLargeRoom = false,
         rootNavigator = false,
         videoConfig = ZegoPrebuiltVideoConfig(),
@@ -105,7 +105,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
     this.turnOnMicrophoneWhenJoining = true,
     this.useSpeakerWhenJoining = true,
     this.turnOnCameraWhenCohosted = true,
-    this.stopCoHostingWhenMicCameraOff = true,
+    this.stopCoHostingWhenMicCameraOff = false,
     this.markAsLargeRoom = false,
     this.rootNavigator = false,
     this.maxCoHostCount = 12,
@@ -186,7 +186,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   /// whether to enable the camera by default when you be co-host, the default value is true
   bool turnOnCameraWhenCohosted;
 
-  /// controls whether to automatically stop co-hosting when both the camera and microphone are turned off.
+  /// controls whether to automatically stop co-hosting when both the camera and microphone are turned off, the default value is false.
   ///
   /// If the value is set to true, the user will stop co-hosting automatically when both camera and microphone are off.
   /// If the value is set to false, the user will keep co-hosting until manually stop co-hosting by clicking the "End" button.
@@ -410,14 +410,23 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   ///
   /// You can perform business-related prompts or other actions in this callback.
   ///
-  /// The default behavior is to return to the previous page. If you override this callback, you must perform the page navigation yourself, otherwise the user will remain on the live streaming page.
-  VoidCallback? onLeaveLiveStreaming;
+  /// The default behavior is return to the previous page while it was in a normal state. If you override this callback, you must perform the page navigation yourself while it was in a normal state, otherwise the user will remain on the live streaming page.
+  ///
+  /// The [isFromMinimizing] it means that the user left the chat room while it was in a minimized state.
+  /// You **can not** return to the previous page while it was **in a minimized state**!!!
+  /// On the other hand, if the value of the parameter is false, it means that the user left the chat room while it was in a normal state (i.e., not minimized).
+  void Function(bool isFromMinimizing)? onLeaveLiveStreaming;
 
   /// This callback method is called when live streaming ended(all users in live streaming will received).
   ///
-  /// The default behavior is to return to the previous page. If you override this callback, you must perform the page navigation yourself, otherwise the user will remain on the live streaming page.
-  VoidCallback? onLiveStreamingEnded;
+  /// The default behavior is return to the previous page while it was in a normal state. If you override this callback, you must perform the page navigation yourself while it was in a normal state, otherwise the user will remain on the live streaming page.
+  ///
+  /// The [isFromMinimizing] it means that the user left the chat room while it was in a minimized state.
+  /// You **can not** return to the previous page while it was **in a minimized state**!!!
+  /// On the other hand, if the value of the parameter is false, it means that the user left the chat room while it was in a normal state (i.e., not minimized).
+  void Function(bool isFromMinimizing)? onLiveStreamingEnded;
 
+  /// This callback method is called when live streaming state update.
   void Function(ZegoLiveStreamingState state)? onLiveStreamingStateUpdate;
 
   /// This callback method is called when someone requests to open your camera, typically when the host wants to open your camera.
@@ -560,6 +569,7 @@ class ZegoTopMenuBarConfig {
     this.buttons = const [],
     this.onHostAvatarClicked,
     this.padding,
+    this.margin,
     this.backgroundColor,
     this.height,
   });
@@ -641,6 +651,7 @@ class ZegoBottomMenuBarConfig {
     this.maxCount = 5,
     this.buttonStyle,
     this.padding,
+    this.margin,
     this.backgroundColor,
     this.height,
   });

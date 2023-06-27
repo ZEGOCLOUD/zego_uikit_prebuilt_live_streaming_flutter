@@ -6,9 +6,11 @@ import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/core/core_managers.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/mini_overlay_machine.dart';
 
 part 'package:zego_uikit_prebuilt_live_streaming/src/internal/controller_p.dart';
 
@@ -37,9 +39,9 @@ class ZegoUIKitPrebuiltLiveStreamingController
     BuildContext context, {
     bool showConfirmation = false,
   }) async {
-    if (null == hostManager) {
+    if (null == _hostManager) {
       ZegoLoggerService.logInfo(
-        'leave, param is invalid, hostManager:$hostManager',
+        'leave, param is invalid, hostManager:$_hostManager',
         tag: 'live streaming',
         subTag: 'controller',
       );
@@ -68,7 +70,7 @@ class ZegoUIKitPrebuiltLiveStreamingController
       ///  if there is a user-defined event before the click,
       ///  wait the synchronize execution result
       final canLeave =
-          await prebuiltConfig?.onLeaveConfirmation?.call(context) ?? true;
+          await _prebuiltConfig?.onLeaveConfirmation?.call(context) ?? true;
       if (!canLeave) {
         ZegoLoggerService.logInfo(
           'leave, refuse',
@@ -82,15 +84,18 @@ class ZegoUIKitPrebuiltLiveStreamingController
       }
     }
 
-    if (hostManager?.isLocalHost ?? false) {
+    if (_hostManager?.isLocalHost ?? false) {
       /// live is ready to end, host will update if receive property notify
       /// so need to keep current host value, DISABLE local host value UPDATE
-      hostManager?.hostUpdateEnabledNotifier.value = false;
+      _hostManager?.hostUpdateEnabledNotifier.value = false;
       await ZegoUIKit().updateRoomProperties({
         RoomPropertyKey.host.text: '',
         RoomPropertyKey.liveStatus.text: LiveStatus.ended.index.toString()
       });
     }
+
+    await ZegoUIKit().resetSoundEffect();
+    await ZegoUIKit().resetBeautyEffect();
 
     final result = await ZegoUIKit().leaveRoom().then((result) {
       ZegoLoggerService.logInfo(
@@ -102,27 +107,56 @@ class ZegoUIKitPrebuiltLiveStreamingController
       return 0 == result.errorCode;
     });
 
-    if (hostManager?.isLocalHost ?? false) {
-      /// host end/leave live streaming
-      if (prebuiltConfig?.onLiveStreamingEnded != null) {
-        prebuiltConfig?.onLiveStreamingEnded?.call();
+    final isFromMinimizing =
+        PrebuiltLiveStreamingMiniOverlayPageState.minimizing ==
+            ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine().state();
+    if (isFromMinimizing) {
+      /// leave in minimizing
+      if (ZegoPluginAdapter().getPlugin(ZegoUIKitPluginType.signaling) !=
+          null) {
+        await ZegoUIKit().getSignalingPlugin().leaveRoom();
+        await ZegoUIKit().getSignalingPlugin().logout();
+        await ZegoUIKit().getSignalingPlugin().uninit();
+      }
+
+      await ZegoLiveStreamingManagers().unintPluginAndManagers();
+
+      ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine().changeState(
+        PrebuiltLiveStreamingMiniOverlayPageState.idle,
+      );
+
+      if (_hostManager?.isLocalHost ?? false) {
+        /// host end/leave live streaming
+        _prebuiltConfig?.onLiveStreamingEnded?.call(isFromMinimizing);
       } else {
-        Navigator.of(
-          context,
-          rootNavigator: prebuiltConfig?.rootNavigator ?? true,
-        ).pop();
+        /// audience leave live streaming
+        _prebuiltConfig?.onLeaveLiveStreaming?.call(isFromMinimizing);
       }
     } else {
-      /// audience leave live streaming
-      if (prebuiltConfig?.onLeaveLiveStreaming != null) {
-        prebuiltConfig?.onLeaveLiveStreaming?.call();
+      if (_hostManager?.isLocalHost ?? false) {
+        /// host end/leave live streaming
+        if (_prebuiltConfig?.onLiveStreamingEnded != null) {
+          _prebuiltConfig?.onLiveStreamingEnded?.call(isFromMinimizing);
+        } else {
+          Navigator.of(
+            context,
+            rootNavigator: _prebuiltConfig?.rootNavigator ?? true,
+          ).pop();
+        }
       } else {
-        Navigator.of(
-          context,
-          rootNavigator: prebuiltConfig?.rootNavigator ?? true,
-        ).pop();
+        /// audience leave live streaming
+        if (_prebuiltConfig?.onLeaveLiveStreaming != null) {
+          _prebuiltConfig?.onLeaveLiveStreaming?.call(isFromMinimizing);
+        } else {
+          Navigator.of(
+            context,
+            rootNavigator: _prebuiltConfig?.rootNavigator ?? true,
+          ).pop();
+        }
       }
     }
+
+    uninitByPrebuilt();
 
     ZegoLoggerService.logInfo(
       'leave, finished',
@@ -135,9 +169,9 @@ class ZegoUIKitPrebuiltLiveStreamingController
 
   /// remove co-host, make co-host to be a audience
   Future<bool> removeCoHost(ZegoUIKitUser coHost) async {
-    if (null == hostManager || null == connectManager) {
+    if (null == _hostManager || null == _connectManager) {
       ZegoLoggerService.logInfo(
-        'kick co-host, param is invalid, hostManager:$hostManager, connectManager:$connectManager',
+        'kick co-host, param is invalid, hostManager:$_hostManager, connectManager:$_connectManager',
         tag: 'live streaming',
         subTag: 'controller',
       );
@@ -145,7 +179,7 @@ class ZegoUIKitPrebuiltLiveStreamingController
       return false;
     }
 
-    if (!hostManager!.isLocalHost) {
+    if (!_hostManager!.isLocalHost) {
       ZegoLoggerService.logInfo(
         'kick co-host, local is not a host',
         tag: 'live streaming',
@@ -155,14 +189,14 @@ class ZegoUIKitPrebuiltLiveStreamingController
       return false;
     }
 
-    return connectManager!.kickCoHost(coHost);
+    return _connectManager!.kickCoHost(coHost);
   }
 
   /// invite audience to be a co-host
   Future<void> makeAudienceCoHost(ZegoUIKitUser invitee) async {
-    if (null == hostManager || null == connectManager) {
+    if (null == _hostManager || null == _connectManager) {
       ZegoLoggerService.logInfo(
-        'kick co-host, param is invalid, hostManager:$hostManager, connectManager:$connectManager',
+        'kick co-host, param is invalid, hostManager:$_hostManager, connectManager:$_connectManager',
         tag: 'live streaming',
         subTag: 'controller',
       );
@@ -170,7 +204,7 @@ class ZegoUIKitPrebuiltLiveStreamingController
       return;
     }
 
-    if (!hostManager!.isLocalHost) {
+    if (!_hostManager!.isLocalHost) {
       ZegoLoggerService.logInfo(
         'kick co-host, local is not a host',
         tag: 'live streaming',
@@ -180,6 +214,6 @@ class ZegoUIKitPrebuiltLiveStreamingController
       return;
     }
 
-    return connectManager!.inviteAudienceConnect(invitee);
+    return _connectManager!.inviteAudienceConnect(invitee);
   }
 }

@@ -1,3 +1,10 @@
+## 2.12.3
+- Fixed an issue where co-host would be stop co-hosting when the host turned off their microphone.
+- Changed the default behavior for co-host to not stop co-hosting when turning off their camera or microphone.
+
+## 2.12.2
+- Support for calling the leave method of the controller to exit the live stream while in-app minimization.
+
 ## 2.12.1
 - Optimizing timing function.
 
@@ -53,20 +60,20 @@
 - Added click event to the item of member list.
 
 ## 2.8.3
-- support config view size for message list.
+- Support config view size for message list.
 - Update dependencies.
 
 ## 2.8.2
-- fix the issue of conflict with extension key of the `flutter_screenutil` package.
+- Fix the issue of conflict with extension key of the `flutter_screenutil` package.
 
 ## 2.8.1
-- fix some user login status issues when used `zego_uikit_prebuilt_live_streaming` with `zego_zimkit`
+- Fix some user login status issues when used `zego_uikit_prebuilt_live_streaming` with `zego_zimkit`
 
 ## 2.8.0
-- add a "removeCoHost" method to the controller that allows the host remove a co-host.
-- add a "makeAudienceCoHost" method to the controller that allows the host invite an audience to be a co-host.
-- supports PK in-app minimization.
-- support foreground in config，if you need to nest some widgets in [ZegoUIKitPrebuiltLiveStreaming], please use [foreground] nesting, otherwise these widgets will be lost when you minimize and restore the [ZegoUIKitPrebuiltLiveStreaming]
+- Add a "removeCoHost" method to the controller that allows the host remove a co-host.
+- Add a "makeAudienceCoHost" method to the controller that allows the host invite an audience to be a co-host.
+- Supports PK in-app minimization.
+- Support foreground in config，if you need to nest some widgets in [ZegoUIKitPrebuiltLiveStreaming], please use [foreground] nesting, otherwise these widgets will be lost when you minimize and restore the [ZegoUIKitPrebuiltLiveStreaming]
 
 ## 2.7.0
 - supports in-app minimization.
@@ -89,27 +96,27 @@
 - Update dependencies
 
 ## 2.5.7
-- switch from local timing to server-based timing for the live broadcast. additionally, if the live starts again, the timer will reset.
+- Switch from local timing to server-based timing for the live broadcast. additionally, if the live starts again, the timer will reset.
 
 ## 2.5.6
-- deprecate flutter_screenutil_zego package
+- Deprecate flutter_screenutil_zego package
 
 ## 2.5.5
-- supports specifying extend button position in the bottom bar by an index, allowing it to be positioned before the built-in button.
+- Supports specifying extend button position in the bottom bar by an index, allowing it to be positioned before the built-in button.
 
 ## 2.5.4
-- rename style variable
+- Rename style variable
 
 ## 2.5.3
 - Support customizing the style of buttons (icons and text) in the bottom toolbar.
 
 ## 2.5.2
-- support close duration in config
+- Support close duration in config
 
 ## 2.5.1
-- add a "leave" method to the controller that allows for actively leave the current live.
-- support tracking the duration of the live locally.
-- fix some beauty bugs
+- Add a "leave" method to the controller that allows for actively leave the current live.
+- Support tracking the duration of the live locally.
+- Fix some beauty bugs
 
 ## 2.5.0
 - support advance beauty

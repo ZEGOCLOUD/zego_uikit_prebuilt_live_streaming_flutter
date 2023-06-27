@@ -95,7 +95,7 @@ class ZegoLeaveStreamingButtonState extends State<ZegoLeaveStreamingButton> {
         if (widget.hostManager.isLocalHost) {
           /// host end/leave live streaming
           if (widget.config.onLiveStreamingEnded != null) {
-            widget.config.onLiveStreamingEnded!.call();
+            widget.config.onLiveStreamingEnded!.call(false);
           } else {
             Navigator.of(
               context,
@@ -105,7 +105,7 @@ class ZegoLeaveStreamingButtonState extends State<ZegoLeaveStreamingButton> {
         } else {
           /// audience leave live streaming
           if (widget.config.onLeaveLiveStreaming != null) {
-            widget.config.onLeaveLiveStreaming!.call();
+            widget.config.onLeaveLiveStreaming!.call(false);
           } else {
             Navigator.of(
               context,

@@ -38,6 +38,7 @@ class ZegoUIKitPrebuiltLiveStreamingMiniOverlayPage extends StatefulWidget {
     this.builder,
     this.foregroundBuilder,
     this.backgroundBuilder,
+    this.foreground,
     this.avatarBuilder,
   }) : super(key: key);
 
@@ -51,10 +52,12 @@ class ZegoUIKitPrebuiltLiveStreamingMiniOverlayPage extends StatefulWidget {
   final bool showUserName;
   final BuildContext Function() contextQuery;
 
-  final Widget Function(ZegoUIKitUser? activeUser)? builder;
+  final ZegoAvatarBuilder? avatarBuilder;
   final ZegoAudioVideoViewForegroundBuilder? foregroundBuilder;
   final ZegoAudioVideoViewBackgroundBuilder? backgroundBuilder;
-  final ZegoAvatarBuilder? avatarBuilder;
+
+  final Widget? foreground;
+  final Widget Function(ZegoUIKitUser? activeUser)? builder;
 
   @override
   ZegoUIKitPrebuiltLiveStreamingMiniOverlayPageState createState() =>
@@ -217,7 +220,8 @@ class ZegoUIKitPrebuiltLiveStreamingMiniOverlayPageState
                       valueListenable: activeUserIDNotifier,
                       builder: (context, activeUserID, _) {
                         return minimizingUserWidget(
-                            ZegoUIKit().getUser(activeUserID ?? ''));
+                          ZegoUIKit().getUser(activeUserID ?? ''),
+                        );
                       },
                     ),
             ),
@@ -257,6 +261,7 @@ class ZegoUIKitPrebuiltLiveStreamingMiniOverlayPageState
           ),
         ),
         durationTimeBoard(),
+        widget.foreground ?? Container(),
       ],
     );
   }
@@ -282,6 +287,7 @@ class ZegoUIKitPrebuiltLiveStreamingMiniOverlayPageState
             userName(activeUser),
             durationTimeBoard(),
             redPoint(),
+            widget.foreground ?? Container(),
           ],
         );
   }

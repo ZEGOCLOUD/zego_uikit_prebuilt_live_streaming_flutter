@@ -627,7 +627,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
 
       if (LiveStatus.ended == widget.liveStatusManager.notifier.value) {
         if (widget.config.onLiveStreamingEnded != null) {
-          widget.config.onLiveStreamingEnded!.call();
+          widget.config.onLiveStreamingEnded!.call(false);
         }
       }
     }
@@ -653,9 +653,10 @@ class ZegoLivePageState extends State<ZegoLivePage>
     }
   }
 
-  Future<void> onTurnOnYourMicrophoneRequest(String fromUserID) async {
+  Future<void> onTurnOnYourMicrophoneRequest(
+      ZegoUIKitReceiveTurnOnLocalMicrophoneEvent event) async {
     ZegoLoggerService.logInfo(
-      'onTurnOnYourMicrophoneRequest, fromUserID:$fromUserID',
+      'onTurnOnYourMicrophoneRequest, event:$event',
       tag: 'live streaming',
       subTag: 'live page',
     );
@@ -672,7 +673,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
     if (canMicrophoneTurnOnByOthers) {
       ZegoUIKit().turnMicrophoneOn(
         true,
-        muteMode: !widget.config.stopCoHostingWhenMicCameraOff,
+        muteMode: event.muteMode,
       );
     }
   }
