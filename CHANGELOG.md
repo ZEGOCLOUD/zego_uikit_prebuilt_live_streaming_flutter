@@ -1,3 +1,12 @@
+## 2.12.6
+- update dependency
+
+## 2.12.5
+- Update dependencies
+
+## 2.12.4
+- Fixed the issue where the bottom toolbar margin setting was not taking effect.
+
 ## 2.12.3
 - Fixed an issue where co-host would be stop co-hosting when the host turned off their microphone.
 - Changed the default behavior for co-host to not stop co-hosting when turning off their camera or microphone.

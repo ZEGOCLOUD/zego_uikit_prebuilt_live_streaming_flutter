@@ -2,7 +2,6 @@
 import 'dart:async';
 import 'dart:core';
 import 'dart:developer';
-import 'dart:io' show Platform;
 
 // Flutter imports:
 import 'package:flutter/material.dart';
@@ -104,7 +103,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     WidgetsBinding.instance?.addObserver(this);
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
-      log('version: zego_uikit_prebuilt_live_streaming: 2.12.3; $version');
+      log('version: zego_uikit_prebuilt_live_streaming: 2.12.6; $version');
     });
 
     isFromMinimizing = PrebuiltLiveStreamingMiniOverlayPageState.idle !=
@@ -314,15 +313,10 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     if (null != widget.config.videoConfig.fps) {
       videoConfig.fps = widget.config.videoConfig.fps!;
     }
-    ZegoUIKit().setVideoConfig(videoConfig);
+    ZegoUIKit().setVideoConfig(videoConfig, ZegoStreamType.main);
 
     if (ZegoPluginAdapter().getPlugin(ZegoUIKitPluginType.beauty) != null) {
-      var type = ZegoVideoBufferType.CVPixelBuffer;
-      if (Platform.isAndroid) {
-        type = ZegoVideoBufferType.GLTexture2D;
-      }
-      ZegoUIKit().enableCustomVideoProcessing(
-          true, ZegoCustomVideoProcessConfig(type));
+      ZegoUIKit().enableCustomVideoProcessing(true);
     }
 
     final useBeautyEffect = widget.config.bottomMenuBarConfig.hostButtons

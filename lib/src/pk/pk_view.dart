@@ -352,7 +352,8 @@ class _ZegoLiveStreamingPKBattleViewState
 
     final screenSize = MediaQuery.of(context).size;
     final isSmallView = maxHeight < screenSize.height / 2;
-    final avatarSize = isSmallView ? Size(110.zR, 110.zR) : Size(258.zR, 258.zR);
+    final avatarSize =
+        isSmallView ? Size(110.zR, 110.zR) : Size(258.zR, 258.zR);
 
     return Positioned(
       top: (maxHeight - avatarSize.height) / 2,
@@ -380,7 +381,7 @@ class _ZegoLiveStreamingPKBattleViewState
     subscriptions.addAll([
       ZegoUIKit().getReceiveSEIStream().where((event) {
         return event.typeIdentifier ==
-            ZegoUIKitInnerSEIType.zegoMixerDeviceState.name;
+            ZegoUIKitInnerSEIType.mixerDeviceState.name;
       }).listen(onReceiveSEIEvent),
     ]);
 

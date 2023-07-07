@@ -196,7 +196,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
           return StreamBuilder<List<ZegoUIKitUser>>(
             stream: ZegoUIKit().getScreenSharingListStream(),
             builder: (context, snapshot) {
-              final screenSharingUsers = snapshot.data ?? [];
+              final screenSharingUsers = ZegoUIKit().getScreenSharingList();
               return ValueListenableBuilder<ZegoUIKitUser?>(
                 valueListenable: widget.hostManager.notifier,
                 builder: (context, host, _) {

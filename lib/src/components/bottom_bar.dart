@@ -75,7 +75,7 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: widget.config.topMenuBarConfig.margin,
+      margin: widget.config.bottomMenuBarConfig.margin,
       padding: widget.config.bottomMenuBarConfig.padding,
       decoration: BoxDecoration(
         color: widget.config.bottomMenuBarConfig.backgroundColor ??
