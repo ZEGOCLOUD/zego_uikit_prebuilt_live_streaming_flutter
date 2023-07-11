@@ -171,7 +171,7 @@ class _ZegoCoHostControlButtonState extends State<ZegoCoHostControlButton> {
       icon: null != widget.endCoHostButtonIcon?.icon
           ? widget.endCoHostButtonIcon
           : buttonIcon,
-      buttonRadius: 72.zR / 2,
+      borderRadius: 72.zR / 2,
       buttonSize: Size(168.zR, 72.zR),
       iconSize: Size(48.zR, 48.zR),
       iconTextSpacing: 12.zR,

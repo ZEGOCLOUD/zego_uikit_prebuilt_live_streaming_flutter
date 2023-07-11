@@ -103,7 +103,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     WidgetsBinding.instance?.addObserver(this);
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
-      log('version: zego_uikit_prebuilt_live_streaming: 2.12.6; $version');
+      log('version: zego_uikit_prebuilt_live_streaming: 2.12.8; $version');
     });
 
     isFromMinimizing = PrebuiltLiveStreamingMiniOverlayPageState.idle !=
