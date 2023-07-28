@@ -22,7 +22,7 @@ class ZegoLiveStatusManager {
   final ZegoUIKitPrebuiltLiveStreamingConfig config;
 
   bool _initialized = false;
-  
+
   ZegoLiveStatusManager({
     required this.hostManager,
     required this.config,
@@ -34,19 +34,6 @@ class ZegoLiveStatusManager {
   /// internal variables
   var notifier = ValueNotifier<LiveStatus>(LiveStatus.notStart);
   List<StreamSubscription<dynamic>?> subscriptions = [];
-
-  bool get isLocalAudience =>
-      !hostManager.isLocalHost && !isCoHost(ZegoUIKit().getLocalUser());
-
-  bool isCoHost(ZegoUIKitUser user) {
-    if (hostManager.notifier.value?.id == user.id) {
-      /// host also open camera/microphone
-      return false;
-    }
-
-    return ZegoUIKit().getCameraStateNotifier(user.id).value ||
-        ZegoUIKit().getMicrophoneStateNotifier(user.id).value;
-  }
 
   Future<void> init() async {
     if (_initialized) {

@@ -12,14 +12,20 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/mini_overlay_machine.dart';
 
-part 'package:zego_uikit_prebuilt_live_streaming/src/internal/controller_p.dart';
+import 'components/message/enable_property.dart';
+
+part 'package:zego_uikit_prebuilt_live_streaming/src/controller/controller.message.dart';
+
+part 'package:zego_uikit_prebuilt_live_streaming/src/controller/controller_p.dart';
 
 /// Used to control the live streaming functionality.
 ///
 /// If the default live streaming UI and interactions do not meet your requirements, you can use this [ZegoUIKitPrebuiltLiveStreamingController] to actively control the business logic.
 /// This class is used by setting the [ZegoUIKitPrebuiltLiveStreaming.controller] parameter in the constructor of [ZegoUIKitPrebuiltLiveStreaming].
 class ZegoUIKitPrebuiltLiveStreamingController
-    with ZegoUIKitPrebuiltLiveStreamingControllerPrivate {
+    with
+        ZegoUIKitPrebuiltLiveStreamingControllerPrivate,
+        ZegoLiveStreamingControllerMessage {
   /// This function is used to specify whether a certain user enters or exits full-screen mode during screen sharing.
   ///
   /// You need to provide the user's ID [userID] to determine which user to perform the operation on.
@@ -115,7 +121,9 @@ class ZegoUIKitPrebuiltLiveStreamingController
       if (ZegoPluginAdapter().getPlugin(ZegoUIKitPluginType.signaling) !=
           null) {
         await ZegoUIKit().getSignalingPlugin().leaveRoom();
-        await ZegoUIKit().getSignalingPlugin().logout();
+
+        /// not need logout
+        // await ZegoUIKit().getSignalingPlugin().logout();
         await ZegoUIKit().getSignalingPlugin().uninit();
       }
 
@@ -167,7 +175,7 @@ class ZegoUIKitPrebuiltLiveStreamingController
     return result;
   }
 
-  /// remove co-host, make co-host to be a audience
+  /// host remove the co-host, make co-host to be a audience
   Future<bool> removeCoHost(ZegoUIKitUser coHost) async {
     if (null == _hostManager || null == _connectManager) {
       ZegoLoggerService.logInfo(
@@ -192,7 +200,7 @@ class ZegoUIKitPrebuiltLiveStreamingController
     return _connectManager!.kickCoHost(coHost);
   }
 
-  /// invite audience to be a co-host
+  /// host invite audience to be a co-host
   Future<void> makeAudienceCoHost(ZegoUIKitUser invitee) async {
     if (null == _hostManager || null == _connectManager) {
       ZegoLoggerService.logInfo(

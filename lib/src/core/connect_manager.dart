@@ -11,8 +11,8 @@ import 'package:zego_uikit/zego_uikit.dart';
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/dialogs.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/permissions.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/components/toast.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/toast.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
@@ -72,18 +72,38 @@ class ZegoLiveConnectManager {
   List<String> audienceIDsOfInvitingConnect = [];
   List<StreamSubscription<dynamic>?> subscriptions = [];
 
+  ZegoLiveStreamingRole get localRole {
+    var role = ZegoLiveStreamingRole.audience;
+    if (hostManager.isLocalHost) {
+      role = ZegoLiveStreamingRole.host;
+    } else if (isLocalAudience) {
+      role = ZegoLiveStreamingRole.audience;
+    }
+
+    return role;
+  }
+
+  bool get isLocalAudience =>
+      !hostManager.isLocalHost && !isCoHost(ZegoUIKit().getLocalUser());
+
   bool isCoHost(ZegoUIKitUser user) {
     if (hostManager.notifier.value?.id == user.id) {
       /// host also open camera/microphone
       return false;
     }
 
-    return user.camera.value ||
-        (user.microphone.value ||
+    /// if camera is in mute mode, same as open state
+    final isCameraOpen = user.camera.value || user.cameraMuteMode.value;
 
-            /// if mic is in mute mode, same as open state
-            user.microphoneMuteMode.value);
+    /// if microphone is in mute mode, same as open state
+    final isMicrophoneOpen =
+        user.microphone.value || user.microphoneMuteMode.value;
+
+    return isCameraOpen || isMicrophoneOpen;
   }
+
+  bool isLocalConnected() =>
+      audienceLocalConnectStateNotifier.value == ConnectState.connected;
 
   void init() {
     if (_initialized) {
@@ -823,6 +843,13 @@ extension ZegoLiveConnectManagerCoHostCount on ZegoLiveConnectManager {
       user.camera.removeListener(onUserCameraStateChanged);
       user.microphone.removeListener(onUserMicrophoneStateChanged);
     }
+
+    final userIDs = users.map((e) => e.id).toList();
+    requestCoHostUsersNotifier.value =
+        List<ZegoUIKitUser>.from(requestCoHostUsersNotifier.value)
+          ..removeWhere(
+            (user) => userIDs.contains(user.id),
+          );
   }
 
   void onUserCameraStateChanged() {

@@ -5,26 +5,27 @@ import 'package:flutter/material.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
-import 'package:zego_uikit_prebuilt_live_streaming/src/components/message/in_room_live_commenting_view_item.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/message/view_item.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
 
 /// @nodoc
-class ZegoInRoomLiveCommentingView extends StatefulWidget {
+class ZegoInRoomLiveMessageView extends StatefulWidget {
   final ZegoInRoomMessageViewConfig? config;
+  final ZegoAvatarBuilder? avatarBuilder;
 
-  const ZegoInRoomLiveCommentingView({
+  const ZegoInRoomLiveMessageView({
     Key? key,
     this.config,
+    this.avatarBuilder,
   }) : super(key: key);
 
   @override
-  State<ZegoInRoomLiveCommentingView> createState() =>
-      _ZegoInRoomLiveCommentingViewState();
+  State<ZegoInRoomLiveMessageView> createState() =>
+      _ZegoInRoomLiveMessageViewState();
 }
 
 /// @nodoc
-class _ZegoInRoomLiveCommentingViewState
-    extends State<ZegoInRoomLiveCommentingView> {
+class _ZegoInRoomLiveMessageViewState extends State<ZegoInRoomLiveMessageView> {
   @override
   Widget build(BuildContext context) {
     return Directionality(
@@ -34,10 +35,12 @@ class _ZegoInRoomLiveCommentingViewState
         stream: ZegoUIKit().getInRoomMessageListStream(),
         itemBuilder: widget.config?.itemBuilder ??
             (BuildContext context, ZegoInRoomMessage message, _) {
-              return ZegoInRoomLiveCommentingViewItem(
-                user: message.user,
-                message: message.message,
+              return ZegoInRoomLiveMessageViewItem(
+                message: message,
                 config: widget.config,
+                avatarBuilder: widget.avatarBuilder,
+                showName: widget.config?.showName ?? true,
+                showAvatar: widget.config?.showAvatar ?? true,
               );
             },
       ),

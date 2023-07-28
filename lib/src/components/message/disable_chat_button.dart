@@ -42,12 +42,9 @@ class _ZegoDisableChatButtonState extends State<ZegoDisableChatButton> {
     final containerSize = widget.buttonSize ?? Size(96.zR, 96.zR);
     final sizeBoxSize = widget.iconSize ?? Size(56.zR, 56.zR);
 
-    isChatEnabled = ZegoUIKit()
-            .getRoomProperties()
-            .containsKey(disableChatRoomPropertyKey)
-        ? toBoolean(
-            ZegoUIKit().getRoomProperties()[disableChatRoomPropertyKey]!.value)
-        : true;
+    isChatEnabled = toBoolean(
+        ZegoUIKit().getRoomProperties()[disableChatRoomPropertyKey]?.value ??
+            'true');
 
     final icon = isChatEnabled ? widget.enableIcon : widget.disableIcon;
     icon?.icon ??= isChatEnabled
@@ -73,8 +70,16 @@ class _ZegoDisableChatButtonState extends State<ZegoDisableChatButton> {
         isUpdatingRoomProperty = true;
         ZegoUIKit()
             .setRoomProperty(
-                disableChatRoomPropertyKey, isChatEnabled.toString())
+          disableChatRoomPropertyKey,
+          isChatEnabled.toString(),
+        )
             .then((value) {
+          ZegoLoggerService.logInfo(
+            'chat enable property update to $isChatEnabled',
+            tag: 'live streaming',
+            subTag: 'disable chat button',
+          );
+
           isUpdatingRoomProperty = false;
         });
 

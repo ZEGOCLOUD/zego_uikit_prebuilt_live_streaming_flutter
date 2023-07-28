@@ -1,5 +1,7 @@
 // Flutter imports:
 // Project imports:
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect_manager.dart';
@@ -9,6 +11,8 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/core/live_status_manager.
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/plugins.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/prebuilt_data.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/zego_uikit_prebuilt_live_streaming.dart';
+
+part 'core_manager.audiovideo.dart';
 
 class ZegoLiveStreamingManagers {
   factory ZegoLiveStreamingManagers() => _instance;
@@ -86,6 +90,8 @@ class ZegoLiveStreamingManagers {
 
     hostManager!.setConnectManger(connectManager!);
     liveStatusManager!.setConnectManger(connectManager!);
+
+    initAudioVideoManagers();
   }
 
   void updateContextQuery(BuildContext Function()? contextQuery) {
@@ -118,6 +124,11 @@ class ZegoLiveStreamingManagers {
 
     _initialized = false;
 
+    for (final subscription in subscriptions) {
+      subscription?.cancel();
+    }
+
+    uninitAudioVideoManagers();
     await ZegoLiveStreamingPKBattleManager().uninit();
 
     await plugins?.uninit();
@@ -136,6 +147,8 @@ class ZegoLiveStreamingManagers {
   }
 
   bool _initialized = false;
+  List<StreamSubscription<dynamic>?> subscriptions = [];
+
   ZegoLiveHostManager? hostManager;
   ZegoLiveStatusManager? liveStatusManager;
   ZegoLiveDurationManager? liveDurationManager;

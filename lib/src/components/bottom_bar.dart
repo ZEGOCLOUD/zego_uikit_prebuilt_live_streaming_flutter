@@ -10,7 +10,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/components/effects/beauty
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/effects/sound_effect_button.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/leave_button.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/message/disable_chat_button.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/components/message/in_room_message_button.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/message/input_board_button.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/co_host_control_button.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect_manager.dart';
@@ -147,7 +147,7 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             zegoLiveButtonPadding,
-            ZegoInRoomMessageButton(
+            ZegoInRoomMessageInputBoardButton(
               translationText: widget.config.innerText,
               hostManager: widget.hostManager,
               onSheetPopUp: (int key) {
@@ -636,7 +636,7 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
         );
       case ZegoMenuBarButtonName.chatButton:
         if (widget.config.bottomMenuBarConfig.showInRoomMessageButton) {
-          return ZegoInRoomMessageButton(
+          return ZegoInRoomMessageInputBoardButton(
             translationText: widget.config.innerText,
             hostManager: widget.hostManager,
             onSheetPopUp: (int key) {

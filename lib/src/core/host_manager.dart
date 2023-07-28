@@ -19,7 +19,7 @@ class ZegoLiveHostManager {
   final ZegoUIKitPrebuiltLiveStreamingConfig config;
 
   bool _initialized = false;
-  
+
   ZegoLiveHostManager({required this.config}) {
     configIsHost = ZegoLiveStreamingRole.host == config.role;
 
@@ -43,6 +43,12 @@ class ZegoLiveHostManager {
       // if room 'host' property received, checkout notifier value
       (notifier.value != null &&
           ZegoUIKit().getLocalUser().id == notifier.value!.id);
+
+  bool isHost(ZegoUIKitUser user) {
+    return
+        // if room 'host' property received, checkout notifier value
+        notifier.value != null && user.id == notifier.value!.id;
+  }
 
   Future<void> init() async {
     if (_initialized) {

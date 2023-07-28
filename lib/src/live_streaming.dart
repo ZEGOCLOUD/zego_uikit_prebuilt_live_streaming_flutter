@@ -103,7 +103,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     WidgetsBinding.instance?.addObserver(this);
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
-      log('version: zego_uikit_prebuilt_live_streaming: 2.12.8; $version');
+      log('version: zego_uikit_prebuilt_live_streaming: 2.13.0; $version');
     });
 
     isFromMinimizing = PrebuiltLiveStreamingMiniOverlayPageState.idle !=
@@ -182,9 +182,9 @@ class _ZegoUIKitPrebuiltLiveStreamingState
 
     if (PrebuiltLiveStreamingMiniOverlayPageState.minimizing !=
         ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine().state()) {
-      ZegoLiveStreamingManagers().unintPluginAndManagers();
-
-      uninitContext();
+      ZegoLiveStreamingManagers().unintPluginAndManagers().then((value) {
+        uninitContext();
+      });
 
       widget.controller?.uninitByPrebuilt();
     } else {
@@ -353,7 +353,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     assert(result.errorCode == 0);
 
     if (result.errorCode != 0) {
-      ZegoLoggerService.logInfo(
+      ZegoLoggerService.logError(
         'failed to login room:${result.errorCode},${result.extendedData}',
         tag: 'live streaming',
         subTag: 'prebuilt',
@@ -372,18 +372,10 @@ class _ZegoUIKitPrebuiltLiveStreamingState
   }
 
   Future<void> uninitContext() async {
-    // var useBeautyEffect = widget.config.bottomMenuBarConfig.buttons
-    //     .contains(ZegoMenuBarButtonName.beautyEffectButton);
-    // if (useBeautyEffect) {
-    //   await ZegoUIKit().stopEffectsEnv();
-    // }
-
     await ZegoUIKit().resetSoundEffect();
     await ZegoUIKit().resetBeautyEffect();
 
     await ZegoUIKit().leaveRoom();
-
-    // await ZegoUIKit().uninit();
   }
 
   void initToast() {

@@ -620,7 +620,7 @@ class ZegoLiveStreamingPKBattleManager {
     if (muting || (isAnotherHostMuted.value == mute)) {
       return;
     }
-    ZegoUIKit().muteAudio(streamCreator!.anotherHostUserID, mute);
+    ZegoUIKit().muteUserAudio(streamCreator!.anotherHostUserID, mute);
     muting = true;
     isAnotherHostMuted.value = mute;
 

@@ -20,6 +20,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/core/plugins.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_controller.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/prebuilt_data.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/pk/pk_service.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/pk/pk_view.dart';
@@ -100,6 +101,8 @@ class ZegoLivePageState extends State<ZegoLivePage>
           .listen(onInRoomLocalMessageFinished));
 
     ZegoLiveStreamingManagers().updateContextQuery(() => context);
+    ZegoLiveStreamingManagers()
+        .muteCoHostAudioVideo(ZegoUIKit().getAudioVideoList());
 
     if (widget.hostManager.isLocalHost) {
       ZegoUIKit().setRoomProperty(
@@ -378,17 +381,27 @@ class ZegoLivePageState extends State<ZegoLivePage>
                 .getCameraStateNotifier(widget.hostManager.notifier.value!.id),
             builder: (context, isCameraEnabled, _) {
               return ValueListenableBuilder<bool>(
-                  valueListenable: ZegoUIKit().getMicrophoneStateNotifier(
-                      widget.hostManager.notifier.value!.id),
-                  builder: (context, isMicrophoneEnabled, _) {
-                    if (!isCameraEnabled && !isMicrophoneEnabled) {
-                      audioVideoContainerHostHadSorted = false;
-                    }
-                    return audioVideoWidget(
-                        maxWidth, maxHeight, withScreenSharing);
-                  });
-            })
-        : audioVideoWidget(maxWidth, maxHeight, withScreenSharing);
+                valueListenable: ZegoUIKit().getMicrophoneStateNotifier(
+                    widget.hostManager.notifier.value!.id),
+                builder: (context, isMicrophoneEnabled, _) {
+                  if (!isCameraEnabled && !isMicrophoneEnabled) {
+                    audioVideoContainerHostHadSorted = false;
+                  }
+
+                  return audioVideoWidget(
+                    maxWidth,
+                    maxHeight,
+                    withScreenSharing,
+                  );
+                },
+              );
+            },
+          )
+        : audioVideoWidget(
+            maxWidth,
+            maxHeight,
+            withScreenSharing,
+          );
   }
 
   Widget audioVideoWidget(
@@ -410,6 +423,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
             foregroundBuilder: audioVideoViewForeground,
             backgroundBuilder: audioVideoViewBackground,
             sortAudioVideo: audioVideoViewSorter,
+            filterAudioVideo: audioVideoViewFilter,
             avatarConfig: ZegoAvatarConfig(
               showInAudioMode:
                   widget.config.audioVideoViewConfig.showAvatarInAudioMode,
@@ -441,6 +455,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
                       backgroundBuilder: audioVideoViewBackground,
                       foregroundBuilder: audioVideoViewForeground,
                       sortAudioVideo: audioVideoViewSorter,
+                      filterAudioVideo: audioVideoViewFilter,
                       avatarConfig: ZegoAvatarConfig(
                         showInAudioMode: widget
                             .config.audioVideoViewConfig.showAvatarInAudioMode,
@@ -476,29 +491,28 @@ class ZegoLivePageState extends State<ZegoLivePage>
         return widget.config.layout!;
       } else {
         return ZegoLayout.gallery(
-            showNewScreenSharingViewInFullscreenMode: true,
-            showScreenSharingFullscreenModeToggleButtonRules:
-                ZegoShowFullscreenModeToggleButtonRules.showWhenScreenPressed);
-      }
-    } else {
-      if (widget.config.layout != null) {
-        return widget.config.layout!;
-      } else {
-        return ZegoLayout.pictureInPicture(
-            smallViewPosition: ZegoViewPosition.bottomRight,
-            isSmallViewDraggable: false,
-            smallViewSize: Size(139.5.zW, 248.0.zH),
-            smallViewMargin: EdgeInsets.only(
-              left: 24.zR,
-              top: 144.zR,
-              right: 24.zR,
-              bottom: 144.zR,
-            ),
-            showNewScreenSharingViewInFullscreenMode: true,
-            showScreenSharingFullscreenModeToggleButtonRules:
-                ZegoShowFullscreenModeToggleButtonRules.showWhenScreenPressed);
+          showNewScreenSharingViewInFullscreenMode: true,
+          showScreenSharingFullscreenModeToggleButtonRules:
+              ZegoShowFullscreenModeToggleButtonRules.showWhenScreenPressed,
+        );
       }
     }
+
+    return widget.config.layout ??
+        ZegoLayout.pictureInPicture(
+          smallViewPosition: ZegoViewPosition.bottomRight,
+          isSmallViewDraggable: false,
+          smallViewSize: Size(139.5.zW, 248.0.zH),
+          smallViewMargin: EdgeInsets.only(
+            left: 24.zR,
+            top: 144.zR,
+            right: 24.zR,
+            bottom: 144.zR,
+          ),
+          showNewScreenSharingViewInFullscreenMode: true,
+          showScreenSharingFullscreenModeToggleButtonRules:
+              ZegoShowFullscreenModeToggleButtonRules.showWhenScreenPressed,
+        );
   }
 
   List<ZegoUIKitUser> audioVideoViewSorter(List<ZegoUIKitUser> users) {
@@ -524,6 +538,33 @@ class ZegoLivePageState extends State<ZegoLivePage>
       /// not sort before next host changed
       audioVideoContainerHostHadSorted = true;
     }
+
+    return users;
+  }
+
+  List<ZegoUIKitUser> audioVideoViewFilter(List<ZegoUIKitUser> users) {
+    users.removeWhere((targetUser) {
+      if (null != widget.config.audioVideoViewConfig.visible) {
+        var targetUserRole = ZegoLiveStreamingRole.coHost;
+        if (ZegoLiveStreamingManagers().hostManager?.isHost(targetUser) ??
+            false) {
+          targetUserRole = ZegoLiveStreamingRole.host;
+        }
+        if (!widget.config.audioVideoViewConfig.visible!.call(
+          ZegoUIKit().getLocalUser(),
+          ZegoLiveStreamingManagers().connectManager?.localRole ??
+              ZegoLiveStreamingRole.audience,
+          targetUser,
+          targetUserRole,
+        )) {
+          /// only hide if invisible
+          return true;
+        }
+      }
+
+      return targetUser.cameraMuteMode.value &&
+          targetUser.microphoneMuteMode.value;
+    });
 
     return users;
   }

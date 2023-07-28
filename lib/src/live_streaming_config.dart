@@ -475,6 +475,12 @@ class ZegoPrebuiltVideoConfig {
   });
 }
 
+typedef ZegoPlayCoHostAudioVideoCallback = bool Function(
+  ZegoUIKitUser localUser,
+  ZegoLiveStreamingRole localRole,
+  ZegoUIKitUser coHost,
+);
+
 /// Configuration options for audio/video views.
 ///
 /// This class is used for the [ZegoUIKitPrebuiltLiveStreamingConfig.audioVideoViewConfig] property.
@@ -485,6 +491,25 @@ class ZegoPrebuiltVideoConfig {
 ///
 /// If you want to hide user avatars or sound waveforms in audio mode, you can set showAvatarInAudioMode and showSoundWavesInAudioMode to false.
 class ZegoPrebuiltAudioVideoViewConfig {
+  /// show target user's audio video view or not
+  /// return false if you don't want to show target user's audio video view.
+  bool Function(
+    ZegoUIKitUser localUser,
+    ZegoLiveStreamingRole localRole,
+    ZegoUIKitUser targetUser,
+    ZegoLiveStreamingRole targetUserRole,
+  )? visible;
+
+  /// Whether to the play audio of the specified co-host?
+  /// The default behavior is play.
+  /// return false if you don't want to play target user's audio.
+  ZegoPlayCoHostAudioVideoCallback? playCoHostAudio;
+
+  /// Whether to the play video of the specified co-host?
+  /// The default behavior is play.
+  /// return false if you don't want to play target user's video.
+  ZegoPlayCoHostAudioVideoCallback? playCoHostVideo;
+
   /// Whether to mirror the displayed video captured by the camera.
   ///
   /// This mirroring effect only applies to the front-facing camera.
@@ -531,6 +556,9 @@ class ZegoPrebuiltAudioVideoViewConfig {
     this.showAvatarInAudioMode = true,
     this.showSoundWavesInAudioMode = true,
     this.useVideoViewAspectFill = true,
+    this.visible,
+    this.playCoHostAudio,
+    this.playCoHostVideo,
     this.foregroundBuilder,
     this.backgroundBuilder,
   });
@@ -894,11 +922,23 @@ class ZegoInRoomMessageConfig {
   /// For example, you can modify the background color, opacity, border radius, or add additional information like the sender's level or role.
   ZegoInRoomMessageItemBuilder? itemBuilder;
 
+  /// display chat message list view or not
+  bool visible;
+
+  /// display user name in message list view or not
+  bool showName;
+
+  /// display user avatar in message list view or not
+  bool showAvatar;
+
   /// The width of chat message list view
   double? width;
 
   /// The height of chat message list view
   double? height;
+
+  /// The offset of chat message list view bottom-left position
+  Offset? bottomLeft;
 
   /// The opacity of the background color for chat message list items, default value of 0.5.
   /// If you set the [backgroundColor], the [opacity] setting will be overridden.
@@ -909,7 +949,7 @@ class ZegoInRoomMessageConfig {
   /// You can use `backgroundColor.withOpacity(0.5)` to set the opacity of the background color.
   Color? backgroundColor;
 
-  /// The max lines of chat message list items, default value is 3.
+  /// The max lines of chat message list items, default value is not limit.
   int? maxLines;
 
   /// The name text style of chat message list items
@@ -924,9 +964,14 @@ class ZegoInRoomMessageConfig {
   /// The paddings of chat message list items
   EdgeInsetsGeometry? paddings;
 
+  /// resend button icon
+  Widget? resendIcon;
+
   ZegoInRoomMessageConfig({
+    this.visible = true,
     this.width,
     this.height,
+    this.bottomLeft,
     this.itemBuilder,
     this.opacity = 0.5,
     this.maxLines,
@@ -936,6 +981,9 @@ class ZegoInRoomMessageConfig {
     this.borderRadius,
     this.paddings,
     this.onLocalMessageSend,
+    this.resendIcon,
+    this.showName = true,
+    this.showAvatar = true,
   });
 }
 

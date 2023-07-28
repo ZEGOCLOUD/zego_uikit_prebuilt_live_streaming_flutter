@@ -9,13 +9,15 @@ import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/message/defines.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/components/message/in_room_message_input_board.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/message/input_board.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_inner_text.dart';
 
+import 'enable_property.dart';
+
 /// @nodoc
-class ZegoInRoomMessageButton extends StatefulWidget {
+class ZegoInRoomMessageInputBoardButton extends StatefulWidget {
   final ZegoLiveHostManager hostManager;
   final ButtonIcon? enabledIcon;
   final ButtonIcon? disabledIcon;
@@ -25,7 +27,7 @@ class ZegoInRoomMessageButton extends StatefulWidget {
   final Function(int)? onSheetPop;
   final ZegoInnerText translationText;
 
-  const ZegoInRoomMessageButton({
+  const ZegoInRoomMessageInputBoardButton({
     Key? key,
     required this.hostManager,
     required this.translationText,
@@ -38,37 +40,34 @@ class ZegoInRoomMessageButton extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<ZegoInRoomMessageButton> createState() =>
-      _ZegoInRoomMessageButtonState();
+  State<ZegoInRoomMessageInputBoardButton> createState() =>
+      _ZegoInRoomMessageInputBoardButtonState();
 }
 
 /// @nodoc
-class _ZegoInRoomMessageButtonState extends State<ZegoInRoomMessageButton> {
+class _ZegoInRoomMessageInputBoardButtonState
+    extends State<ZegoInRoomMessageInputBoardButton> {
   var isMessageInputting = false;
-  var chatEnableNotifier = ValueNotifier<bool>(true);
-  List<StreamSubscription<dynamic>?> subscriptions = [];
+  final _enableProperty = ZegoInRoomMessageEnableProperty();
 
   @override
   void initState() {
     super.initState();
 
-    subscriptions.add(
-        ZegoUIKit().getRoomPropertiesStream().listen(onRoomPropertiesUpdated));
+    _enableProperty.notifier.addListener(onEnablePropertyUpdated);
   }
 
   @override
   void dispose() {
     super.dispose();
 
-    for (final subscription in subscriptions) {
-      subscription?.cancel();
-    }
+    _enableProperty.notifier.removeListener(onEnablePropertyUpdated);
   }
 
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<bool>(
-      valueListenable: chatEnableNotifier,
+      valueListenable: _enableProperty.notifier,
       builder: (context, isChatEnabled, _) {
         var chatLocalEnabled = true;
         if (!widget.hostManager.isLocalHost) {
@@ -114,20 +113,8 @@ class _ZegoInRoomMessageButtonState extends State<ZegoInRoomMessageButton> {
     );
   }
 
-  void onRoomPropertiesUpdated(Map<String, RoomProperty> updatedProperties) {
-    if (!updatedProperties.containsKey(disableChatRoomPropertyKey)) {
-      return;
-    }
-
-    ZegoLoggerService.logInfo(
-      'chat enabled property changed to '
-      '${updatedProperties[disableChatRoomPropertyKey]!.value}',
-      tag: 'live streaming',
-      subTag: 'message button',
-    );
-    chatEnableNotifier.value =
-        toBoolean(updatedProperties[disableChatRoomPropertyKey]!.value);
-    if (!chatEnableNotifier.value && isMessageInputting) {
+  void onEnablePropertyUpdated() {
+    if (!_enableProperty.value && isMessageInputting) {
       ZegoLoggerService.logInfo(
         'message inputting, close it',
         tag: 'live streaming',
@@ -138,9 +125,5 @@ class _ZegoInRoomMessageButtonState extends State<ZegoInRoomMessageButton> {
         rootNavigator: widget.hostManager.config.rootNavigator,
       ).pop();
     }
-  }
-
-  bool toBoolean(String str) {
-    return str != '0' && str != 'false' && str != '';
   }
 }

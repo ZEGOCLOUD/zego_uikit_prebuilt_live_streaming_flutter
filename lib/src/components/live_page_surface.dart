@@ -11,7 +11,7 @@ import 'package:zego_uikit/zego_uikit.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/bottom_bar.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/duration_time_board.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/components/message/in_room_live_commenting_view.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/message/view.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/top_bar.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect_manager.dart';
@@ -148,6 +148,10 @@ class ZegoLivePageSurfaceState extends State<ZegoLivePageSurface>
   }
 
   Widget messageList() {
+    if (!widget.config.inRoomMessageConfig.visible) {
+      return Container();
+    }
+
     var listSize = Size(
       widget.config.inRoomMessageViewConfig.width ?? 540.zR,
       widget.config.inRoomMessageViewConfig.height ?? 400.zR,
@@ -159,12 +163,14 @@ class ZegoLivePageSurfaceState extends State<ZegoLivePageSurface>
       listSize = Size(listSize.width, 40.zR);
     }
     return Positioned(
-      left: 32.zR,
-      bottom: 124.zR,
+      left: 32.zR + (widget.config.inRoomMessageViewConfig.bottomLeft?.dx ?? 0),
+      bottom:
+          124.zR + (widget.config.inRoomMessageViewConfig.bottomLeft?.dy ?? 0),
       child: ConstrainedBox(
         constraints: BoxConstraints.loose(listSize),
-        child: ZegoInRoomLiveCommentingView(
+        child: ZegoInRoomLiveMessageView(
           config: widget.config.inRoomMessageViewConfig,
+          avatarBuilder: widget.config.avatarBuilder,
         ),
       ),
     );

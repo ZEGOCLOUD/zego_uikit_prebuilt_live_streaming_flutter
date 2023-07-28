@@ -1,3 +1,16 @@
+## 2.13.0
+- Added message sending and receiving API to the controller. 
+- Adjusted the message display to default to showing the entire content. If not all content needs to be displayed, the maximum number of displayed lines can be modified through 
+  **ZegoInRoomMessageConfig.maxLines**. When the maximum number of lines is exceeded, the message will automatically collapse. 
+- Supported customizing the location of the message display container. The offset value of the bottom left corner can be set through **ZegoInRoomMessageConfig.bottomLeft** to adjust the position. 
+- Added handling for local message sending failures. When a local message fails to send, it can be retried by clicking the icon. The icon can be customized through **ZegoInRoomMessageConfig.resendIcon**. 
+- Added avatar display to messages by default. If avatars are not desired, they can be hidden through **ZegoInRoomMessageConfig.showAvatar**. 
+- Supported dynamically configuring whether the audio/video data of each co-host plays. This can be customized through **ZegoPrebuiltAudioVideoViewConfig.playCoHostVideo** and **ZegoPrebuiltAudioVideoViewConfig.playCoHostAudio**. 
+- Supported dynamically configuring the display and hiding of each co-host window. This can be customized through **ZegoPrebuiltAudioVideoViewConfig.visible**.
+
+## 2.12.9
+- Fixed the issue of not receiving calls when prebuilt_call is used in conjunction with prebuilt_live_streaming.
+
 ## 2.12.8
 - update dependency
 
