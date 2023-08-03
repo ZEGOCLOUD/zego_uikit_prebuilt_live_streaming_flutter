@@ -12,6 +12,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect_manager.dart
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_inner_text.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/pk/pk_service.dart';
 
@@ -86,16 +87,16 @@ class _ZegoCoHostControlButtonState extends State<ZegoCoHostControlButton> {
             pkBattleState == ZegoLiveStreamingPKBattleState.loading) {
           return const SizedBox.shrink();
         } else {
-          return ValueListenableBuilder<ConnectState>(
+          return ValueListenableBuilder<ZegoLiveStreamingAudienceConnectState>(
             valueListenable:
                 widget.connectManager.audienceLocalConnectStateNotifier,
             builder: (context, connectState, _) {
               switch (connectState) {
-                case ConnectState.idle:
+                case ZegoLiveStreamingAudienceConnectState.idle:
                   return requestCoHostButton();
-                case ConnectState.connecting:
+                case ZegoLiveStreamingAudienceConnectState.connecting:
                   return cancelRequestCoHostButton();
-                case ConnectState.connected:
+                case ZegoLiveStreamingAudienceConnectState.connected:
                   return endCoHostButton();
               }
             },
@@ -134,10 +135,10 @@ class _ZegoCoHostControlButtonState extends State<ZegoCoHostControlButton> {
               '$code $message');
         } else {
           showSuccess(widget.translationText.sendRequestCoHostToast);
-        }
 
-        widget.connectManager
-            .updateAudienceConnectState(ConnectState.connecting);
+          widget.connectManager.updateAudienceConnectState(
+              ZegoLiveStreamingAudienceConnectState.connecting);
+        }
       },
       clickableTextColor: Colors.white,
       clickableBackgroundColor: const Color(0xff1E2740).withOpacity(0.4),
@@ -158,8 +159,8 @@ class _ZegoCoHostControlButtonState extends State<ZegoCoHostControlButton> {
       textStyle: buttonTextStyle,
       verticalLayout: false,
       onPressed: (String code, String message, List<String> errorInvitees) {
-        widget.connectManager.updateAudienceConnectState(ConnectState.idle);
-        //
+        widget.connectManager.updateAudienceConnectState(
+            ZegoLiveStreamingAudienceConnectState.idle);
       },
       clickableTextColor: Colors.white,
       clickableBackgroundColor: const Color(0xff1E2740).withOpacity(0.4),

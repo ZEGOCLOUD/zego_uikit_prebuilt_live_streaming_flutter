@@ -96,6 +96,9 @@ class _ZegoUIKitPrebuiltLiveStreamingState
   bool isFromMinimizing = false;
   late ZegoUIKitPrebuiltLiveStreamingData prebuiltData;
 
+  ZegoUIKitPrebuiltLiveStreamingController get controller =>
+      widget.controller ?? ZegoUIKitPrebuiltLiveStreamingController();
+
   @override
   void initState() {
     super.initState();
@@ -103,7 +106,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     WidgetsBinding.instance?.addObserver(this);
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
-      log('version: zego_uikit_prebuilt_live_streaming: 2.13.0; $version');
+      log('version: zego_uikit_prebuilt_live_streaming: 2.14.3; $version');
     });
 
     isFromMinimizing = PrebuiltLiveStreamingMiniOverlayPageState.idle !=
@@ -117,7 +120,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
       userName: widget.userName,
       config: widget.config,
       onDispose: widget.onDispose,
-      controller: widget.controller,
+      controller: controller,
       isPrebuiltFromMinimizing: isFromMinimizing,
     );
 
@@ -141,11 +144,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     subscriptions.add(
         ZegoUIKit().getMeRemovedFromRoomStream().listen(onMeRemovedFromRoom));
 
-    widget.controller?.initByPrebuilt(
-      prebuiltConfig: widget.config,
-      hostManager: ZegoLiveStreamingManagers().hostManager!,
-      connectManager: ZegoLiveStreamingManagers().connectManager!,
-    );
+    controller.initByPrebuilt();
 
     initToast();
 
@@ -186,7 +185,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
         uninitContext();
       });
 
-      widget.controller?.uninitByPrebuilt();
+      controller.uninitByPrebuilt();
     } else {
       ZegoLoggerService.logInfo(
         'mini machine state is minimizing, room will not be leave',
@@ -466,7 +465,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
       liveDurationManager: ZegoLiveStreamingManagers().liveDurationManager!,
       popUpManager: popUpManager,
       plugins: ZegoLiveStreamingManagers().plugins,
-      controller: widget.controller,
+      controller: controller,
       prebuiltData: prebuiltData,
     );
   }

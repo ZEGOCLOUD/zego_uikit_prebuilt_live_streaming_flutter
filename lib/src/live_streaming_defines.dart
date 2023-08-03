@@ -127,6 +127,18 @@ class ZegoDialogInfo {
   });
 }
 
+/// only for audience or co-host, connection state
+enum ZegoLiveStreamingAudienceConnectState {
+  ///
+  idle,
+
+  /// requesting to be a co-host, wait response from host
+  connecting,
+
+  /// be a co-host now, host agree the co-host request
+  connected,
+}
+
 /// A callback function for customizing the start live button
 /// It should return a Widget that represents the custom start live button.
 typedef ZegoStartLiveButtonBuilder = Widget Function(

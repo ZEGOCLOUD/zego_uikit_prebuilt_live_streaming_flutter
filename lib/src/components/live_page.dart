@@ -41,8 +41,8 @@ class ZegoLivePage extends StatefulWidget {
     required this.liveStatusManager,
     required this.liveDurationManager,
     required this.popUpManager,
+    required this.controller,
     this.plugins,
-    this.controller,
   }) : super(key: key);
 
   final int appID;
@@ -62,7 +62,7 @@ class ZegoLivePage extends StatefulWidget {
   final ZegoPopUpManager popUpManager;
   final ZegoPrebuiltPlugins? plugins;
 
-  final ZegoUIKitPrebuiltLiveStreamingController? controller;
+  final ZegoUIKitPrebuiltLiveStreamingController controller;
 
   @override
   State<ZegoLivePage> createState() => ZegoLivePageState();
@@ -432,7 +432,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
               builder: widget.config.avatarBuilder,
             ),
             screenSharingViewController:
-                widget.controller?.screenSharingViewController,
+                widget.controller?.screen.screenSharingViewController,
           );
         } else if (LiveStatus.living != liveStatusValue &&
             null != widget.hostManager.notifier.value) {
@@ -464,7 +464,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
                         builder: widget.config.avatarBuilder,
                       ),
                       screenSharingViewController:
-                          widget.controller?.screenSharingViewController,
+                          widget.controller?.screen.screenSharingViewController,
                     );
                   });
             },
@@ -599,6 +599,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
                 hostManager: widget.hostManager,
                 connectManager: ZegoLiveStreamingManagers().connectManager!,
                 popUpManager: widget.popUpManager,
+                prebuiltController: widget.controller,
                 translationText: widget.config.innerText,
                 isPluginEnabled: widget.plugins?.isEnabled ?? false,
                 //  only show if close

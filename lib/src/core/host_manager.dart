@@ -239,8 +239,10 @@ class ZegoLiveHostManager {
         if (host.id != notifier.value?.id &&
             notifier.value?.id == ZegoUIKit().getLocalUser().id) {
           /// local host, change by new host, switch to audience
-          connectManager?.updateAudienceConnectState(ConnectState.connecting);
-          connectManager?.updateAudienceConnectState(ConnectState.idle);
+          connectManager?.updateAudienceConnectState(
+              ZegoLiveStreamingAudienceConnectState.connecting);
+          connectManager?.updateAudienceConnectState(
+              ZegoLiveStreamingAudienceConnectState.idle);
         }
 
         updateHostValue(host);

@@ -34,8 +34,8 @@ class ZegoLivePageSurface extends StatefulWidget {
     required this.liveDurationManager,
     required this.popUpManager,
     required this.connectManager,
+    required this.controller,
     this.plugins,
-    this.controller,
   }) : super(key: key);
 
   final ZegoUIKitPrebuiltLiveStreamingConfig config;
@@ -48,7 +48,7 @@ class ZegoLivePageSurface extends StatefulWidget {
   final ZegoPrebuiltPlugins? plugins;
   final ZegoLiveConnectManager connectManager;
 
-  final ZegoUIKitPrebuiltLiveStreamingController? controller;
+  final ZegoUIKitPrebuiltLiveStreamingController controller;
 
   @override
   State<ZegoLivePageSurface> createState() => ZegoLivePageSurfaceState();
@@ -124,7 +124,8 @@ class ZegoLivePageSurfaceState extends State<ZegoLivePageSurface>
         hostUpdateEnabledNotifier: widget.hostManager.hostUpdateEnabledNotifier,
         connectManager: widget.connectManager,
         popUpManager: widget.popUpManager,
-        isLeaveRequestingNotifier: widget.controller?.isLeaveRequestingNotifier,
+        prebuiltController: widget.controller,
+        isLeaveRequestingNotifier: widget.controller.isLeaveRequestingNotifier,
         translationText: widget.config.innerText,
       ),
     );
@@ -141,7 +142,7 @@ class ZegoLivePageSurfaceState extends State<ZegoLivePageSurface>
         hostUpdateEnabledNotifier: widget.hostManager.hostUpdateEnabledNotifier,
         liveStatusNotifier: widget.liveStatusManager.notifier,
         connectManager: widget.connectManager,
-        isLeaveRequestingNotifier: widget.controller?.isLeaveRequestingNotifier,
+        isLeaveRequestingNotifier: widget.controller.isLeaveRequestingNotifier,
         popUpManager: widget.popUpManager,
       ),
     );
@@ -153,8 +154,8 @@ class ZegoLivePageSurfaceState extends State<ZegoLivePageSurface>
     }
 
     var listSize = Size(
-      widget.config.inRoomMessageViewConfig.width ?? 540.zR,
-      widget.config.inRoomMessageViewConfig.height ?? 400.zR,
+      widget.config.inRoomMessageConfig.width ?? 540.zR,
+      widget.config.inRoomMessageConfig.height ?? 400.zR,
     );
     if (listSize.width < 54.zR) {
       listSize = Size(54.zR, listSize.height);
@@ -163,13 +164,12 @@ class ZegoLivePageSurfaceState extends State<ZegoLivePageSurface>
       listSize = Size(listSize.width, 40.zR);
     }
     return Positioned(
-      left: 32.zR + (widget.config.inRoomMessageViewConfig.bottomLeft?.dx ?? 0),
-      bottom:
-          124.zR + (widget.config.inRoomMessageViewConfig.bottomLeft?.dy ?? 0),
+      left: 32.zR + (widget.config.inRoomMessageConfig.bottomLeft?.dx ?? 0),
+      bottom: 124.zR + (widget.config.inRoomMessageConfig.bottomLeft?.dy ?? 0),
       child: ConstrainedBox(
         constraints: BoxConstraints.loose(listSize),
         child: ZegoInRoomLiveMessageView(
-          config: widget.config.inRoomMessageViewConfig,
+          config: widget.config.inRoomMessageConfig,
           avatarBuilder: widget.config.avatarBuilder,
         ),
       ),

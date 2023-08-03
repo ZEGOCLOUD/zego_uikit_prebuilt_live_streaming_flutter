@@ -37,10 +37,3 @@ extension ZegoInvitationTypeExtension on ZegoInvitationType {
     5: ZegoInvitationType.crossRoomPKBattleRequest,
   };
 }
-
-/// @nodoc
-enum ConnectState {
-  idle,
-  connecting,
-  connected,
-}

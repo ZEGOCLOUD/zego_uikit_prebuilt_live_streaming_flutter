@@ -773,18 +773,18 @@ class ZegoLiveStreamingPKBattleManager {
           ).pop();
         }
         // cancel audience's co-host request
-        if (ConnectState.connecting ==
+        if (ZegoLiveStreamingAudienceConnectState.connecting ==
             hostManager
                 .connectManager?.audienceLocalConnectStateNotifier.value) {
-          hostManager.connectManager
-              ?.updateAudienceConnectState(ConnectState.idle);
+          hostManager.connectManager?.updateAudienceConnectState(
+              ZegoLiveStreamingAudienceConnectState.idle);
           ZegoUIKit().getSignalingPlugin().cancelInvitation(
               invitees: [hostManager.notifier.value?.id ?? hostID], data: '');
-        } else if (ConnectState.connected ==
+        } else if (ZegoLiveStreamingAudienceConnectState.connected ==
             hostManager
                 .connectManager?.audienceLocalConnectStateNotifier.value) {
-          hostManager.connectManager
-              ?.updateAudienceConnectState(ConnectState.idle);
+          hostManager.connectManager?.updateAudienceConnectState(
+              ZegoLiveStreamingAudienceConnectState.idle);
 
           final dialogInfo = innerText.coHostEndCauseByHostStartPK;
           showLiveDialog(

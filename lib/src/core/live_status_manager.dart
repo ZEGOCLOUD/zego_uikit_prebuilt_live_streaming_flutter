@@ -193,7 +193,8 @@ class ZegoLiveStatusManager {
         tag: 'live streaming',
         subTag: 'live status manager',
       );
-      connectManager?.updateAudienceConnectState(ConnectState.idle);
+      connectManager?.updateAudienceConnectState(
+          ZegoLiveStreamingAudienceConnectState.idle);
     }
   }
 

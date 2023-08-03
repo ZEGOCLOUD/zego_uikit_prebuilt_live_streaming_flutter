@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_inner_text.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/pk/defines.dart';
@@ -13,6 +14,8 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/pk/defines.dart';
 ///
 /// This class is used as the [ZegoUIKitPrebuiltLiveStreaming.config] parameter for the constructor of [ZegoUIKitPrebuiltLiveStreaming].
 class ZegoUIKitPrebuiltLiveStreamingConfig {
+  static const defaultMaxCoHostCount = 12;
+
   /// Default initialization parameters for the host.
   /// If a configuration item does not meet your expectations, you can directly override its value.
   ///
@@ -33,7 +36,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         markAsLargeRoom = false,
         rootNavigator = false,
         videoConfig = ZegoPrebuiltVideoConfig(),
-        maxCoHostCount = 12,
+        maxCoHostCount = defaultMaxCoHostCount,
         audioVideoViewConfig = ZegoPrebuiltAudioVideoViewConfig(
           showSoundWavesInAudioMode: true,
         ),
@@ -44,6 +47,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
               //  host maybe change to be an audience
               : const [ZegoMenuBarButtonName.coHostControlButton],
         ),
+        memberButtonConfig = ZegoMemberButtonConfig(),
         memberListConfig = ZegoMemberListConfig(),
         inRoomMessageConfig = ZegoInRoomMessageConfig(),
         effectConfig = ZegoEffectConfig(),
@@ -81,7 +85,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         markAsLargeRoom = false,
         rootNavigator = false,
         videoConfig = ZegoPrebuiltVideoConfig(),
-        maxCoHostCount = 12,
+        maxCoHostCount = defaultMaxCoHostCount,
         audioVideoViewConfig = ZegoPrebuiltAudioVideoViewConfig(
           showSoundWavesInAudioMode: true,
         ),
@@ -91,6 +95,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
               ? []
               : const [ZegoMenuBarButtonName.coHostControlButton],
         ),
+        memberButtonConfig = ZegoMemberButtonConfig(),
         memberListConfig = ZegoMemberListConfig(),
         inRoomMessageConfig = ZegoInRoomMessageConfig(),
         effectConfig = ZegoEffectConfig(),
@@ -108,7 +113,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
     this.stopCoHostingWhenMicCameraOff = false,
     this.markAsLargeRoom = false,
     this.rootNavigator = false,
-    this.maxCoHostCount = 12,
+    this.maxCoHostCount = defaultMaxCoHostCount,
     this.layout,
     this.foreground,
     this.background,
@@ -125,6 +130,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
     ZegoInnerText? translationText,
     ZegoEffectConfig? effectConfig,
     ZegoMemberListConfig? memberListConfig,
+    ZegoMemberButtonConfig? memberButtonConfig,
     ZegoLiveDurationConfig? durationConfig,
     ZegoPrebuiltVideoConfig? videoConfig,
     ZegoInRoomMessageConfig? messageConfig,
@@ -139,6 +145,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         topMenuBarConfig = topMenuBarConfig ?? ZegoTopMenuBarConfig(),
         bottomMenuBarConfig = bottomMenuBarConfig ?? ZegoBottomMenuBarConfig(),
         memberListConfig = memberListConfig ?? ZegoMemberListConfig(),
+        memberButtonConfig = memberButtonConfig ?? ZegoMemberButtonConfig(),
         inRoomMessageConfig = messageConfig ?? ZegoInRoomMessageConfig(),
         effectConfig = effectConfig ?? ZegoEffectConfig(),
         innerText = translationText ?? ZegoInnerText(),
@@ -208,6 +215,9 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   /// You can use these options to customize the appearance and behavior of the bottom menu bar.
   ZegoBottomMenuBarConfig bottomMenuBarConfig;
 
+  /// Configuration related to the top member button
+  ZegoMemberButtonConfig memberButtonConfig;
+
   /// Configuration related to the bottom member list, including displaying the member list, member list styles, and more.
   ZegoMemberListConfig memberListConfig;
 
@@ -215,10 +225,11 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   ZegoInRoomMessageConfig inRoomMessageConfig;
 
   @Deprecated('Since 2.10.7, please use inRoomMessageConfig instead')
-  ZegoInRoomMessageConfig get inRoomMessageViewConfig => inRoomMessageConfig;
+  ZegoInRoomMessageViewConfig get inRoomMessageViewConfig =>
+      inRoomMessageConfig;
 
   @Deprecated('Since 2.10.7, please use inRoomMessageConfig instead')
-  set inRoomMessageViewConfig(ZegoInRoomMessageConfig config) =>
+  set inRoomMessageViewConfig(ZegoInRoomMessageViewConfig config) =>
       inRoomMessageConfig = config;
 
   /// You can use it to modify your voice, apply beauty effects, and control reverb.
@@ -570,17 +581,6 @@ class ZegoTopMenuBarConfig {
   /// only support [minimizingButton] right now
   List<ZegoMenuBarButtonName> buttons;
 
-  /// You can listen to the event of clicking on the host information in the top left corner.
-  /// For example, if you want to display a popup or dialog with host information after it is clicked.
-  ///
-  /// ```dart
-  /// ..topMenuBarConfig.onHostAvatarClicked = (host) {
-  ///   // do your own things.
-  ///
-  /// }
-  /// ```
-  void Function(ZegoUIKitUser host)? onHostAvatarClicked;
-
   /// padding for the top menu bar.
   EdgeInsetsGeometry? padding;
 
@@ -593,13 +593,27 @@ class ZegoTopMenuBarConfig {
   /// height for the top menu bar.
   double? height;
 
+  /// You can listen to the event of clicking on the host information in the top left corner.
+  /// For example, if you want to display a popup or dialog with host information after it is clicked.
+  ///
+  /// ```dart
+  /// ..topMenuBarConfig.onHostAvatarClicked = (host) {
+  ///   // do your own things.
+  ///
+  /// }
+  /// ```
+  void Function(ZegoUIKitUser host)? onHostAvatarClicked;
+
+  Widget Function(ZegoUIKitUser host)? hostAvatarBuilder;
+
   ZegoTopMenuBarConfig({
     this.buttons = const [],
-    this.onHostAvatarClicked,
     this.padding,
     this.margin,
     this.backgroundColor,
     this.height,
+    this.onHostAvatarClicked,
+    this.hostAvatarBuilder,
   });
 }
 
@@ -850,6 +864,24 @@ class ZegoBottomMenuBarButtonStyle {
   });
 }
 
+/// Configuration for the member button of top bar.
+class ZegoMemberButtonConfig {
+  /// If you want to redefine the entire button, you can return your own Widget through [builder].
+  Widget Function(int memberCount)? builder;
+
+  /// Customize the icon through [icon], with Icons.person being the default if not set.
+  Widget? icon;
+
+  /// Customize the background color through [backgroundColor]
+  Color? backgroundColor;
+
+  ZegoMemberButtonConfig({
+    this.builder,
+    this.icon,
+    this.backgroundColor,
+  });
+}
+
 /// Configuration for the member list.
 ///
 /// You can use the [ZegoUIKitPrebuiltLiveStreamingConfig.memberListConfig] property to set the properties inside this class.
@@ -870,14 +902,12 @@ class ZegoBottomMenuBarButtonStyle {
 ///
 /// In addition, you can listen for item click events through [onClicked].
 class ZegoMemberListConfig {
-  @Deprecated('Since 2.10.2, not support')
-
   /// Whether to show the microphone state of the member. Defaults to true, which means it will be shown.
+  @Deprecated('Since 2.10.2, not support')
   bool showMicrophoneState;
 
-  @Deprecated('Since 2.10.2, not support')
-
   /// Whether to show the camera state of the member. Defaults to true, which means it will be shown.
+  @Deprecated('Since 2.10.2, not support')
   bool showCameraState;
 
   /// Custom member list item view.
@@ -918,9 +948,19 @@ class ZegoInRoomMessageConfig {
   /// Local message sending callback, This callback method is called when a message is sent successfully or fails to send.
   void Function(ZegoInRoomMessage message)? onLocalMessageSend;
 
+  /// Triggered when has click on the message item
+  ZegoInRoomMessageViewItemPressEvent? onMessageClick;
+
+  /// Triggered when a pointer has remained in contact with the message item at
+  /// the same location for a long period of time.
+  ZegoInRoomMessageViewItemPressEvent? onMessageLongPress;
+
   /// Use this to customize the style and content of each chat message list item.
   /// For example, you can modify the background color, opacity, border radius, or add additional information like the sender's level or role.
   ZegoInRoomMessageItemBuilder? itemBuilder;
+
+  /// background
+  Widget? background;
 
   /// display chat message list view or not
   bool visible;
@@ -980,8 +1020,11 @@ class ZegoInRoomMessageConfig {
     this.backgroundColor,
     this.borderRadius,
     this.paddings,
-    this.onLocalMessageSend,
     this.resendIcon,
+    this.background,
+    this.onLocalMessageSend,
+    this.onMessageClick,
+    this.onMessageLongPress,
     this.showName = true,
     this.showAvatar = true,
   });

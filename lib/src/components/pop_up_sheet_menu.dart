@@ -9,11 +9,10 @@ import 'package:zego_uikit/zego_uikit.dart';
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_manager.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/components/toast.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_controller.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_inner_text.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/pk/src/pk_impl.dart';
 
 /// @nodoc
 class ZegoPopUpSheetMenu extends StatefulWidget {
@@ -24,6 +23,7 @@ class ZegoPopUpSheetMenu extends StatefulWidget {
     required this.translationText,
     required this.hostManager,
     required this.connectManager,
+    required this.prebuiltController,
     this.onPressed,
   }) : super(key: key);
 
@@ -31,6 +31,7 @@ class ZegoPopUpSheetMenu extends StatefulWidget {
   final ZegoUIKitUser targetUser;
   final ZegoLiveHostManager hostManager;
   final ZegoLiveConnectManager connectManager;
+  final ZegoUIKitPrebuiltLiveStreamingController prebuiltController;
   final void Function(PopupItemValue)? onPressed;
   final ZegoInnerText translationText;
 
@@ -80,42 +81,13 @@ class _ZegoPopUpSheetMenuState extends State<ZegoPopUpSheetMenu> {
 
         switch (popupItem.value) {
           case PopupItemValue.kickCoHost:
-            widget.connectManager.kickCoHost(widget.targetUser);
+            widget.prebuiltController.removeCoHost(widget.targetUser);
             break;
           case PopupItemValue.inviteConnect:
-            final pkBattleState =
-                ZegoLiveStreamingPKBattleManager().state.value;
-            final needHideCoHostWidget =
-                pkBattleState == ZegoLiveStreamingPKBattleState.inPKBattle ||
-                    pkBattleState == ZegoLiveStreamingPKBattleState.loading;
-            if (needHideCoHostWidget) {
-              break;
-            }
-
-            if (widget.connectManager.isMaxCoHostReached) {
-              widget.hostManager.config.onMaxCoHostReached
-                  ?.call(widget.hostManager.config.maxCoHostCount);
-
-              ZegoLoggerService.logInfo(
-                'co-host max count had reached',
-                tag: 'live streaming',
-                subTag: 'pop-up sheet',
-              );
-
-              break;
-            }
-
-            final targetUserIsInviting = widget
-                .connectManager.audienceIDsOfInvitingConnect
-                .contains(widget.targetUser.id);
-            final targetUserIsRequesting = -1 !=
-                widget.connectManager.requestCoHostUsersNotifier.value
-                    .indexWhere((user) => user.id == widget.targetUser.id);
-            if (targetUserIsInviting || targetUserIsRequesting) {
-              showError(widget.translationText.repeatInviteCoHostFailedToast);
-            } else {
-              widget.connectManager.inviteAudienceConnect(widget.targetUser);
-            }
+            widget.prebuiltController.makeAudienceCoHost(
+              widget.targetUser,
+              withToast: true,
+            );
             break;
           case PopupItemValue.kickOutAttendance:
             ZegoUIKit()
@@ -174,6 +146,7 @@ Future<void> showPopUpSheet({
   required ZegoLiveConnectManager connectManager,
   required ZegoPopUpManager popUpManager,
   required ZegoLiveHostManager hostManager,
+  required ZegoUIKitPrebuiltLiveStreamingController prebuiltController,
 }) async {
   final key = DateTime.now().millisecondsSinceEpoch;
   popUpManager.addAPopUpSheet(key);
@@ -205,6 +178,7 @@ Future<void> showPopUpSheet({
             translationText: translationText,
             hostManager: hostManager,
             connectManager: connectManager,
+            prebuiltController: prebuiltController,
           ),
         ),
       );

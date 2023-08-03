@@ -18,9 +18,9 @@ class ZegoUIKitPrebuiltLiveStreamingData {
     required this.liveID,
     required this.config,
     required this.isPrebuiltFromMinimizing,
+    required this.controller,
     this.durationStartTime,
     this.onDispose,
-    this.controller,
   });
 
   /// you need to fill in the appID you obtained from console.zegocloud.com
@@ -42,7 +42,7 @@ class ZegoUIKitPrebuiltLiveStreamingData {
 
   final VoidCallback? onDispose;
 
-  final ZegoUIKitPrebuiltLiveStreamingController? controller;
+  final ZegoUIKitPrebuiltLiveStreamingController controller;
 
   final bool isPrebuiltFromMinimizing;
 

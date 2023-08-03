@@ -1,10 +1,27 @@
+## 2.14.3
+- Optimizing code for chat widget
+
+## 2.14.2
+- Added connect-invitation-related APIs in the **ZegoUIKitPrebuiltLiveStreamingController**, which can be called through **ZegoUIKitPrebuiltLiveStreamingController.connectInvite**.
+
+## 2.14.1
+- Optimized the notification events form for the audience request co-host, removed **registerCoHostEventsForHost**, and split it into **onRequestCoHostEvent**, **onCancelCoHostEvent**, and 
+  **onRequestCoHostTimeoutEvent**.
+
+## 2.14.0
+- Added connection-related APIs in the **ZegoUIKitPrebuiltLiveStreamingController**, which can be called through **ZegoUIKitPrebuiltLiveStreamingController.connect**.
+- Added notifications for click and long-press events in the chat message, which can be monitored through **ZegoInRoomMessageConfig.onMessageClick** and **ZegoInRoomMessageConfig.onMessageLongPress**.
+- Support set chat background by **ZegoInRoomMessageConfig.background**.
+- Support customization of member button by **ZegoMemberButtonConfig**.
+- Support customization of the host avatar in the top left corner by **ZegoTopMenuBarConfig.hostAvatarBuilder**.
+
 ## 2.13.0
 - Added message sending and receiving API to the controller. 
+- Added handling for local message sending failures. When a local message fails to send, it can be retried by clicking the icon. The icon can be customized through **ZegoInRoomMessageConfig.resendIcon**.
+- Added avatar display to messages by default. If avatars are not desired, they can be hidden through **ZegoInRoomMessageConfig.showAvatar**.
 - Adjusted the message display to default to showing the entire content. If not all content needs to be displayed, the maximum number of displayed lines can be modified through 
   **ZegoInRoomMessageConfig.maxLines**. When the maximum number of lines is exceeded, the message will automatically collapse. 
 - Supported customizing the location of the message display container. The offset value of the bottom left corner can be set through **ZegoInRoomMessageConfig.bottomLeft** to adjust the position. 
-- Added handling for local message sending failures. When a local message fails to send, it can be retried by clicking the icon. The icon can be customized through **ZegoInRoomMessageConfig.resendIcon**. 
-- Added avatar display to messages by default. If avatars are not desired, they can be hidden through **ZegoInRoomMessageConfig.showAvatar**. 
 - Supported dynamically configuring whether the audio/video data of each co-host plays. This can be customized through **ZegoPrebuiltAudioVideoViewConfig.playCoHostVideo** and **ZegoPrebuiltAudioVideoViewConfig.playCoHostAudio**. 
 - Supported dynamically configuring the display and hiding of each co-host window. This can be customized through **ZegoPrebuiltAudioVideoViewConfig.visible**.
 
@@ -101,7 +118,7 @@
 - Add a "removeCoHost" method to the controller that allows the host remove a co-host.
 - Add a "makeAudienceCoHost" method to the controller that allows the host invite an audience to be a co-host.
 - Supports PK in-app minimization.
-- Support foreground in config，if you need to nest some widgets in [ZegoUIKitPrebuiltLiveStreaming], please use [foreground] nesting, otherwise these widgets will be lost when you minimize and restore the [ZegoUIKitPrebuiltLiveStreaming]
+- Support foreground in config，if you need to nest some widgets in **ZegoUIKitPrebuiltLiveStreaming**, please use **foreground** nesting, otherwise these widgets will be lost when you minimize and restore the **ZegoUIKitPrebuiltLiveStreaming**
 
 ## 2.7.0
 - supports in-app minimization.

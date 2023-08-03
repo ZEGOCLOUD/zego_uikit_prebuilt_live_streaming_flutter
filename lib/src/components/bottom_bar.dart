@@ -95,7 +95,8 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
                   return rightToolbar(context);
                 }
 
-                if (ConnectState.connecting == connectState) {
+                if (ZegoLiveStreamingAudienceConnectState.connecting ==
+                    connectState) {
                   return rightToolbar(context);
                 }
 
@@ -117,7 +118,8 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
     } else {
       final connectState =
           widget.connectManager.audienceLocalConnectStateNotifier.value;
-      final isCoHost = ConnectState.connected == connectState;
+      final isCoHost =
+          ZegoLiveStreamingAudienceConnectState.connected == connectState;
 
       buttons = isCoHost
           ? widget.config.bottomMenuBarConfig.coHostButtons
@@ -352,7 +354,7 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
     switch (type) {
       case ZegoMenuBarButtonName.coHostControlButton:
         switch (widget.connectManager.audienceLocalConnectStateNotifier.value) {
-          case ConnectState.idle:
+          case ZegoLiveStreamingAudienceConnectState.idle:
             final textSize = getTextSize(
               widget.config.bottomMenuBarConfig.buttonStyle
                       ?.requestCoHostButtonText ??
@@ -366,7 +368,7 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
               zegoLiveButtonSize.height,
             );
             break;
-          case ConnectState.connecting:
+          case ZegoLiveStreamingAudienceConnectState.connecting:
             final textSize = getTextSize(
               widget.config.bottomMenuBarConfig.buttonStyle
                       ?.cancelRequestCoHostButtonText ??
@@ -380,7 +382,7 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
               zegoLiveButtonSize.height,
             );
             break;
-          case ConnectState.connected:
+          case ZegoLiveStreamingAudienceConnectState.connected:
             final textSize = getTextSize(
               widget.config.bottomMenuBarConfig.buttonStyle
                       ?.endCoHostButtonText ??
@@ -438,7 +440,7 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
     var cameraDefaultOn = widget.config.turnOnCameraWhenJoining;
     var microphoneDefaultOn = widget.config.turnOnMicrophoneWhenJoining;
     if (widget.config.plugins.isNotEmpty &&
-        ConnectState.connected ==
+        ZegoLiveStreamingAudienceConnectState.connected ==
             widget.connectManager.audienceLocalConnectStateNotifier.value) {
       cameraDefaultOn = widget.config.turnOnCameraWhenCohosted;
       microphoneDefaultOn = true;

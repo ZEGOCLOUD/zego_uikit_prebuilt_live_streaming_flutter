@@ -14,6 +14,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect_manager.dart
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_inner_text.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_controller.dart';
 
 /// @nodoc
 class ZegoAudioVideoForeground extends StatelessWidget {
@@ -25,6 +26,7 @@ class ZegoAudioVideoForeground extends StatelessWidget {
   final ZegoLiveConnectManager connectManager;
   final ZegoPopUpManager popUpManager;
   final ZegoInnerText translationText;
+  final ZegoUIKitPrebuiltLiveStreamingController prebuiltController;
 
   final bool showMicrophoneStateOnView;
   final bool showCameraStateOnView;
@@ -38,6 +40,7 @@ class ZegoAudioVideoForeground extends StatelessWidget {
     required this.hostManager,
     required this.connectManager,
     required this.popUpManager,
+    required this.prebuiltController,
     required this.translationText,
     this.showMicrophoneStateOnView = true,
     this.showCameraStateOnView = true,
@@ -174,6 +177,7 @@ class ZegoAudioVideoForeground extends StatelessWidget {
           hostManager: hostManager,
           connectManager: connectManager,
           popUpManager: popUpManager,
+          prebuiltController: prebuiltController,
           translationText: translationText,
         );
       },

@@ -2,18 +2,20 @@ part of 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_controlle
 
 /// @nodoc
 mixin ZegoLiveStreamingControllerMessage {
-  final ZegoLiveStreamingMessageController _messageController =
-      ZegoLiveStreamingMessageController();
+  final _messageController = ZegoLiveStreamingMessageController();
 
   ZegoLiveStreamingMessageController get message => _messageController;
 }
 
-/// @nodoc
+/// Here are the APIs related to message.
 class ZegoLiveStreamingMessageController {
   final _enableProperty = ZegoInRoomMessageEnableProperty();
 
-  /// send in-room message
+  /// sends the chat message
+  ///
   /// @return Error code, please refer to the error codes document https://docs.zegocloud.com/en/5548.html for details.
+  ///
+  /// @return A `Future` that representing whether the request was successful.
   Future<bool> send(String message) async {
     if (!_enableProperty.value) {
       ZegoLoggerService.logInfo(
@@ -28,11 +30,19 @@ class ZegoLiveStreamingMessageController {
     return ZegoUIKit().sendInRoomMessage(message);
   }
 
-  /// get existed in-room messages
+  /// Retrieves a list of chat messages that already exist in the room.
+  ///
+  /// @return A `List` of `ZegoInRoomMessage` objects representing the chat messages that already exist in the room.
   List<ZegoInRoomMessage> list() {
     return ZegoUIKit().getInRoomMessages();
   }
 
+  /// Retrieves a list stream of chat messages that already exist in the room.
+  /// the stream will dynamically update when new chat messages are received,
+  /// and you can use a `StreamBuilder` to listen to it and update the UI in real time.
+  ///
+  /// @return A `List` of `ZegoInRoomMessage` objects representing the chat messages that already exist in the room.
+  ///
   /// Example:
   ///
   /// ```dart
@@ -62,7 +72,6 @@ class ZegoLiveStreamingMessageController {
   ///     ),
   ///   )
   /// ```
-  /// get in-room messages notifier
   Stream<List<ZegoInRoomMessage>> stream() {
     return ZegoUIKit().getInRoomMessageListStream();
   }

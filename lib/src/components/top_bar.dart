@@ -10,11 +10,12 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/components/leave_button.d
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/mini_button.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/prebuilt_data.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_controller.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_inner_text.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/mini_button.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/prebuilt_data.dart';
 
 /// @nodoc
 class ZegoTopBar extends StatefulWidget {
@@ -27,6 +28,8 @@ class ZegoTopBar extends StatefulWidget {
 
   final ZegoLiveConnectManager connectManager;
   final ZegoPopUpManager popUpManager;
+  final ZegoUIKitPrebuiltLiveStreamingController prebuiltController;
+
   final ZegoInnerText translationText;
 
   final ValueNotifier<bool>? isLeaveRequestingNotifier;
@@ -40,6 +43,7 @@ class ZegoTopBar extends StatefulWidget {
     required this.hostUpdateEnabledNotifier,
     required this.connectManager,
     required this.popUpManager,
+    required this.prebuiltController,
     required this.translationText,
     this.isLeaveRequestingNotifier,
   }) : super(key: key);
@@ -87,7 +91,12 @@ class _ZegoTopBarState extends State<ZegoTopBar> {
                 hostManager: widget.hostManager,
                 connectManager: widget.connectManager,
                 popUpManager: widget.popUpManager,
+                prebuiltController: widget.prebuiltController,
                 translationText: widget.translationText,
+                builder: widget.config.memberButtonConfig.builder,
+                icon: widget.config.memberButtonConfig.icon,
+                backgroundColor:
+                    widget.config.memberButtonConfig.backgroundColor,
               ),
               SizedBox(width: 20.zR),
               closeButton(),
@@ -137,40 +146,42 @@ class _ZegoTopBarState extends State<ZegoTopBar> {
           children: [
             SizedBox(width: 32.zR),
             GestureDetector(
-                onTap: () {
-                  widget.config.topMenuBarConfig.onHostAvatarClicked
-                      ?.call(host);
-                },
-                child: SizedBox(
-                  height: 68.zR,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: ZegoUIKitDefaultTheme.buttonBackgroundColor,
-                      borderRadius: BorderRadius.circular(68.zR),
-                    ),
-                    child: Row(
-                      children: [
-                        SizedBox(width: 6.zR),
-                        ZegoAvatar(
-                          user: host,
-                          avatarSize: Size(56.zR, 56.zR),
-                          showSoundLevel: false,
-                          avatarBuilder: widget.config.avatarBuilder,
-                        ),
-                        SizedBox(width: 12.zR),
-                        Text(
-                          host.name,
-                          style: TextStyle(
-                            fontSize: 24.zR,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w400,
+              onTap: () {
+                widget.config.topMenuBarConfig.onHostAvatarClicked?.call(host);
+              },
+              child: widget.config.topMenuBarConfig.hostAvatarBuilder
+                      ?.call(host) ??
+                  SizedBox(
+                    height: 68.zR,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: ZegoUIKitDefaultTheme.buttonBackgroundColor,
+                        borderRadius: BorderRadius.circular(68.zR),
+                      ),
+                      child: Row(
+                        children: [
+                          SizedBox(width: 6.zR),
+                          ZegoAvatar(
+                            user: host,
+                            avatarSize: Size(56.zR, 56.zR),
+                            showSoundLevel: false,
+                            avatarBuilder: widget.config.avatarBuilder,
                           ),
-                        ),
-                        SizedBox(width: 24.zR),
-                      ],
+                          SizedBox(width: 12.zR),
+                          Text(
+                            host.name,
+                            style: TextStyle(
+                              fontSize: 24.zR,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                          SizedBox(width: 24.zR),
+                        ],
+                      ),
                     ),
                   ),
-                )),
+            ),
           ],
         );
       },

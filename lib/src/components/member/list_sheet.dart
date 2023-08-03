@@ -10,10 +10,10 @@ import 'package:zego_uikit/zego_uikit.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_sheet_menu.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/components/toast.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_controller.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_inner_text.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/pk/src/pk_impl.dart';
 
@@ -28,6 +28,7 @@ class ZegoMemberListSheet extends StatefulWidget {
     required this.connectManager,
     required this.popUpManager,
     required this.innerText,
+    required this.prebuiltController,
   }) : super(key: key);
 
   final bool isPluginEnabled;
@@ -35,6 +36,7 @@ class ZegoMemberListSheet extends StatefulWidget {
   final ZegoLiveConnectManager connectManager;
   final ZegoPopUpManager popUpManager;
   final ZegoInnerText innerText;
+  final ZegoUIKitPrebuiltLiveStreamingController prebuiltController;
 
   final ZegoAvatarBuilder? avatarBuilder;
   final ZegoMemberListItemBuilder? itemBuilder;
@@ -45,24 +47,14 @@ class ZegoMemberListSheet extends StatefulWidget {
 
 /// @nodoc
 class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
-  List<String> agreeRequestingUserIDs = [];
-  List<StreamSubscription<dynamic>?> subscriptions = [];
-
   @override
   void initState() {
     super.initState();
-
-    subscriptions.add(
-        ZegoUIKit().getAudioVideoListStream().listen(onAudioVideoListUpdated));
   }
 
   @override
   void dispose() {
     super.dispose();
-
-    for (final subscription in subscriptions) {
-      subscription?.cancel();
-    }
   }
 
   @override
@@ -75,15 +67,16 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
           SizedBox(
             height: constraints.maxHeight - 1.zR - 98.zH,
             child: StreamBuilder<List<ZegoUIKitUser>>(
-                stream: ZegoUIKit().getAudioVideoListStream(),
-                builder: (context, snapshot) {
-                  return ValueListenableBuilder<List<ZegoUIKitUser>>(
-                      valueListenable:
-                          widget.connectManager.requestCoHostUsersNotifier,
-                      builder: (context, requestCoHostUsers, _) {
-                        return memberListView();
-                      });
-                }),
+              stream: ZegoUIKit().getAudioVideoListStream(),
+              builder: (context, snapshot) {
+                return ValueListenableBuilder<List<ZegoUIKitUser>>(
+                    valueListenable:
+                        widget.connectManager.requestCoHostUsersNotifier,
+                    builder: (context, requestCoHostUsers, _) {
+                      return memberListView();
+                    });
+              },
+            ),
           ),
         ],
       );
@@ -101,23 +94,27 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
 
         /// co-host
         final coHostUsers = <ZegoUIKitUser>[];
-        remoteUsers.removeWhere((remoteUser) {
-          if (widget.connectManager.isCoHost(remoteUser)) {
-            coHostUsers.add(remoteUser);
-            return true;
-          }
-          return false;
-        });
+        remoteUsers.removeWhere(
+          (remoteUser) {
+            if (widget.connectManager.isCoHost(remoteUser)) {
+              coHostUsers.add(remoteUser);
+              return true;
+            }
+            return false;
+          },
+        );
 
         /// requesting co-host
         final usersInRequestCoHost = <ZegoUIKitUser>[];
-        remoteUsers.removeWhere((remoteUser) {
-          if (isUserInRequestCoHost(remoteUser.id)) {
-            usersInRequestCoHost.add(remoteUser);
-            return true;
-          }
-          return false;
-        });
+        remoteUsers.removeWhere(
+          (remoteUser) {
+            if (isUserInRequestCoHost(remoteUser.id)) {
+              usersInRequestCoHost.add(remoteUser);
+              return true;
+            }
+            return false;
+          },
+        );
 
         var sortUsers = <ZegoUIKitUser>[];
         if (widget.hostManager.notifier.value != null) {
@@ -303,72 +300,24 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
     return Row(
       children: [
         controlButton(
-            text: widget.innerText.disagreeButton,
-            backgroundColor: const Color(0xffA7A6B7),
-            onPressed: () {
-              ZegoUIKit()
-                  .getSignalingPlugin()
-                  .refuseInvitation(inviterID: user.id, data: '')
-                  .then((result) {
-                ZegoLoggerService.logInfo(
-                  'refuse audience ${user.name} co-host request, $result',
-                  tag: 'live streaming',
-                  subTag: 'member list',
-                );
-                if (result.error == null) {
-                  widget.connectManager.removeRequestCoHostUsers(user);
-                } else {
-                  showDebugToast('error:${result.error}');
-                }
-              });
-            }),
+          text: widget.innerText.disagreeButton,
+          backgroundColor: const Color(0xffA7A6B7),
+          onPressed: () {
+            widget.prebuiltController.connect.hostRejectCoHostRequest(user);
+          },
+        ),
         SizedBox(width: 12.zR),
         controlButton(
-            text: widget.innerText.agreeButton,
-            gradient: const LinearGradient(
-              colors: [Color(0xffA754FF), Color(0xff510DF1)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            onPressed: () {
-              if (widget.connectManager.coHostCount.value +
-                      agreeRequestingUserIDs.length >=
-                  widget.connectManager.maxCoHostCount) {
-                widget.hostManager.config.onMaxCoHostReached
-                    ?.call(widget.hostManager.config.maxCoHostCount);
-
-                ZegoLoggerService.logInfo(
-                  'co-host max count had reached',
-                  tag: 'live streaming',
-                  subTag: 'member list',
-                );
-
-                return;
-              }
-              agreeRequestingUserIDs.add(user.id);
-
-              ZegoLoggerService.logInfo(
-                'agree requesting count:${agreeRequestingUserIDs.length}',
-                tag: 'live streaming',
-                subTag: 'member list',
-              );
-              ZegoUIKit()
-                  .getSignalingPlugin()
-                  .acceptInvitation(inviterID: user.id, data: '')
-                  .then((result) {
-                ZegoLoggerService.logInfo(
-                  'accept audience ${user.name} co-host request, result:$result, ',
-                  tag: 'live streaming',
-                  subTag: 'member list',
-                );
-
-                if (result.error == null) {
-                  widget.connectManager.removeRequestCoHostUsers(user);
-                } else {
-                  showDebugToast('error:${result.error}');
-                }
-              });
-            }),
+          text: widget.innerText.agreeButton,
+          gradient: const LinearGradient(
+            colors: [Color(0xffA754FF), Color(0xff510DF1)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          onPressed: () {
+            widget.prebuiltController.connect.hostAgreeCoHostRequest(user);
+          },
+        ),
       ],
     );
   }
@@ -440,6 +389,7 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
               hostManager: widget.hostManager,
               connectManager: widget.connectManager,
               popUpManager: widget.popUpManager,
+              prebuiltController: widget.prebuiltController,
               translationText: widget.innerText,
             );
           },
@@ -533,11 +483,6 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
         widget.connectManager.requestCoHostUsersNotifier.value
             .indexWhere((requestCoHostUser) => userID == requestCoHostUser.id);
   }
-
-  void onAudioVideoListUpdated(List<ZegoUIKitUser> users) {
-    agreeRequestingUserIDs.removeWhere(
-        (userID) => -1 != users.indexWhere((user) => user.id == userID));
-  }
 }
 
 /// @nodoc
@@ -549,6 +494,7 @@ Future<void> showMemberListSheet({
   required ZegoLiveHostManager hostManager,
   required ZegoLiveConnectManager connectManager,
   required ZegoPopUpManager popUpManager,
+  required ZegoUIKitPrebuiltLiveStreamingController prebuiltController,
   required ZegoInnerText translationText,
 }) async {
   final key = DateTime.now().millisecondsSinceEpoch;
@@ -582,6 +528,7 @@ Future<void> showMemberListSheet({
               hostManager: hostManager,
               connectManager: connectManager,
               popUpManager: popUpManager,
+              prebuiltController: prebuiltController,
               innerText: translationText,
             ),
           ),
