@@ -22,6 +22,17 @@ class ZegoLiveStreamingManagers {
   static final ZegoLiveStreamingManagers _instance =
       ZegoLiveStreamingManagers._internal();
 
+  set swipingCurrentLiveID(String value) {
+    ZegoLoggerService.logInfo(
+      'set switching current live id:$value',
+      tag: 'live streaming',
+      subTag: 'core manager.swiping',
+    );
+    _swipingCurrentLiveID = value;
+  }
+
+  String get swipingCurrentLiveID => _swipingCurrentLiveID;
+
   void initPluginAndManagers(
     ZegoPopUpManager popUpManager,
     ZegoUIKitPrebuiltLiveStreamingData prebuiltData,
@@ -31,7 +42,7 @@ class ZegoLiveStreamingManagers {
     if (_initialized) {
       ZegoLoggerService.logInfo(
         'had init',
-        tag: 'audio room',
+        tag: 'live streaming',
         subTag: 'core manager',
       );
 
@@ -40,7 +51,7 @@ class ZegoLiveStreamingManagers {
 
     ZegoLoggerService.logInfo(
       'init plugin and managers',
-      tag: 'audio room',
+      tag: 'live streaming',
       subTag: 'core manager',
     );
 
@@ -155,6 +166,9 @@ class ZegoLiveStreamingManagers {
   ZegoPrebuiltPlugins? plugins;
 
   ZegoLiveConnectManager? connectManager;
+
+  bool _swipingInitialized = false;
+  String _swipingCurrentLiveID = '';
 
   final kickOutNotifier = ValueNotifier<bool>(false);
 }

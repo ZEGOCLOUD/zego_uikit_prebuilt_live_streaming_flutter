@@ -11,3 +11,4 @@ export 'src/live_streaming_inner_text.dart';
 export 'src/minimizing/mini_overlay_machine.dart';
 export 'src/minimizing/mini_overlay_page.dart';
 export 'src/pk/pk_service.dart';
+export 'src/swiping/config.dart';

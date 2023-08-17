@@ -12,6 +12,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/components/duration_time_
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/core_managers.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/swiping/live_streaming_swiping.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/mini_overlay_machine.dart';
@@ -195,17 +196,18 @@ class ZegoUIKitPrebuiltLiveStreamingMiniOverlayPageState
 
             Navigator.of(widget.contextQuery(), rootNavigator: true).push(
               MaterialPageRoute(builder: (context) {
-                return SafeArea(
-                  child: ZegoUIKitPrebuiltLiveStreaming(
-                    appID: prebuiltData!.appID,
-                    appSign: prebuiltData.appSign,
-                    userID: prebuiltData.userID,
-                    userName: prebuiltData.userName,
-                    liveID: prebuiltData.liveID,
-                    config: prebuiltData.config,
-                    onDispose: prebuiltData.onDispose,
-                    controller: prebuiltData.controller,
-                  ),
+                final isSwiping = prebuiltData?.config.swipingConfig != null;
+                return ZegoUIKitPrebuiltLiveStreaming(
+                  appID: prebuiltData!.appID,
+                  appSign: prebuiltData.appSign,
+                  userID: prebuiltData.userID,
+                  userName: prebuiltData.userName,
+                  liveID: isSwiping
+                      ? ZegoLiveStreamingManagers().swipingCurrentLiveID
+                      : prebuiltData.liveID,
+                  config: prebuiltData.config,
+                  onDispose: prebuiltData.onDispose,
+                  controller: prebuiltData.controller,
                 );
               }),
             );

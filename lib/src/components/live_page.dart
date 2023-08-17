@@ -365,7 +365,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
           ),
         ),
       ),
-      backgroundTips(),
+      if (widget.config.showBackgroundTips) backgroundTips(),
     ];
   }
 

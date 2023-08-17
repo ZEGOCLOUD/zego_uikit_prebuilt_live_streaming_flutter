@@ -97,7 +97,8 @@ class ZegoLiveStreamingRoomController {
 
         /// not need logout
         // await ZegoUIKit().getSignalingPlugin().logout();
-        await ZegoUIKit().getSignalingPlugin().uninit();
+        /// not need destroy signaling sdk
+        await ZegoUIKit().getSignalingPlugin().uninit(forceDestroy: false);
       }
 
       await ZegoLiveStreamingManagers().unintPluginAndManagers();

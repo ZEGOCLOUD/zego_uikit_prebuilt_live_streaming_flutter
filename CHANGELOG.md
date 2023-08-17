@@ -1,3 +1,16 @@
+## 2.15.3
+- update dependency
+
+## 2.15.2
+- update dependency
+
+## 2.15.1
+- Hide background tips by default. If you want to show them, they can be configured through **ZegoUIKitPrebuiltLiveStreamingConfig.showBackgroundTips**.
+- Add liveID in **ZegoLiveStreamingSwipingConfig.loadingBuilder**
+
+## 2.15.0
+- Supports up and down swiping during live streaming through configuration of **ZegoUIKitPrebuiltLiveStreamingConfig.swipingConfig**.
+
 ## 2.14.3
 - Optimizing code for chat widget
 

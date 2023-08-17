@@ -9,6 +9,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/components/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_inner_text.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/pk/defines.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/swiping/config.dart';
 
 /// Configuration for initializing the Live Streaming
 ///
@@ -37,6 +38,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         rootNavigator = false,
         videoConfig = ZegoPrebuiltVideoConfig(),
         maxCoHostCount = defaultMaxCoHostCount,
+        showBackgroundTips = false,
         audioVideoViewConfig = ZegoPrebuiltAudioVideoViewConfig(
           showSoundWavesInAudioMode: true,
         ),
@@ -86,6 +88,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         rootNavigator = false,
         videoConfig = ZegoPrebuiltVideoConfig(),
         maxCoHostCount = defaultMaxCoHostCount,
+        showBackgroundTips = false,
         audioVideoViewConfig = ZegoPrebuiltAudioVideoViewConfig(
           showSoundWavesInAudioMode: true,
         ),
@@ -114,11 +117,13 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
     this.markAsLargeRoom = false,
     this.rootNavigator = false,
     this.maxCoHostCount = defaultMaxCoHostCount,
+    this.showBackgroundTips = false,
     this.layout,
     this.foreground,
     this.background,
     this.confirmDialogInfo,
     this.beautyConfig,
+    this.swipingConfig,
     this.avatarBuilder,
     this.startLiveButtonBuilder,
     this.onMaxCoHostReached,
@@ -372,6 +377,14 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   /// If exceeded, other audience members cannot become co-hosts.
   /// The default value is 12.
   int maxCoHostCount;
+
+  /// show background tips of live or not, default tips is 'No host is online.'
+  bool showBackgroundTips;
+
+  /// swiping config, if you wish to use swiping, please configure this config.
+  /// if it is null, this swiping will not be enabled.
+  /// the [liveID] will be the initial live id of swiping
+  ZegoLiveStreamingSwipingConfig? swipingConfig;
 
   /// Confirmation callback method before leaving the live streaming.
   ///
