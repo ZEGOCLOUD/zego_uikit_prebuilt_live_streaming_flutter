@@ -1,13 +1,15 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
 
-//
+// Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
 
-//
+// Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/live_streaming.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/core_managers.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_controller.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/swiping/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/swiping/loading.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/swiping/login_notifier.dart';
@@ -25,6 +27,7 @@ class ZegoUIKitPrebuiltLiveStreamingSwiping extends StatefulWidget {
     required this.config,
     required this.swipingConfig,
     this.controller,
+    this.events,
   }) : super(key: key);
   final String initialLiveID;
 
@@ -48,6 +51,9 @@ class ZegoUIKitPrebuiltLiveStreamingSwiping extends StatefulWidget {
 
   /// same as [ZegoUIKitPrebuiltLiveStreamingPage.controller]
   final ZegoUIKitPrebuiltLiveStreamingController? controller;
+
+  /// same as [ZegoUIKitPrebuiltLiveStreamingPage.events]
+  final ZegoUIKitPrebuiltLiveStreamingEvents? events;
 
   /// @nodoc
   @override
@@ -160,6 +166,7 @@ class _ZegoUIKitPrebuiltLiveStreamingSwipingState
                 userID: widget.userID,
                 userName: widget.userName,
                 controller: widget.controller,
+                events: widget.events,
                 config: widget.config,
               );
             },

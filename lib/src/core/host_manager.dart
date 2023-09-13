@@ -9,7 +9,6 @@ import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect_manager.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/core/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_defines.dart';
 
@@ -252,6 +251,12 @@ class ZegoLiveHostManager {
 
   void setConnectManger(ZegoLiveConnectManager manager) {
     connectManager = manager;
+
+    ZegoLoggerService.logInfo(
+      'set connect manager',
+      tag: 'live streaming',
+      subTag: 'host manager',
+    );
   }
 
   void updateHostValue(ZegoUIKitUser? host) {

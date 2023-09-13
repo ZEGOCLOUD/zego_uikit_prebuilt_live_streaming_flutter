@@ -1,10 +1,11 @@
-// Flutter imports:
+// Dart imports:
 import 'dart:async';
 
+// Flutter imports:
 import 'package:flutter/cupertino.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 // Package imports:
+import 'package:permission_handler/permission_handler.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
@@ -17,6 +18,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_defines.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/mini_overlay_machine.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/pk/src/pk_impl.dart';
 
@@ -90,15 +92,15 @@ class ZegoUIKitPrebuiltLiveStreamingController
 
   /// DO NOT CALL!!!
   /// Call Inside By Prebuilt
-  void initByPrebuilt() {
+  void initByPrebuilt({ZegoUIKitPrebuiltLiveStreamingEvents? events}) {
     ZegoLoggerService.logInfo(
       'init by prebuilt',
       tag: 'live streaming',
       subTag: 'controller',
     );
 
-    connect.init();
-    connectInvite.init();
+    connect.init(events: events);
+    connectInvite.init(events: events);
   }
 
   /// DO NOT CALL!!!

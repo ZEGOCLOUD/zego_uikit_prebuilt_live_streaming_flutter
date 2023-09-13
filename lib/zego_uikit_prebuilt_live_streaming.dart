@@ -7,6 +7,7 @@ export 'src/live_streaming.dart';
 export 'src/live_streaming_config.dart';
 export 'src/live_streaming_controller.dart';
 export 'src/live_streaming_defines.dart';
+export 'src/live_streaming_events.dart';
 export 'src/live_streaming_inner_text.dart';
 export 'src/minimizing/mini_overlay_machine.dart';
 export 'src/minimizing/mini_overlay_page.dart';

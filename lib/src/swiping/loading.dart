@@ -1,7 +1,10 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
 
+// Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
 
+// Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/mini_overlay_machine.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/swiping/logout_notifier.dart';
 

@@ -176,7 +176,7 @@ class ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine {
     await ZegoUIKit().resetBeautyEffect();
     // await ZegoUIKit().leaveRoom(); //  kick-out will leave in zego_uikit
 
-    _prebuiltData?.controller?.uninitByPrebuilt();
+    _prebuiltData?.controller.uninitByPrebuilt();
     _prebuiltData?.config.onMeRemovedFromRoom?.call(fromUserID);
   }
 

@@ -53,11 +53,16 @@ extension ZegoLiveStreamingAudioVideoManagers on ZegoLiveStreamingManagers {
           audioVideoUser,
         );
         ZegoLoggerService.logInfo(
-          'mute co-host(${audioVideoUser.id}) audio, local role:$localRole, is play:$isPlayAudio',
+          'mute co-host(${audioVideoUser.id}) audio, local role:$localRole, is play:$isPlayAudio, '
+          'co-host microphone state:${audioVideoUser.microphone.value}',
           tag: 'live streaming',
           subTag: 'core manager-audio video',
         );
-        ZegoUIKit().muteUserAudio(audioVideoUser.id, !isPlayAudio);
+        if (isPlayAudio && audioVideoUser.microphone.value) {
+          ZegoUIKit().muteUserAudio(audioVideoUser.id, false);
+        } else if (!isPlayAudio) {
+          ZegoUIKit().muteUserAudio(audioVideoUser.id, true);
+        }
       }
     }
 
@@ -78,11 +83,16 @@ extension ZegoLiveStreamingAudioVideoManagers on ZegoLiveStreamingManagers {
           audioVideoUser,
         );
         ZegoLoggerService.logInfo(
-          'mute co-host(${audioVideoUser.id}) video, local role:$localRole, is play:$isPlayVideo',
+          'mute co-host(${audioVideoUser.id}) video, local role:$localRole, is play:$isPlayVideo, '
+          'co-host camera state:${audioVideoUser.camera.value}',
           tag: 'live streaming',
           subTag: 'core manager-audio video',
         );
-        ZegoUIKit().muteUserVideo(audioVideoUser.id, !isPlayVideo);
+        if (isPlayVideo && audioVideoUser.camera.value) {
+          ZegoUIKit().muteUserVideo(audioVideoUser.id, false);
+        } else if (!isPlayVideo) {
+          ZegoUIKit().muteUserVideo(audioVideoUser.id, true);
+        }
       }
     }
   }

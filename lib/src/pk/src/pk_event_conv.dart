@@ -228,8 +228,9 @@ extension ZegoLiveStreamingPKBattleManagerEventConv
     }
   }
 
-  void onIncomingPKBattleRequestReceivedEvent(
-      ZegoIncomingPKBattleRequestReceivedEvent event) async {
+  Future<void> onIncomingPKBattleRequestReceivedEvent(
+    ZegoIncomingPKBattleRequestReceivedEvent event,
+  ) async {
     ZegoLoggerService.logInfo(
       'onIncomingPKBattleRequestReceived, $event',
       tag: 'ZegoLiveStreamingPKBattleService',
@@ -260,7 +261,8 @@ extension ZegoLiveStreamingPKBattleManagerEventConv
     final shouldAutoAccept = (state.value ==
             ZegoLiveStreamingPKBattleState.waitingAnotherHostResponse) &&
         (event.anotherHost.id == waitingOutgoingPKBattleRequestUserID);
-    final alreadyInPKBattle = event.anotherHost.id == anotherHost?.id;
+    final alreadyInPKBattle = (event.anotherHost.id == anotherHost?.id) &&
+        (state.value != ZegoLiveStreamingPKBattleState.idle);
     if (shouldAutoAccept || alreadyInPKBattle) {
       final ret = await ZegoUIKit().getSignalingPlugin().acceptInvitation(
             inviterID: event.anotherHost.id,
@@ -331,7 +333,9 @@ extension ZegoLiveStreamingPKBattleManagerEventConv
         : defaultAction();
   }
 
-  void onPKBattleEndedByAnotherHostEvent(event) {
+  void onPKBattleEndedByAnotherHostEvent(
+    ZegoIncomingPKBattleRequestReceivedEvent event,
+  ) {
     ZegoLoggerService.logInfo(
       'onPKBattleEndedByAnotherHost, $event',
       tag: 'ZegoLiveStreamingPKBattleService',
@@ -467,7 +471,9 @@ extension ZegoLiveStreamingPKBattleManagerEventConv
         : defaultAction();
   }
 
-  void onOutgoingPKBattleRequestRejectedEvent(event) {
+  void onOutgoingPKBattleRequestRejectedEvent(
+    ZegoOutgoingPKBattleRequestRejectedEvent event,
+  ) {
     var message = 'code: ${event.code}.';
     if (event.code == ZegoLiveStreamingPKBattleRejectCode.busy.index) {
       message = 'The host is busy.';
@@ -497,7 +503,9 @@ extension ZegoLiveStreamingPKBattleManagerEventConv
         : defaultAction();
   }
 
-  void onOutgoingPKBattleRequestTimeoutEvent(event) {
+  void onOutgoingPKBattleRequestTimeoutEvent(
+    ZegoOutgoingPKBattleRequestTimeoutEvent event,
+  ) {
     ZegoLoggerService.logInfo(
       'onOutgoingPKBattleRequestTimeout, $event',
       tag: 'ZegoLiveStreamingPKBattleService',

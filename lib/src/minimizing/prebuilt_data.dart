@@ -5,8 +5,10 @@ import 'dart:core';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+// Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_controller.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_events.dart';
 
 /// @nodoc
 class ZegoUIKitPrebuiltLiveStreamingData {
@@ -19,6 +21,7 @@ class ZegoUIKitPrebuiltLiveStreamingData {
     required this.config,
     required this.isPrebuiltFromMinimizing,
     required this.controller,
+    required this.events,
     this.durationStartTime,
     this.onDispose,
   });
@@ -43,6 +46,8 @@ class ZegoUIKitPrebuiltLiveStreamingData {
   final VoidCallback? onDispose;
 
   final ZegoUIKitPrebuiltLiveStreamingController controller;
+
+  final ZegoUIKitPrebuiltLiveStreamingEvents events;
 
   final bool isPrebuiltFromMinimizing;
 

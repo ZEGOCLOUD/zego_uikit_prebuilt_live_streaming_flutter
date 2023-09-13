@@ -4,9 +4,9 @@ import 'dart:math' as math; // import this
 
 // Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 // Package imports:
+import 'package:permission_handler/permission_handler.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:

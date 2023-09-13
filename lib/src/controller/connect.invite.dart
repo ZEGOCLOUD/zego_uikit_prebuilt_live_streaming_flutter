@@ -10,15 +10,6 @@ mixin ZegoLiveStreamingControllerConnectInvite {
 
 /// Here are the APIs related to inviting co-hosts to connect.
 class ZegoLiveStreamingConnectInviteController {
-  /// for audience: Notification that an audience has received a request to become a co-host from the host.
-  void Function(ZegoUIKitUser host)? onCoHostInvitationReceived;
-
-  /// for host: Notification that an audience has accepted or rejected to become a co-host.
-  void Function(
-    ZegoUIKitUser audience,
-    bool isAccepted,
-  )? onCoHostInvitationResponse;
-
   /// host invite [audience] to be a co-host
   ///
   /// If [withToast] is set to true, a toast message will be displayed after the request succeeds or fails.
@@ -183,6 +174,8 @@ class ZegoLiveStreamingConnectInviteController {
         return false;
       }
 
+      _events?.audienceEvents.onActionAcceptCoHostInvitation?.call();
+
       final permissions = _connectManager!.getCoHostPermissions();
       await permissions
           .request()
@@ -264,6 +257,8 @@ class ZegoLiveStreamingConnectInviteController {
         subTag: 'controller.connect.invite',
       );
 
+      _events?.audienceEvents.onActionRefuseCoHostInvitation?.call();
+
       if (result.error != null) {
         showDebugToast('error:${result.error}');
       }
@@ -274,18 +269,14 @@ class ZegoLiveStreamingConnectInviteController {
 
   /// DO NOT CALL
   /// Call Inside By Prebuilt
-  void init() {
-    _connectManager?.registerCoHostInvitationCallbacks(
-      onCoHostInvitationReceived: (ZegoUIKitUser host) {
-        onCoHostInvitationReceived?.call(host);
-      },
-      onCoHostInvitationResponse: (
-        ZegoUIKitUser audience,
-        bool isAccepted,
-      ) {
-        onCoHostInvitationResponse?.call(audience, isAccepted);
-      },
+  void init({ZegoUIKitPrebuiltLiveStreamingEvents? events}) {
+    ZegoLoggerService.logInfo(
+      'init',
+      tag: 'live streaming',
+      subTag: 'controller.connect.invite',
     );
+
+    _events = events;
   }
 
   /// DO NOT CALL
@@ -297,10 +288,7 @@ class ZegoLiveStreamingConnectInviteController {
       subTag: 'controller.connect.invite',
     );
 
-    _connectManager?.registerCoHostInvitationCallbacks(
-      onCoHostInvitationReceived: null,
-      onCoHostInvitationResponse: null,
-    );
+    _events = null;
   }
 
   ZegoUIKitPrebuiltLiveStreamingConfig? get _prebuiltConfig =>
@@ -313,4 +301,6 @@ class ZegoLiveStreamingConnectInviteController {
       ZegoLiveStreamingManagers().connectManager;
 
   bool get _isLocalHost => _hostManager?.isLocalHost ?? false;
+
+  ZegoUIKitPrebuiltLiveStreamingEvents? _events;
 }

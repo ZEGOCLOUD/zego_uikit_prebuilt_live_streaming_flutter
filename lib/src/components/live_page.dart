@@ -432,7 +432,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
               builder: widget.config.avatarBuilder,
             ),
             screenSharingViewController:
-                widget.controller?.screen.screenSharingViewController,
+                widget.controller.screen.screenSharingViewController,
           );
         } else if (LiveStatus.living != liveStatusValue &&
             null != widget.hostManager.notifier.value) {
@@ -464,7 +464,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
                         builder: widget.config.avatarBuilder,
                       ),
                       screenSharingViewController:
-                          widget.controller?.screen.screenSharingViewController,
+                          widget.controller.screen.screenSharingViewController,
                     );
                   });
             },
@@ -562,8 +562,11 @@ class ZegoLivePageState extends State<ZegoLivePage>
         }
       }
 
-      return targetUser.cameraMuteMode.value &&
-          targetUser.microphoneMuteMode.value;
+      return !targetUser.camera.value &&
+          (!targetUser.microphone.value &&
+
+              /// if mic is in mute mode, same as open state
+              !targetUser.microphoneMuteMode.value);
     });
 
     return users;

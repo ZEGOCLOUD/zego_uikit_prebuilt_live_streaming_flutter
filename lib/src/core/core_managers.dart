@@ -1,8 +1,12 @@
 // Flutter imports:
-// Project imports:
+
+// Dart imports:
 import 'dart:async';
 
+// Flutter imports:
 import 'package:flutter/cupertino.dart';
+
+// Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
@@ -90,6 +94,7 @@ class ZegoLiveStreamingManagers {
 
     connectManager = ZegoLiveConnectManager(
       config: prebuiltData.config,
+      events: prebuiltData.events,
       hostManager: hostManager!,
       popUpManager: popUpManager,
       liveStatusNotifier: liveStatusManager!.notifier,
@@ -167,7 +172,6 @@ class ZegoLiveStreamingManagers {
 
   ZegoLiveConnectManager? connectManager;
 
-  bool _swipingInitialized = false;
   String _swipingCurrentLiveID = '';
 
   final kickOutNotifier = ValueNotifier<bool>(false);

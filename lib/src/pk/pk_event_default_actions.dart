@@ -79,7 +79,8 @@ class ZegoLiveStreamingPKBattleDefaultActions {
   }
 
   static Future<void> onPKBattleEndedByAnotherHost(
-      ZegoIncomingPKBattleRequestReceivedEvent event) async {
+    ZegoIncomingPKBattleRequestReceivedEvent event,
+  ) async {
     ZegoLoggerService.logInfo(
       'onPKBattleEndedByAnotherHost, running default action',
       tag: 'ZegoLiveStreamingPKBattleService',

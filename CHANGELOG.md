@@ -1,3 +1,28 @@
+## 2.18.1
+- Update dependency.
+
+## 2.18.0
+- Fixed an issue where the events events.audienceEvents.onActionAcceptCoHostInvitation and events.audienceEvents.onActionRefuseCoHostInvitation were not triggered after calling the methods 
+audienceAgreeCoHostInvitation and audienceRejectCoHostInvitation in the controller.
+- Added a new configuration option **disableCoHostInvitationReceivedDialog** to the config. This option controls whether the audience is prompted with a co-host invitation dialog when receiving a 
+  co-host invitation from the host.
+
+## 2.17.1
+- Update dependency.
+
+## 2.17.0
+- Add a series of co-hosting event callbacks, you can register the callbacks using **ZegoUIKitPrebuiltLiveStreamingEvents**.
+- Fix the issue where the co-host window in the host disappears when co-host turns off the camera and microphone, caused by using **ZegoPrebuiltAudioVideoViewConfig.visible**.
+
+## 2.16.0
+- Add **advanceConfigs** config, which to set advanced engine configuration
+
+## 2.15.5
+- Fix the issue where the co-host window in the host disappears when co-host turns off the camera and microphone, when the configuration **stopCoHostingWhenMicCameraOff** is set to false.
+
+## 2.15.4
+- fix pk-battle auto start issue
+
 ## 2.15.3
 - update dependency
 

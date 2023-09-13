@@ -5,7 +5,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
-import 'package:zego_uikit_prebuilt_live_streaming/src/components/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_inner_text.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/pk/defines.dart';
@@ -34,11 +33,13 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         useSpeakerWhenJoining = true,
         turnOnCameraWhenCohosted = true,
         stopCoHostingWhenMicCameraOff = false,
+        disableCoHostInvitationReceivedDialog = false,
         markAsLargeRoom = false,
         rootNavigator = false,
         videoConfig = ZegoPrebuiltVideoConfig(),
         maxCoHostCount = defaultMaxCoHostCount,
         showBackgroundTips = false,
+        advanceConfigs = {},
         audioVideoViewConfig = ZegoPrebuiltAudioVideoViewConfig(
           showSoundWavesInAudioMode: true,
         ),
@@ -84,11 +85,13 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         useSpeakerWhenJoining = true,
         turnOnCameraWhenCohosted = true,
         stopCoHostingWhenMicCameraOff = false,
+        disableCoHostInvitationReceivedDialog = false,
         markAsLargeRoom = false,
         rootNavigator = false,
         videoConfig = ZegoPrebuiltVideoConfig(),
         maxCoHostCount = defaultMaxCoHostCount,
         showBackgroundTips = false,
+        advanceConfigs = {},
         audioVideoViewConfig = ZegoPrebuiltAudioVideoViewConfig(
           showSoundWavesInAudioMode: true,
         ),
@@ -114,10 +117,12 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
     this.useSpeakerWhenJoining = true,
     this.turnOnCameraWhenCohosted = true,
     this.stopCoHostingWhenMicCameraOff = false,
+    this.disableCoHostInvitationReceivedDialog = false,
     this.markAsLargeRoom = false,
     this.rootNavigator = false,
     this.maxCoHostCount = defaultMaxCoHostCount,
     this.showBackgroundTips = false,
+    this.advanceConfigs = const {},
     this.layout,
     this.foreground,
     this.background,
@@ -203,6 +208,15 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   /// If the value is set to true, the user will stop co-hosting automatically when both camera and microphone are off.
   /// If the value is set to false, the user will keep co-hosting until manually stop co-hosting by clicking the "End" button.
   bool stopCoHostingWhenMicCameraOff;
+
+  /// used to determine whether to display a confirmation dialog to the
+  /// audience when they receive a co-host invitation, the default value is false
+  ///
+  /// If the value is True, the confirmation dialog will not be displayed.
+  /// If the value is False, the confirmation dialog will be displayed.
+  ///
+  /// You can adjust and set this variable according to your specific requirements.
+  bool disableCoHostInvitationReceivedDialog;
 
   /// configuration parameters for audio and video streaming, such as Resolution, Frame rate, Bit rate..
   ZegoPrebuiltVideoConfig videoConfig;
@@ -386,6 +400,10 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   /// the [liveID] will be the initial live id of swiping
   ZegoLiveStreamingSwipingConfig? swipingConfig;
 
+  /// Set advanced engine configuration, Used to enable advanced functions.
+  /// For details, please consult ZEGO technical support.
+  Map<String, String> advanceConfigs;
+
   /// Confirmation callback method before leaving the live streaming.
   ///
   /// If you want to perform more complex business logic before exiting the live streaming, such as updating some records to the backend, you can use the [onLeaveConfirmation] parameter to set it.
@@ -517,6 +535,9 @@ typedef ZegoPlayCoHostAudioVideoCallback = bool Function(
 class ZegoPrebuiltAudioVideoViewConfig {
   /// show target user's audio video view or not
   /// return false if you don't want to show target user's audio video view.
+  ///
+  /// when the stream list changes (specifically, when the co-hosts change),
+  /// it will dynamically read this configuration to determine whether to show the view.
   bool Function(
     ZegoUIKitUser localUser,
     ZegoLiveStreamingRole localRole,
@@ -527,11 +548,17 @@ class ZegoPrebuiltAudioVideoViewConfig {
   /// Whether to the play audio of the specified co-host?
   /// The default behavior is play.
   /// return false if you don't want to play target user's audio.
+  ///
+  /// when the stream list changes (specifically, when the co-hosts change),
+  /// it will dynamically read this configuration to determine whether to fetch the audio.(muteUserAudio)
   ZegoPlayCoHostAudioVideoCallback? playCoHostAudio;
 
   /// Whether to the play video of the specified co-host?
   /// The default behavior is play.
   /// return false if you don't want to play target user's video.
+  ///
+  /// when the stream list changes (specifically, when the co-hosts change),
+  /// it will dynamically read this configuration to determine whether to fetch the video.(muteUserVideo)
   ZegoPlayCoHostAudioVideoCallback? playCoHostVideo;
 
   /// Whether to mirror the displayed video captured by the camera.

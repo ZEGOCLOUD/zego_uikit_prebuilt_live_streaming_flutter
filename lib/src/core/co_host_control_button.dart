@@ -136,6 +136,9 @@ class _ZegoCoHostControlButtonState extends State<ZegoCoHostControlButton> {
         } else {
           showSuccess(widget.translationText.sendRequestCoHostToast);
 
+          widget.connectManager.events?.audienceEvents.onCoHostRequestSent
+              ?.call();
+
           widget.connectManager.updateAudienceConnectState(
               ZegoLiveStreamingAudienceConnectState.connecting);
         }
@@ -159,6 +162,9 @@ class _ZegoCoHostControlButtonState extends State<ZegoCoHostControlButton> {
       textStyle: buttonTextStyle,
       verticalLayout: false,
       onPressed: (String code, String message, List<String> errorInvitees) {
+        widget.connectManager.events?.audienceEvents.onActionCancelCoHostRequest
+            ?.call();
+
         widget.connectManager.updateAudienceConnectState(
             ZegoLiveStreamingAudienceConnectState.idle);
       },

@@ -9,7 +9,6 @@ import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect_manager.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/core/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
@@ -128,6 +127,12 @@ class ZegoLiveStatusManager {
 
   void setConnectManger(ZegoLiveConnectManager manager) {
     connectManager = manager;
+
+    ZegoLoggerService.logInfo(
+      'set connect manager',
+      tag: 'live streaming',
+      subTag: 'live status manager',
+    );
   }
 
   void onRoomPropertiesUpdated(Map<String, RoomProperty> updatedProperties) {

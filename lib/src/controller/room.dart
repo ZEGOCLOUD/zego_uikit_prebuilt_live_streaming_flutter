@@ -11,9 +11,6 @@ class ZegoLiveStreamingRoomController {
   ZegoLiveHostManager? get _hostManager =>
       ZegoLiveStreamingManagers().hostManager;
 
-  ZegoLiveConnectManager? get _connectManager =>
-      ZegoLiveStreamingManagers().connectManager;
-
   Future<bool> leave(
     BuildContext context, {
     bool showConfirmation = false,

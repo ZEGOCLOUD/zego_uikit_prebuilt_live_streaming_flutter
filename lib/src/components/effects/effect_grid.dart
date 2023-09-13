@@ -29,7 +29,7 @@ class ZegoEffectGridModel {
   String title;
 
   ValueNotifier<String> selectedID;
-  List<ZegoEffectGridItem> items = [];
+  List<ZegoEffectGridItem<dynamic>> items = [];
 
   ZegoEffectGridModel({
     required this.title,
@@ -161,7 +161,7 @@ class _ZegoEffectGridState extends State<ZegoEffectGrid> {
     );
   }
 
-  Widget gridItem(ZegoEffectGridItem item, Size buttonSize) {
+  Widget gridItem(ZegoEffectGridItem<dynamic> item, Size buttonSize) {
     final selectedIconBorderColor =
         widget.selectedIconBorderColor ?? const Color(0xffA653FF);
     final normalIconBorderColor =

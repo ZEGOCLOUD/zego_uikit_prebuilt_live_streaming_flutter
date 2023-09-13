@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/live_streaming.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_controller.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/swiping/config.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/swiping/live_streaming_swiping.dart';
 
 /// Live Streaming Widget.
@@ -27,6 +27,7 @@ class ZegoUIKitPrebuiltLiveStreaming extends StatefulWidget {
     required this.liveID,
     required this.config,
     this.controller,
+    this.events,
     @Deprecated('Since 2.15.0') this.onDispose,
     @Deprecated('Since 2.4.1') this.appDesignSize,
   }) : super(key: key);
@@ -57,6 +58,9 @@ class ZegoUIKitPrebuiltLiveStreaming extends StatefulWidget {
   /// You can invoke the methods provided by [ZegoUIKitPrebuiltLiveStreaming] through the [controller].
   final ZegoUIKitPrebuiltLiveStreamingController? controller;
 
+  /// You can listen to events that you are interested in here.
+  final ZegoUIKitPrebuiltLiveStreamingEvents? events;
+
   /// Callback when the page is destroyed.
   @Deprecated('Since 2.15.0')
   final VoidCallback? onDispose;
@@ -85,6 +89,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
             liveID: widget.liveID,
             config: widget.config,
             controller: widget.controller,
+            events: widget.events,
             onDispose: widget.onDispose,
             appDesignSize: widget.appDesignSize,
           )
@@ -96,6 +101,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
             userName: widget.userName,
             config: widget.config,
             controller: widget.controller,
+            events: widget.events,
             swipingConfig: widget.config.swipingConfig!,
           );
   }

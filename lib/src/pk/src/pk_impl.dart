@@ -202,6 +202,7 @@ class ZegoLiveStreamingPKBattleManager {
     );
 
     final ret = await ZegoUIKit().getSignalingPlugin().sendInvitation(
+          inviterID: ZegoUIKit().getLocalUser().id,
           inviterName: ZegoUIKit().getLocalUser().name,
           invitees: [anotherHostUserID],
           timeout: timeout,
@@ -495,7 +496,7 @@ class ZegoLiveStreamingPKBattleManager {
       tag: 'ZegoLiveStreamingPKBattleService',
       subTag: 'api',
     );
-    return _waitCompleter('startPKBattleWith').then((_) async {
+    return _waitCompleter('stopPKBattle').then((_) async {
       if (state.value != ZegoLiveStreamingPKBattleState.inPKBattle) {
         ZegoLoggerService.logError(
           'stopPKBattle, state is not inPkBattle, state:${state.value}',
@@ -559,6 +560,7 @@ class ZegoLiveStreamingPKBattleManager {
             subTag: 'api',
           );
           final ret = await ZegoUIKit().getSignalingPlugin().sendInvitation(
+                inviterID: ZegoUIKit().getLocalUser().id,
                 inviterName: ZegoUIKit().getLocalUser().name,
                 invitees: [streamCreator!.anotherHostUserID],
                 timeout: 60,
@@ -595,7 +597,6 @@ class ZegoLiveStreamingPKBattleManager {
             return ZegoLiveStreamingPKBattleResult(error: ret.error);
           }
         }
-        streamCreator = null;
       } else {
         return ZegoLiveStreamingPKBattleResult(
             error: PlatformException(
@@ -605,6 +606,7 @@ class ZegoLiveStreamingPKBattleManager {
       }
       return const ZegoLiveStreamingPKBattleResult();
     }).then((ret) {
+      streamCreator = null;
       _completeCompleter('stopPKBattle');
       return ret;
     });
