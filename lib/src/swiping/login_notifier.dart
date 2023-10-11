@@ -9,7 +9,15 @@ import 'package:zego_uikit/zego_uikit.dart';
 
 /// @nodoc
 class ZegoRoomLoginNotifier {
-  ZegoRoomLoginNotifier() {
+  ZegoRoomLoginNotifier({
+    required List<IZegoUIKitPlugin> configPlugins,
+  }) : _configPlugins = configPlugins {
+    ZegoLoggerService.logInfo(
+      'constructor, config plugins:$_configPlugins',
+      tag: 'live streaming',
+      subTag: 'login-notifier',
+    );
+
     _checkExpressRoom();
     _checkSignalingRoom();
   }
@@ -19,6 +27,7 @@ class ZegoRoomLoginNotifier {
   bool get value => notifier.value;
 
   String _targetRoomID = '';
+  List<IZegoUIKitPlugin> _configPlugins = [];
 
   final List<bool> _result = [false, false];
   final _expressResultIndex = 0;
@@ -112,6 +121,22 @@ class ZegoRoomLoginNotifier {
   }
 
   void _checkSignalingRoom() {
+    if (_configPlugins
+        .where(
+            (plugin) => plugin.getPluginType() == ZegoUIKitPluginType.signaling)
+        .isEmpty) {
+      ZegoLoggerService.logInfo(
+        'check signaling room, signaling is not in config, not need to check',
+        tag: 'live streaming',
+        subTag: 'login-notifier',
+      );
+
+      _result[_signalingResultIndex] = true;
+      _syncResult();
+
+      return;
+    }
+
     if (null == ZegoUIKit().getPlugin(ZegoUIKitPluginType.signaling)) {
       ZegoLoggerService.logInfo(
         'check signaling room, signaling is null, wait install...',

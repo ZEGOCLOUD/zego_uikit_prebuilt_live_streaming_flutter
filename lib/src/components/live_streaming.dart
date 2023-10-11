@@ -122,7 +122,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     );
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
-      log('version: zego_uikit_prebuilt_live_streaming: 2.18.1; $version');
+      log('version: zego_uikit_prebuilt_live_streaming: 2.21.2; $version');
     });
 
     isFromMinimizing = PrebuiltLiveStreamingMiniOverlayPageState.idle !=
@@ -198,7 +198,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
 
     if (PrebuiltLiveStreamingMiniOverlayPageState.minimizing !=
         ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine().state()) {
-      ZegoLiveStreamingManagers().unintPluginAndManagers().then((value) {
+      ZegoLiveStreamingManagers().uninitPluginAndManagers().then((value) {
         uninitContext();
       });
 

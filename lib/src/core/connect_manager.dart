@@ -17,6 +17,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/core/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_controller.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_inner_text.dart';
@@ -29,6 +30,7 @@ class ZegoLiveConnectManager {
     required this.popUpManager,
     required this.liveStatusNotifier,
     required this.config,
+    required this.controller,
     required this.translationText,
     required this.kickOutNotifier,
     this.events,
@@ -43,6 +45,7 @@ class ZegoLiveConnectManager {
   final ZegoPopUpManager popUpManager;
   final ValueNotifier<LiveStatus> liveStatusNotifier;
   final ZegoUIKitPrebuiltLiveStreamingConfig config;
+  final ZegoUIKitPrebuiltLiveStreamingController controller;
   ZegoUIKitPrebuiltLiveStreamingEvents? events;
   final ZegoInnerText translationText;
   final ValueNotifier<bool> kickOutNotifier;
@@ -106,7 +109,7 @@ class ZegoLiveConnectManager {
     return isCameraOpen || isMicrophoneOpen;
   }
 
-  bool isLocalConnected() =>
+  bool get isLocalConnected =>
       audienceLocalConnectStateNotifier.value ==
       ZegoLiveStreamingAudienceConnectState.connected;
 
@@ -165,6 +168,21 @@ class ZegoLiveConnectManager {
     }
 
     initCoHostMixin();
+  }
+
+  Future<bool> audienceCancelCoHostIfRequesting() async {
+    if (audienceLocalConnectStateNotifier.value ==
+        ZegoLiveStreamingAudienceConnectState.connecting) {
+      ZegoLoggerService.logInfo(
+        'local user is still in requesting connect, cancel the request internally',
+        tag: 'live streaming',
+        subTag: 'connect manager',
+      );
+
+      return controller.connect.audienceCancelCoHostRequest();
+    }
+
+    return true;
   }
 
   void uninit() {

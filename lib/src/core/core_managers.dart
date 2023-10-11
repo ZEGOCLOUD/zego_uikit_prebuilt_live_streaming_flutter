@@ -94,6 +94,7 @@ class ZegoLiveStreamingManagers {
 
     connectManager = ZegoLiveConnectManager(
       config: prebuiltData.config,
+      controller: prebuiltData.controller,
       events: prebuiltData.events,
       hostManager: hostManager!,
       popUpManager: popUpManager,
@@ -121,7 +122,7 @@ class ZegoLiveStreamingManagers {
     connectManager?.contextQuery = contextQuery;
   }
 
-  Future<void> unintPluginAndManagers() async {
+  Future<void> uninitPluginAndManagers() async {
     ZegoLoggerService.logInfo(
       'uninit plugin and managers',
       tag: 'live streaming',
@@ -143,6 +144,8 @@ class ZegoLiveStreamingManagers {
     for (final subscription in subscriptions) {
       subscription?.cancel();
     }
+
+    await connectManager?.audienceCancelCoHostIfRequesting();
 
     uninitAudioVideoManagers();
     await ZegoLiveStreamingPKBattleManager().uninit();

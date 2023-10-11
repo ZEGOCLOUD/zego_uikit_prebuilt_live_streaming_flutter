@@ -35,6 +35,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         stopCoHostingWhenMicCameraOff = false,
         disableCoHostInvitationReceivedDialog = false,
         markAsLargeRoom = false,
+        slideSurfaceToHide = true,
         rootNavigator = false,
         videoConfig = ZegoPrebuiltVideoConfig(),
         maxCoHostCount = defaultMaxCoHostCount,
@@ -87,6 +88,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         stopCoHostingWhenMicCameraOff = false,
         disableCoHostInvitationReceivedDialog = false,
         markAsLargeRoom = false,
+        slideSurfaceToHide = true,
         rootNavigator = false,
         videoConfig = ZegoPrebuiltVideoConfig(),
         maxCoHostCount = defaultMaxCoHostCount,
@@ -119,6 +121,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
     this.stopCoHostingWhenMicCameraOff = false,
     this.disableCoHostInvitationReceivedDialog = false,
     this.markAsLargeRoom = false,
+    this.slideSurfaceToHide = true,
     this.rootNavigator = false,
     this.maxCoHostCount = defaultMaxCoHostCount,
     this.showBackgroundTips = false,
@@ -281,7 +284,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   @Deprecated('Since 2.5.8, please use innerText instead')
   ZegoInnerText get translationText => innerText;
 
-  /// Layout-related configuration. You can choose your layout here.
+  /// Layout-related configuration. You can choose your layout here. such as [layout = ZegoLayout.gallery()]
   ZegoLayout? layout;
 
   /// same as Flutter's Navigator's param
@@ -336,6 +339,9 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   ///  sendInRoomCommand will sending to everyone in the room if true
   ///  that mean [toUserIDs] of [sendInRoomCommand] function is disabled if true
   bool markAsLargeRoom;
+
+  /// set whether the surface can be slid to hide, including the top toolbar, bottom toolbar, message list, and foreground
+  bool slideSurfaceToHide;
 
   /// The foreground of the live streaming.
   ///
@@ -537,7 +543,7 @@ class ZegoPrebuiltAudioVideoViewConfig {
   /// return false if you don't want to show target user's audio video view.
   ///
   /// when the stream list changes (specifically, when the co-hosts change),
-  /// it will dynamically read this configuration to determine whether to show the view.
+  /// it will dynamically read this configuration to determine whether to show the target user view.
   bool Function(
     ZegoUIKitUser localUser,
     ZegoLiveStreamingRole localRole,
@@ -644,7 +650,12 @@ class ZegoTopMenuBarConfig {
   /// ```
   void Function(ZegoUIKitUser host)? onHostAvatarClicked;
 
+  /// You can customize the host icon widget in the top-left corner.
+  /// If you don't want to display it, return Container().
   Widget Function(ZegoUIKitUser host)? hostAvatarBuilder;
+
+  /// set false if you want to hide the close (exit the live streaming room) button.
+  bool showCloseButton;
 
   ZegoTopMenuBarConfig({
     this.buttons = const [],
@@ -654,6 +665,7 @@ class ZegoTopMenuBarConfig {
     this.height,
     this.onHostAvatarClicked,
     this.hostAvatarBuilder,
+    this.showCloseButton = true,
   });
 }
 

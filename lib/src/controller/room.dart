@@ -98,7 +98,7 @@ class ZegoLiveStreamingRoomController {
         await ZegoUIKit().getSignalingPlugin().uninit(forceDestroy: false);
       }
 
-      await ZegoLiveStreamingManagers().unintPluginAndManagers();
+      await ZegoLiveStreamingManagers().uninitPluginAndManagers();
 
       ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine().changeState(
         PrebuiltLiveStreamingMiniOverlayPageState.idle,

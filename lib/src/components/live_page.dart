@@ -176,10 +176,6 @@ class ZegoLivePageState extends State<ZegoLivePage>
                             plugins: widget.plugins,
                             prebuiltData: widget.prebuiltData,
                           ),
-                          foreground(
-                            constraints.maxWidth,
-                            constraints.maxHeight,
-                          ),
                         ],
                       );
                     });
@@ -330,10 +326,6 @@ class ZegoLivePageState extends State<ZegoLivePage>
     );
   }
 
-  Widget foreground(double width, double height) {
-    return widget.config.foreground ?? Container();
-  }
-
   List<Widget> background(double width, double height) {
     if (widget.config.background != null) {
       /// full screen
@@ -442,31 +434,32 @@ class ZegoLivePageState extends State<ZegoLivePage>
                 .getCameraStateNotifier(ZegoUIKit().getLocalUser().id),
             builder: (context, isCameraEnabled, _) {
               return ValueListenableBuilder<bool>(
-                  valueListenable: ZegoUIKit().getMicrophoneStateNotifier(
-                      ZegoUIKit().getLocalUser().id),
-                  builder: (context, isMicrophoneEnabled, _) {
-                    if (!isCameraEnabled && !isMicrophoneEnabled) {
-                      return Container();
-                    }
+                valueListenable: ZegoUIKit()
+                    .getMicrophoneStateNotifier(ZegoUIKit().getLocalUser().id),
+                builder: (context, isMicrophoneEnabled, _) {
+                  if (!isCameraEnabled && !isMicrophoneEnabled) {
+                    return Container();
+                  }
 
-                    /// local open camera or microphone
-                    return ZegoAudioVideoContainer(
-                      layout: audioVideoContainerLayout,
-                      backgroundBuilder: audioVideoViewBackground,
-                      foregroundBuilder: audioVideoViewForeground,
-                      sortAudioVideo: audioVideoViewSorter,
-                      filterAudioVideo: audioVideoViewFilter,
-                      avatarConfig: ZegoAvatarConfig(
-                        showInAudioMode: widget
-                            .config.audioVideoViewConfig.showAvatarInAudioMode,
-                        showSoundWavesInAudioMode: widget.config
-                            .audioVideoViewConfig.showSoundWavesInAudioMode,
-                        builder: widget.config.avatarBuilder,
-                      ),
-                      screenSharingViewController:
-                          widget.controller.screen.screenSharingViewController,
-                    );
-                  });
+                  /// local open camera or microphone
+                  return ZegoAudioVideoContainer(
+                    layout: audioVideoContainerLayout,
+                    backgroundBuilder: audioVideoViewBackground,
+                    foregroundBuilder: audioVideoViewForeground,
+                    sortAudioVideo: audioVideoViewSorter,
+                    filterAudioVideo: audioVideoViewFilter,
+                    avatarConfig: ZegoAvatarConfig(
+                      showInAudioMode: widget
+                          .config.audioVideoViewConfig.showAvatarInAudioMode,
+                      showSoundWavesInAudioMode: widget.config
+                          .audioVideoViewConfig.showSoundWavesInAudioMode,
+                      builder: widget.config.avatarBuilder,
+                    ),
+                    screenSharingViewController:
+                        widget.controller.screen.screenSharingViewController,
+                  );
+                },
+              );
             },
           );
         }

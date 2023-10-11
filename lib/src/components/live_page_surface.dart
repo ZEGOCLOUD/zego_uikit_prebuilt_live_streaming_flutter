@@ -83,32 +83,44 @@ class ZegoLivePageSurfaceState extends State<ZegoLivePageSurface>
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      behavior: HitTestBehavior.translucent, // 添加此行
+    return widget.config.slideSurfaceToHide
+        ? GestureDetector(
+            behavior: HitTestBehavior.translucent, // 添加此行
 
-      onHorizontalDragUpdate: (DragUpdateDetails details) {
-        _animationController.value +=
-            details.primaryDelta! / context.size!.width;
-      },
-      onHorizontalDragEnd: (DragEndDetails details) {
-        if (_animationController.value >= 0.5) {
-          _animationController.forward();
-        } else {
-          _animationController.reverse();
-        }
-      },
-      child: SlideTransition(
-        position: _animation,
-        child: Stack(
-          children: [
-            topBar(),
-            bottomBar(),
-            messageList(),
-            durationTimeBoard(),
-          ],
-        ),
-      ),
-    );
+            onHorizontalDragUpdate: (DragUpdateDetails details) {
+              _animationController.value +=
+                  details.primaryDelta! / context.size!.width;
+            },
+            onHorizontalDragEnd: (DragEndDetails details) {
+              if (_animationController.value >= 0.5) {
+                _animationController.forward();
+              } else {
+                _animationController.reverse();
+              }
+            },
+            child: SlideTransition(
+              position: _animation,
+              child: body(),
+            ),
+          )
+        : body();
+  }
+
+  Widget body() {
+    return LayoutBuilder(builder: (context, constraints) {
+      return Stack(
+        children: [
+          topBar(),
+          bottomBar(),
+          messageList(),
+          durationTimeBoard(),
+          foreground(
+            constraints.maxWidth,
+            constraints.maxHeight,
+          ),
+        ],
+      );
+    });
   }
 
   Widget topBar() {
@@ -190,5 +202,9 @@ class ZegoLivePageSurfaceState extends State<ZegoLivePageSurface>
         manager: widget.liveDurationManager,
       ),
     );
+  }
+
+  Widget foreground(double width, double height) {
+    return widget.config.foreground ?? Container();
   }
 }

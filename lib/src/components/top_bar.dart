@@ -120,18 +120,20 @@ class _ZegoTopBarState extends State<ZegoTopBar> {
   }
 
   Widget closeButton() {
-    return ZegoLeaveStreamingButton(
-      buttonSize: Size(52.zR, 52.zR),
-      iconSize: Size(24.zR, 24.zR),
-      icon: ButtonIcon(
-        icon: const Icon(Icons.close, color: Colors.white),
-        backgroundColor: ZegoUIKitDefaultTheme.buttonBackgroundColor,
-      ),
-      config: widget.config,
-      hostManager: widget.hostManager,
-      hostUpdateEnabledNotifier: widget.hostUpdateEnabledNotifier,
-      isLeaveRequestingNotifier: widget.isLeaveRequestingNotifier,
-    );
+    return widget.config.topMenuBarConfig.showCloseButton
+        ? ZegoLeaveStreamingButton(
+            buttonSize: Size(52.zR, 52.zR),
+            iconSize: Size(24.zR, 24.zR),
+            icon: ButtonIcon(
+              icon: const Icon(Icons.close, color: Colors.white),
+              backgroundColor: ZegoUIKitDefaultTheme.buttonBackgroundColor,
+            ),
+            config: widget.config,
+            hostManager: widget.hostManager,
+            hostUpdateEnabledNotifier: widget.hostUpdateEnabledNotifier,
+            isLeaveRequestingNotifier: widget.isLeaveRequestingNotifier,
+          )
+        : Container();
   }
 
   Widget hostAvatar() {

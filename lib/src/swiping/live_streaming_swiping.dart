@@ -64,7 +64,7 @@ class ZegoUIKitPrebuiltLiveStreamingSwiping extends StatefulWidget {
 /// @nodoc
 class _ZegoUIKitPrebuiltLiveStreamingSwipingState
     extends State<ZegoUIKitPrebuiltLiveStreamingSwiping> {
-  final roomLoginNotifier = ZegoRoomLoginNotifier();
+  ZegoRoomLoginNotifier? roomLoginNotifier;
   late final PageController _pageController;
 
   String _targetRoomID = '';
@@ -82,7 +82,10 @@ class _ZegoUIKitPrebuiltLiveStreamingSwipingState
   void initState() {
     super.initState();
 
-    roomLoginNotifier.notifier.addListener(onRoomStateChanged);
+    roomLoginNotifier = ZegoRoomLoginNotifier(
+      configPlugins: widget.config.plugins,
+    );
+    roomLoginNotifier?.notifier.addListener(onRoomStateChanged);
 
     _pageController = PageController(initialPage: 0);
 
@@ -92,7 +95,7 @@ class _ZegoUIKitPrebuiltLiveStreamingSwipingState
     }
     ZegoLiveStreamingManagers().swipingCurrentLiveID = _targetRoomID;
     _targetRoomDone = false;
-    roomLoginNotifier.resetCheckingData(_targetRoomID);
+    roomLoginNotifier?.resetCheckingData(_targetRoomID);
   }
 
   @override
@@ -100,7 +103,7 @@ class _ZegoUIKitPrebuiltLiveStreamingSwipingState
     super.dispose();
 
     _pageController.dispose();
-    roomLoginNotifier.notifier.removeListener(onRoomStateChanged);
+    roomLoginNotifier?.notifier.removeListener(onRoomStateChanged);
   }
 
   @override
@@ -118,6 +121,19 @@ class _ZegoUIKitPrebuiltLiveStreamingSwipingState
           targetRoomID = widget.swipingConfig.requireNextLiveID();
         }
         if (targetRoomID == _targetRoomID) {
+          ZegoLoggerService.logInfo(
+            'PageView.onVerticalDragEnd target room id($targetRoomID) is same as before($_targetRoomID)',
+            tag: 'live streaming',
+            subTag: 'swiping',
+          );
+          return;
+        }
+        if (targetRoomID.isEmpty) {
+          ZegoLoggerService.logInfo(
+            'PageView.onVerticalDragEnd target room id is empty',
+            tag: 'live streaming',
+            subTag: 'swiping',
+          );
           return;
         }
 
@@ -157,7 +173,7 @@ class _ZegoUIKitPrebuiltLiveStreamingSwipingState
               );
 
               ///wait express room and signaling room login result
-              roomLoginNotifier.resetCheckingData(_targetRoomID);
+              roomLoginNotifier?.resetCheckingData(_targetRoomID);
 
               return ZegoUIKitPrebuiltLiveStreamingPage(
                 liveID: _targetRoomID,

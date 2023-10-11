@@ -64,6 +64,16 @@ class ZegoLiveStreamingConnectController {
       return false;
     }
 
+    if (ZegoLiveStreamingAudienceConnectState.connecting ==
+        audienceLocalConnectStateNotifier.value) {
+      ZegoLoggerService.logInfo(
+        'audience connect state is in requesting, not need request more',
+        tag: 'live streaming',
+        subTag: 'controller.connect',
+      );
+      return false;
+    }
+
     final result = await ZegoUIKit()
         .getSignalingPlugin()
         .sendInvitation(
@@ -126,6 +136,16 @@ class ZegoLiveStreamingConnectController {
         subTag: 'controller.connect',
       );
 
+      return false;
+    }
+
+    if (ZegoLiveStreamingAudienceConnectState.connecting !=
+        audienceLocalConnectStateNotifier.value) {
+      ZegoLoggerService.logInfo(
+        'audience connect state is not in requesting, not need cancel',
+        tag: 'live streaming',
+        subTag: 'controller.connect',
+      );
       return false;
     }
 

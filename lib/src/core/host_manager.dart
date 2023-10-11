@@ -91,7 +91,9 @@ class ZegoLiveHostManager {
         );
         updateHostValue(ZegoUIKit().getLocalUser());
         await ZegoUIKit().setRoomProperty(
-            RoomPropertyKey.host.text, ZegoUIKit().getLocalUser().id);
+          RoomPropertyKey.host.text,
+          ZegoUIKit().getLocalUser().id,
+        );
       }
     }
   }

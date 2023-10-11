@@ -170,7 +170,7 @@ class ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine {
     );
     changeState(PrebuiltLiveStreamingMiniOverlayPageState.idle);
 
-    ZegoLiveStreamingManagers().unintPluginAndManagers();
+    ZegoLiveStreamingManagers().uninitPluginAndManagers();
 
     await ZegoUIKit().resetSoundEffect();
     await ZegoUIKit().resetBeautyEffect();
