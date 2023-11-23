@@ -93,6 +93,9 @@ enum ZegoMenuBarButtonName {
   /// Button for minimizing the current [ZegoUIKitPrebuiltLiveStreaming] widget within the app.
   ///
   /// When clicked, the [ZegoUIKitPrebuiltLiveStreaming] widget will shrink into a small draggable widget within the app.
+  ///
+  /// If you need to nest some widgets in [ZegoUIKitPrebuiltLiveStreaming], please use [foreground] nesting,
+  /// otherwise these widgets will be lost when you minimize and restore the [ZegoUIKitPrebuiltLiveStreaming]
   minimizingButton,
 
   /// Used in toolbar layout, similar to the [Expanded] widget in Flutter.

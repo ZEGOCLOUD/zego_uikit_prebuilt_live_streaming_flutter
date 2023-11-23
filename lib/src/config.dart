@@ -5,8 +5,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
-import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_defines.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_inner_text.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/defines.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/inner_text.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/pk/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/swiping/config.dart';
 
@@ -452,13 +452,26 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   Future<bool> Function(BuildContext context)? onLeaveConfirmation;
 
   /// This callback is triggered when local user removed from live streaming
+  ///
+  /// The default behavior is to return to the previous page.
+  ///
+  /// If you override this callback, you must perform the page navigation
+  /// yourself to return to the previous page!!!
+  /// otherwise the user will remain on the current live streaming page !!!!!
+  ///
+  /// You can perform business-related prompts or other actions in this callback.
+  /// For example, you can perform custom logic during the hang-up operation, such as recording log information, stopping recording, etc.
   Future<void> Function(String)? onMeRemovedFromRoom;
 
-  /// This callback is triggered after leaving the live streaming(host would not trigger this callback).
+  /// This callback is triggered after leaving the live streaming(host would not trigger this callback!!!).
   ///
   /// You can perform business-related prompts or other actions in this callback.
   ///
-  /// The default behavior is return to the previous page while it was in a normal state. If you override this callback, you must perform the page navigation yourself while it was in a normal state, otherwise the user will remain on the live streaming page.
+  /// The default behavior is to return to the previous page.
+  ///
+  /// If you override this callback, you must perform the page navigation
+  /// yourself to return to the previous page!!!
+  /// otherwise the user will remain on the current live streaming page !!!!!
   ///
   /// The [isFromMinimizing] it means that the user left the chat room while it was in a minimized state.
   /// You **can not** return to the previous page while it was **in a minimized state**!!!
@@ -467,7 +480,9 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
 
   /// This callback method is called when live streaming ended(all users in live streaming will received).
   ///
-  /// The default behavior is return to the previous page while it was in a normal state. If you override this callback, you must perform the page navigation yourself while it was in a normal state, otherwise the user will remain on the live streaming page.
+  /// The default behavior of host is return to the previous page(only host!!).
+  /// If you override this callback, you must perform the page navigation yourself while it was in a normal state,
+  /// otherwise the user will remain on the live streaming page.
   ///
   /// The [isFromMinimizing] it means that the user left the chat room while it was in a minimized state.
   /// You **can not** return to the previous page while it was **in a minimized state**!!!
@@ -486,6 +501,50 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   /// Alternatively, you can return `true` without any processing, indicating that when someone requests to open your camera, it can be directly opened.
   ///
   /// By default, this method does nothing and returns `false`, indicating that others cannot open your camera.
+  ///
+  /// Example：
+  ///
+  /// ```dart
+  ///
+  ///  // eg:
+  /// ..onCameraTurnOnByOthersConfirmation =
+  ///     (BuildContext context) async {
+  ///   const textStyle = TextStyle(
+  ///     fontSize: 10,
+  ///     color: Colors.white70,
+  ///   );
+  ///
+  ///   return await showDialog(
+  ///     context: context,
+  ///     barrierDismissible: false,
+  ///     builder: (BuildContext context) {
+  ///       return AlertDialog(
+  ///         backgroundColor: Colors.blue[900]!.withOpacity(0.9),
+  ///         title: const Text(
+  ///           'You have a request to turn on your camera',
+  ///           style: textStyle,
+  ///         ),
+  ///         content: const Text(
+  ///           'Do you agree to turn on the camera?',
+  ///           style: textStyle,
+  ///         ),
+  ///         actions: [
+  ///           ElevatedButton(
+  ///             child: const Text('Cancel', style: textStyle),
+  ///             onPressed: () => Navigator.of(context).pop(false),
+  ///           ),
+  ///           ElevatedButton(
+  ///             child: const Text('OK', style: textStyle),
+  ///             onPressed: () {
+  ///               Navigator.of(context).pop(true);
+  ///             },
+  ///           ),
+  ///         ],
+  ///       );
+  ///     },
+  ///   );
+  /// },
+  /// ```
   Future<bool> Function(BuildContext context)?
       onCameraTurnOnByOthersConfirmation;
 
@@ -498,6 +557,50 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   /// Alternatively, you can return `true` without any processing, indicating that when someone requests to open your microphone, it can be directly opened.
   ///
   /// By default, this method does nothing and returns `false`, indicating that others cannot open your microphone.
+  ///
+  /// Example：
+  ///
+  /// ```dart
+  ///
+  ///  // eg:
+  /// ..onMicrophoneTurnOnByOthersConfirmation =
+  ///     (BuildContext context) async {
+  ///   const textStyle = TextStyle(
+  ///     fontSize: 10,
+  ///     color: Colors.white70,
+  ///   );
+  ///
+  ///   return await showDialog(
+  ///     context: context,
+  ///     barrierDismissible: false,
+  ///     builder: (BuildContext context) {
+  ///       return AlertDialog(
+  ///         backgroundColor: Colors.blue[900]!.withOpacity(0.9),
+  ///         title: const Text(
+  ///           'You have a request to turn on your microphone',
+  ///           style: textStyle,
+  ///         ),
+  ///         content: const Text(
+  ///           'Do you agree to turn on the microphone?',
+  ///           style: textStyle,
+  ///         ),
+  ///         actions: [
+  ///           ElevatedButton(
+  ///             child: const Text('Cancel', style: textStyle),
+  ///             onPressed: () => Navigator.of(context).pop(false),
+  ///           ),
+  ///           ElevatedButton(
+  ///             child: const Text('OK', style: textStyle),
+  ///             onPressed: () {
+  ///               Navigator.of(context).pop(true);
+  ///             },
+  ///           ),
+  ///         ],
+  ///       );
+  ///     },
+  ///   );
+  /// },
+  /// ```
   Future<bool> Function(BuildContext context)?
       onMicrophoneTurnOnByOthersConfirmation;
 

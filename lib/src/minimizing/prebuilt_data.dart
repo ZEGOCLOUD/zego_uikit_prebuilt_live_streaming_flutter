@@ -1,14 +1,10 @@
 // Dart imports:
 import 'dart:core';
 
-// Flutter imports:
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-
 // Project imports:
-import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_controller.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_events.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
 
 /// @nodoc
 class ZegoUIKitPrebuiltLiveStreamingData {
@@ -23,7 +19,6 @@ class ZegoUIKitPrebuiltLiveStreamingData {
     required this.controller,
     required this.events,
     this.durationStartTime,
-    this.onDispose,
   });
 
   /// you need to fill in the appID you obtained from console.zegocloud.com
@@ -42,8 +37,6 @@ class ZegoUIKitPrebuiltLiveStreamingData {
   final String liveID;
 
   final ZegoUIKitPrebuiltLiveStreamingConfig config;
-
-  final VoidCallback? onDispose;
 
   final ZegoUIKitPrebuiltLiveStreamingController controller;
 

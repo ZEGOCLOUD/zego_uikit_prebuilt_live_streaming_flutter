@@ -12,12 +12,12 @@ import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/dialogs.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/defines.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/inner_text.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_defines.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_inner_text.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/mini_overlay_machine.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/pk/pk_event_default_actions.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/pk/pk_service.dart';
@@ -337,7 +337,8 @@ class ZegoLiveStreamingPKBattleManager {
   }
 
   Future<ZegoLiveStreamingPKBattleResult> acceptIncomingPKBattleRequest(
-      ZegoIncomingPKBattleRequestReceivedEvent event) async {
+    ZegoIncomingPKBattleRequestReceivedEvent event,
+  ) async {
     ZegoLoggerService.logInfo(
       'acceptIncomingPKBattleRequest, event:$event',
       tag: 'ZegoLiveStreamingPKBattleService',

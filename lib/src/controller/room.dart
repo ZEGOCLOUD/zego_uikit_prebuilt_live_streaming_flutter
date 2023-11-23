@@ -1,4 +1,4 @@
-part of 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_controller.dart';
+part of 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 
 /// @nodoc
 class ZegoLiveStreamingRoomController {
@@ -111,12 +111,15 @@ class ZegoLiveStreamingRoomController {
         /// audience leave live streaming
         _prebuiltConfig?.onLeaveLiveStreaming?.call(isFromMinimizing);
       }
+
+      /// from minimizing, not need to return to the previous page by default
     } else {
       if (_hostManager?.isLocalHost ?? false) {
         /// host end/leave live streaming
         if (_prebuiltConfig?.onLiveStreamingEnded != null) {
           _prebuiltConfig?.onLiveStreamingEnded?.call(isFromMinimizing);
         } else {
+          /// return to the previous page by default
           Navigator.of(
             context,
             rootNavigator: _prebuiltConfig?.rootNavigator ?? true,
@@ -127,6 +130,7 @@ class ZegoLiveStreamingRoomController {
         if (_prebuiltConfig?.onLeaveLiveStreaming != null) {
           _prebuiltConfig?.onLeaveLiveStreaming?.call(isFromMinimizing);
         } else {
+          /// return to the previous page by default
           Navigator.of(
             context,
             rootNavigator: _prebuiltConfig?.rootNavigator ?? true,

@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
+import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
 
 /// @nodoc
 class ZegoLeaveStreamingButton extends StatefulWidget {
@@ -97,6 +97,7 @@ class ZegoLeaveStreamingButtonState extends State<ZegoLeaveStreamingButton> {
           if (widget.config.onLiveStreamingEnded != null) {
             widget.config.onLiveStreamingEnded!.call(false);
           } else {
+            /// host will return to the previous page by default
             Navigator.of(
               context,
               rootNavigator: widget.hostManager.config.rootNavigator,

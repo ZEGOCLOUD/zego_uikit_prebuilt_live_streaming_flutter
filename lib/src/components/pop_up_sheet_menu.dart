@@ -9,10 +9,10 @@ import 'package:zego_uikit/zego_uikit.dart';
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_controller.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_inner_text.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/inner_text.dart';
 
 /// @nodoc
 class ZegoPopUpSheetMenu extends StatefulWidget {
@@ -81,10 +81,11 @@ class _ZegoPopUpSheetMenuState extends State<ZegoPopUpSheetMenu> {
 
         switch (popupItem.value) {
           case PopupItemValue.kickCoHost:
-            widget.prebuiltController.removeCoHost(widget.targetUser);
+            widget.prebuiltController.connect.removeCoHost(widget.targetUser);
             break;
           case PopupItemValue.inviteConnect:
-            widget.prebuiltController.makeAudienceCoHost(
+            widget.prebuiltController.connectInvite
+                .hostSendCoHostInvitationToAudience(
               widget.targetUser,
               withToast: true,
             );

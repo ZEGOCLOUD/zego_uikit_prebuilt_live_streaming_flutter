@@ -8,8 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
+import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/live_duration_manager.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
 
 /// @nodoc
 class LiveDurationTimeBoard extends StatefulWidget {

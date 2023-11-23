@@ -79,6 +79,7 @@ class ZegoLiveStreamingManagers {
         roomID: prebuiltData.liveID,
         plugins: prebuiltData.config.plugins,
         beautyConfig: prebuiltData.config.beautyConfig,
+        onError: prebuiltData.events.onError,
       );
 
       ZegoLiveStreamingPKBattleManager().init(

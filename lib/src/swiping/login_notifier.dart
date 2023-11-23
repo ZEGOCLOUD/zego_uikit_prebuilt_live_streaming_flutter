@@ -27,7 +27,7 @@ class ZegoRoomLoginNotifier {
   bool get value => notifier.value;
 
   String _targetRoomID = '';
-  List<IZegoUIKitPlugin> _configPlugins = [];
+  final List<IZegoUIKitPlugin> _configPlugins;
 
   final List<bool> _result = [false, false];
   final _expressResultIndex = 0;

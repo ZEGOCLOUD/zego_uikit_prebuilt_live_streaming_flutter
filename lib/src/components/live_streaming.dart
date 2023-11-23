@@ -18,11 +18,11 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/components/permissions.da
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/preview_page.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/toast.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/core_managers.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_controller.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_defines.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_events.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/defines.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/mini_overlay_machine.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/prebuilt_data.dart';
 
@@ -43,8 +43,6 @@ class ZegoUIKitPrebuiltLiveStreamingPage extends StatefulWidget {
     required this.config,
     this.controller,
     this.events,
-    @Deprecated('Since 2.15.0') this.onDispose,
-    @Deprecated('Since 2.4.1') this.appDesignSize,
   }) : super(key: key);
 
   /// You can create a project and obtain an appID from the [ZEGOCLOUD Admin Console](https://console.zegocloud.com).
@@ -76,14 +74,6 @@ class ZegoUIKitPrebuiltLiveStreamingPage extends StatefulWidget {
   /// You can listen to events that you are interested in here.
   final ZegoUIKitPrebuiltLiveStreamingEvents? events;
 
-  /// Callback when the page is destroyed.
-  @Deprecated('Since 2.15.0')
-  final VoidCallback? onDispose;
-
-  /// @nodoc
-  @Deprecated('Since 2.4.1')
-  final Size? appDesignSize;
-
   /// @nodoc
   @override
   State<ZegoUIKitPrebuiltLiveStreamingPage> createState() =>
@@ -113,7 +103,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance?.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
 
     ZegoLoggerService.logInfo(
       'initState',
@@ -122,7 +112,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     );
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
-      log('version: zego_uikit_prebuilt_live_streaming: 2.21.2; $version');
+      log('version: zego_uikit_prebuilt_live_streaming: 2.22.4; $version');
     });
 
     isFromMinimizing = PrebuiltLiveStreamingMiniOverlayPageState.idle !=
@@ -135,7 +125,6 @@ class _ZegoUIKitPrebuiltLiveStreamingState
       userID: widget.userID,
       userName: widget.userName,
       config: widget.config,
-      onDispose: widget.onDispose,
       controller: controller,
       events: events,
       isPrebuiltFromMinimizing: isFromMinimizing,
@@ -158,8 +147,10 @@ class _ZegoUIKitPrebuiltLiveStreamingState
 
     ZegoLiveStreamingManagers().plugins?.init();
 
-    subscriptions.add(
-        ZegoUIKit().getMeRemovedFromRoomStream().listen(onMeRemovedFromRoom));
+    subscriptions
+      ..add(
+          ZegoUIKit().getMeRemovedFromRoomStream().listen(onMeRemovedFromRoom))
+      ..add(ZegoUIKit().getErrorStream().listen(onUIKitError));
 
     controller.initByPrebuilt(events: widget.events);
 
@@ -194,7 +185,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     super.dispose();
 
     startedByLocalNotifier.removeListener(onStartedByLocalValueChanged);
-    WidgetsBinding.instance?.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
 
     if (PrebuiltLiveStreamingMiniOverlayPageState.minimizing !=
         ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine().state()) {
@@ -216,8 +207,6 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     for (final subscription in subscriptions) {
       subscription?.cancel();
     }
-
-    widget.onDispose?.call();
 
     ZegoLoggerService.logInfo(
       'dispose',
@@ -243,6 +232,9 @@ class _ZegoUIKitPrebuiltLiveStreamingState
       case AppLifecycleState.inactive:
       case AppLifecycleState.paused:
       case AppLifecycleState.detached:
+        break;
+      // case AppLifecycleState.hidden:
+      default:
         break;
     }
   }
@@ -343,15 +335,14 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     }
     ZegoUIKit().setVideoConfig(videoConfig, ZegoStreamType.main);
 
+    /// beauty
     if (ZegoPluginAdapter().getPlugin(ZegoUIKitPluginType.beauty) != null) {
       ZegoUIKit().enableCustomVideoProcessing(true);
     }
-
     final useBeautyEffect = widget.config.bottomMenuBarConfig.hostButtons
             .contains(ZegoMenuBarButtonName.beautyEffectButton) ||
         widget.config.bottomMenuBarConfig.coHostButtons
             .contains(ZegoMenuBarButtonName.beautyEffectButton);
-
     if (useBeautyEffect) {
       ZegoUIKit()
           .startEffectsEnv()
@@ -462,6 +453,16 @@ class _ZegoUIKitPrebuiltLiveStreamingState
         rootNavigator: widget.config.rootNavigator,
       ).pop(true);
     }
+  }
+
+  void onUIKitError(ZegoUIKitError error) {
+    ZegoLoggerService.logError(
+      'on uikit error:$error',
+      tag: 'live streaming',
+      subTag: 'prebuilt',
+    );
+
+    events.onError?.call(error);
   }
 
   Widget previewPage() {

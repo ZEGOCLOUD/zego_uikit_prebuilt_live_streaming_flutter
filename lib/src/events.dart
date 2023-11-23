@@ -7,6 +7,9 @@ class ZegoUIKitPrebuiltLiveStreamingEvents {
   /// this can occur when a new co-host joins the session or when an existing co-host leaves the session.
   Function(List<ZegoUIKitUser> coHosts)? onCoHostsUpdated;
 
+  /// error stream
+  Function(ZegoUIKitError)? onError;
+
   /// host's events about.
   ZegoUIKitPrebuiltLiveStreamingHostEvents hostEvents;
 
@@ -16,6 +19,7 @@ class ZegoUIKitPrebuiltLiveStreamingEvents {
 
   ZegoUIKitPrebuiltLiveStreamingEvents({
     this.onCoHostsUpdated,
+    this.onError,
     ZegoUIKitPrebuiltLiveStreamingHostEvents? hostEvents,
     ZegoUIKitPrebuiltLiveStreamingAudienceEvents? audienceEvents,
   })  : hostEvents = hostEvents ?? ZegoUIKitPrebuiltLiveStreamingHostEvents(),

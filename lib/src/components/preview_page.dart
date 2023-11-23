@@ -1,6 +1,5 @@
 // Dart imports:
 import 'dart:core';
-import 'dart:math' as math; // import this
 
 // Flutter imports:
 import 'package:flutter/material.dart';
@@ -14,9 +13,11 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/components/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/effects/beauty_effect_button.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/permissions.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
+
+import 'dart:math' as math; // import this
 
 /// @nodoc
 /// user should be login before page enter

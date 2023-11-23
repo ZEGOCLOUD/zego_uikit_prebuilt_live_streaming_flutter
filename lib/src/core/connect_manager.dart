@@ -13,14 +13,14 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/components/dialogs.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/permissions.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/toast.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/defines.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/inner_text.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_controller.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_defines.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_events.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_inner_text.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/mini_overlay_machine.dart';
 
 /// @nodoc
@@ -901,9 +901,7 @@ extension ZegoLiveConnectManagerCoHostCount on ZegoLiveConnectManager {
         subTag: 'connect manager co-host count',
       );
 
-      kickUsers.forEach((user) {
-        kickCoHost(user);
-      });
+      kickUsers.forEach(kickCoHost);
     }
   }
 
@@ -930,9 +928,11 @@ extension ZegoLiveConnectManagerCoHostCount on ZegoLiveConnectManager {
       user.microphone.removeListener(onUserMicrophoneStateChanged);
     }
 
-    requestCoHostUsersNotifier.value.forEach((requestCoHostUser) {
-      events?.hostEvents.onCoHostRequestCanceled?.call(requestCoHostUser);
-    });
+    if (null != events?.hostEvents.onCoHostRequestCanceled) {
+      requestCoHostUsersNotifier.value.forEach(
+        events!.hostEvents.onCoHostRequestCanceled!,
+      );
+    }
 
     final userIDs = users.map((e) => e.id).toList();
     requestCoHostUsersNotifier.value =

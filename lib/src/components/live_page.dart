@@ -12,15 +12,15 @@ import 'package:zego_uikit/zego_uikit.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/audio_video_view_foreground.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/live_page_surface.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/core_managers.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/live_duration_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/live_status_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/plugins.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_controller.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/prebuilt_data.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/pk/pk_service.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/pk/pk_view.dart';
@@ -667,6 +667,8 @@ class ZegoLivePageState extends State<ZegoLivePage>
         if (widget.config.onLiveStreamingEnded != null) {
           widget.config.onLiveStreamingEnded!.call(false);
         }
+
+        /// audience or co-host wouldn't return to the previous page by default
       }
     }
   }
@@ -677,6 +679,16 @@ class ZegoLivePageState extends State<ZegoLivePage>
       tag: 'live streaming',
       subTag: 'live page',
     );
+
+    if (ZegoUIKit().getLocalUser().microphone.value) {
+      ZegoLoggerService.logInfo(
+        'camera is open now, not need request',
+        tag: 'live streaming',
+        subTag: 'live page',
+      );
+
+      return;
+    }
 
     final canCameraTurnOnByOthers =
         await widget.config.onCameraTurnOnByOthersConfirmation?.call(context) ??
@@ -698,6 +710,16 @@ class ZegoLivePageState extends State<ZegoLivePage>
       tag: 'live streaming',
       subTag: 'live page',
     );
+
+    if (ZegoUIKit().getLocalUser().microphone.value) {
+      ZegoLoggerService.logInfo(
+        'microphone is open now, not need request',
+        tag: 'live streaming',
+        subTag: 'live page',
+      );
+
+      return;
+    }
 
     final canMicrophoneTurnOnByOthers = await widget
             .config.onMicrophoneTurnOnByOthersConfirmation

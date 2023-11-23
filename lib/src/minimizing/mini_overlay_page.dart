@@ -9,11 +9,11 @@ import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/duration_time_board.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/core_managers.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/mini_overlay_machine.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/pk/pk_service.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/pk/pk_view.dart';
@@ -87,7 +87,7 @@ class ZegoUIKitPrebuiltLiveStreamingMiniOverlayPageState
 
     topLeft = widget.topLeft;
 
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine()
           .listenStateChanged(onMiniOverlayMachineStateChanged);
 
@@ -205,7 +205,6 @@ class ZegoUIKitPrebuiltLiveStreamingMiniOverlayPageState
                       ? ZegoLiveStreamingManagers().swipingCurrentLiveID
                       : prebuiltData.liveID,
                   config: prebuiltData.config,
-                  onDispose: prebuiltData.onDispose,
                   controller: prebuiltData.controller,
                   events: prebuiltData.events,
                 );

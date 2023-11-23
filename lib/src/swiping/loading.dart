@@ -47,7 +47,7 @@ class _ZegoUIKitPrebuiltLiveStreamingScrollerElementState
         subTag: 'swiping-loading',
       );
 
-      WidgetsBinding.instance?.addPostFrameCallback((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
         roomBuildNotifier.value = true;
       });
     } else {

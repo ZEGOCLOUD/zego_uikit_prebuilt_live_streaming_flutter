@@ -42,8 +42,6 @@ extension ZegoLiveStreamingAudioVideoManagers on ZegoLiveStreamingManagers {
           continue;
         }
         if (hostManager?.notifier.value?.id == audioVideoUser.id) {
-          /// host can not mute
-          ZegoUIKit().muteUserAudio(audioVideoUser.id, false);
           continue;
         }
 

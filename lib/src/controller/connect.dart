@@ -1,4 +1,4 @@
-part of 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_controller.dart';
+part of 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 
 /// @nodoc
 mixin ZegoLiveStreamingControllerConnect {
@@ -52,14 +52,14 @@ class ZegoLiveStreamingConnectController {
 
     if (!_hostExist) {
       if (withToast) {
-        showError(_prebuiltConfig!.translationText.requestCoHostFailedToast);
+        showError(_prebuiltConfig!.innerText.requestCoHostFailedToast);
       }
       return false;
     }
 
     if (!_isLiving) {
       if (withToast) {
-        showError(_prebuiltConfig!.translationText.requestCoHostFailedToast);
+        showError(_prebuiltConfig!.innerText.requestCoHostFailedToast);
       }
       return false;
     }
@@ -93,11 +93,10 @@ class ZegoLiveStreamingConnectController {
 
       if (withToast) {
         if (result.error?.code.isNotEmpty ?? false) {
-          showError(
-              '${_prebuiltConfig!.translationText.requestCoHostFailedToast}, '
+          showError('${_prebuiltConfig!.innerText.requestCoHostFailedToast}, '
               '${result.error?.code} ${result.error?.message}');
         } else {
-          showSuccess(_prebuiltConfig!.translationText.sendRequestCoHostToast);
+          showSuccess(_prebuiltConfig!.innerText.sendRequestCoHostToast);
         }
       }
 
@@ -554,20 +553,29 @@ class ZegoLiveStreamingConnectController {
   /// for host: Notification that an audience has requested to become a co-host to the host.
   @Deprecated(
       'Since 2.17.0， use [ZegoUIKitPrebuiltLiveStreamingEvents.hostEvents.onCoHostRequest]')
-  set onRequestCoHostEvent(ZegoLiveStreamingConnectEvent event) =>
+  set onRequestCoHostEvent(ZegoLiveStreamingConnectEvent? event) =>
       _events?.hostEvents.onCoHostRequestReceived = event;
+
+  ZegoLiveStreamingConnectEvent? get onRequestCoHostEvent =>
+      _events?.hostEvents.onCoHostRequestReceived;
 
   /// for host: Notification that an audience has cancelled their co-host request.
   @Deprecated(
       'Since 2.17.0， use [ZegoUIKitPrebuiltLiveStreamingEvents.hostEvents.onCoHostRequestCanceled]')
-  set onCancelCoHostEvent(ZegoLiveStreamingConnectEvent event) =>
+  set onCancelCoHostEvent(ZegoLiveStreamingConnectEvent? event) =>
       _events?.hostEvents.onCoHostRequestCanceled = event;
+
+  ZegoLiveStreamingConnectEvent? get onCancelCoHostEvent =>
+      _events?.hostEvents.onCoHostRequestCanceled;
 
   /// for host: Notification that an audience co-host request has timed out.
   @Deprecated(
       'Since 2.17.0， use [ZegoUIKitPrebuiltLiveStreamingEvents.hostEvents.onCoHostRequestTimeout]')
-  set onRequestCoHostTimeoutEvent(ZegoLiveStreamingConnectEvent event) =>
+  set onRequestCoHostTimeoutEvent(ZegoLiveStreamingConnectEvent? event) =>
       _events?.hostEvents.onCoHostRequestTimeout = event;
+
+  ZegoLiveStreamingConnectEvent? get onRequestCoHostTimeoutEvent =>
+      _events?.hostEvents.onCoHostRequestTimeout;
 
   final List<StreamSubscription<dynamic>?> _subscriptions = [];
   final List<String> _agreeRequestingUserIDs = [];

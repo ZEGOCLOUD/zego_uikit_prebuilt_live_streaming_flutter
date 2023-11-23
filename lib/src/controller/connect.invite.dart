@@ -1,4 +1,4 @@
-part of 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_controller.dart';
+part of 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 
 /// @nodoc
 mixin ZegoLiveStreamingControllerConnectInvite {
@@ -89,8 +89,8 @@ class ZegoLiveStreamingConnectInviteController {
       if (withToast) {
         showError(
           targetUserIsInviting
-              ? _prebuiltConfig!.translationText.repeatInviteCoHostFailedToast
-              : _prebuiltConfig!.translationText.inviteCoHostFailedToast,
+              ? _prebuiltConfig!.innerText.repeatInviteCoHostFailedToast
+              : _prebuiltConfig!.innerText.inviteCoHostFailedToast,
         );
       }
 

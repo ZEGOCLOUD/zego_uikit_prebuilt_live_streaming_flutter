@@ -1,4 +1,29 @@
+## 2.22.4
+
+- Update dependency.
+
+## 2.22.3
+
+- Compatible with AppLifecycleState.hidden in flutter 3.13.0
+
+## 2.22.2
+
+- Optimization warnings from analysis
+
+## 2.22.1
+
+- Optimization warnings from analysis
+
+## 2.22.0
+
+- Support listening for errors in the beauty and signaling plugins and uikit library.
+
+## 2.21.3
+
+- Fix the issue of losing the host window when manually calling the ZegoUIKit().**turnMicrophoneOn**(false, muteMode:true) API to mute host after configuring **audioVideoViewConfig.playCoHostAudio**.
+
 ## 2.21.2
+
 - update dart dependency
 
 ## 2.21.1

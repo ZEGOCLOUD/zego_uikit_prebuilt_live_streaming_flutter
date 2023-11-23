@@ -6,9 +6,9 @@ import 'package:flutter/material.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/live_streaming.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_config.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_controller.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_events.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/swiping/live_streaming_swiping.dart';
 
 /// Live Streaming Widget.
@@ -90,8 +90,6 @@ class _ZegoUIKitPrebuiltLiveStreamingState
             config: widget.config,
             controller: widget.controller,
             events: widget.events,
-            onDispose: widget.onDispose,
-            appDesignSize: widget.appDesignSize,
           )
         : ZegoUIKitPrebuiltLiveStreamingSwiping(
             initialLiveID: widget.liveID,

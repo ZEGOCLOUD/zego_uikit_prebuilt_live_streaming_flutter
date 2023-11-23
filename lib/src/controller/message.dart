@@ -1,4 +1,4 @@
-part of 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming_controller.dart';
+part of 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 
 /// @nodoc
 mixin ZegoLiveStreamingControllerMessage {
