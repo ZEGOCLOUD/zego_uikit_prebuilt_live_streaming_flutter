@@ -27,47 +27,42 @@ typedef PrebuiltLiveStreamingMiniOverlayMachineStateChanged = void Function(
 class ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine {
   factory ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine() => _instance;
 
+  BuildContext Function()? _contextQuery;
+  BuildContext? get context => _contextQuery?.call();
+  void updateContextQuery(BuildContext Function()? contextQuery) {
+    ZegoLoggerService.logInfo(
+      'update context query',
+      tag: 'call',
+      subTag: 'overlay machine',
+    );
+
+    _contextQuery = contextQuery;
+  }
+
   ZegoUIKitPrebuiltLiveStreamingData? get prebuiltData => _prebuiltData;
+
+  set prebuiltData(ZegoUIKitPrebuiltLiveStreamingData? value) {
+    _prebuiltData = value;
+
+    ZegoLoggerService.logInfo(
+      'set prebuilt data:$value',
+      tag: 'call',
+      subTag: 'overlay machine',
+    );
+  }
 
   sm.Machine<PrebuiltLiveStreamingMiniOverlayPageState> get machine => _machine;
 
   bool get isMinimizing =>
-      PrebuiltLiveStreamingMiniOverlayPageState.minimizing == state();
+      PrebuiltLiveStreamingMiniOverlayPageState.minimizing == state;
 
-  PrebuiltLiveStreamingMiniOverlayPageState state() {
-    return _machine.current?.identifier ??
-        PrebuiltLiveStreamingMiniOverlayPageState.idle;
-  }
+  PrebuiltLiveStreamingMiniOverlayPageState get state =>
+      _machine.current?.identifier ??
+      PrebuiltLiveStreamingMiniOverlayPageState.idle;
 
-  DateTime durationStartTime() {
-    return _durationStartTime ?? DateTime.now();
-  }
+  DateTime get durationStartTime => _durationStartTime ?? DateTime.now();
 
-  ValueNotifier<Duration> durationNotifier() {
-    return _durationNotifier;
-  }
-
-  void listenStateChanged(
-      PrebuiltLiveStreamingMiniOverlayMachineStateChanged listener) {
-    _onStateChangedListeners.add(listener);
-
-    ZegoLoggerService.logInfo(
-      'add listener:$listener, size:${_onStateChangedListeners.length}',
-      tag: 'call',
-      subTag: 'overlay machine',
-    );
-  }
-
-  void removeListenStateChanged(
-      PrebuiltLiveStreamingMiniOverlayMachineStateChanged listener) {
-    _onStateChangedListeners.remove(listener);
-
-    ZegoLoggerService.logInfo(
-      'remove listener:$listener, size:${_onStateChangedListeners.length}',
-      tag: 'call',
-      subTag: 'overlay machine',
-    );
-  }
+  ValueNotifier<Duration> get durationNotifier => _durationNotifier;
 
   void init() {
     ZegoLoggerService.logInfo(
@@ -96,49 +91,34 @@ class ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine {
         _machine.newState(PrebuiltLiveStreamingMiniOverlayPageState.minimizing);
   }
 
-  void changeState(
-    PrebuiltLiveStreamingMiniOverlayPageState state, {
-    ZegoUIKitPrebuiltLiveStreamingData? prebuiltData,
-  }) {
+  void toMinimize() {
     ZegoLoggerService.logInfo(
-      'change state outside to $state',
+      'to minimize',
       tag: 'call',
       subTag: 'overlay machine',
     );
 
-    switch (state) {
-      case PrebuiltLiveStreamingMiniOverlayPageState.idle:
-        _prebuiltData = null;
-        kickOutSubscription?.cancel();
+    _changeState(PrebuiltLiveStreamingMiniOverlayPageState.minimizing);
+  }
 
-        _stateIdle.enter();
+  void restoreFromMinimize() {
+    ZegoLoggerService.logInfo(
+      'restore from minimize',
+      tag: 'call',
+      subTag: 'overlay machine',
+    );
 
-        stopDurationTimer();
-        break;
-      case PrebuiltLiveStreamingMiniOverlayPageState.living:
-        _prebuiltData = null;
-        kickOutSubscription?.cancel();
+    _changeState(PrebuiltLiveStreamingMiniOverlayPageState.living);
+  }
 
-        _stateLiving.enter();
-        break;
-      case PrebuiltLiveStreamingMiniOverlayPageState.minimizing:
-        ZegoLoggerService.logInfo(
-          'data: $_prebuiltData',
-          tag: 'call',
-          subTag: 'overlay machine',
-        );
-        assert(null != prebuiltData);
-        _prebuiltData = prebuiltData;
+  void resetInLiving() {
+    ZegoLoggerService.logInfo(
+      'reset in living',
+      tag: 'call',
+      subTag: 'overlay machine',
+    );
 
-        kickOutSubscription = ZegoUIKit()
-            .getMeRemovedFromRoomStream()
-            .listen(onMeRemovedFromRoom);
-
-        _stateMinimizing.enter();
-
-        startDurationTimer();
-        break;
-    }
+    _changeState(PrebuiltLiveStreamingMiniOverlayPageState.idle);
   }
 
   void startDurationTimer() {
@@ -162,13 +142,77 @@ class ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine {
     _durationTimer = null;
   }
 
-  Future<void> onMeRemovedFromRoom(String fromUserID) async {
+  void listenStateChanged(
+    PrebuiltLiveStreamingMiniOverlayMachineStateChanged listener,
+  ) {
+    _onStateChangedListeners.add(listener);
+
+    ZegoLoggerService.logInfo(
+      'add listener:$listener, size:${_onStateChangedListeners.length}',
+      tag: 'call',
+      subTag: 'overlay machine',
+    );
+  }
+
+  void removeListenStateChanged(
+    PrebuiltLiveStreamingMiniOverlayMachineStateChanged listener,
+  ) {
+    _onStateChangedListeners.remove(listener);
+
+    ZegoLoggerService.logInfo(
+      'remove listener:$listener, size:${_onStateChangedListeners.length}',
+      tag: 'call',
+      subTag: 'overlay machine',
+    );
+  }
+
+  void _changeState(
+    PrebuiltLiveStreamingMiniOverlayPageState state,
+  ) {
+    ZegoLoggerService.logInfo(
+      'change state outside to $state',
+      tag: 'call',
+      subTag: 'overlay machine',
+    );
+
+    switch (state) {
+      case PrebuiltLiveStreamingMiniOverlayPageState.idle:
+        kickOutSubscription?.cancel();
+
+        _stateIdle.enter();
+
+        stopDurationTimer();
+        break;
+      case PrebuiltLiveStreamingMiniOverlayPageState.living:
+        kickOutSubscription?.cancel();
+
+        _stateLiving.enter();
+        break;
+      case PrebuiltLiveStreamingMiniOverlayPageState.minimizing:
+        ZegoLoggerService.logInfo(
+          'data: $_prebuiltData',
+          tag: 'call',
+          subTag: 'overlay machine',
+        );
+
+        kickOutSubscription = ZegoUIKit()
+            .getMeRemovedFromRoomStream()
+            .listen(_onMeRemovedFromRoom);
+
+        _stateMinimizing.enter();
+
+        startDurationTimer();
+        break;
+    }
+  }
+
+  Future<void> _onMeRemovedFromRoom(String fromUserID) async {
     ZegoLoggerService.logInfo(
       'local user removed by $fromUserID',
       tag: 'live audio room',
       subTag: 'mini overlay page',
     );
-    changeState(PrebuiltLiveStreamingMiniOverlayPageState.idle);
+    _changeState(PrebuiltLiveStreamingMiniOverlayPageState.idle);
 
     ZegoLiveStreamingManagers().uninitPluginAndManagers();
 

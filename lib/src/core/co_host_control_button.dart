@@ -14,7 +14,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/inner_text.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/pk/pk_service.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/internal/pk_combine_notifier.dart';
 
 /// @nodoc
 class ZegoCoHostControlButton extends StatefulWidget {
@@ -79,12 +79,11 @@ class _ZegoCoHostControlButtonState extends State<ZegoCoHostControlButton> {
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder(
-      valueListenable: ZegoLiveStreamingPKBattleManager().state,
-      builder: (BuildContext context,
-          ZegoLiveStreamingPKBattleState pkBattleState, Widget? child) {
-        if (pkBattleState == ZegoLiveStreamingPKBattleState.inPKBattle ||
-            pkBattleState == ZegoLiveStreamingPKBattleState.loading) {
+    return ValueListenableBuilder<bool>(
+      valueListenable:
+          ZegoLiveStreamingPKBattleStateCombineNotifier.instance.state,
+      builder: (context, isInPK, _) {
+        if (isInPK) {
           return const SizedBox.shrink();
         } else {
           return ValueListenableBuilder<ZegoLiveStreamingAudienceConnectState>(

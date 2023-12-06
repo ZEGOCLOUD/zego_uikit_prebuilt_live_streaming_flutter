@@ -8,6 +8,7 @@ import 'package:zego_uikit/zego_uikit.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/inner_text.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/pk/defines.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/pkv2/layout/layout.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/swiping/config.dart';
 
 /// Configuration for initializing the Live Streaming
@@ -65,6 +66,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         previewConfig = ZegoLiveStreamingPreviewConfig(),
         pkBattleConfig = ZegoLiveStreamingPKBattleConfig(),
         pkBattleEvents = ZegoLiveStreamingPKBattleEvents(),
+        pkBattleV2Config = ZegoLiveStreamingPKBattleV2Config(),
         durationConfig = ZegoLiveDurationConfig();
 
   /// Default initialization parameters for the audience.
@@ -110,6 +112,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         innerText = ZegoInnerText(),
         previewConfig = ZegoLiveStreamingPreviewConfig(),
         pkBattleConfig = ZegoLiveStreamingPKBattleConfig(),
+        pkBattleV2Config = ZegoLiveStreamingPKBattleV2Config(),
         pkBattleEvents = ZegoLiveStreamingPKBattleEvents(),
         durationConfig = ZegoLiveDurationConfig();
 
@@ -151,6 +154,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
     ZegoBottomMenuBarConfig? bottomMenuBarConfig,
     ZegoLiveStreamingPreviewConfig? previewConfig,
     ZegoLiveStreamingPKBattleConfig? pkBattleConfig,
+    ZegoLiveStreamingPKBattleV2Config? pkBattleV2Config,
     ZegoLiveStreamingPKBattleEvents? pkBattleEvents,
     ZegoPrebuiltAudioVideoViewConfig? audioVideoViewConfig,
   })  : audioVideoViewConfig =
@@ -165,6 +169,8 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         videoConfig = videoConfig ?? ZegoPrebuiltVideoConfig(),
         previewConfig = previewConfig ?? ZegoLiveStreamingPreviewConfig(),
         pkBattleConfig = pkBattleConfig ?? ZegoLiveStreamingPKBattleConfig(),
+        pkBattleV2Config =
+            pkBattleV2Config ?? ZegoLiveStreamingPKBattleV2Config(),
         pkBattleEvents = pkBattleEvents ?? ZegoLiveStreamingPKBattleEvents(),
         durationConfig = durationConfig ?? ZegoLiveDurationConfig() {
     layout ??= ZegoLayout.pictureInPicture();
@@ -366,11 +372,17 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   /// preview config
   ZegoLiveStreamingPreviewConfig previewConfig;
 
-  /// cross room pk events
+  /// cross room pk events(pk version 1)
   ///
   /// Please refer to our [documentation](https://docs.zegocloud.com/article/15580) and [sample code](https://github.com/ZEGOCLOUD/zego_uikit_prebuilt_live_streaming_example_flutter/tree/master/live_streaming_with_pkbattles) for usage instructions.
   ZegoLiveStreamingPKBattleEvents pkBattleEvents;
+
+  /// pk version 1's config
   ZegoLiveStreamingPKBattleConfig pkBattleConfig;
+
+  /// pk version 2's config
+  /// event please refer [ZegoUIKitPrebuiltLiveStreamingEvents.pkV2Events]
+  ZegoLiveStreamingPKBattleV2Config pkBattleV2Config;
 
   /// Live Streaming timing configuration.
   ///
@@ -1351,6 +1363,58 @@ class ZegoLiveStreamingPKBattleConfig {
 
   /// To add custom components on the bottom edge of the PKBattleView.
   ZegoLiveStreamingPKBattleViewBuilder? pkBattleViewBottomBuilder;
+}
+
+/// Used to configure the parameters related to PK battles
+///
+/// This class is used for the [ZegoUIKitPrebuiltLiveStreamingConfig.pkBattleV2Config] property.
+class ZegoLiveStreamingPKBattleV2Config {
+  /// If the connection with a PK user is lost for a [userReconnectingSecond] period of time,
+  /// it will trigger [hostReconnectingBuilder], which waits for the user to reconnect.
+  ///
+  /// default value is 5 seconds.
+  ///
+  /// [ZegoUIKitPrebuiltLiveStreamingPKV2Events.onUserReconnecting] will be triggered
+  int userReconnectingSecond;
+
+  /// When a PK user loses connection for more than [userDisconnectedSecond],
+  /// they will be automatically kicked out of the PK.
+  ///
+  /// default value is 90 seconds.
+  ///
+  /// [ZegoUIKitPrebuiltLiveStreamingPKV2Events.onUserDisconnected] will be triggered
+  int userDisconnectedSecond;
+
+  /// The distance that the pkBattleEvents's top edge is inset from the top of the stack.
+  /// default is 164.r
+  double? pKBattleViewTopPadding;
+
+  /// you can custom coordinates and modify the PK layout.
+  ZegoPKV2MixerLayout? mixerLayout;
+
+  /// When the connected host gets offline due to exceptions, SDK defaults to show "Host is reconnecting".
+  /// To customize the content that displays when the connected host gets offline.
+  ZegoLiveStreamingPKBattleHostReconnectingBuilder? hostReconnectingBuilder;
+
+  /// To overlay custom components on the PKBattleView.
+  ZegoLiveStreamingPKBattleViewBuilder? pkBattleViewForegroundBuilder;
+
+  /// To add custom components on the top edge of the PKBattleView.
+  ZegoLiveStreamingPKBattleViewBuilder? pkBattleViewTopBuilder;
+
+  /// To add custom components on the bottom edge of the PKBattleView.
+  ZegoLiveStreamingPKBattleViewBuilder? pkBattleViewBottomBuilder;
+
+  ZegoLiveStreamingPKBattleV2Config({
+    this.userReconnectingSecond = 5,
+    this.userDisconnectedSecond = 90,
+    this.mixerLayout,
+    this.pKBattleViewTopPadding,
+    this.hostReconnectingBuilder,
+    this.pkBattleViewForegroundBuilder,
+    this.pkBattleViewTopBuilder,
+    this.pkBattleViewBottomBuilder,
+  });
 }
 
 /// Used to configure the parameters related to the preview of the live streaming.

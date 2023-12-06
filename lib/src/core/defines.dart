@@ -11,6 +11,9 @@ enum ZegoInvitationType {
 
   /// cross room PK invitation
   crossRoomPKBattleRequest,
+
+  /// cross room PK invitation
+  crossRoomPKBattleRequestV2,
 }
 
 /// @nodoc
@@ -21,11 +24,16 @@ extension ZegoInvitationTypeExtension on ZegoInvitationType {
         type == ZegoInvitationType.removeFromCoHost.value;
   }
 
+  static bool isPKV2Type(int type) {
+    return type == ZegoInvitationType.crossRoomPKBattleRequestV2.value;
+  }
+
   static const valueMap = {
     ZegoInvitationType.requestCoHost: 2,
     ZegoInvitationType.inviteToJoinCoHost: 3,
     ZegoInvitationType.removeFromCoHost: 4,
     ZegoInvitationType.crossRoomPKBattleRequest: 5,
+    ZegoInvitationType.crossRoomPKBattleRequestV2: 6,
   };
 
   int get value => valueMap[this] ?? -1;
@@ -35,5 +43,6 @@ extension ZegoInvitationTypeExtension on ZegoInvitationType {
     3: ZegoInvitationType.inviteToJoinCoHost,
     4: ZegoInvitationType.removeFromCoHost,
     5: ZegoInvitationType.crossRoomPKBattleRequest,
+    6: ZegoInvitationType.crossRoomPKBattleRequestV2,
   };
 }

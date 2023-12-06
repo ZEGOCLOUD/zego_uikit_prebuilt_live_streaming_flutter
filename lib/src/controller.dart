@@ -19,18 +19,26 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/internal/pk_combine_notifier.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/mini_overlay_machine.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/pk/src/pk_impl.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/pkv2/core/core.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/pkv2/core/defines.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/pkv2/core/service/defines.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/pkv2/core/service/services.dart';
 
-part 'package:zego_uikit_prebuilt_live_streaming/src/controller/connect.dart';
+part 'controller/connect.dart';
 
-part 'package:zego_uikit_prebuilt_live_streaming/src/controller/connect.invite.dart';
+part 'controller/connect.invite.dart';
 
-part 'package:zego_uikit_prebuilt_live_streaming/src/controller/message.dart';
+part 'controller/message.dart';
 
-part 'package:zego_uikit_prebuilt_live_streaming/src/controller/room.dart';
+part 'controller/minimize.dart';
 
-part 'package:zego_uikit_prebuilt_live_streaming/src/controller/screen.dart';
+part 'controller/room.dart';
+
+part 'controller/screen.dart';
+
+part 'controller/pk_v2.dart';
 
 /// Used to control the live streaming functionality.
 ///
@@ -39,9 +47,11 @@ part 'package:zego_uikit_prebuilt_live_streaming/src/controller/screen.dart';
 class ZegoUIKitPrebuiltLiveStreamingController
     with
         ZegoLiveStreamingControllerMessage,
+        ZegoLiveStreamingControllerMinimizing,
         ZegoLiveStreamingControllerScreen,
         ZegoLiveStreamingControllerConnect,
-        ZegoLiveStreamingControllerConnectInvite {
+        ZegoLiveStreamingControllerConnectInvite,
+        ZegoLiveStreamingControllerPKV2 {
   /// This function is used to end the Live Streaming.
   ///
   /// You can pass the context [context] for any necessary pop-ups or page transitions.

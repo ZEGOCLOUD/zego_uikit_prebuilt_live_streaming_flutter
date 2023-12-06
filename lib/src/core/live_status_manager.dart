@@ -55,7 +55,8 @@ class ZegoLiveStatusManager {
 
     notifier.addListener(onLiveStatusUpdated);
 
-    if (!hostManager.isLocalHost) {
+    if (!hostManager.isLocalHost && notifier.value != LiveStatus.living) {
+      /// audience, stop play first if not living, wait living to start play
       ZegoUIKit().stopPlayAllAudioVideo();
     }
 
@@ -183,6 +184,7 @@ class ZegoLiveStatusManager {
 
     if (!hostManager.isLocalHost) {
       if (notifier.value == LiveStatus.living) {
+        /// audience, living to start play
         ZegoUIKit().startPlayAllAudioVideo();
       } else {
         ZegoUIKit().stopPlayAllAudioVideo();

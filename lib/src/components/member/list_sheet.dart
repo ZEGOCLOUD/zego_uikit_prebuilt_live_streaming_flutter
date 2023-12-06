@@ -16,7 +16,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect_manager.dart
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/inner_text.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/pk/src/pk_impl.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/internal/pk_combine_notifier.dart';
 
 /// @nodoc
 class ZegoMemberListSheet extends StatefulWidget {
@@ -265,12 +265,11 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
   }
 
   Widget controlsItem(ZegoUIKitUser user) {
-    return ValueListenableBuilder(
-      valueListenable: ZegoLiveStreamingPKBattleManager().state,
-      builder: (context, pkBattleState, _) {
-        final needHideCoHostWidget =
-            pkBattleState == ZegoLiveStreamingPKBattleState.inPKBattle ||
-                pkBattleState == ZegoLiveStreamingPKBattleState.loading;
+    return ValueListenableBuilder<bool>(
+      valueListenable:
+          ZegoLiveStreamingPKBattleStateCombineNotifier.instance.state,
+      builder: (context, isInPK, _) {
+        final needHideCoHostWidget = isInPK;
         if (needHideCoHostWidget) {
           if (widget.hostManager.isLocalHost) {
             return hostControlItem(user);
@@ -324,15 +323,13 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
   }
 
   Widget hostControlItem(ZegoUIKitUser user) {
-    return ValueListenableBuilder(
-      valueListenable: ZegoLiveStreamingPKBattleManager().state,
-      builder: (context, pkBattleState, _) {
-        final needHideCoHostWidget =
-            pkBattleState == ZegoLiveStreamingPKBattleState.inPKBattle ||
-                pkBattleState == ZegoLiveStreamingPKBattleState.loading;
+    return ValueListenableBuilder<bool>(
+      valueListenable:
+          ZegoLiveStreamingPKBattleStateCombineNotifier.instance.state,
+      builder: (context, isInPK, _) {
+        final needHideCoHostWidget = isInPK;
 
         final popupItems = <PopupItem>[];
-
         if (user.id != widget.hostManager.notifier.value?.id &&
             widget.connectManager.isCoHost(user) &&
             (widget.isPluginEnabled)) {

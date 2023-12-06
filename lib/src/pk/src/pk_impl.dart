@@ -44,6 +44,10 @@ class ZegoLiveStreamingPKBattleManager {
     ZegoLiveStreamingPKBattleState.idle,
   );
 
+  bool get isInPK =>
+      state.value == ZegoLiveStreamingPKBattleState.inPKBattle ||
+      state.value == ZegoLiveStreamingPKBattleState.loading;
+
   ValueNotifier<bool> isAnotherHostMuted = ValueNotifier(false);
   ValueNotifier<bool> anotherHostHeartBeatTimeout = ValueNotifier(false);
 
@@ -228,11 +232,11 @@ class ZegoLiveStreamingPKBattleManager {
         return const ZegoLiveStreamingPKBattleResult();
       } else {
         final errorUserID = ret.errorInvitees.entries.first.key;
-        final errorUserState = ret.errorInvitees.entries.first.value;
+        final errorReason = ret.errorInvitees.entries.first.value;
         return ZegoLiveStreamingPKBattleResult(
           error: PlatformException(
             code: '-1',
-            message: "user $errorUserID's state is ${errorUserState.name}",
+            message: "user $errorUserID's reason is $errorReason",
           ),
         );
       }
@@ -585,12 +589,11 @@ class ZegoLiveStreamingPKBattleManager {
               return const ZegoLiveStreamingPKBattleResult();
             } else {
               final errorUserID = ret.errorInvitees.entries.first.key;
-              final errorUserState = ret.errorInvitees.entries.first.value;
+              final errorReason = ret.errorInvitees.entries.first.value;
               return ZegoLiveStreamingPKBattleResult(
                 error: PlatformException(
                   code: '-1',
-                  message:
-                      "user $errorUserID's state is ${errorUserState.name}",
+                  message: "user $errorUserID's reason is $errorReason",
                 ),
               );
             }
@@ -806,10 +809,14 @@ class ZegoLiveStreamingPKBattleManager {
           anotherHostUserName: anotherHostUserName,
         );
 
-        await ZegoUIKit().startPlayMixAudioVideo(streamCreator!.mixerID, [
-          hostManager.notifier.value?.id ?? hostID,
-          anotherHostUserID,
-        ]);
+        await ZegoUIKit().startPlayMixAudioVideo(
+          streamCreator!.mixerID,
+          [
+            hostManager.notifier.value ?? ZegoUIKit().getUser(hostID),
+            ZegoUIKitUser(id: anotherHostUserID, name: anotherHostUserName),
+          ],
+          {hostID: 0, anotherHostUserID: 1},
+        );
 
         final mixAudioVideoLoaded =
             ZegoUIKit().getMixAudioVideoLoadedNotifier(streamCreator!.mixerID);
@@ -883,7 +890,7 @@ class ZegoLiveStreamingPKBattleStreamCreator {
   ZegoMixerTask generateMixerTask() {
     return ZegoMixerTask(mixerID)
       ..videoConfig.width = 360 * 2
-      ..videoConfig.bitrate = 1200
+      ..videoConfig.bitrate = 1500
       ..enableSoundLevel = true
       ..inputList = [
         // My Stream

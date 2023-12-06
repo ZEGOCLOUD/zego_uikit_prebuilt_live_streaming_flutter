@@ -37,7 +37,7 @@ class _ZegoUIKitPrebuiltLiveStreamingScrollerElementState
     super.initState();
 
     final isFromMinimizing = PrebuiltLiveStreamingMiniOverlayPageState.idle !=
-        ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine().state();
+        ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine().state;
 
     ///wait express room and zim room logout
     if (isFromMinimizing || roomLogoutNotifier.value) {

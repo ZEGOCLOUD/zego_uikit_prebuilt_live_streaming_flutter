@@ -138,7 +138,8 @@ class ZegoLiveStreamingPKBattleDefaultActions {
       context: context,
       rootNavigator: rootNavigator,
       title: dialogInfo.title,
-      content: dialogInfo.message,
+      content: dialogInfo.message
+          .replaceFirst(innerText.param_1, event.anotherHost.name),
       rightButtonText: dialogInfo.confirmButtonName,
     );
   }

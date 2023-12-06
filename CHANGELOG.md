@@ -1,3 +1,7 @@
+## 2.23.0
+
+- Support multiplayer PK.
+
 ## 2.22.4
 
 - Update dependency.

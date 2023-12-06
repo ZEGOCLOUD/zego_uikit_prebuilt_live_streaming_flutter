@@ -49,10 +49,13 @@ class ZegoUIKitPrebuiltLiveStreamingData {
 
   @override
   String toString() {
-    return 'app id:$appID, app sign:$appSign, live id:$liveID, '
+    return 'ZegoUIKitPrebuiltLiveStreamingData{'
+        'app id:$appID, '
+        'live id:$liveID, '
         'isPrebuiltFromMinimizing: $isPrebuiltFromMinimizing, '
         'user id:$userID, user name:$userName, '
         'duration start time:$durationStartTime, '
-        'config:$config ';
+        'config:$config, '
+        '}';
   }
 }

@@ -50,9 +50,9 @@ class ZegoLiveStreamingConnectInviteController {
       return false;
     }
 
-    final pkBattleState = ZegoLiveStreamingPKBattleManager().state.value;
-    if (pkBattleState == ZegoLiveStreamingPKBattleState.inPKBattle ||
-        pkBattleState == ZegoLiveStreamingPKBattleState.loading) {
+    final isInPK =
+        ZegoLiveStreamingPKBattleStateCombineNotifier.instance.state.value;
+    if (isInPK) {
       ZegoLoggerService.logInfo(
         'local in the pk-battle, can not invite',
         tag: 'live streaming',

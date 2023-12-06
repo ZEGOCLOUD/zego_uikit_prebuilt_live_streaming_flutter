@@ -190,7 +190,7 @@ class ZegoLiveConnectManager {
       ZegoLoggerService.logInfo(
         'not init before',
         tag: 'live streaming',
-        subTag: 'seat manager',
+        subTag: 'connect manager',
       );
 
       return;
@@ -412,8 +412,7 @@ class ZegoLiveConnectManager {
     events?.audienceEvents.onCoHostInvitationReceived?.call(host);
 
     inviterOfInvitedToJoinCoHostInMinimizing = null;
-    if (PrebuiltLiveStreamingMiniOverlayPageState.minimizing ==
-        ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine().state()) {
+    if (ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine().isMinimizing) {
       ZegoLoggerService.logInfo(
         'is minimizing now, cache the inviter:$host',
         tag: 'live streaming',

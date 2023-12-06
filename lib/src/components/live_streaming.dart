@@ -112,11 +112,11 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     );
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
-      log('version: zego_uikit_prebuilt_live_streaming: 2.22.4; $version');
+      log('version: zego_uikit_prebuilt_live_streaming: 2.23.0; $version');
     });
 
     isFromMinimizing = PrebuiltLiveStreamingMiniOverlayPageState.idle !=
-        ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine().state();
+        ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine().state;
 
     prebuiltData = ZegoUIKitPrebuiltLiveStreamingData(
       appID: widget.appID,
@@ -131,6 +131,9 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     );
 
     if (!isFromMinimizing) {
+      ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine().prebuiltData =
+          prebuiltData;
+
       ZegoLiveStreamingManagers().initPluginAndManagers(
         popUpManager,
         prebuiltData,
@@ -144,6 +147,9 @@ class _ZegoUIKitPrebuiltLiveStreamingState
         return context;
       });
     }
+    ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine().updateContextQuery(() {
+      return context;
+    });
 
     ZegoLiveStreamingManagers().plugins?.init();
 
@@ -159,7 +165,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     startedByLocalNotifier.addListener(onStartedByLocalValueChanged);
 
     ZegoLoggerService.logInfo(
-      'mini machine state is ${ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine().state()}',
+      'mini machine state is ${ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine().state}',
       tag: 'live streaming',
       subTag: 'prebuilt',
     );
@@ -175,9 +181,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
       initContext();
     }
 
-    ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine().changeState(
-      PrebuiltLiveStreamingMiniOverlayPageState.idle,
-    );
+    ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine().resetInLiving();
   }
 
   @override
@@ -187,8 +191,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     startedByLocalNotifier.removeListener(onStartedByLocalValueChanged);
     WidgetsBinding.instance.removeObserver(this);
 
-    if (PrebuiltLiveStreamingMiniOverlayPageState.minimizing !=
-        ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine().state()) {
+    if (!ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine().isMinimizing) {
       ZegoLiveStreamingManagers().uninitPluginAndManagers().then((value) {
         uninitContext();
       });

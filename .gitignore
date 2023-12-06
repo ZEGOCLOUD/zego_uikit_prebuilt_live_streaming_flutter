@@ -48,6 +48,7 @@ app.*.map.json
 
 # Xcode
 ios/Podfile.lock
+dgph
 
 # web
 # yarn v2

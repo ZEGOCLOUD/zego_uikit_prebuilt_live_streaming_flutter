@@ -87,7 +87,7 @@ class _ZegoEffectGridState extends State<ZegoEffectGrid> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 200.zR,
+      height: 210.zR,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

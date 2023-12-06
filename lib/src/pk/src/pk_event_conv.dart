@@ -307,8 +307,7 @@ extension ZegoLiveStreamingPKBattleManagerEventConv
 
     /// check if minimizing
     pkBattleRequestReceivedEventInMinimizingNotifier.value = null;
-    if (PrebuiltLiveStreamingMiniOverlayPageState.minimizing ==
-        ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine().state()) {
+    if (ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine().isMinimizing) {
       ZegoLoggerService.logInfo(
         'is minimizing now, cache the event:$event',
         tag: 'ZegoLiveStreamingPKBattleService',

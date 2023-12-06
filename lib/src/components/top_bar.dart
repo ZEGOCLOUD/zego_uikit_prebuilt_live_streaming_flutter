@@ -112,7 +112,6 @@ class _ZegoTopBarState extends State<ZegoTopBar> {
     return widget.config.topMenuBarConfig.buttons
             .contains(ZegoMenuBarButtonName.minimizingButton)
         ? ZegoUIKitPrebuiltLiveStreamingMinimizingButton(
-            prebuiltData: widget.prebuiltData,
             buttonSize: Size(52.zR, 52.zR),
             iconSize: Size(24.zR, 24.zR),
           )

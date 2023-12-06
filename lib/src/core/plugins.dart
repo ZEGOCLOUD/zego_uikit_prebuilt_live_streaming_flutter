@@ -232,8 +232,7 @@ class ZegoPrebuiltPlugins {
     roomHasInitLogin = false;
     tryReLogging = false;
 
-    if (PrebuiltLiveStreamingMiniOverlayPageState.minimizing ==
-        ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine().state()) {
+    if (ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine().isMinimizing) {
       ZegoLoggerService.logInfo(
         'to minimizing, not need to leave room, logout and uninit',
         tag: 'live streaming',

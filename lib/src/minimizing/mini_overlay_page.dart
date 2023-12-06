@@ -13,10 +13,13 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/core_managers.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/internal/pk_combine_notifier.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/mini_overlay_machine.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/pk/pk_service.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/pk/pk_view.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/pkv2/components/view.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/pkv2/core/core.dart';
 
 /// @nodoc
 /// @deprecated Use ZegoUIKitPrebuiltLiveStreamingMiniOverlayPage
@@ -113,9 +116,10 @@ class ZegoUIKitPrebuiltLiveStreamingMiniOverlayPageState
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<ZegoLiveStreamingPKBattleState>(
-        valueListenable: ZegoLiveStreamingPKBattleManager().state,
-        builder: (context, pkBattleState, _) {
+    return ValueListenableBuilder<bool>(
+        valueListenable:
+            ZegoLiveStreamingPKBattleStateCombineNotifier.instance.state,
+        builder: (context, isInPK, _) {
           overlaySize = calculateItemSize();
 
           return WillPopScope(
@@ -163,8 +167,8 @@ class ZegoUIKitPrebuiltLiveStreamingMiniOverlayPageState
     }
 
     final size = MediaQuery.of(context).size;
-    final isInPK = ZegoLiveStreamingPKBattleManager().state.value ==
-        ZegoLiveStreamingPKBattleState.inPKBattle;
+    final isInPK =
+        ZegoLiveStreamingPKBattleStateCombineNotifier.instance.state.value;
     if (isInPK) {
       /// pk has two audio views
       final width = size.width / 2.0;
@@ -191,7 +195,7 @@ class ZegoUIKitPrebuiltLiveStreamingMiniOverlayPageState
 
             /// re-enter prebuilt call
             ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine()
-                .changeState(PrebuiltLiveStreamingMiniOverlayPageState.living);
+                .restoreFromMinimize();
 
             Navigator.of(widget.contextQuery(), rootNavigator: true).push(
               MaterialPageRoute(builder: (context) {
@@ -214,8 +218,8 @@ class ZegoUIKitPrebuiltLiveStreamingMiniOverlayPageState
           child: circleBorder(
             child: Scaffold(
               resizeToAvoidBottomInset: false,
-              body: ZegoLiveStreamingPKBattleManager().state.value ==
-                      ZegoLiveStreamingPKBattleState.inPKBattle
+              body: ZegoLiveStreamingPKBattleStateCombineNotifier
+                      .instance.state.value
                   ? minimizingPKUsersWidget(constraints)
                   : ValueListenableBuilder<String?>(
                       valueListenable: activeUserIDNotifier,
@@ -233,33 +237,57 @@ class ZegoUIKitPrebuiltLiveStreamingMiniOverlayPageState
 
   Widget minimizingPKUsersWidget(BoxConstraints constraints) {
     final spacing = 5.zR;
+
+    Widget pkView = const SizedBox.shrink();
+
+    final constraints = BoxConstraints(
+      maxWidth: overlaySize.width - spacing,
+      maxHeight: overlaySize.height - spacing,
+    );
+    final config = ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine()
+            .prebuiltData
+            ?.config ??
+        ZegoUIKitPrebuiltLiveStreamingConfig();
+    final avatarConfig = ZegoAvatarConfig(
+      builder: widget.avatarBuilder ??
+          ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine()
+              .prebuiltData
+              ?.config
+              .avatarBuilder,
+      soundWaveColor: widget.soundWaveColor,
+    );
+
+    /// old pk
+    if (ZegoLiveStreamingPKBattleManager().isInPK) {
+      pkView = ZegoLiveStreamingPKBattleView(
+        withAspectRatio: false,
+        constraints: constraints,
+        config: config,
+        foregroundBuilder: widget.foregroundBuilder,
+        backgroundBuilder: widget.backgroundBuilder,
+        avatarConfig: avatarConfig,
+      );
+    }
+
+    /// new pk
+    if (ZegoUIKitPrebuiltLiveStreamingPKV2.instance.isInPK) {
+      pkView = ZegoLiveStreamingPKV2View(
+        constraints: constraints,
+        hostManager: ZegoLiveStreamingManagers().hostManager!,
+        config: config,
+        foregroundBuilder: widget.foregroundBuilder,
+        backgroundBuilder: widget.backgroundBuilder,
+        avatarConfig: avatarConfig,
+      );
+    }
+
     return Stack(
       children: [
         ...pkBackground(),
         Positioned(
           left: 0,
           right: 0,
-          child: ZegoLiveStreamingPKBattleView(
-            withAspectRatio: false,
-            constraints: BoxConstraints(
-              maxWidth: overlaySize.width - spacing,
-              maxHeight: overlaySize.height - spacing,
-            ),
-            config: ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine()
-                    .prebuiltData
-                    ?.config ??
-                ZegoUIKitPrebuiltLiveStreamingConfig(),
-            foregroundBuilder: widget.foregroundBuilder,
-            backgroundBuilder: widget.backgroundBuilder,
-            avatarConfig: ZegoAvatarConfig(
-              builder: widget.avatarBuilder ??
-                  ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine()
-                      .prebuiltData
-                      ?.config
-                      .avatarBuilder,
-              soundWaveColor: widget.soundWaveColor,
-            ),
-          ),
+          child: pkView,
         ),
         durationTimeBoard(),
         widget.foreground ?? Container(),
@@ -421,17 +449,16 @@ class ZegoUIKitPrebuiltLiveStreamingMiniOverlayPageState
     return Positioned(
       right: 3,
       top: 3,
-      child: ValueListenableBuilder<ZegoIncomingPKBattleRequestReceivedEvent?>(
-          valueListenable: ZegoUIKitPrebuiltLiveStreamingPKService()
-              .pkBattleRequestReceivedEventInMinimizingNotifier,
-          builder: (context, pkBattleRequestReceivedEventInMinimizing, _) {
+      child: ValueListenableBuilder<bool>(
+          valueListenable: ZegoLiveStreamingPKBattleStateCombineNotifier
+              .instance.hasRequestEvent,
+          builder: (context, hasRequestEvent, _) {
             return ValueListenableBuilder<List<ZegoUIKitUser>>(
                 valueListenable: ZegoLiveStreamingManagers()
                     .connectManager!
                     .requestCoHostUsersNotifier,
                 builder: (context, requestCoHostUsers, _) {
-                  if (requestCoHostUsers.isEmpty &&
-                      null == pkBattleRequestReceivedEventInMinimizing) {
+                  if (requestCoHostUsers.isEmpty && !hasRequestEvent) {
                     return Container();
                   } else {
                     return Container(
@@ -536,7 +563,7 @@ class ZegoUIKitPrebuiltLiveStreamingMiniOverlayPageState
 
   void syncState() {
     setState(() {
-      currentState = ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine().state();
+      currentState = ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine().state;
       visibility =
           currentState == PrebuiltLiveStreamingMiniOverlayPageState.minimizing;
 

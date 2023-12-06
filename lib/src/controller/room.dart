@@ -84,8 +84,7 @@ class ZegoLiveStreamingRoomController {
     });
 
     final isFromMinimizing =
-        PrebuiltLiveStreamingMiniOverlayPageState.minimizing ==
-            ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine().state();
+        ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine().isMinimizing;
     if (isFromMinimizing) {
       /// leave in minimizing
       if (ZegoPluginAdapter().getPlugin(ZegoUIKitPluginType.signaling) !=
@@ -100,9 +99,7 @@ class ZegoLiveStreamingRoomController {
 
       await ZegoLiveStreamingManagers().uninitPluginAndManagers();
 
-      ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine().changeState(
-        PrebuiltLiveStreamingMiniOverlayPageState.idle,
-      );
+      ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine().resetInLiving();
 
       if (_hostManager?.isLocalHost ?? false) {
         /// host end/leave live streaming

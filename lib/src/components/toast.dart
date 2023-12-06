@@ -56,8 +56,7 @@ class ZegoToast {
 
 /// @nodoc
 void showToast(String message) {
-  if (PrebuiltLiveStreamingMiniOverlayPageState.minimizing ==
-      ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine().state()) {
+  if (ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine().isMinimizing) {
     return;
   }
 
@@ -66,8 +65,7 @@ void showToast(String message) {
 
 /// @nodoc
 void showDebugToast(String message) {
-  if (PrebuiltLiveStreamingMiniOverlayPageState.minimizing ==
-      ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine().state()) {
+  if (ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine().isMinimizing) {
     return;
   }
 
@@ -78,8 +76,7 @@ void showDebugToast(String message) {
 
 /// @nodoc
 void showSuccess(String message) {
-  if (PrebuiltLiveStreamingMiniOverlayPageState.minimizing ==
-      ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine().state()) {
+  if (ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine().isMinimizing) {
     return;
   }
 
@@ -88,8 +85,7 @@ void showSuccess(String message) {
 
 /// @nodoc
 void showError(String message) {
-  if (PrebuiltLiveStreamingMiniOverlayPageState.minimizing ==
-      ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine().state()) {
+  if (ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine().isMinimizing) {
     return;
   }
 

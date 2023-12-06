@@ -8,13 +8,11 @@ import 'package:zego_uikit/zego_uikit.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/mini_overlay_machine.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/prebuilt_data.dart';
 
 /// @nodoc
 class ZegoUIKitPrebuiltLiveStreamingMinimizingButton extends StatefulWidget {
   const ZegoUIKitPrebuiltLiveStreamingMinimizingButton({
     Key? key,
-    required this.prebuiltData,
     this.afterClicked,
     this.icon,
     this.iconSize,
@@ -31,8 +29,6 @@ class ZegoUIKitPrebuiltLiveStreamingMinimizingButton extends StatefulWidget {
 
   /// the size of button
   final Size? buttonSize;
-
-  final ZegoUIKitPrebuiltLiveStreamingData prebuiltData;
 
   @override
   State<ZegoUIKitPrebuiltLiveStreamingMinimizingButton> createState() =>
@@ -54,8 +50,7 @@ class _ZegoUIKitPrebuiltLiveStreamingMinimizingButtonState
 
     return GestureDetector(
       onTap: () {
-        if (PrebuiltLiveStreamingMiniOverlayPageState.minimizing ==
-            ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine().state()) {
+        if (ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine().isMinimizing) {
           ZegoLoggerService.logInfo(
             'is minimizing, ignore',
             tag: 'call',
@@ -65,10 +60,7 @@ class _ZegoUIKitPrebuiltLiveStreamingMinimizingButtonState
           return;
         }
 
-        ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine().changeState(
-          PrebuiltLiveStreamingMiniOverlayPageState.minimizing,
-          prebuiltData: widget.prebuiltData,
-        );
+        ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine().toMinimize();
 
         Navigator.of(context).pop();
 

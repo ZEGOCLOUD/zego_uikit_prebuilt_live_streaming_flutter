@@ -14,7 +14,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/inner_text.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/pk/src/pk_impl.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/internal/pk_combine_notifier.dart';
 
 /// @nodoc
 class ZegoMemberButton extends StatefulWidget {
@@ -132,12 +132,11 @@ class _ZegoMemberButtonState extends State<ZegoMemberButton> {
   }
 
   Widget redPoint() {
-    return ValueListenableBuilder(
-      valueListenable: ZegoLiveStreamingPKBattleManager().state,
-      builder: (context, pkBattleState, _) {
-        final needHideCoHostWidget =
-            pkBattleState == ZegoLiveStreamingPKBattleState.inPKBattle ||
-                pkBattleState == ZegoLiveStreamingPKBattleState.loading;
+    return ValueListenableBuilder<bool>(
+      valueListenable:
+          ZegoLiveStreamingPKBattleStateCombineNotifier.instance.state,
+      builder: (context, isInPK, _) {
+        final needHideCoHostWidget = isInPK;
 
         if (needHideCoHostWidget) {
           return Container();

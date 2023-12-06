@@ -519,7 +519,7 @@ class ZegoInnerText {
             outgoingPKBattleRequestRejectedCauseByBusy ??
                 ZegoDialogInfo(
                   title: 'PK Battle Initiate Failed',
-                  message: 'The host is busy.',
+                  message: 'The host %0 is busy.',
                   cancelButtonName: '',
                   confirmButtonName: 'OK',
                 ),
@@ -536,7 +536,7 @@ class ZegoInnerText {
             outgoingPKBattleRequestRejectedCauseByReject ??
                 ZegoDialogInfo(
                   title: 'PK Battle Rejected',
-                  message: 'The host rejected your request.',
+                  message: 'The host %0 rejected your request.',
                   cancelButtonName: '',
                   confirmButtonName: 'OK',
                 );

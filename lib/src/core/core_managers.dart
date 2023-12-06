@@ -1,5 +1,3 @@
-// Flutter imports:
-
 // Dart imports:
 import 'dart:async';
 
@@ -13,10 +11,11 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/live_duration_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/live_status_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/plugins.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/internal/pk_combine_notifier.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/prebuilt_data.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/zego_uikit_prebuilt_live_streaming.dart';
 
-part 'core_manager.audiovideo.dart';
+part 'core_manager.audio_video.dart';
 
 class ZegoLiveStreamingManagers {
   factory ZegoLiveStreamingManagers() => _instance;
@@ -91,6 +90,29 @@ class ZegoLiveStreamingManagers {
         startedByLocalNotifier: startedByLocalNotifier,
         contextQuery: contextQuery,
       );
+
+      ZegoUIKitPrebuiltLiveStreamingPKV2().init(
+        config: prebuiltData.config,
+        controller: prebuiltData.controller,
+        events: prebuiltData.events,
+        innerText: prebuiltData.config.innerText,
+        hostManager: ZegoLiveStreamingManagers().hostManager!,
+        liveStatusNotifier:
+            ZegoLiveStreamingManagers().liveStatusManager!.notifier,
+        startedByLocalNotifier: startedByLocalNotifier,
+        contextQuery: contextQuery,
+      );
+
+      ZegoLiveStreamingPKBattleStateCombineNotifier().init(
+        v1StateNotifier: ZegoLiveStreamingPKBattleManager().state,
+        v2StateNotifier: ZegoUIKitPrebuiltLiveStreamingPKV2().pkStateNotifier,
+        v1RequestReceivedEventInMinimizingNotifier:
+            ZegoUIKitPrebuiltLiveStreamingPKService()
+                .pkBattleRequestReceivedEventInMinimizingNotifier,
+        v2RequestReceivedEventInMinimizingNotifier:
+            ZegoUIKitPrebuiltLiveStreamingPKV2()
+                .pkBattleRequestReceivedEventInMinimizingNotifier,
+      );
     }
 
     connectManager = ZegoLiveConnectManager(
@@ -118,9 +140,10 @@ class ZegoLiveStreamingManagers {
       tag: 'live streaming',
       subTag: 'core manager',
     );
+    connectManager?.contextQuery = contextQuery;
 
     ZegoLiveStreamingPKBattleManager().contextQuery = contextQuery;
-    connectManager?.contextQuery = contextQuery;
+    ZegoUIKitPrebuiltLiveStreamingPKV2().updateContextQuery(contextQuery);
   }
 
   Future<void> uninitPluginAndManagers() async {
@@ -149,7 +172,9 @@ class ZegoLiveStreamingManagers {
     await connectManager?.audienceCancelCoHostIfRequesting();
 
     uninitAudioVideoManagers();
+    await ZegoUIKitPrebuiltLiveStreamingPKV2().uninit();
     await ZegoLiveStreamingPKBattleManager().uninit();
+    ZegoLiveStreamingPKBattleStateCombineNotifier().uninit();
 
     await plugins?.uninit();
     await hostManager?.uninit();

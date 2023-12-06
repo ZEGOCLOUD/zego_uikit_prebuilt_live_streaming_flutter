@@ -18,9 +18,9 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect_manager.dart
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/internal/pk_combine_notifier.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/mini_button.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/prebuilt_data.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/pk/src/pk_impl.dart';
 
 /// @nodoc
 class ZegoBottomBar extends StatefulWidget {
@@ -137,6 +137,7 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
 
   Widget leftChatButton() {
     if (buttons.contains(ZegoMenuBarButtonName.chatButton)) {
+      /// hide chat button is show on right bar
       return const SizedBox();
     }
 
@@ -217,14 +218,14 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
 
   List<Widget> sortDisplayButtons(
     List<Widget> builtInButton,
-    List<ZegoMenuBarExtendButton> _extendButtons,
+    List<ZegoMenuBarExtendButton> tempExtendButtons,
   ) {
     /// classify
     final unsortedExtendIndexesWithButton = <int, Widget>{};
     final notNeedSortedExtendButtons = <Widget>[];
-    final totalButtonCount = builtInButton.length + _extendButtons.length;
-    for (var i = 0; i < _extendButtons.length; i++) {
-      final extendButton = _extendButtons[i];
+    final totalButtonCount = builtInButton.length + tempExtendButtons.length;
+    for (var i = 0; i < tempExtendButtons.length; i++) {
+      final extendButton = tempExtendButtons[i];
       if (extendButton.index >= 0 && extendButton.index < totalButtonCount) {
         unsortedExtendIndexesWithButton[extendButton.index] = extendButton;
       } else {
@@ -453,14 +454,12 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
     final iconSize = zegoLiveButtonIconSize;
     switch (type) {
       case ZegoMenuBarButtonName.toggleMicrophoneButton:
-        return ValueListenableBuilder(
-          valueListenable: ZegoLiveStreamingPKBattleManager().state,
-          builder: (context, pkBattleState, _) {
-            final inPKMode =
-                pkBattleState == ZegoLiveStreamingPKBattleState.inPKBattle ||
-                    pkBattleState == ZegoLiveStreamingPKBattleState.loading;
+        return ValueListenableBuilder<bool>(
+          valueListenable:
+              ZegoLiveStreamingPKBattleStateCombineNotifier.instance.state,
+          builder: (context, isInPK, _) {
             final needUserMuteMode =
-                (!widget.config.stopCoHostingWhenMicCameraOff) || inPKMode;
+                (!widget.config.stopCoHostingWhenMicCameraOff) || isInPK;
             return ZegoToggleMicrophoneButton(
               buttonSize: buttonSize,
               iconSize: iconSize,
@@ -661,9 +660,7 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
       case ZegoMenuBarButtonName.expanding:
         return Expanded(child: Container());
       case ZegoMenuBarButtonName.minimizingButton:
-        return ZegoUIKitPrebuiltLiveStreamingMinimizingButton(
-          prebuiltData: widget.prebuiltData,
-        );
+        return const ZegoUIKitPrebuiltLiveStreamingMinimizingButton();
     }
   }
 }
