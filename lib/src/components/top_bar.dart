@@ -19,7 +19,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/prebuilt_data.
 
 /// @nodoc
 class ZegoTopBar extends StatefulWidget {
-  final bool isPluginEnabled;
+  final bool isCoHostEnabled;
   final ZegoUIKitPrebuiltLiveStreamingConfig config;
   final ZegoUIKitPrebuiltLiveStreamingData prebuiltData;
 
@@ -36,7 +36,7 @@ class ZegoTopBar extends StatefulWidget {
 
   const ZegoTopBar({
     Key? key,
-    required this.isPluginEnabled,
+    required this.isCoHostEnabled,
     required this.config,
     required this.prebuiltData,
     required this.hostManager,
@@ -87,7 +87,7 @@ class _ZegoTopBarState extends State<ZegoTopBar> {
               ZegoMemberButton(
                 avatarBuilder: widget.config.avatarBuilder,
                 itemBuilder: widget.config.memberListConfig.itemBuilder,
-                isPluginEnabled: widget.isPluginEnabled,
+                isCoHostEnabled: widget.isCoHostEnabled,
                 hostManager: widget.hostManager,
                 connectManager: widget.connectManager,
                 popUpManager: widget.popUpManager,

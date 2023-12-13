@@ -24,7 +24,7 @@ class ZegoMemberListSheet extends StatefulWidget {
     Key? key,
     this.avatarBuilder,
     this.itemBuilder,
-    required this.isPluginEnabled,
+    required this.isCoHostEnabled,
     required this.hostManager,
     required this.connectManager,
     required this.popUpManager,
@@ -32,7 +32,7 @@ class ZegoMemberListSheet extends StatefulWidget {
     required this.prebuiltController,
   }) : super(key: key);
 
-  final bool isPluginEnabled;
+  final bool isCoHostEnabled;
   final ZegoLiveHostManager hostManager;
   final ZegoLiveConnectManager connectManager;
   final ZegoPopUpManager popUpManager;
@@ -332,14 +332,14 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
         final popupItems = <PopupItem>[];
         if (user.id != widget.hostManager.notifier.value?.id &&
             widget.connectManager.isCoHost(user) &&
-            (widget.isPluginEnabled)) {
+            (widget.isCoHostEnabled)) {
           popupItems.add(PopupItem(
             PopupItemValue.kickCoHost,
             widget.innerText.removeCoHostButton,
           ));
         }
 
-        if (widget.isPluginEnabled &&
+        if (widget.isCoHostEnabled &&
             //  not host
             user.id != widget.hostManager.notifier.value?.id &&
             !widget.connectManager.isCoHost(user) &&
@@ -487,7 +487,7 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
 Future<void> showMemberListSheet({
   ZegoAvatarBuilder? avatarBuilder,
   ZegoMemberListItemBuilder? itemBuilder,
-  required bool isPluginEnabled,
+  required bool isCoHostEnabled,
   required BuildContext context,
   required ZegoLiveHostManager hostManager,
   required ZegoLiveConnectManager connectManager,
@@ -522,7 +522,7 @@ Future<void> showMemberListSheet({
             child: ZegoMemberListSheet(
               avatarBuilder: avatarBuilder,
               itemBuilder: itemBuilder,
-              isPluginEnabled: isPluginEnabled,
+              isCoHostEnabled: isCoHostEnabled,
               hostManager: hostManager,
               connectManager: connectManager,
               popUpManager: popUpManager,

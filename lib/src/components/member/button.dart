@@ -25,7 +25,7 @@ class ZegoMemberButton extends StatefulWidget {
     this.icon,
     this.builder,
     this.backgroundColor,
-    required this.isPluginEnabled,
+    required this.isCoHostEnabled,
     required this.hostManager,
     required this.connectManager,
     required this.popUpManager,
@@ -42,7 +42,7 @@ class ZegoMemberButton extends StatefulWidget {
   /// Customize the background color through [backgroundColor]
   final Color? backgroundColor;
 
-  final bool isPluginEnabled;
+  final bool isCoHostEnabled;
   final ZegoAvatarBuilder? avatarBuilder;
   final ZegoMemberListItemBuilder? itemBuilder;
   final ZegoLiveHostManager hostManager;
@@ -91,7 +91,7 @@ class _ZegoMemberButtonState extends State<ZegoMemberButton> {
           context: context,
           avatarBuilder: widget.avatarBuilder,
           itemBuilder: widget.itemBuilder,
-          isPluginEnabled: widget.isPluginEnabled,
+          isCoHostEnabled: widget.isCoHostEnabled,
           hostManager: widget.hostManager,
           connectManager: widget.connectManager,
           popUpManager: widget.popUpManager,

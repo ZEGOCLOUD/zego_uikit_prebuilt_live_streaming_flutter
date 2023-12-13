@@ -1,3 +1,7 @@
+## 2.23.1
+
+- Fixed an issue where the co-host invitation feature was still being displayed at host member list even when coHostControlButton was not set in bottomMenuBarConfig.audienceButtons.
+
 ## 2.23.0
 
 - Support multiplayer PK.

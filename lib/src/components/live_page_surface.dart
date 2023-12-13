@@ -15,6 +15,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/components/message/view.d
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/top_bar.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
@@ -124,6 +125,9 @@ class ZegoLivePageSurfaceState extends State<ZegoLivePageSurface>
   }
 
   Widget topBar() {
+    final isCoHostEnabled = (widget.plugins?.isEnabled ?? false) &&
+        widget.config.bottomMenuBarConfig.audienceButtons
+            .contains(ZegoMenuBarButtonName.coHostControlButton);
     return Positioned(
       left: 0,
       right: 0,
@@ -131,7 +135,7 @@ class ZegoLivePageSurfaceState extends State<ZegoLivePageSurface>
       child: ZegoTopBar(
         config: widget.config,
         prebuiltData: widget.prebuiltData,
-        isPluginEnabled: widget.plugins?.isEnabled ?? false,
+        isCoHostEnabled: isCoHostEnabled,
         hostManager: widget.hostManager,
         hostUpdateEnabledNotifier: widget.hostManager.hostUpdateEnabledNotifier,
         connectManager: widget.connectManager,
