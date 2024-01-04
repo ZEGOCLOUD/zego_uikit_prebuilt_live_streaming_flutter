@@ -347,14 +347,14 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
           popupItems.add(PopupItem(
               PopupItemValue.inviteConnect,
               widget.innerText.inviteCoHostButton
-                  .replaceFirst(widget.innerText.param_1, user.name)));
+                  .replaceFirst(ZegoInnerText.param_1, user.name)));
         }
 
         if (user.id != widget.hostManager.notifier.value?.id) {
           popupItems.add(PopupItem(
               PopupItemValue.kickOutAttendance,
               widget.innerText.removeUserMenuDialogButton
-                  .replaceFirst(widget.innerText.param_1, user.name)));
+                  .replaceFirst(ZegoInnerText.param_1, user.name)));
         }
 
         if (popupItems.isEmpty) {

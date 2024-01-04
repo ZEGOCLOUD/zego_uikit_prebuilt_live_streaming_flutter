@@ -112,7 +112,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     );
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
-      log('version: zego_uikit_prebuilt_live_streaming: 2.23.1; $version');
+      log('version: zego_uikit_prebuilt_live_streaming: 2.25.0; $version');
     });
 
     isFromMinimizing = PrebuiltLiveStreamingMiniOverlayPageState.idle !=
@@ -390,6 +390,27 @@ class _ZegoUIKitPrebuiltLiveStreamingState
 
     if (!widget.config.previewConfig.showPreviewForHost) {
       startedByLocalNotifier.value = true;
+    }
+
+    notifyUserJoinByMessage();
+  }
+
+  Future<void> notifyUserJoinByMessage() async {
+    if (!widget.config.inRoomMessageConfig.notifyUserJoin) {
+      return;
+    }
+
+    final messageAttributes =
+        widget.config.inRoomMessageConfig.attributes?.call();
+    if (messageAttributes?.isEmpty ?? true) {
+      await ZegoUIKit().sendInRoomMessage(widget.config.innerText.userEnter);
+    } else {
+      await ZegoUIKit().sendInRoomMessage(
+        ZegoInRoomMessage.jsonBody(
+          message: widget.config.innerText.userEnter,
+          attributes: messageAttributes!,
+        ),
+      );
     }
   }
 

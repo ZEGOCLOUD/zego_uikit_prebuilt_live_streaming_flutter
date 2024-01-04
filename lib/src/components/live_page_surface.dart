@@ -186,6 +186,7 @@ class ZegoLivePageSurfaceState extends State<ZegoLivePageSurface>
         constraints: BoxConstraints.loose(listSize),
         child: ZegoInRoomLiveMessageView(
           config: widget.config.inRoomMessageConfig,
+          innerText: widget.config.innerText,
           avatarBuilder: widget.config.avatarBuilder,
         ),
       ),

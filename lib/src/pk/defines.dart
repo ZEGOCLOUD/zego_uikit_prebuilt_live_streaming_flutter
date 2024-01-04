@@ -7,7 +7,10 @@ import 'package:zego_uikit/zego_uikit.dart';
 /// @nodoc
 typedef ZegoDefaultAction = void Function();
 
-/// @nodoc
+@Deprecated(
+    'Since 2.23.0,Please use [ZegoUIKitPrebuiltLiveStreamingController.pkV2], '
+    '[ZegoUIKitPrebuiltLiveStreamingEvents.pkV2Events], '
+    '[ZegoLiveStreamingPKBattleV2Config] instead')
 class ZegoLiveStreamingPKBattleEvents {
   void Function(
     ZegoIncomingPKBattleRequestReceivedEvent event,

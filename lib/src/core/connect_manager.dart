@@ -365,7 +365,7 @@ class ZegoLiveConnectManager {
               ..add(inviter);
 
         showSuccess(translation.message
-            .replaceFirst(translationText.param_1, inviter.name));
+            .replaceFirst(ZegoInnerText.param_1, inviter.name));
       }
     } else {
       if (ZegoInvitationType.inviteToJoinCoHost == invitationType) {
@@ -628,7 +628,7 @@ class ZegoLiveConnectManager {
       audienceIDsOfInvitingConnect.remove(invitee.id);
 
       showError(translationText.audienceRejectInvitationToast.replaceFirst(
-        translationText.param_1,
+        ZegoInnerText.param_1,
         ZegoUIKit().getUser(invitee.id).name,
       ));
     } else {

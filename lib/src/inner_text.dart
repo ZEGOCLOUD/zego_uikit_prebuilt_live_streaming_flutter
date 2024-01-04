@@ -11,7 +11,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/defines.dart';
 class ZegoInnerText {
   /// %0: is a string placeholder, represents the first parameter of prompt
   /// @nodoc
-  final String param_1 = '%0';
+  static String param_1 = '%0';
 
   /// The text of the button for the host to reject audience's co-host request on the member list.
   /// The **default value** is *"Disagree"*.
@@ -105,6 +105,12 @@ class ZegoInnerText {
 
   /// message's place holder
   String messageEmptyToast;
+
+  /// user enter tips in message
+  String userEnter;
+
+  /// user leave tips in message
+  String userLeave;
 
   /// Info for camera permission request dialog.
   /// The **default values** are:
@@ -331,6 +337,8 @@ class ZegoInnerText {
     String? requestCoHostFailedToast,
     String? repeatInviteCoHostFailedToast,
     String? messageEmptyToast,
+    String? userEnter,
+    String? userLeave,
     ZegoDialogInfo? cameraPermissionSettingDialogInfo,
     ZegoDialogInfo? microphonePermissionSettingDialogInfo,
     ZegoDialogInfo? receivedCoHostRequestDialogInfo,
@@ -385,9 +393,9 @@ class ZegoInnerText {
         cancelRequestCoHostButton =
             cancelRequestCoHostButton ?? 'Cancel the application',
         removeCoHostButton = removeCoHostButton ?? 'Remove the co-host',
-        inviteCoHostButton = inviteCoHostButton ?? 'Invite %0 to co-host',
+        inviteCoHostButton = inviteCoHostButton ?? 'Invite $param_1 to co-host',
         removeUserMenuDialogButton =
-            removeUserMenuDialogButton ?? 'Remove %0 from the room',
+            removeUserMenuDialogButton ?? 'Remove $param_1 from the room',
         cancelMenuDialogButton = cancelMenuDialogButton ?? 'Cancel',
         noHostOnline = noHostOnline ?? 'No host is online.',
         memberListTitle = memberListTitle ?? 'Audience',
@@ -403,8 +411,10 @@ class ZegoInnerText {
         repeatInviteCoHostFailedToast = repeatInviteCoHostFailedToast ??
             "You've sent the invitation, please wait for confirmation.",
         messageEmptyToast = messageEmptyToast ?? 'Say something...',
-        audienceRejectInvitationToast =
-            audienceRejectInvitationToast ?? '%0 refused to be a co-host.',
+        userEnter = userEnter ?? 'entered',
+        userLeave = userLeave ?? 'left',
+        audienceRejectInvitationToast = audienceRejectInvitationToast ??
+            '$param_1 refused to be a co-host.',
         requestCoHostFailedToast =
             requestCoHostFailedToast ?? 'Failed to apply for connection.',
         cameraPermissionSettingDialogInfo = cameraPermissionSettingDialogInfo ??
@@ -426,7 +436,7 @@ class ZegoInnerText {
         receivedCoHostRequestDialogInfo = receivedCoHostRequestDialogInfo ??
             ZegoDialogInfo(
               title: 'Co-host request',
-              message: '%0 wants to co-host with you.',
+              message: '$param_1 wants to co-host with you.',
               cancelButtonName: 'Disagree',
               confirmButtonName: 'Agree',
             ),
@@ -489,7 +499,7 @@ class ZegoInnerText {
         incomingPKBattleRequestReceived = incomingPKBattleRequestReceived ??
             ZegoDialogInfo(
               title: 'PK Battle Request',
-              message: '%0 sends a PK battle request to you.',
+              message: '$param_1 sends a PK battle request to you.',
               cancelButtonName: 'Reject',
               confirmButtonName: 'Accept',
             ),
@@ -503,7 +513,7 @@ class ZegoInnerText {
         pkBattleEndedCauseByAnotherHost = pkBattleEndedCauseByAnotherHost ??
             ZegoDialogInfo(
               title: 'PK Battle Ended',
-              message: '%0 ended the PK Battle.',
+              message: '$param_1 ended the PK Battle.',
               cancelButtonName: '',
               confirmButtonName: 'OK',
             ),
@@ -511,7 +521,7 @@ class ZegoInnerText {
             outgoingPKBattleRequestRejectedCauseByError ??
                 ZegoDialogInfo(
                   title: 'PK Battle Initiate Failed',
-                  message: 'code: %0.',
+                  message: 'code: $param_1.',
                   cancelButtonName: '',
                   confirmButtonName: 'OK',
                 ),
@@ -519,7 +529,7 @@ class ZegoInnerText {
             outgoingPKBattleRequestRejectedCauseByBusy ??
                 ZegoDialogInfo(
                   title: 'PK Battle Initiate Failed',
-                  message: 'The host %0 is busy.',
+                  message: 'The host $param_1 is busy.',
                   cancelButtonName: '',
                   confirmButtonName: 'OK',
                 ),
@@ -536,7 +546,7 @@ class ZegoInnerText {
             outgoingPKBattleRequestRejectedCauseByReject ??
                 ZegoDialogInfo(
                   title: 'PK Battle Rejected',
-                  message: 'The host %0 rejected your request.',
+                  message: 'The host $param_1 rejected your request.',
                   cancelButtonName: '',
                   confirmButtonName: 'OK',
                 );

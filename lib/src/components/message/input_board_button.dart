@@ -92,14 +92,21 @@ class _ZegoInRoomMessageInputBoardButtonState
                     context,
                     rootNavigator: widget.hostManager.config.rootNavigator,
                   )
-                      .push(ZegoInRoomMessageInputBoard(
-                    translationText: widget.translationText,
-                    rootNavigator: widget.hostManager.config.rootNavigator,
-                  ))
-                      .then((value) {
-                    isMessageInputting = false;
-                    widget.onSheetPop?.call(key);
-                  });
+                      .push(
+                    ZegoInRoomMessageInputBoard(
+                      translationText: widget.translationText,
+                      payloadAttributes: widget
+                          .hostManager.config.inRoomMessageConfig.attributes
+                          ?.call(),
+                      rootNavigator: widget.hostManager.config.rootNavigator,
+                    ),
+                  )
+                      .then(
+                    (value) {
+                      isMessageInputting = false;
+                      widget.onSheetPop?.call(key);
+                    },
+                  );
                 }
               : null,
           icon: buttonIcon,

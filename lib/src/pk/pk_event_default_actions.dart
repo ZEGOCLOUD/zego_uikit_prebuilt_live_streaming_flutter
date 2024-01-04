@@ -36,7 +36,7 @@ class ZegoLiveStreamingPKBattleDefaultActions {
       rootNavigator: rootNavigator,
       title: dialogInfo.title,
       content: dialogInfo.message
-          .replaceFirst(innerText.param_1, event.anotherHost.name),
+          .replaceFirst(ZegoInnerText.param_1, event.anotherHost.name),
       leftButtonText: dialogInfo.cancelButtonName,
       leftButtonCallback: () {
         ZegoLiveStreamingPKBattleManager().showingRequestReceivedDialog = false;
@@ -95,7 +95,7 @@ class ZegoLiveStreamingPKBattleDefaultActions {
       rootNavigator: rootNavigator,
       title: dialogInfo.title,
       content: dialogInfo.message
-          .replaceFirst(innerText.param_1, event.anotherHost.name),
+          .replaceFirst(ZegoInnerText.param_1, event.anotherHost.name),
       rightButtonText: dialogInfo.confirmButtonName,
     );
   }
@@ -139,7 +139,7 @@ class ZegoLiveStreamingPKBattleDefaultActions {
       rootNavigator: rootNavigator,
       title: dialogInfo.title,
       content: dialogInfo.message
-          .replaceFirst(innerText.param_1, event.anotherHost.name),
+          .replaceFirst(ZegoInnerText.param_1, event.anotherHost.name),
       rightButtonText: dialogInfo.confirmButtonName,
     );
   }

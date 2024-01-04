@@ -19,7 +19,7 @@ extension PKServiceV2Dialogs on ZegoUIKitPrebuiltLiveStreamingPKServicesV2 {
         rootNavigator: rootNavigator,
         title: dialogInfo.title,
         content: dialogInfo.message
-            .replaceFirst(innerText.param_1, event.fromHost.name),
+            .replaceFirst(ZegoInnerText.param_1, event.fromHost.name),
         leftButtonText: dialogInfo.cancelButtonName,
         leftButtonCallback: () {
           Navigator.of(
@@ -76,7 +76,7 @@ extension PKServiceV2Dialogs on ZegoUIKitPrebuiltLiveStreamingPKServicesV2 {
         rootNavigator: rootNavigator,
         title: dialogInfo.title,
         content: dialogInfo.message
-            .replaceFirst(innerText.param_1, event.fromHost.name),
+            .replaceFirst(ZegoInnerText.param_1, event.fromHost.name),
         rightButtonText: dialogInfo.confirmButtonName,
       ).then((value) {
         _coreData.showingPKBattleEndedDialog = false;
@@ -123,7 +123,7 @@ extension PKServiceV2Dialogs on ZegoUIKitPrebuiltLiveStreamingPKServicesV2 {
         rootNavigator: rootNavigator,
         title: dialogInfo.title,
         content: dialogInfo.message
-            .replaceFirst(innerText.param_1, event.fromHost.name),
+            .replaceFirst(ZegoInnerText.param_1, event.fromHost.name),
         rightButtonText: dialogInfo.confirmButtonName,
       ).then((value) {
         _coreData.showOutgoingPKBattleRequestRejectedDialog = false;

@@ -12,10 +12,12 @@ class ZegoInRoomMessageInputBoard extends ModalRoute<String> {
   ZegoInRoomMessageInputBoard({
     required this.translationText,
     required this.rootNavigator,
+    this.payloadAttributes,
   }) : super();
 
   final ZegoInnerText translationText;
   final bool rootNavigator;
+  final Map<String, String>? payloadAttributes;
 
   @override
   Duration get transitionDuration => const Duration(milliseconds: 200);
@@ -57,6 +59,7 @@ class ZegoInRoomMessageInputBoard extends ModalRoute<String> {
           ),
           ZegoInRoomMessageInput(
             placeHolder: translationText.messageEmptyToast,
+            payloadAttributes: payloadAttributes,
             onSubmit: () {
               Navigator.of(
                 context,

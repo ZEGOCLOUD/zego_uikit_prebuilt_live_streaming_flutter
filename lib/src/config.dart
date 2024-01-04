@@ -323,23 +323,6 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   /// <img src="https://storage.zego.im/sdk-doc/Pics/zegocloud/api/flutter/live/avatar_builder.png" width=50%/>
   ZegoAvatarBuilder? avatarBuilder;
 
-  /// Customize your start call button
-  /// you MUST call startLive function on your custom button
-  ///
-  ///```dart
-  /// ..startLiveButtonBuilder =
-  ///   (BuildContext context, VoidCallback startLive) {
-  ///     return ElevatedButton(
-  ///       onPressed: () {
-  ///         //  do whatever you want
-  ///         startLive();  //  MUST call this function to skip to target page!!!
-  ///       },
-  ///       child: Text("START"),
-  ///     );
-  ///   }
-  /// ```
-  ZegoStartLiveButtonBuilder? startLiveButtonBuilder;
-
   ///  Mark is large room or not
   ///
   ///  sendInRoomCommand will sending to everyone in the room if true
@@ -369,19 +352,45 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   /// ```
   Widget? background;
 
+  /// Customize your start call button
+  /// you MUST call startLive function on your custom button
+  ///
+  ///```dart
+  /// ..startLiveButtonBuilder =
+  ///   (BuildContext context, VoidCallback startLive) {
+  ///     return ElevatedButton(
+  ///       onPressed: () {
+  ///         //  do whatever you want
+  ///         startLive();  //  MUST call this function to skip to target page!!!
+  ///       },
+  ///       child: Text("START"),
+  ///     );
+  ///   }
+  /// ```
+  /// todo@v3.0.0 move to [ZegoLiveStreamingPreviewConfig]
+  ZegoStartLiveButtonBuilder? startLiveButtonBuilder;
+
   /// preview config
   ZegoLiveStreamingPreviewConfig previewConfig;
 
   /// cross room pk events(pk version 1)
   ///
   /// Please refer to our [documentation](https://docs.zegocloud.com/article/15580) and [sample code](https://github.com/ZEGOCLOUD/zego_uikit_prebuilt_live_streaming_example_flutter/tree/master/live_streaming_with_pkbattles) for usage instructions.
+  @Deprecated(
+      'Since 2.23.0,Please use [ZegoUIKitPrebuiltLiveStreamingController.pkV2], '
+      '[ZegoUIKitPrebuiltLiveStreamingEvents.pkV2Events], '
+      '[ZegoLiveStreamingPKBattleV2Config] instead')
   ZegoLiveStreamingPKBattleEvents pkBattleEvents;
 
   /// pk version 1's config
+  @Deprecated(
+      'Since 2.23.0,Please use [ZegoUIKitPrebuiltLiveStreamingController.pkV2], '
+      '[ZegoUIKitPrebuiltLiveStreamingEvents.pkV2Events], '
+      '[ZegoLiveStreamingPKBattleV2Config] instead')
   ZegoLiveStreamingPKBattleConfig pkBattleConfig;
 
-  /// pk version 2's config
-  /// event please refer [ZegoUIKitPrebuiltLiveStreamingEvents.pkV2Events]
+  /// pk version 2's config,
+  /// if you want to listen event, please refer [ZegoUIKitPrebuiltLiveStreamingEvents.pkV2Events]
   ZegoLiveStreamingPKBattleV2Config pkBattleV2Config;
 
   /// Live Streaming timing configuration.
@@ -1126,6 +1135,59 @@ class ZegoInRoomMessageConfig {
   /// For example, you can modify the background color, opacity, border radius, or add additional information like the sender's level or role.
   ZegoInRoomMessageItemBuilder? itemBuilder;
 
+  /// A more granular builder for customizing the widget on the leading of the avatar part, default is empty.
+  /// default message display widget = avatar + name + text
+  /// Please note that if you use [itemBuilder], this builder will be ignored.
+  ZegoInRoomMessageItemBuilder? avatarLeadingBuilder;
+
+  /// A more granular builder for customizing the widget on the tailing of the avatar part, default is empty.
+  /// default message display widget = avatar + name + text
+  /// Please note that if you use [itemBuilder], this builder will be ignored.
+  ZegoInRoomMessageItemBuilder? avatarTailingBuilder;
+
+  /// A more granular builder for customizing the widget on the leading of the name part, default is empty.
+  /// default message display widget = avatar + name + text
+  /// Please note that if you use [itemBuilder], this builder will be ignored.
+  ZegoInRoomMessageItemBuilder? nameLeadingBuilder;
+
+  /// A more granular builder for customizing the widget on the tailing of the name part, default is empty.
+  /// default message display widget = avatar + name + text
+  /// Please note that if you use [itemBuilder], this builder will be ignored.
+  ZegoInRoomMessageItemBuilder? nameTailingBuilder;
+
+  /// A more granular builder for customizing the widget on the leading of the text part, default is empty.
+  /// default message display widget = avatar + name + text
+  /// Please note that if you use [itemBuilder], this builder will be ignored.
+  ZegoInRoomMessageItemBuilder? textLeadingBuilder;
+
+  /// A more granular builder for customizing the widget on the tailing of the text part, default is empty.
+  /// default message display widget = avatar + name + text
+  /// Please note that if you use [itemBuilder], this builder will be ignored.
+  ZegoInRoomMessageItemBuilder? textTailingBuilder;
+
+  /// Whether to display user join messages, default is not displayed
+  bool notifyUserJoin;
+
+  /// Whether to display user leave messages, default is not displayed
+  bool notifyUserLeave;
+
+  /// message attributes of local user, which will be appended to the message body.
+  ///
+  /// if set, [attributes] will be sent along with the message body.
+  ///
+  /// ``` dart
+  ///  inRoomMessageConfig.attributes = {'k':'v'};
+  ///  inRoomMessageConfig.itemBuilder = (
+  ///    BuildContext context,
+  ///    ZegoInRoomMessage message,
+  ///    Map<String, dynamic> extraInfo,
+  ///  ) {
+  ///   final attributes = message.attributes;
+  ///   return YouCustomMessageItem();
+  ///  }
+  /// ```
+  Map<String, String> Function()? attributes;
+
   /// background
   Widget? background;
 
@@ -1176,10 +1238,19 @@ class ZegoInRoomMessageConfig {
 
   ZegoInRoomMessageConfig({
     this.visible = true,
+    this.notifyUserJoin = false,
+    this.notifyUserLeave = false,
+    this.attributes,
     this.width,
     this.height,
     this.bottomLeft,
     this.itemBuilder,
+    this.avatarLeadingBuilder,
+    this.avatarTailingBuilder,
+    this.nameLeadingBuilder,
+    this.nameTailingBuilder,
+    this.textLeadingBuilder,
+    this.textTailingBuilder,
     this.opacity = 0.5,
     this.maxLines,
     this.nameTextStyle,
@@ -1346,6 +1417,10 @@ class ZegoEffectConfig {
 /// Used to configure the parameters related to PK battles
 ///
 /// This class is used for the [ZegoUIKitPrebuiltLiveStreamingConfig.pkBattleConfig] property.
+@Deprecated(
+    'Since 2.23.0,Please use [ZegoUIKitPrebuiltLiveStreamingController.pkV2], '
+    '[ZegoUIKitPrebuiltLiveStreamingEvents.pkV2Events], '
+    '[ZegoLiveStreamingPKBattleV2Config] instead')
 class ZegoLiveStreamingPKBattleConfig {
   /// The distance that the pkBattleEvents's top edge is inset from the top of the stack.
   /// default is 164.r

@@ -12,7 +12,10 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/pk/src/pk_impl.dart';
 export 'defines.dart';
 export 'src/pk_impl.dart';
 
-/// @nodoc
+@Deprecated(
+    'Since 2.23.0,Please use [ZegoUIKitPrebuiltLiveStreamingController.pkV2], '
+    '[ZegoUIKitPrebuiltLiveStreamingEvents.pkV2Events], '
+    '[ZegoLiveStreamingPKBattleV2Config] instead')
 class ZegoUIKitPrebuiltLiveStreamingPKService {
   Future<ZegoLiveStreamingPKBattleResult> sendPKBattleRequest(
     String anotherHostUserID, {
@@ -108,6 +111,6 @@ class ZegoUIKitPrebuiltLiveStreamingPKService {
       ZegoLiveStreamingPKBattleManager();
 }
 
-@Deprecated('Since 2.6.1, Please User ZegoUIKitPrebuiltLiveStreamingPKService')
+@Deprecated('Since 2.6.1, Please Use ZegoUIKitPrebuiltLiveStreamingPKService')
 typedef ZegoUIKitPrebuiltLiveStreamingService
     = ZegoUIKitPrebuiltLiveStreamingPKService;

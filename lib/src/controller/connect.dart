@@ -20,6 +20,11 @@ class ZegoLiveStreamingConnectController {
   ValueNotifier<List<ZegoUIKitUser>> get requestCoHostUsersNotifier =>
       _requestCoHostUsersNotifier;
 
+  ValueNotifier<ZegoUIKitUser?> get hostNotifier {
+    _initByCoreManager();
+    return _hostNotifier;
+  }
+
   /// audience requests to become a co-host by sending a request to the host.
   /// if you want audience be co-host without request to the host, use [startCoHost]
   ///
@@ -534,6 +539,38 @@ class ZegoLiveStreamingConnectController {
         _connectManager!.requestCoHostUsersNotifier.value;
   }
 
+  void _initByCoreManager() {
+    if (_alreadyInitByCoreManager) {
+      return;
+    }
+
+    _alreadyInitByCoreManager = true;
+
+    ZegoLiveStreamingManagers()
+        .initializedNotifier
+        .addListener(_onCoreManagerInitFinished);
+    _onCoreManagerInitFinished();
+  }
+
+  void _onCoreManagerInitFinished() {
+    if (ZegoLiveStreamingManagers().initializedNotifier.value) {
+      ZegoLiveStreamingManagers()
+          .hostManager
+          ?.notifier
+          .addListener(_onHostUpdated);
+    } else {
+      ZegoLiveStreamingManagers()
+          .hostManager
+          ?.notifier
+          .removeListener(_onHostUpdated);
+    }
+  }
+
+  void _onHostUpdated() {
+    _hostNotifier.value =
+        ZegoLiveStreamingManagers().hostManager?.notifier.value;
+  }
+
   ZegoUIKitPrebuiltLiveStreamingConfig? get _prebuiltConfig =>
       ZegoLiveStreamingManagers().hostManager?.config;
 
@@ -587,6 +624,9 @@ class ZegoLiveStreamingConnectController {
 
   /// for host: current requesting co-host's users
   final _requestCoHostUsersNotifier = ValueNotifier<List<ZegoUIKitUser>>([]);
+
+  var _hostNotifier = ValueNotifier<ZegoUIKitUser?>(null);
+  bool _alreadyInitByCoreManager = false;
 
   ZegoUIKitPrebuiltLiveStreamingEvents? _events;
 }

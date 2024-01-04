@@ -132,6 +132,8 @@ class ZegoLiveStreamingManagers {
     liveStatusManager!.setConnectManger(connectManager!);
 
     initAudioVideoManagers();
+
+    initializedNotifier.value = true;
   }
 
   void updateContextQuery(BuildContext Function()? contextQuery) {
@@ -164,6 +166,7 @@ class ZegoLiveStreamingManagers {
     }
 
     _initialized = false;
+    initializedNotifier.value = false;
 
     for (final subscription in subscriptions) {
       subscription?.cancel();
@@ -192,6 +195,8 @@ class ZegoLiveStreamingManagers {
   }
 
   bool _initialized = false;
+  var initializedNotifier = ValueNotifier<bool>(false);
+
   List<StreamSubscription<dynamic>?> subscriptions = [];
 
   ZegoLiveHostManager? hostManager;

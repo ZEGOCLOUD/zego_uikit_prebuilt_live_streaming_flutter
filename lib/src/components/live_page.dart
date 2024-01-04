@@ -146,42 +146,44 @@ class ZegoLivePageState extends State<ZegoLivePage>
           minTextAdapt: true,
           splitScreenMode: true,
           builder: (context, child) {
-            return clickListener(
-              child: LayoutBuilder(builder: (context, constraints) {
-                return ValueListenableBuilder<ZegoUIKitUser?>(
-                    valueListenable: widget.hostManager.notifier,
-                    builder: (context, host, _) {
-                      return Stack(
-                        children: [
-                          ...background(
-                            constraints.maxWidth,
-                            constraints.maxHeight,
-                          ),
-                          ZegoLivePageCentralAudioVideoView(
-                            config: widget.config,
-                            hostManager: widget.hostManager,
-                            liveStatusManager: widget.liveStatusManager,
-                            popUpManager: widget.popUpManager,
-                            controller: widget.controller,
-                            plugins: widget.plugins,
-                            constraints: constraints,
-                          ),
-                          ZegoLivePageSurface(
-                            config: widget.config,
-                            hostManager: widget.hostManager,
-                            liveStatusManager: widget.liveStatusManager,
-                            liveDurationManager: widget.liveDurationManager,
-                            popUpManager: widget.popUpManager,
-                            connectManager:
-                                ZegoLiveStreamingManagers().connectManager!,
-                            controller: widget.controller,
-                            plugins: widget.plugins,
-                            prebuiltData: widget.prebuiltData,
-                          ),
-                        ],
-                      );
-                    });
-              }),
+            return ZegoInputBoardWrapper(
+              child: clickListener(
+                child: LayoutBuilder(builder: (context, constraints) {
+                  return ValueListenableBuilder<ZegoUIKitUser?>(
+                      valueListenable: widget.hostManager.notifier,
+                      builder: (context, host, _) {
+                        return Stack(
+                          children: [
+                            ...background(
+                              constraints.maxWidth,
+                              constraints.maxHeight,
+                            ),
+                            ZegoLivePageCentralAudioVideoView(
+                              config: widget.config,
+                              hostManager: widget.hostManager,
+                              liveStatusManager: widget.liveStatusManager,
+                              popUpManager: widget.popUpManager,
+                              controller: widget.controller,
+                              plugins: widget.plugins,
+                              constraints: constraints,
+                            ),
+                            ZegoLivePageSurface(
+                              config: widget.config,
+                              hostManager: widget.hostManager,
+                              liveStatusManager: widget.liveStatusManager,
+                              liveDurationManager: widget.liveDurationManager,
+                              popUpManager: widget.popUpManager,
+                              connectManager:
+                                  ZegoLiveStreamingManagers().connectManager!,
+                              controller: widget.controller,
+                              plugins: widget.plugins,
+                              prebuiltData: widget.prebuiltData,
+                            ),
+                          ],
+                        );
+                      });
+                }),
+              ),
             );
           },
         ),

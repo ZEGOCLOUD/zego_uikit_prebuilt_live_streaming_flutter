@@ -75,6 +75,8 @@ class ZegoLeaveStreamingButtonState extends State<ZegoLeaveStreamingButton> {
         final canLeave =
             await widget.config.onLeaveConfirmation?.call(context) ?? true;
         if (canLeave) {
+          await notifyUserLeaveByMessage();
+
           if (widget.hostManager.isLocalHost) {
             /// live is ready to end, host will update if receive property notify
             /// so need to keep current host value, DISABLE local host value UPDATE
@@ -124,5 +126,24 @@ class ZegoLeaveStreamingButtonState extends State<ZegoLeaveStreamingButton> {
   void oHangUpRequestingChanged() {
     hangupButtonClickableNotifier.value =
         !(widget.isLeaveRequestingNotifier?.value ?? true);
+  }
+
+  Future<void> notifyUserLeaveByMessage() async {
+    if (!widget.config.inRoomMessageConfig.notifyUserLeave) {
+      return;
+    }
+
+    final messageAttributes =
+        widget.config.inRoomMessageConfig.attributes?.call();
+    if (messageAttributes?.isEmpty ?? true) {
+      await ZegoUIKit().sendInRoomMessage(widget.config.innerText.userLeave);
+    } else {
+      await ZegoUIKit().sendInRoomMessage(
+        ZegoInRoomMessage.jsonBody(
+          message: widget.config.innerText.userLeave,
+          attributes: messageAttributes!,
+        ),
+      );
+    }
   }
 }

@@ -1,3 +1,23 @@
+## 2.25.0
+
+- payload attribute by message, add **attributes** in **ZegoInRoomMessageConfig**, that's message attributes of local user, which will be appended to the message body. if set, [userAttributes] 
+  will be sent along with the message body.
+- builder in message，add more leading/tailing builder for customizing the widget in **ZegoInRoomMessageConfig**.
+  for avatar, name or text part in default message display，all have the builder on leading or tailing.
+  Please note that if you use [itemBuilder], this granular builder will be ignored.
+
+## 2.24.2
+
+- Update dependency.
+
+## 2.24.1
+
+- Fix the issue of video shaking caused by chat input.
+
+## 2.24.0
+
+- Add a host notifier, which allows you to monitor change in host from here.
+
 ## 2.23.1
 
 - Fixed an issue where the co-host invitation feature was still being displayed at host member list even when coHostControlButton was not set in bottomMenuBarConfig.audienceButtons.
