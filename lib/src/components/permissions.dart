@@ -89,13 +89,21 @@ Future<void> requestPermissions({
     if (permissions.contains(Permission.microphone) &&
         statuses[Permission.microphone] != PermissionStatus.granted) {
       if (isShowDialog) {
-        await showAppSettingsDialog(
-          context: context,
-          dialogInfo: translationText.microphonePermissionSettingDialogInfo,
-          rootNavigator: rootNavigator,
-          popUpManager: popUpManager,
-          kickOutNotifier: kickOutNotifier,
-        );
+        if (context.mounted) {
+          await showAppSettingsDialog(
+            context: context,
+            dialogInfo: translationText.microphonePermissionSettingDialogInfo,
+            rootNavigator: rootNavigator,
+            popUpManager: popUpManager,
+            kickOutNotifier: kickOutNotifier,
+          );
+        } else {
+          ZegoLoggerService.logInfo(
+            'show app settings dialog, context is not mounted',
+            tag: 'live streaming',
+            subTag: 'permissions',
+          );
+        }
       }
     }
   });
@@ -113,7 +121,7 @@ Future<bool> showAppSettingsDialog({
     ZegoLoggerService.logInfo(
       'local user is kick-out, ignore show app settings dialog',
       tag: 'live streaming',
-      subTag: 'prebuilt',
+      subTag: 'permissions',
     );
     return false;
   }
@@ -136,10 +144,19 @@ Future<bool> showAppSettingsDialog({
     rightButtonText: dialogInfo.confirmButtonName,
     rightButtonCallback: () async {
       await openAppSettings();
-      Navigator.of(
-        context,
-        rootNavigator: rootNavigator,
-      ).pop(false);
+
+      if (context.mounted) {
+        Navigator.of(
+          context,
+          rootNavigator: rootNavigator,
+        ).pop(false);
+      } else {
+        ZegoLoggerService.logInfo(
+          'show app settings dialog, context is not mounted',
+          tag: 'live streaming',
+          subTag: 'permissions',
+        );
+      }
     },
   ).then((result) {
     popUpManager.removeAPopUpSheet(key);

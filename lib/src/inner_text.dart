@@ -551,7 +551,3 @@ class ZegoInnerText {
                   confirmButtonName: 'OK',
                 );
 }
-
-/// @nodoc
-@Deprecated('Since 2.5.8, please use ZegoInnerText instead')
-typedef ZegoTranslationText = ZegoInnerText;

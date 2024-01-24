@@ -1,0 +1,26 @@
+dartdoc:
+  header: ['doc/header.html']
+  categories:
+#    "Get started":
+#      markdown: doc/get-started.md
+    "APIs":
+      markdown: doc/apis.md
+    "Events":
+      markdown: doc/events.md
+    "Configs":
+      markdown: doc/configs.md
+    "Advances":
+      markdown: doc/advances.md
+    "Migration: from 2.x to 3.0":
+      markdown: doc/MigrateGuide_v2.x_to_v3.0.md
+  categoryOrder:
+#    - "Get started"
+    - "APIs"
+    - "Events"
+    - "Configs"
+    - "Advances"
+    - "Migration: from 2.x to 3.0"
+  showUndocumentedCategories: true
+  ignore:
+    - broken-link
+    - missing-from-search-index

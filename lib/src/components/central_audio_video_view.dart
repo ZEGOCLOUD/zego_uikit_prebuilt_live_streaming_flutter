@@ -20,11 +20,9 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/core/plugins.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/pk_combine_notifier.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/pk/pk_view.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/pk/src/pk_impl.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/pkv2/components/view.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/pkv2/core/core.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/pkv2/core/service/defines.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/pk/components/view.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/pk/core/core.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/pk/core/service/defines.dart';
 
 /// @nodoc
 class ZegoLivePageCentralAudioVideoView extends StatefulWidget {
@@ -34,7 +32,6 @@ class ZegoLivePageCentralAudioVideoView extends StatefulWidget {
     required this.hostManager,
     required this.liveStatusManager,
     required this.popUpManager,
-    required this.controller,
     required this.constraints,
     this.plugins,
   }) : super(key: key);
@@ -46,7 +43,6 @@ class ZegoLivePageCentralAudioVideoView extends StatefulWidget {
   final ZegoPopUpManager popUpManager;
   final ZegoPrebuiltPlugins? plugins;
 
-  final ZegoUIKitPrebuiltLiveStreamingController controller;
   final BoxConstraints constraints;
 
   @override
@@ -90,21 +86,11 @@ class ZegoLivePageCentralAudioVideoViewState
           ZegoLiveStreamingPKBattleStateCombineNotifier.instance.state,
       builder: (context, isInPK, _) {
         if (isInPK) {
-          /// old pk
-          if (ZegoLiveStreamingPKBattleManager().isInPK) {
+          if (ZegoUIKitPrebuiltLiveStreamingPK.instance.pkStateNotifier.value ==
+                  ZegoLiveStreamingPKBattleState.inPK ||
+              ZegoUIKitPrebuiltLiveStreamingPK.instance.pkStateNotifier.value ==
+                  ZegoLiveStreamingPKBattleState.loading) {
             return pkBattleView(
-              constraints: widget.constraints,
-            );
-          }
-
-          /// new pk
-          if (ZegoUIKitPrebuiltLiveStreamingPKV2
-                      .instance.pkStateNotifier.value ==
-                  ZegoLiveStreamingPKBattleStateV2.inPK ||
-              ZegoUIKitPrebuiltLiveStreamingPKV2
-                      .instance.pkStateNotifier.value ==
-                  ZegoLiveStreamingPKBattleStateV2.loading) {
-            return pkBattleViewV2(
               constraints: widget.constraints,
             );
           }
@@ -134,40 +120,25 @@ class ZegoLivePageCentralAudioVideoViewState
   Widget pkBattleView({
     required BoxConstraints constraints,
   }) {
-    return Positioned(
-      top: widget.config.pkBattleConfig.pKBattleViewTopPadding ?? 164.zR,
-      child: ZegoLiveStreamingPKBattleView(
-        constraints: constraints,
-        config: widget.config,
-        foregroundBuilder: widget.config.audioVideoViewConfig.foregroundBuilder,
-        backgroundBuilder: widget.config.audioVideoViewConfig.backgroundBuilder,
-        avatarConfig: ZegoAvatarConfig(
-          showInAudioMode:
-              widget.config.audioVideoViewConfig.showAvatarInAudioMode,
-          showSoundWavesInAudioMode:
-              widget.config.audioVideoViewConfig.showSoundWavesInAudioMode,
-          builder: widget.config.avatarBuilder,
-        ),
-      ),
-    );
-  }
+    final topPadding = widget.config.pkBattle.pKBattleViewTopPadding ?? 164.zR;
 
-  Widget pkBattleViewV2({
-    required BoxConstraints constraints,
-  }) {
+    final displayConstraints = BoxConstraints(
+      maxWidth: constraints.maxWidth,
+      maxHeight: constraints.maxHeight - topPadding - 2.zR,
+    );
+
     return Positioned(
-      top: widget.config.pkBattleV2Config.pKBattleViewTopPadding ?? 164.zR,
+      top: topPadding,
       child: ZegoLiveStreamingPKV2View(
-        constraints: widget.constraints,
+        constraints: displayConstraints,
         hostManager: widget.hostManager,
         config: widget.config,
-        foregroundBuilder: widget.config.audioVideoViewConfig.foregroundBuilder,
-        backgroundBuilder: widget.config.audioVideoViewConfig.backgroundBuilder,
+        foregroundBuilder: widget.config.audioVideoView.foregroundBuilder,
+        backgroundBuilder: widget.config.audioVideoView.backgroundBuilder,
         avatarConfig: ZegoAvatarConfig(
-          showInAudioMode:
-              widget.config.audioVideoViewConfig.showAvatarInAudioMode,
+          showInAudioMode: widget.config.audioVideoView.showAvatarInAudioMode,
           showSoundWavesInAudioMode:
-              widget.config.audioVideoViewConfig.showSoundWavesInAudioMode,
+              widget.config.audioVideoView.showSoundWavesInAudioMode,
           builder: widget.config.avatarBuilder,
         ),
       ),
@@ -232,13 +203,15 @@ class ZegoLivePageCentralAudioVideoViewState
             filterAudioVideo: audioVideoViewFilter,
             avatarConfig: ZegoAvatarConfig(
               showInAudioMode:
-                  widget.config.audioVideoViewConfig.showAvatarInAudioMode,
+                  widget.config.audioVideoView.showAvatarInAudioMode,
               showSoundWavesInAudioMode:
-                  widget.config.audioVideoViewConfig.showSoundWavesInAudioMode,
+                  widget.config.audioVideoView.showSoundWavesInAudioMode,
               builder: widget.config.avatarBuilder,
             ),
             screenSharingViewController:
-                widget.controller.screen.screenSharingViewController,
+                ZegoUIKitPrebuiltLiveStreamingController()
+                    .screenSharing
+                    .viewController,
           );
         } else if (LiveStatus.living != liveStatusValue &&
             null != widget.hostManager.notifier.value) {
@@ -263,14 +236,16 @@ class ZegoLivePageCentralAudioVideoViewState
                     sortAudioVideo: audioVideoViewSorter,
                     filterAudioVideo: audioVideoViewFilter,
                     avatarConfig: ZegoAvatarConfig(
-                      showInAudioMode: widget
-                          .config.audioVideoViewConfig.showAvatarInAudioMode,
-                      showSoundWavesInAudioMode: widget.config
-                          .audioVideoViewConfig.showSoundWavesInAudioMode,
+                      showInAudioMode:
+                          widget.config.audioVideoView.showAvatarInAudioMode,
+                      showSoundWavesInAudioMode: widget
+                          .config.audioVideoView.showSoundWavesInAudioMode,
                       builder: widget.config.avatarBuilder,
                     ),
                     screenSharingViewController:
-                        widget.controller.screen.screenSharingViewController,
+                        ZegoUIKitPrebuiltLiveStreamingController()
+                            .screenSharing
+                            .viewController,
                   );
                 },
               );
@@ -332,14 +307,14 @@ class ZegoLivePageCentralAudioVideoViewState
             as bool? ??
         false) {
       /// live streaming not need microphone/camera/user name foreground
-      return widget.config.audioVideoViewConfig.foregroundBuilder
+      return widget.config.audioVideoView.foregroundBuilder
               ?.call(context, size, user, extraInfo) ??
           Container(color: Colors.transparent);
     }
 
     return Stack(
       children: [
-        widget.config.audioVideoViewConfig.foregroundBuilder
+        widget.config.audioVideoView.foregroundBuilder
                 ?.call(context, size, user, extraInfo) ??
             Container(color: Colors.transparent),
         ValueListenableBuilder<bool>(
@@ -352,14 +327,13 @@ class ZegoLivePageCentralAudioVideoViewState
                 hostManager: widget.hostManager,
                 connectManager: ZegoLiveStreamingManagers().connectManager!,
                 popUpManager: widget.popUpManager,
-                prebuiltController: widget.controller,
                 translationText: widget.config.innerText,
                 isPluginEnabled: widget.plugins?.isEnabled ?? false,
                 //  only show if close
                 showMicrophoneStateOnView: !isMicrophoneEnabled,
                 showCameraStateOnView: false,
                 showUserNameOnView:
-                    widget.config.audioVideoViewConfig.showUserNameOnView,
+                    widget.config.audioVideoView.showUserNameOnView,
               );
             }),
       ],
@@ -380,7 +354,7 @@ class ZegoLivePageCentralAudioVideoViewState
             color: isSmallView
                 ? const Color(0xff333437)
                 : const Color(0xff4A4B4D)),
-        widget.config.audioVideoViewConfig.backgroundBuilder?.call(
+        widget.config.audioVideoView.backgroundBuilder?.call(
               context,
               size,
               user,
@@ -420,13 +394,13 @@ class ZegoLivePageCentralAudioVideoViewState
 
   List<ZegoUIKitUser> audioVideoViewFilter(List<ZegoUIKitUser> users) {
     users.removeWhere((targetUser) {
-      if (null != widget.config.audioVideoViewConfig.visible) {
+      if (null != widget.config.audioVideoView.visible) {
         var targetUserRole = ZegoLiveStreamingRole.coHost;
         if (ZegoLiveStreamingManagers().hostManager?.isHost(targetUser) ??
             false) {
           targetUserRole = ZegoLiveStreamingRole.host;
         }
-        if (!widget.config.audioVideoViewConfig.visible!.call(
+        if (!widget.config.audioVideoView.visible!.call(
           ZegoUIKit().getLocalUser(),
           ZegoLiveStreamingManagers().connectManager?.localRole ??
               ZegoLiveStreamingRole.audience,

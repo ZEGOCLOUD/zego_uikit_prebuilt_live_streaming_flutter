@@ -16,14 +16,14 @@ class ZegoBeautyEffectSheet extends StatefulWidget {
   final ZegoInnerText translationText;
   final bool rootNavigator;
   final List<BeautyEffectType> beautyEffects;
-  final ZegoEffectConfig effectConfig;
+  final ZegoLiveStreamingEffectConfig config;
 
   const ZegoBeautyEffectSheet({
     Key? key,
     required this.translationText,
     required this.rootNavigator,
     required this.beautyEffects,
-    required this.effectConfig,
+    required this.config,
   }) : super(key: key);
 
   @override
@@ -75,8 +75,7 @@ class _ZegoBeautyEffectSheetState extends State<ZegoBeautyEffectSheet> {
               icon: ButtonIcon(
                 icon: ColorFiltered(
                   colorFilter: ColorFilter.mode(
-                    widget.effectConfig.normalIconColor ??
-                        const Color(0xffCCCCCC),
+                    widget.config.normalIconColor ?? const Color(0xffCCCCCC),
                     BlendMode.srcATop,
                   ),
                   child: PrebuiltLiveStreamingImage.asset(
@@ -87,8 +86,7 @@ class _ZegoBeautyEffectSheetState extends State<ZegoBeautyEffectSheet> {
               selectIcon: ButtonIcon(
                 icon: ColorFiltered(
                   colorFilter: ColorFilter.mode(
-                    widget.effectConfig.selectedIconColor ??
-                        const Color(0xffA653FF),
+                    widget.config.selectedIconColor ?? const Color(0xffA653FF),
                     BlendMode.srcATop,
                   ),
                   child: PrebuiltLiveStreamingImage.asset(
@@ -149,11 +147,11 @@ class _ZegoBeautyEffectSheetState extends State<ZegoBeautyEffectSheet> {
                       withBorderColor: true,
                       buttonSize: Size(150.zR, 133.zR),
                       selectedIconBorderColor:
-                          widget.effectConfig.selectedIconBorderColor,
+                          widget.config.selectedIconBorderColor,
                       normalIconBorderColor:
-                          widget.effectConfig.normalIconBorderColor,
-                      selectedTextStyle: widget.effectConfig.selectedTextStyle,
-                      normalTextStyle: widget.effectConfig.normalTextStyle,
+                          widget.config.normalIconBorderColor,
+                      selectedTextStyle: widget.config.selectedTextStyle,
+                      normalTextStyle: widget.config.normalTextStyle,
                     ),
                   ],
                 ),
@@ -189,12 +187,12 @@ class _ZegoBeautyEffectSheetState extends State<ZegoBeautyEffectSheet> {
       effectType: selectedEffectTypeNotifier.value,
       thumpHeight: height,
       defaultValue: selectedEffectValue,
-      textStyle: widget.effectConfig.sliderTextStyle,
-      textBackgroundColor: widget.effectConfig.sliderTextBackgroundColor,
-      activeTrackColor: widget.effectConfig.sliderActiveTrackColor,
-      inactiveTrackColor: widget.effectConfig.sliderInactiveTrackColor,
-      thumbColor: widget.effectConfig.sliderThumbColor,
-      thumbRadius: widget.effectConfig.sliderThumbRadius,
+      textStyle: widget.config.sliderTextStyle,
+      textBackgroundColor: widget.config.sliderTextBackgroundColor,
+      activeTrackColor: widget.config.sliderActiveTrackColor,
+      inactiveTrackColor: widget.config.sliderInactiveTrackColor,
+      thumbColor: widget.config.sliderThumbColor,
+      thumbRadius: widget.config.sliderThumbRadius,
     );
   }
 
@@ -203,7 +201,7 @@ class _ZegoBeautyEffectSheetState extends State<ZegoBeautyEffectSheet> {
       height: height,
       padding: EdgeInsets.symmetric(vertical: 5.zR, horizontal: 10.zR),
       decoration: BoxDecoration(
-        color: widget.effectConfig.backgroundColor ??
+        color: widget.config.backgroundColor ??
             ZegoUIKitDefaultTheme.viewBackgroundColor,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(32.0.zR),
@@ -229,7 +227,7 @@ class _ZegoBeautyEffectSheetState extends State<ZegoBeautyEffectSheet> {
             child: SizedBox(
               width: 70.zR,
               height: 70.zR,
-              child: widget.effectConfig.backIcon ??
+              child: widget.config.backIcon ??
                   PrebuiltLiveStreamingImage.asset(
                     PrebuiltLiveStreamingIconUrls.back,
                   ),
@@ -238,7 +236,7 @@ class _ZegoBeautyEffectSheetState extends State<ZegoBeautyEffectSheet> {
           SizedBox(width: 10.zR),
           Text(
             widget.translationText.beautyEffectTitle,
-            style: widget.effectConfig.headerTitleTextStyle ??
+            style: widget.config.headerTitleTextStyle ??
                 TextStyle(
                   fontSize: 36.0.zR,
                   color: const Color(0xffffffff),
@@ -247,7 +245,7 @@ class _ZegoBeautyEffectSheetState extends State<ZegoBeautyEffectSheet> {
           ),
           Expanded(child: Container()),
           ZegoBeautyEffectResetButton(
-            icon: ButtonIcon(icon: widget.effectConfig.resetIcon),
+            icon: ButtonIcon(icon: widget.config.resetIcon),
             iconSize: Size(38.zR, 38.zR),
             buttonSize: Size(_besHeaderHeight, _besHeaderHeight),
             onPressed: () {
@@ -284,7 +282,7 @@ void showBeautyEffectSheet(
   BuildContext context, {
   required ZegoInnerText translationText,
   required bool rootNavigator,
-  required ZegoEffectConfig effectConfig,
+  required ZegoLiveStreamingEffectConfig config,
   required List<BeautyEffectType> beautyEffects,
 }) {
   showModalBottomSheet(
@@ -304,7 +302,7 @@ void showBeautyEffectSheet(
             translationText: translationText,
             rootNavigator: rootNavigator,
             beautyEffects: beautyEffects,
-            effectConfig: effectConfig,
+            config: config,
           ),
         ),
       );

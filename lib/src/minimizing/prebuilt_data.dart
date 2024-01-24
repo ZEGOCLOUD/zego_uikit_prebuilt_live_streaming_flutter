@@ -3,7 +3,6 @@ import 'dart:core';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
 
 /// @nodoc
@@ -16,7 +15,6 @@ class ZegoUIKitPrebuiltLiveStreamingData {
     required this.liveID,
     required this.config,
     required this.isPrebuiltFromMinimizing,
-    required this.controller,
     required this.events,
     this.durationStartTime,
   });
@@ -37,8 +35,6 @@ class ZegoUIKitPrebuiltLiveStreamingData {
   final String liveID;
 
   final ZegoUIKitPrebuiltLiveStreamingConfig config;
-
-  final ZegoUIKitPrebuiltLiveStreamingController controller;
 
   final ZegoUIKitPrebuiltLiveStreamingEvents events;
 

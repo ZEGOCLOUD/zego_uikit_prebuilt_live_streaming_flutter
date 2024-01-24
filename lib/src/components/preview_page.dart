@@ -29,7 +29,6 @@ class ZegoPreviewPage extends StatefulWidget {
     required this.userID,
     required this.userName,
     required this.liveID,
-    required this.liveStreamingConfig,
     required this.hostManager,
     required this.startedNotifier,
     required this.liveStreamingPageReady,
@@ -45,8 +44,6 @@ class ZegoPreviewPage extends StatefulWidget {
   final String userName;
 
   final String liveID;
-
-  final ZegoUIKitPrebuiltLiveStreamingConfig liveStreamingConfig;
 
   final ZegoLiveHostManager hostManager;
   final ValueNotifier<bool> startedNotifier;
@@ -106,11 +103,11 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
                     foregroundBuilder: audioVideoViewForeground,
                     backgroundBuilder: audioVideoViewBackground,
                     avatarConfig: ZegoAvatarConfig(
-                      showInAudioMode: widget.liveStreamingConfig
-                          .audioVideoViewConfig.showAvatarInAudioMode,
-                      showSoundWavesInAudioMode: widget.liveStreamingConfig
-                          .audioVideoViewConfig.showSoundWavesInAudioMode,
-                      builder: widget.liveStreamingConfig.avatarBuilder,
+                      showInAudioMode:
+                          widget.config.audioVideoView.showAvatarInAudioMode,
+                      showSoundWavesInAudioMode: widget
+                          .config.audioVideoView.showSoundWavesInAudioMode,
+                      builder: widget.config.avatarBuilder,
                     ),
                   ),
                   topBar(),
@@ -170,11 +167,11 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
               onPressed: () {
                 Navigator.of(
                   context,
-                  rootNavigator: widget.liveStreamingConfig.rootNavigator,
+                  rootNavigator: widget.config.rootNavigator,
                 ).pop();
               },
               icon: ButtonIcon(
-                icon: widget.config.previewConfig.pageBackIcon ??
+                icon: widget.config.preview.pageBackIcon ??
                     (isRTL(context)
                         ? Transform(
                             alignment: Alignment.center,
@@ -195,7 +192,7 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
               buttonSize: buttonSize,
               iconSize: iconSize,
               icon: ButtonIcon(
-                icon: widget.config.previewConfig.switchCameraIcon ??
+                icon: widget.config.preview.switchCameraIcon ??
                     PrebuiltLiveStreamingImage.asset(
                         PrebuiltLiveStreamingIconUrls.previewFlipCamera),
                 backgroundColor: Colors.transparent,
@@ -228,14 +225,14 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ZegoBeautyEffectButton(
-              translationText: widget.liveStreamingConfig.innerText,
-              rootNavigator: widget.liveStreamingConfig.rootNavigator,
-              effectConfig: widget.liveStreamingConfig.effectConfig,
+              translationText: widget.config.innerText,
+              rootNavigator: widget.config.rootNavigator,
+              effectConfig: widget.config.effect,
               buttonSize: buttonSize,
               iconSize: iconSize,
-              icon: widget.config.previewConfig.beautyEffectIcon != null
+              icon: widget.config.preview.beautyEffectIcon != null
                   ? ButtonIcon(
-                      icon: widget.config.previewConfig.beautyEffectIcon,
+                      icon: widget.config.preview.beautyEffectIcon,
                     )
                   : null,
             ),
@@ -258,54 +255,37 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
       permissions.add(Permission.microphone);
     }
 
-    return widget.liveStreamingConfig.startLiveButtonBuilder?.call(context,
-            () async {
-          checkPermissions(
-            context: context,
-            permissions: permissions,
-            isShowDialog: true,
-            translationText: widget.liveStreamingConfig.innerText,
-            rootNavigator: widget.liveStreamingConfig.rootNavigator,
-            popUpManager: widget.popUpManager,
-            kickOutNotifier: widget.kickOutNotifier,
-          ).then(
-            (value) {
-              if (!widget.liveStreamingPageReady.value) {
-                ZegoLoggerService.logInfo(
-                  'live streaming page is waiting room login',
-                  tag: 'live streaming',
-                  subTag: 'preview page',
-                );
-                return;
-              }
+    defaultAction() async {
+      await checkPermissions(
+        context: context,
+        permissions: permissions,
+        isShowDialog: true,
+        translationText: widget.config.innerText,
+        rootNavigator: widget.config.rootNavigator,
+        popUpManager: widget.popUpManager,
+        kickOutNotifier: widget.kickOutNotifier,
+      ).then(
+        (value) {
+          if (!widget.liveStreamingPageReady.value) {
+            ZegoLoggerService.logInfo(
+              'live streaming page is waiting room login',
+              tag: 'live streaming',
+              subTag: 'preview page',
+            );
+            return;
+          }
 
-              widget.startedNotifier.value = true;
-            },
-          );
+          widget.startedNotifier.value = true;
+        },
+      );
+    }
+
+    return widget.config.preview.startLiveButtonBuilder?.call(context,
+            () async {
+          defaultAction.call();
         }) ??
         GestureDetector(
-          onTap: () async {
-            checkPermissions(
-              context: context,
-              permissions: permissions,
-              isShowDialog: true,
-              translationText: widget.liveStreamingConfig.innerText,
-              rootNavigator: widget.liveStreamingConfig.rootNavigator,
-              popUpManager: widget.popUpManager,
-              kickOutNotifier: widget.kickOutNotifier,
-            ).then((value) {
-              if (!widget.liveStreamingPageReady.value) {
-                ZegoLoggerService.logInfo(
-                  'live streaming page is waiting room login',
-                  tag: 'live streaming',
-                  subTag: 'preview page',
-                );
-                return;
-              }
-
-              widget.startedNotifier.value = true;
-            });
-          },
+          onTap: defaultAction,
           child: Container(
             width: 300.zR,
             height: 88.zR,
@@ -319,7 +299,7 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
             child: Align(
               alignment: Alignment.center,
               child: Text(
-                widget.liveStreamingConfig.innerText.startLiveStreamingButton,
+                widget.config.innerText.startLiveStreamingButton,
                 style: TextStyle(
                   fontSize: 32.zR,
                   fontWeight: FontWeight.w600,
@@ -339,7 +319,7 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
   ) {
     return Stack(
       children: [
-        widget.liveStreamingConfig.audioVideoViewConfig.foregroundBuilder?.call(
+        widget.config.audioVideoView.foregroundBuilder?.call(
               context,
               size,
               user,
@@ -364,7 +344,7 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
             color: isSmallView
                 ? const Color(0xff333437)
                 : const Color(0xff4A4B4D)),
-        widget.liveStreamingConfig.audioVideoViewConfig.backgroundBuilder?.call(
+        widget.config.audioVideoView.backgroundBuilder?.call(
               context,
               size,
               user,

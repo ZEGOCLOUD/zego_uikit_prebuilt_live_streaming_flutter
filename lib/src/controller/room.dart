@@ -1,23 +1,22 @@
 part of 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 
 /// @nodoc
-class ZegoLiveStreamingRoomController {
-  final ValueNotifier<bool> isLeaveRequestingNotifier =
-      ValueNotifier<bool>(false);
+mixin ZegoLiveStreamingControllerRoom {
+  final _roomImpl = ZegoLiveStreamingControllerRoomImpl();
 
-  ZegoUIKitPrebuiltLiveStreamingConfig? get _prebuiltConfig =>
-      ZegoLiveStreamingManagers().hostManager?.config;
+  ZegoLiveStreamingControllerRoomImpl get room => _roomImpl;
+}
 
-  ZegoLiveHostManager? get _hostManager =>
-      ZegoLiveStreamingManagers().hostManager;
-
-  Future<bool> leave(
+/// Here are the APIs related to screen sharing.
+class ZegoLiveStreamingControllerRoomImpl
+    with ZegoLiveStreamingControllerRoomPrivate {
+  Future<bool> _leave(
     BuildContext context, {
     bool showConfirmation = false,
   }) async {
-    if (null == _hostManager) {
+    if (null == private.hostManager) {
       ZegoLoggerService.logInfo(
-        'leave, param is invalid, hostManager:$_hostManager',
+        'leave, param is invalid, hostManager:${private.hostManager}',
         tag: 'live streaming',
         subTag: 'controller.room',
       );
@@ -25,7 +24,7 @@ class ZegoLiveStreamingRoomController {
       return false;
     }
 
-    if (isLeaveRequestingNotifier.value) {
+    if (private.isLeaveRequestingNotifier.value) {
       ZegoLoggerService.logInfo(
         'leave, is leave requesting...',
         tag: 'live streaming',
@@ -40,13 +39,17 @@ class ZegoLiveStreamingRoomController {
       tag: 'live streaming',
       subTag: 'controller.room',
     );
-    isLeaveRequestingNotifier.value = true;
+    private.isLeaveRequestingNotifier.value = true;
 
     if (showConfirmation) {
       ///  if there is a user-defined event before the click,
       ///  wait the synchronize execution result
-      final canLeave =
-          await _prebuiltConfig?.onLeaveConfirmation?.call(context) ?? true;
+      final endConfirmationEvent = ZegoLiveStreamingLeaveConfirmationEvent(
+        context: context,
+      );
+      final canLeave = await private.defaultLeaveConfirmationAction(
+        endConfirmationEvent,
+      );
       if (!canLeave) {
         ZegoLoggerService.logInfo(
           'leave, refuse',
@@ -54,24 +57,33 @@ class ZegoLiveStreamingRoomController {
           subTag: 'controller.room',
         );
 
-        isLeaveRequestingNotifier.value = false;
+        private.isLeaveRequestingNotifier.value = false;
 
         return false;
       }
     }
 
-    if (_hostManager?.isLocalHost ?? false) {
+    final isFromMinimizing = ZegoLiveStreamingMiniOverlayPageState.minimizing ==
+        ZegoUIKitPrebuiltLiveStreamingController().minimize.state;
+    ZegoUIKitPrebuiltLiveStreamingController().minimize.hide();
+
+    if (private.hostManager?.isLocalHost ?? false) {
       /// live is ready to end, host will update if receive property notify
       /// so need to keep current host value, DISABLE local host value UPDATE
-      _hostManager?.hostUpdateEnabledNotifier.value = false;
+      private.hostManager?.hostUpdateEnabledNotifier.value = false;
       await ZegoUIKit().updateRoomProperties({
         RoomPropertyKey.host.text: '',
         RoomPropertyKey.liveStatus.text: LiveStatus.ended.index.toString()
       });
     }
 
-    await ZegoUIKit().resetSoundEffect();
-    await ZegoUIKit().resetBeautyEffect();
+    if (isFromMinimizing) {
+      /// leave in minimizing
+      await ZegoLiveStreamingManagers().uninitPluginAndManagers();
+
+      await ZegoUIKit().resetSoundEffect();
+      await ZegoUIKit().resetBeautyEffect();
+    }
 
     final result = await ZegoUIKit().leaveRoom().then((result) {
       ZegoLoggerService.logInfo(
@@ -83,57 +95,18 @@ class ZegoLiveStreamingRoomController {
       return 0 == result.errorCode;
     });
 
-    final isFromMinimizing =
-        ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine().isMinimizing;
-    if (isFromMinimizing) {
-      /// leave in minimizing
-      if (ZegoPluginAdapter().getPlugin(ZegoUIKitPluginType.signaling) !=
-          null) {
-        await ZegoUIKit().getSignalingPlugin().leaveRoom();
+    final endEvent = ZegoLiveStreamingEndEvent(
+      reason: ZegoLiveStreamingEndReason.localLeave,
+      isFromMinimizing: isFromMinimizing,
+    );
+    defaultAction() {
+      private.defaultEndAction(endEvent, context, true);
+    }
 
-        /// not need logout
-        // await ZegoUIKit().getSignalingPlugin().logout();
-        /// not need destroy signaling sdk
-        await ZegoUIKit().getSignalingPlugin().uninit(forceDestroy: false);
-      }
-
-      await ZegoLiveStreamingManagers().uninitPluginAndManagers();
-
-      ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine().resetInLiving();
-
-      if (_hostManager?.isLocalHost ?? false) {
-        /// host end/leave live streaming
-        _prebuiltConfig?.onLiveStreamingEnded?.call(isFromMinimizing);
-      } else {
-        /// audience leave live streaming
-        _prebuiltConfig?.onLeaveLiveStreaming?.call(isFromMinimizing);
-      }
-
-      /// from minimizing, not need to return to the previous page by default
+    if (private.events?.onEnded != null) {
+      private.events?.onEnded?.call(endEvent, defaultAction);
     } else {
-      if (_hostManager?.isLocalHost ?? false) {
-        /// host end/leave live streaming
-        if (_prebuiltConfig?.onLiveStreamingEnded != null) {
-          _prebuiltConfig?.onLiveStreamingEnded?.call(isFromMinimizing);
-        } else {
-          /// return to the previous page by default
-          Navigator.of(
-            context,
-            rootNavigator: _prebuiltConfig?.rootNavigator ?? true,
-          ).pop();
-        }
-      } else {
-        /// audience leave live streaming
-        if (_prebuiltConfig?.onLeaveLiveStreaming != null) {
-          _prebuiltConfig?.onLeaveLiveStreaming?.call(isFromMinimizing);
-        } else {
-          /// return to the previous page by default
-          Navigator.of(
-            context,
-            rootNavigator: _prebuiltConfig?.rootNavigator ?? true,
-          ).pop();
-        }
-      }
+      defaultAction.call();
     }
 
     ZegoLoggerService.logInfo(
@@ -143,5 +116,213 @@ class ZegoLiveStreamingRoomController {
     );
 
     return result;
+  }
+
+  /// set/update room property
+  ///
+  /// @param isForce: Whether the operation is mandatory, that is, the property of the room whose owner is another user can be modified.
+  /// @param isDeleteAfterOwnerLeft: Room attributes are automatically deleted after the owner leaves the room.
+  /// @param isUpdateOwner: Whether to update the owner of the room attribute involved.
+  Future<bool> updateProperty({
+    required String roomID,
+    required String key,
+    required String value,
+    bool isForce = false,
+    bool isDeleteAfterOwnerLeft = false,
+    bool isUpdateOwner = false,
+  }) async {
+    return updateProperties(
+      roomID: roomID,
+      roomProperties: {key: value},
+      isForce: isForce,
+      isDeleteAfterOwnerLeft: isDeleteAfterOwnerLeft,
+      isUpdateOwner: isUpdateOwner,
+    );
+  }
+
+  /// set/update room properties
+  ///
+  /// @param isForce: Whether the operation is mandatory, that is, the property of the room whose owner is another user can be modified.
+  /// @param isDeleteAfterOwnerLeft: Room attributes are automatically deleted after the owner leaves the room.
+  /// @param isUpdateOwner: Whether to update the owner of the room attribute involved.
+  Future<bool> updateProperties({
+    required String roomID,
+    required Map<String, String> roomProperties,
+    bool isForce = false,
+    bool isDeleteAfterOwnerLeft = false,
+    bool isUpdateOwner = false,
+  }) async {
+    if (null == ZegoUIKit().getPlugin(ZegoUIKitPluginType.signaling)) {
+      ZegoLoggerService.logInfo(
+        'updateProperties, signaling is null',
+        tag: 'live streaming',
+        subTag: 'controller.room',
+      );
+
+      return false;
+    }
+
+    return ZegoUIKit()
+        .getSignalingPlugin()
+        .updateRoomProperties(
+          roomID: roomID,
+          roomProperties: roomProperties,
+          isForce: isForce,
+          isDeleteAfterOwnerLeft: isDeleteAfterOwnerLeft,
+          isUpdateOwner: isUpdateOwner,
+        )
+        .then((result) {
+      if (null != result.error) {
+        ZegoLoggerService.logInfo(
+          'updateProperties, error:$result',
+          tag: 'live streaming',
+          subTag: 'controller.room',
+        );
+
+        return false;
+      }
+
+      return true;
+    });
+  }
+
+  /// delete room properties
+  Future<bool> deleteProperties({
+    required String roomID,
+    required List<String> keys,
+    bool isForce = false,
+  }) async {
+    if (null == ZegoUIKit().getPlugin(ZegoUIKitPluginType.signaling)) {
+      ZegoLoggerService.logInfo(
+        'deleteRoomProperties, signaling is null',
+        tag: 'live streaming',
+        subTag: 'controller.room',
+      );
+
+      return false;
+    }
+
+    return ZegoUIKit()
+        .getSignalingPlugin()
+        .deleteRoomProperties(
+          roomID: roomID,
+          keys: keys,
+          isForce: isForce,
+        )
+        .then((result) {
+      if (null != result.error) {
+        ZegoLoggerService.logInfo(
+          'deleteRoomProperties, error:$result',
+          tag: 'live streaming',
+          subTag: 'controller.room',
+        );
+
+        return false;
+      }
+
+      return true;
+    });
+  }
+
+  /// query room properties
+  Future<Map<String, String>> queryProperties({
+    required String roomID,
+  }) async {
+    if (null == ZegoUIKit().getPlugin(ZegoUIKitPluginType.signaling)) {
+      ZegoLoggerService.logInfo(
+        'queryRoomProperties, signaling is null',
+        tag: 'live streaming',
+        subTag: 'controller.room',
+      );
+
+      return <String, String>{};
+    }
+
+    return ZegoUIKit()
+        .getSignalingPlugin()
+        .queryRoomProperties(
+          roomID: roomID,
+        )
+        .then((result) {
+      if (null != result.error) {
+        ZegoLoggerService.logInfo(
+          'queryRoomProperties, error:${result.error}',
+          tag: 'live streaming',
+          subTag: 'controller.room',
+        );
+
+        return <String, String>{};
+      }
+
+      return result.properties;
+    });
+  }
+
+  /// room properties stream notify
+  Stream<ZegoSignalingPluginRoomPropertiesUpdatedEvent> propertiesStream() {
+    if (null == ZegoUIKit().getPlugin(ZegoUIKitPluginType.signaling)) {
+      ZegoLoggerService.logInfo(
+        'getRoomPropertiesStream, signaling is null',
+        tag: 'live streaming',
+        subTag: 'controller.room',
+      );
+
+      return const Stream.empty();
+    }
+
+    return ZegoUIKit().getSignalingPlugin().getRoomPropertiesStream();
+  }
+
+  /// send room command
+  Future<bool> sendCommand({
+    required String roomID,
+    required Uint8List command,
+  }) async {
+    if (null == ZegoUIKit().getPlugin(ZegoUIKitPluginType.signaling)) {
+      ZegoLoggerService.logInfo(
+        'sendCommand, signaling is null',
+        tag: 'live streaming',
+        subTag: 'controller.room',
+      );
+
+      return false;
+    }
+
+    return ZegoUIKit()
+        .getSignalingPlugin()
+        .sendInRoomCommandMessage(
+          roomID: roomID,
+          message: command,
+        )
+        .then((result) {
+      if (null != result.error) {
+        ZegoLoggerService.logInfo(
+          'sendCommand, error:${result.error}',
+          tag: 'live streaming',
+          subTag: 'controller.room',
+        );
+
+        return false;
+      }
+      return true;
+    });
+  }
+
+  /// room command stream notify
+  Stream<ZegoSignalingPluginInRoomCommandMessageReceivedEvent>
+      commandReceivedStream() {
+    if (null == ZegoUIKit().getPlugin(ZegoUIKitPluginType.signaling)) {
+      ZegoLoggerService.logInfo(
+        'commandReceivedStream, signaling is null',
+        tag: 'live streaming',
+        subTag: 'controller.room',
+      );
+
+      return const Stream.empty();
+    }
+
+    return ZegoUIKit()
+        .getSignalingPlugin()
+        .getInRoomCommandMessageReceivedEventStream();
   }
 }

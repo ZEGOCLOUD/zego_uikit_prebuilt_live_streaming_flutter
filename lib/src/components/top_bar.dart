@@ -9,26 +9,29 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/components/components.dar
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/leave_button.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/defines.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/events.defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/inner_text.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/mini_button.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/prebuilt_data.dart';
 
 /// @nodoc
 class ZegoTopBar extends StatefulWidget {
   final bool isCoHostEnabled;
   final ZegoUIKitPrebuiltLiveStreamingConfig config;
-  final ZegoUIKitPrebuiltLiveStreamingData prebuiltData;
+  final ZegoUIKitPrebuiltLiveStreamingEvents events;
+  final void Function(ZegoLiveStreamingEndEvent event) defaultEndAction;
+  final Future<bool> Function(
+    ZegoLiveStreamingLeaveConfirmationEvent event,
+  ) defaultLeaveConfirmationAction;
 
   final ZegoLiveHostManager hostManager;
   final ValueNotifier<bool> hostUpdateEnabledNotifier;
 
   final ZegoLiveConnectManager connectManager;
   final ZegoPopUpManager popUpManager;
-  final ZegoUIKitPrebuiltLiveStreamingController prebuiltController;
 
   final ZegoInnerText translationText;
 
@@ -38,12 +41,13 @@ class ZegoTopBar extends StatefulWidget {
     Key? key,
     required this.isCoHostEnabled,
     required this.config,
-    required this.prebuiltData,
+    required this.events,
+    required this.defaultEndAction,
+    required this.defaultLeaveConfirmationAction,
     required this.hostManager,
     required this.hostUpdateEnabledNotifier,
     required this.connectManager,
     required this.popUpManager,
-    required this.prebuiltController,
     required this.translationText,
     this.isLeaveRequestingNotifier,
   }) : super(key: key);
@@ -67,13 +71,12 @@ class _ZegoTopBarState extends State<ZegoTopBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: widget.config.topMenuBarConfig.margin,
-      padding: widget.config.topMenuBarConfig.padding,
+      margin: widget.config.topMenuBar.margin,
+      padding: widget.config.topMenuBar.padding,
       decoration: BoxDecoration(
-        color: widget.config.topMenuBarConfig.backgroundColor ??
-            Colors.transparent,
+        color: widget.config.topMenuBar.backgroundColor ?? Colors.transparent,
       ),
-      height: widget.config.topMenuBarConfig.height ?? 80.zR,
+      height: widget.config.topMenuBar.height ?? 80.zR,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -85,18 +88,18 @@ class _ZegoTopBarState extends State<ZegoTopBar> {
               minimizingButton(),
               SizedBox(width: 20.zR),
               ZegoMemberButton(
-                avatarBuilder: widget.config.avatarBuilder,
-                itemBuilder: widget.config.memberListConfig.itemBuilder,
+                config: widget.config.memberList,
+                events: widget.events.memberList,
                 isCoHostEnabled: widget.isCoHostEnabled,
                 hostManager: widget.hostManager,
                 connectManager: widget.connectManager,
                 popUpManager: widget.popUpManager,
-                prebuiltController: widget.prebuiltController,
                 translationText: widget.translationText,
-                builder: widget.config.memberButtonConfig.builder,
-                icon: widget.config.memberButtonConfig.icon,
-                backgroundColor:
-                    widget.config.memberButtonConfig.backgroundColor,
+                builder: widget.config.memberButton.builder,
+                icon: widget.config.memberButton.icon,
+                backgroundColor: widget.config.memberButton.backgroundColor,
+                avatarBuilder: widget.config.avatarBuilder,
+                itemBuilder: widget.config.memberList.itemBuilder,
               ),
               SizedBox(width: 20.zR),
               closeButton(),
@@ -109,7 +112,7 @@ class _ZegoTopBarState extends State<ZegoTopBar> {
   }
 
   Widget minimizingButton() {
-    return widget.config.topMenuBarConfig.buttons
+    return widget.config.topMenuBar.buttons
             .contains(ZegoMenuBarButtonName.minimizingButton)
         ? ZegoUIKitPrebuiltLiveStreamingMinimizingButton(
             buttonSize: Size(52.zR, 52.zR),
@@ -119,7 +122,7 @@ class _ZegoTopBarState extends State<ZegoTopBar> {
   }
 
   Widget closeButton() {
-    return widget.config.topMenuBarConfig.showCloseButton
+    return widget.config.topMenuBar.showCloseButton
         ? ZegoLeaveStreamingButton(
             buttonSize: Size(52.zR, 52.zR),
             iconSize: Size(24.zR, 24.zR),
@@ -128,6 +131,10 @@ class _ZegoTopBarState extends State<ZegoTopBar> {
               backgroundColor: ZegoUIKitDefaultTheme.buttonBackgroundColor,
             ),
             config: widget.config,
+            events: widget.events,
+            defaultEndAction: widget.defaultEndAction,
+            defaultLeaveConfirmationAction:
+                widget.defaultLeaveConfirmationAction,
             hostManager: widget.hostManager,
             hostUpdateEnabledNotifier: widget.hostUpdateEnabledNotifier,
             isLeaveRequestingNotifier: widget.isLeaveRequestingNotifier,
@@ -148,10 +155,9 @@ class _ZegoTopBarState extends State<ZegoTopBar> {
             SizedBox(width: 32.zR),
             GestureDetector(
               onTap: () {
-                widget.config.topMenuBarConfig.onHostAvatarClicked?.call(host);
+                widget.events.topMenuBar.onHostAvatarClicked?.call(host);
               },
-              child: widget.config.topMenuBarConfig.hostAvatarBuilder
-                      ?.call(host) ??
+              child: widget.config.topMenuBar.hostAvatarBuilder?.call(host) ??
                   SizedBox(
                     height: 68.zR,
                     child: Container(

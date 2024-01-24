@@ -6,8 +6,8 @@ import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/defines.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/mini_overlay_machine.dart';
 
 /// @nodoc
 class ZegoUIKitPrebuiltLiveStreamingMinimizingButton extends StatefulWidget {
@@ -50,7 +50,7 @@ class _ZegoUIKitPrebuiltLiveStreamingMinimizingButtonState
 
     return GestureDetector(
       onTap: () {
-        if (ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine().isMinimizing) {
+        if (ZegoUIKitPrebuiltLiveStreamingController().minimize.isMinimizing) {
           ZegoLoggerService.logInfo(
             'is minimizing, ignore',
             tag: 'call',
@@ -60,9 +60,7 @@ class _ZegoUIKitPrebuiltLiveStreamingMinimizingButtonState
           return;
         }
 
-        ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine().toMinimize();
-
-        Navigator.of(context).pop();
+        ZegoUIKitPrebuiltLiveStreamingController().minimize.minimize(context);
 
         if (widget.afterClicked != null) {
           widget.afterClicked!();

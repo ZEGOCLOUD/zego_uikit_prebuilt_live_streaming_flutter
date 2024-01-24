@@ -1,6 +1,57 @@
+## 3.0.0
+
+The 3.0.0 version has standardized and optimized the API and Event, simplifying the usage of most APIs.
+
+Most of the changes involve modifications to the calling path, Most of the changes involve modifications to the calling path, such as changing from `ZegoUIKitPrebuiltLiveStreamingController().isMinimizing()` to `ZegoUIKitPrebuiltLiveStreamingController().minimize.isMinimizing`.
+
+💥 [breaking changes](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/topics/Migration:%20from%202.x%20to%203.0-topic.html)
+
+- Support quick quit in minimize page
+- Support user/room/audioVideo series events
+- Support room property/room command series APIs
+
+## 2.27.2
+
+- Fix the issue of video shaking caused by chat input in iOS.
+- Fix the issue of UI control position offset after minimizing and restoring
+
+## 2.27.1
+
+- Fixed issue about layout of PK
+
+## 2.27.0
+
+- Add media player config
+
+## 2.26.5
+
+- Fixed issue with brief appearance of the preview page when `previewConfig.showPreviewForHost` is set to false,
+
+## 2.26.4
+
+- Update dependency.
+
+## 2.26.3
+
+- support jump to live stream by **ZegoUIKitPrebuiltLiveStreamingController.swiping**
+- Update dependency.
+
+## 2.26.2
+
+- Update dependency.
+
+## 2.26.1
+
+- Update dependency.
+
+## 2.26.0
+
+- support swiping live stream by **ZegoUIKitPrebuiltLiveStreamingController.swiping**
+- make ZegoUIKitPrebuiltLiveStreamingController be a singleton instance class
+
 ## 2.25.0
 
-- payload attribute by message, add **attributes** in **ZegoInRoomMessageConfig**, that's message attributes of local user, which will be appended to the message body. if set, [userAttributes] 
+- payload attribute by message, add **attributes** in **ZegoInRoomMessageConfig**, that's message attributes of local user, which will be appended to the message body. if set, [userAttributes]
   will be sent along with the message body.
 - builder in message，add more leading/tailing builder for customizing the widget in **ZegoInRoomMessageConfig**.
   for avatar, name or text part in default message display，all have the builder on leading or tailing.

@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
-import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/mini_overlay_machine.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/defines.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/overlay_machine.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/swiping/logout_notifier.dart';
 
 /// @nodoc
@@ -36,8 +37,8 @@ class _ZegoUIKitPrebuiltLiveStreamingScrollerElementState
   void initState() {
     super.initState();
 
-    final isFromMinimizing = PrebuiltLiveStreamingMiniOverlayPageState.idle !=
-        ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine().state;
+    final isFromMinimizing = ZegoLiveStreamingMiniOverlayPageState.idle !=
+        ZegoLiveStreamingInternalMiniOverlayMachine().state;
 
     ///wait express room and zim room logout
     if (isFromMinimizing || roomLogoutNotifier.value) {

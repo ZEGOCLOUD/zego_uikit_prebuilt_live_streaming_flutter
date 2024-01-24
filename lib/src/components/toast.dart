@@ -10,7 +10,7 @@ import 'package:flutter_styled_toast/flutter_styled_toast.dart' as styled_toast;
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
-import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/mini_overlay_machine.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/overlay_machine.dart';
 
 /// @nodoc
 typedef ContextQuery = BuildContext Function();
@@ -56,7 +56,7 @@ class ZegoToast {
 
 /// @nodoc
 void showToast(String message) {
-  if (ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine().isMinimizing) {
+  if (ZegoLiveStreamingInternalMiniOverlayMachine().isMinimizing) {
     return;
   }
 
@@ -65,7 +65,7 @@ void showToast(String message) {
 
 /// @nodoc
 void showDebugToast(String message) {
-  if (ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine().isMinimizing) {
+  if (ZegoLiveStreamingInternalMiniOverlayMachine().isMinimizing) {
     return;
   }
 
@@ -76,7 +76,7 @@ void showDebugToast(String message) {
 
 /// @nodoc
 void showSuccess(String message) {
-  if (ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine().isMinimizing) {
+  if (ZegoLiveStreamingInternalMiniOverlayMachine().isMinimizing) {
     return;
   }
 
@@ -85,7 +85,7 @@ void showSuccess(String message) {
 
 /// @nodoc
 void showError(String message) {
-  if (ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine().isMinimizing) {
+  if (ZegoLiveStreamingInternalMiniOverlayMachine().isMinimizing) {
     return;
   }
 

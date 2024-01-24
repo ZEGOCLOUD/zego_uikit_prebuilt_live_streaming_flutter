@@ -2,10 +2,10 @@ part of 'core_managers.dart';
 
 extension ZegoLiveStreamingAudioVideoManagers on ZegoLiveStreamingManagers {
   ZegoPlayCoHostAudioVideoCallback? get playCoHostAudioConfig =>
-      hostManager?.config.audioVideoViewConfig.playCoHostAudio;
+      hostManager?.config.audioVideoView.playCoHostAudio;
 
   ZegoPlayCoHostAudioVideoCallback? get playCoHostVideoConfig =>
-      hostManager?.config.audioVideoViewConfig.playCoHostVideo;
+      hostManager?.config.audioVideoView.playCoHostVideo;
 
   void initAudioVideoManagers() {
     ZegoLoggerService.logInfo(

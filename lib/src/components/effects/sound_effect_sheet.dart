@@ -21,7 +21,7 @@ class ZegoSoundEffectSheet extends StatefulWidget {
   final List<ReverbType> reverbEffect;
   final ValueNotifier<String> reverbSelectedIDNotifier;
 
-  final ZegoEffectConfig effectConfig;
+  final ZegoLiveStreamingEffectConfig config;
 
   const ZegoSoundEffectSheet({
     Key? key,
@@ -31,7 +31,7 @@ class ZegoSoundEffectSheet extends StatefulWidget {
     required this.voiceChangerSelectedIDNotifier,
     required this.reverbEffect,
     required this.reverbSelectedIDNotifier,
-    required this.effectConfig,
+    required this.config,
   }) : super(key: key);
 
   @override
@@ -72,24 +72,20 @@ class _ZegoSoundEffectSheetState extends State<ZegoSoundEffectSheet> {
                 model: voiceChangerModel,
                 isSpaceEvenly: false,
                 withBorderColor: true,
-                selectedIconBorderColor:
-                    widget.effectConfig.selectedIconBorderColor,
-                normalIconBorderColor:
-                    widget.effectConfig.normalIconBorderColor,
-                selectedTextStyle: widget.effectConfig.selectedTextStyle,
-                normalTextStyle: widget.effectConfig.normalTextStyle,
+                selectedIconBorderColor: widget.config.selectedIconBorderColor,
+                normalIconBorderColor: widget.config.normalIconBorderColor,
+                selectedTextStyle: widget.config.selectedTextStyle,
+                normalTextStyle: widget.config.normalTextStyle,
               ),
               SizedBox(height: 36.zR),
               ZegoEffectGrid(
                 model: reverbPresetModel,
                 isSpaceEvenly: false,
                 withBorderColor: true,
-                selectedIconBorderColor:
-                    widget.effectConfig.selectedIconBorderColor,
-                normalIconBorderColor:
-                    widget.effectConfig.normalIconBorderColor,
-                selectedTextStyle: widget.effectConfig.selectedTextStyle,
-                normalTextStyle: widget.effectConfig.normalTextStyle,
+                selectedIconBorderColor: widget.config.selectedIconBorderColor,
+                normalIconBorderColor: widget.config.normalIconBorderColor,
+                selectedTextStyle: widget.config.selectedTextStyle,
+                normalTextStyle: widget.config.normalTextStyle,
               ),
             ],
           ),
@@ -113,7 +109,7 @@ class _ZegoSoundEffectSheetState extends State<ZegoSoundEffectSheet> {
             child: SizedBox(
               width: 70.zR,
               height: 70.zR,
-              child: widget.effectConfig.backIcon ??
+              child: widget.config.backIcon ??
                   PrebuiltLiveStreamingImage.asset(
                     PrebuiltLiveStreamingIconUrls.back,
                   ),
@@ -122,7 +118,7 @@ class _ZegoSoundEffectSheetState extends State<ZegoSoundEffectSheet> {
           SizedBox(width: 10.zR),
           Text(
             widget.translationText.audioEffectTitle,
-            style: widget.effectConfig.headerTitleTextStyle ??
+            style: widget.config.headerTitleTextStyle ??
                 TextStyle(
                   fontSize: 36.0.zR,
                   color: const Color(0xffffffff),
@@ -155,8 +151,7 @@ class _ZegoSoundEffectSheetState extends State<ZegoSoundEffectSheet> {
               icon: ButtonIcon(
                 icon: ColorFiltered(
                   colorFilter: ColorFilter.mode(
-                    widget.effectConfig.normalIconColor ??
-                        const Color(0xffCCCCCC),
+                    widget.config.normalIconColor ?? const Color(0xffCCCCCC),
                     BlendMode.srcATop,
                   ),
                   child: PrebuiltLiveStreamingImage.asset(
@@ -167,8 +162,7 @@ class _ZegoSoundEffectSheetState extends State<ZegoSoundEffectSheet> {
               selectIcon: ButtonIcon(
                 icon: ColorFiltered(
                   colorFilter: ColorFilter.mode(
-                    widget.effectConfig.selectedIconColor ??
-                        const Color(0xffA653FF),
+                    widget.config.selectedIconColor ?? const Color(0xffA653FF),
                     BlendMode.srcATop,
                   ),
                   child: PrebuiltLiveStreamingImage.asset(
@@ -291,12 +285,12 @@ void showSoundEffectSheet(
   required List<ReverbType> reverbEffect,
   required ValueNotifier<String> voiceChangerSelectedIDNotifier,
   required ValueNotifier<String> reverbSelectedIDNotifier,
-  required ZegoEffectConfig effectConfig,
+  required ZegoLiveStreamingEffectConfig config,
 }) {
   showModalBottomSheet(
     barrierColor: ZegoUIKitDefaultTheme.viewBarrierColor,
-    backgroundColor: effectConfig.backgroundColor ??
-        ZegoUIKitDefaultTheme.viewBackgroundColor,
+    backgroundColor:
+        config.backgroundColor ?? ZegoUIKitDefaultTheme.viewBackgroundColor,
     context: context,
     useRootNavigator: rootNavigator,
     shape: const RoundedRectangleBorder(
@@ -322,7 +316,7 @@ void showSoundEffectSheet(
               voiceChangerSelectedIDNotifier: voiceChangerSelectedIDNotifier,
               reverbEffect: reverbEffect,
               reverbSelectedIDNotifier: reverbSelectedIDNotifier,
-              effectConfig: effectConfig,
+              config: config,
             ),
           ),
         ),

@@ -4,16 +4,22 @@ import 'dart:async';
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
 
+// Package imports:
+import 'package:zego_uikit/zego_uikit.dart';
+
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/config.defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/live_duration_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/live_status_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/plugins.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/defines.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/pk_combine_notifier.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/prebuilt_data.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/zego_uikit_prebuilt_live_streaming.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/pk/core/core.dart';
 
 part 'core_manager.audio_video.dart';
 
@@ -37,8 +43,14 @@ class ZegoLiveStreamingManagers {
   String get swipingCurrentLiveID => _swipingCurrentLiveID;
 
   void initPluginAndManagers(
+    int appID,
+    String appSign,
+    String userID,
+    String userName,
+    String liveID,
+    ZegoUIKitPrebuiltLiveStreamingConfig config,
+    ZegoUIKitPrebuiltLiveStreamingEvents events,
     ZegoPopUpManager popUpManager,
-    ZegoUIKitPrebuiltLiveStreamingData prebuiltData,
     ValueNotifier<bool> startedByLocalNotifier,
     BuildContext Function()? contextQuery,
   ) {
@@ -60,42 +72,32 @@ class ZegoLiveStreamingManagers {
 
     _initialized = true;
 
-    hostManager = ZegoLiveHostManager(config: prebuiltData.config);
+    hostManager = ZegoLiveHostManager(config: config);
     liveStatusManager = ZegoLiveStatusManager(
       hostManager: hostManager!,
-      config: prebuiltData.config,
+      config: config,
+      events: events,
     );
     liveDurationManager = ZegoLiveDurationManager(
       hostManager: hostManager!,
     );
 
-    if (prebuiltData.config.plugins.isNotEmpty) {
+    if (config.plugins.isNotEmpty) {
       plugins = ZegoPrebuiltPlugins(
-        appID: prebuiltData.appID,
-        appSign: prebuiltData.appSign,
-        userID: prebuiltData.userID,
-        userName: prebuiltData.userName,
-        roomID: prebuiltData.liveID,
-        plugins: prebuiltData.config.plugins,
-        beautyConfig: prebuiltData.config.beautyConfig,
-        onError: prebuiltData.events.onError,
+        appID: appID,
+        appSign: appSign,
+        userID: userID,
+        userName: userName,
+        roomID: liveID,
+        plugins: config.plugins,
+        beautyConfig: config.beauty,
+        onError: events.onError,
       );
 
-      ZegoLiveStreamingPKBattleManager().init(
-        hostManager: ZegoLiveStreamingManagers().hostManager!,
-        liveStatusNotifier:
-            ZegoLiveStreamingManagers().liveStatusManager!.notifier,
-        config: prebuiltData.config,
-        innerText: prebuiltData.config.innerText,
-        startedByLocalNotifier: startedByLocalNotifier,
-        contextQuery: contextQuery,
-      );
-
-      ZegoUIKitPrebuiltLiveStreamingPKV2().init(
-        config: prebuiltData.config,
-        controller: prebuiltData.controller,
-        events: prebuiltData.events,
-        innerText: prebuiltData.config.innerText,
+      ZegoUIKitPrebuiltLiveStreamingPK().init(
+        config: config,
+        events: events,
+        innerText: config.innerText,
         hostManager: ZegoLiveStreamingManagers().hostManager!,
         liveStatusNotifier:
             ZegoLiveStreamingManagers().liveStatusManager!.notifier,
@@ -104,25 +106,19 @@ class ZegoLiveStreamingManagers {
       );
 
       ZegoLiveStreamingPKBattleStateCombineNotifier().init(
-        v1StateNotifier: ZegoLiveStreamingPKBattleManager().state,
-        v2StateNotifier: ZegoUIKitPrebuiltLiveStreamingPKV2().pkStateNotifier,
-        v1RequestReceivedEventInMinimizingNotifier:
-            ZegoUIKitPrebuiltLiveStreamingPKService()
-                .pkBattleRequestReceivedEventInMinimizingNotifier,
+        v2StateNotifier: ZegoUIKitPrebuiltLiveStreamingPK().pkStateNotifier,
         v2RequestReceivedEventInMinimizingNotifier:
-            ZegoUIKitPrebuiltLiveStreamingPKV2()
+            ZegoUIKitPrebuiltLiveStreamingPK()
                 .pkBattleRequestReceivedEventInMinimizingNotifier,
       );
     }
 
     connectManager = ZegoLiveConnectManager(
-      config: prebuiltData.config,
-      controller: prebuiltData.controller,
-      events: prebuiltData.events,
+      config: config,
+      events: events,
       hostManager: hostManager!,
       popUpManager: popUpManager,
       liveStatusNotifier: liveStatusManager!.notifier,
-      translationText: prebuiltData.config.innerText,
       contextQuery: contextQuery,
       kickOutNotifier: kickOutNotifier,
     );
@@ -144,8 +140,7 @@ class ZegoLiveStreamingManagers {
     );
     connectManager?.contextQuery = contextQuery;
 
-    ZegoLiveStreamingPKBattleManager().contextQuery = contextQuery;
-    ZegoUIKitPrebuiltLiveStreamingPKV2().updateContextQuery(contextQuery);
+    ZegoUIKitPrebuiltLiveStreamingPK().updateContextQuery(contextQuery);
   }
 
   Future<void> uninitPluginAndManagers() async {
@@ -175,8 +170,7 @@ class ZegoLiveStreamingManagers {
     await connectManager?.audienceCancelCoHostIfRequesting();
 
     uninitAudioVideoManagers();
-    await ZegoUIKitPrebuiltLiveStreamingPKV2().uninit();
-    await ZegoLiveStreamingPKBattleManager().uninit();
+    await ZegoUIKitPrebuiltLiveStreamingPK().uninit();
     ZegoLiveStreamingPKBattleStateCombineNotifier().uninit();
 
     await plugins?.uninit();
@@ -202,9 +196,8 @@ class ZegoLiveStreamingManagers {
   ZegoLiveHostManager? hostManager;
   ZegoLiveStatusManager? liveStatusManager;
   ZegoLiveDurationManager? liveDurationManager;
-  ZegoPrebuiltPlugins? plugins;
-
   ZegoLiveConnectManager? connectManager;
+  ZegoPrebuiltPlugins? plugins;
 
   String _swipingCurrentLiveID = '';
 

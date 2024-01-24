@@ -19,7 +19,9 @@ class ZegoLiveHostManager {
 
   bool _initialized = false;
 
-  ZegoLiveHostManager({required this.config}) {
+  ZegoLiveHostManager({
+    required this.config,
+  }) {
     configIsHost = ZegoLiveStreamingRole.host == config.role;
 
     subscriptions

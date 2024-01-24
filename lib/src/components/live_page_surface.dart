@@ -15,32 +15,38 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/components/message/view.d
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/top_bar.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/live_duration_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/live_status_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/plugins.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/prebuilt_data.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/defines.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/events.defines.dart';
 
 /// @nodoc
 class ZegoLivePageSurface extends StatefulWidget {
   const ZegoLivePageSurface({
     Key? key,
     required this.config,
-    required this.prebuiltData,
+    required this.events,
+    required this.defaultEndAction,
+    required this.defaultLeaveConfirmationAction,
     required this.hostManager,
     required this.liveStatusManager,
     required this.liveDurationManager,
     required this.popUpManager,
     required this.connectManager,
-    required this.controller,
     this.plugins,
   }) : super(key: key);
 
   final ZegoUIKitPrebuiltLiveStreamingConfig config;
-  final ZegoUIKitPrebuiltLiveStreamingData prebuiltData;
+  final ZegoUIKitPrebuiltLiveStreamingEvents events;
+  final void Function(ZegoLiveStreamingEndEvent event) defaultEndAction;
+  final Future<bool> Function(
+    ZegoLiveStreamingLeaveConfirmationEvent event,
+  ) defaultLeaveConfirmationAction;
 
   final ZegoLiveHostManager hostManager;
   final ZegoLiveStatusManager liveStatusManager;
@@ -48,8 +54,6 @@ class ZegoLivePageSurface extends StatefulWidget {
   final ZegoPopUpManager popUpManager;
   final ZegoPrebuiltPlugins? plugins;
   final ZegoLiveConnectManager connectManager;
-
-  final ZegoUIKitPrebuiltLiveStreamingController controller;
 
   @override
   State<ZegoLivePageSurface> createState() => ZegoLivePageSurfaceState();
@@ -126,7 +130,7 @@ class ZegoLivePageSurfaceState extends State<ZegoLivePageSurface>
 
   Widget topBar() {
     final isCoHostEnabled = (widget.plugins?.isEnabled ?? false) &&
-        widget.config.bottomMenuBarConfig.audienceButtons
+        widget.config.bottomMenuBar.audienceButtons
             .contains(ZegoMenuBarButtonName.coHostControlButton);
     return Positioned(
       left: 0,
@@ -134,14 +138,16 @@ class ZegoLivePageSurfaceState extends State<ZegoLivePageSurface>
       top: 64.zR,
       child: ZegoTopBar(
         config: widget.config,
-        prebuiltData: widget.prebuiltData,
+        events: widget.events,
+        defaultEndAction: widget.defaultEndAction,
+        defaultLeaveConfirmationAction: widget.defaultLeaveConfirmationAction,
         isCoHostEnabled: isCoHostEnabled,
         hostManager: widget.hostManager,
         hostUpdateEnabledNotifier: widget.hostManager.hostUpdateEnabledNotifier,
         connectManager: widget.connectManager,
         popUpManager: widget.popUpManager,
-        prebuiltController: widget.controller,
-        isLeaveRequestingNotifier: widget.controller.isLeaveRequestingNotifier,
+        isLeaveRequestingNotifier: ZegoUIKitPrebuiltLiveStreamingController()
+            .isLeaveRequestingNotifier,
         translationText: widget.config.innerText,
       ),
     );
@@ -153,25 +159,28 @@ class ZegoLivePageSurfaceState extends State<ZegoLivePageSurface>
       child: ZegoBottomBar(
         buttonSize: zegoLiveButtonSize,
         config: widget.config,
-        prebuiltData: widget.prebuiltData,
+        events: widget.events,
+        defaultEndAction: widget.defaultEndAction,
+        defaultLeaveConfirmationAction: widget.defaultLeaveConfirmationAction,
         hostManager: widget.hostManager,
         hostUpdateEnabledNotifier: widget.hostManager.hostUpdateEnabledNotifier,
         liveStatusNotifier: widget.liveStatusManager.notifier,
         connectManager: widget.connectManager,
-        isLeaveRequestingNotifier: widget.controller.isLeaveRequestingNotifier,
+        isLeaveRequestingNotifier: ZegoUIKitPrebuiltLiveStreamingController()
+            .isLeaveRequestingNotifier,
         popUpManager: widget.popUpManager,
       ),
     );
   }
 
   Widget messageList() {
-    if (!widget.config.inRoomMessageConfig.visible) {
+    if (!widget.config.inRoomMessage.visible) {
       return Container();
     }
 
     var listSize = Size(
-      widget.config.inRoomMessageConfig.width ?? 540.zR,
-      widget.config.inRoomMessageConfig.height ?? 400.zR,
+      widget.config.inRoomMessage.width ?? 540.zR,
+      widget.config.inRoomMessage.height ?? 400.zR,
     );
     if (listSize.width < 54.zR) {
       listSize = Size(54.zR, listSize.height);
@@ -180,12 +189,13 @@ class ZegoLivePageSurfaceState extends State<ZegoLivePageSurface>
       listSize = Size(listSize.width, 40.zR);
     }
     return Positioned(
-      left: 32.zR + (widget.config.inRoomMessageConfig.bottomLeft?.dx ?? 0),
-      bottom: 124.zR + (widget.config.inRoomMessageConfig.bottomLeft?.dy ?? 0),
+      left: 32.zR + (widget.config.inRoomMessage.bottomLeft?.dx ?? 0),
+      bottom: 124.zR + (widget.config.inRoomMessage.bottomLeft?.dy ?? 0),
       child: ConstrainedBox(
         constraints: BoxConstraints.loose(listSize),
         child: ZegoInRoomLiveMessageView(
-          config: widget.config.inRoomMessageConfig,
+          config: widget.config.inRoomMessage,
+          events: widget.events.inRoomMessage,
           innerText: widget.config.innerText,
           avatarBuilder: widget.config.avatarBuilder,
         ),
@@ -194,7 +204,7 @@ class ZegoLivePageSurfaceState extends State<ZegoLivePageSurface>
   }
 
   Widget durationTimeBoard() {
-    if (!widget.config.durationConfig.isVisible) {
+    if (!widget.config.duration.isVisible) {
       return Container();
     }
 
@@ -203,7 +213,8 @@ class ZegoLivePageSurfaceState extends State<ZegoLivePageSurface>
       right: 0,
       top: 10,
       child: LiveDurationTimeBoard(
-        config: widget.config.durationConfig,
+        config: widget.config.duration,
+        events: widget.events.duration,
         manager: widget.liveDurationManager,
       ),
     );

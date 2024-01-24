@@ -4,13 +4,14 @@ export 'package:zego_uikit/zego_uikit.dart';
 
 export 'src/components/dialogs.dart';
 export 'src/config.dart';
+export 'src/config.defines.dart';
 export 'src/controller.dart';
 export 'src/defines.dart';
+export 'src/deprecated.dart';
 export 'src/events.dart';
+export 'src/events.defines.dart';
 export 'src/inner_text.dart';
 export 'src/live_streaming.dart';
-export 'src/minimizing/mini_overlay_machine.dart';
-export 'src/minimizing/mini_overlay_page.dart';
-export 'src/pk/pk_service.dart';
-export 'src/pkv2/export.dart';
+export 'src/minimizing/export.dart';
+export 'src/pk/export.dart';
 export 'src/swiping/config.dart';

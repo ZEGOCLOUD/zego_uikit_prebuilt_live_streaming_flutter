@@ -19,11 +19,12 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/live_duration_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/live_status_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/plugins.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/events.defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/prebuilt_data.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/pk/pk_service.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/pkv2/core/core.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/pkv2/core/service/services.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/defines.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/pk/core/core.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/pk/core/service/services.dart';
 
 /// @nodoc
 /// user and sdk should be login and init before page enter
@@ -36,12 +37,13 @@ class ZegoLivePage extends StatefulWidget {
     required this.userName,
     required this.liveID,
     required this.config,
-    required this.prebuiltData,
+    required this.events,
+    required this.defaultEndAction,
+    required this.defaultLeaveConfirmationAction,
     required this.hostManager,
     required this.liveStatusManager,
     required this.liveDurationManager,
     required this.popUpManager,
-    required this.controller,
     this.plugins,
   }) : super(key: key);
 
@@ -54,15 +56,17 @@ class ZegoLivePage extends StatefulWidget {
   final String liveID;
 
   final ZegoUIKitPrebuiltLiveStreamingConfig config;
-  final ZegoUIKitPrebuiltLiveStreamingData prebuiltData;
+  final ZegoUIKitPrebuiltLiveStreamingEvents events;
+  final void Function(ZegoLiveStreamingEndEvent event) defaultEndAction;
+  final Future<bool> Function(
+    ZegoLiveStreamingLeaveConfirmationEvent event,
+  ) defaultLeaveConfirmationAction;
 
   final ZegoLiveHostManager hostManager;
   final ZegoLiveStatusManager liveStatusManager;
   final ZegoLiveDurationManager liveDurationManager;
   final ZegoPopUpManager popUpManager;
   final ZegoPrebuiltPlugins? plugins;
-
-  final ZegoUIKitPrebuiltLiveStreamingController controller;
 
   @override
   State<ZegoLivePage> createState() => ZegoLivePageState();
@@ -126,7 +130,17 @@ class ZegoLivePageState extends State<ZegoLivePage>
       resizeToAvoidBottomInset: false,
       body: WillPopScope(
         onWillPop: () async {
-          final canLeave = await widget.config.onLeaveConfirmation!(context);
+          final endConfirmationEvent = ZegoLiveStreamingLeaveConfirmationEvent(
+            context: context,
+          );
+          defaultAction() async {
+            return widget.defaultLeaveConfirmationAction(endConfirmationEvent);
+          }
+
+          final canLeave = await widget.events.onLeaveConfirmation!(
+            endConfirmationEvent,
+            defaultAction,
+          );
           if (canLeave) {
             if (widget.hostManager.isLocalHost) {
               /// live is ready to end, host will update if receive property notify
@@ -163,21 +177,22 @@ class ZegoLivePageState extends State<ZegoLivePage>
                               hostManager: widget.hostManager,
                               liveStatusManager: widget.liveStatusManager,
                               popUpManager: widget.popUpManager,
-                              controller: widget.controller,
                               plugins: widget.plugins,
                               constraints: constraints,
                             ),
                             ZegoLivePageSurface(
                               config: widget.config,
+                              events: widget.events,
+                              defaultEndAction: widget.defaultEndAction,
+                              defaultLeaveConfirmationAction:
+                                  widget.defaultLeaveConfirmationAction,
                               hostManager: widget.hostManager,
                               liveStatusManager: widget.liveStatusManager,
                               liveDurationManager: widget.liveDurationManager,
                               popUpManager: widget.popUpManager,
                               connectManager:
                                   ZegoLiveStreamingManagers().connectManager!,
-                              controller: widget.controller,
                               plugins: widget.plugins,
-                              prebuiltData: widget.prebuiltData,
                             ),
                           ],
                         );
@@ -192,7 +207,12 @@ class ZegoLivePageState extends State<ZegoLivePage>
   }
 
   void checkFromMinimizing() {
-    if (!widget.prebuiltData.isPrebuiltFromMinimizing) {
+    if (!(ZegoUIKitPrebuiltLiveStreamingController()
+            .minimize
+            .private
+            .minimizeData
+            ?.isPrebuiltFromMinimizing ??
+        false)) {
       return;
     }
 
@@ -220,7 +240,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
     }
 
     if (null !=
-        ZegoUIKitPrebuiltLiveStreamingPKService()
+        ZegoUIKitPrebuiltLiveStreamingPK()
             .pkBattleRequestReceivedEventInMinimizingNotifier
             .value) {
       ZegoLoggerService.logInfo(
@@ -229,21 +249,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
         subTag: 'live page',
       );
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        ZegoUIKitPrebuiltLiveStreamingPKService()
-            .restorePKBattleRequestReceivedEventFromMinimizing();
-      });
-    }
-    if (null !=
-        ZegoUIKitPrebuiltLiveStreamingPKV2()
-            .pkBattleRequestReceivedEventInMinimizingNotifier
-            .value) {
-      ZegoLoggerService.logInfo(
-        'exist a pk battle request when minimizing, show now',
-        tag: 'live streaming',
-        subTag: 'live page',
-      );
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        ZegoUIKitPrebuiltLiveStreamingPKV2()
+        ZegoUIKitPrebuiltLiveStreamingPK()
             .restorePKBattleRequestReceivedEventFromMinimizing();
       });
     }
@@ -358,11 +364,20 @@ class ZegoLivePageState extends State<ZegoLivePage>
       );
 
       if (LiveStatus.ended == widget.liveStatusManager.notifier.value) {
-        if (widget.config.onLiveStreamingEnded != null) {
-          widget.config.onLiveStreamingEnded!.call(false);
+        final endEvent = ZegoLiveStreamingEndEvent(
+          reason: ZegoLiveStreamingEndReason.hostEnd,
+          isFromMinimizing: ZegoLiveStreamingMiniOverlayPageState.minimizing ==
+              ZegoUIKitPrebuiltLiveStreamingController().minimize.state,
+        );
+        defaultAction() {
+          widget.defaultEndAction(endEvent);
         }
 
-        /// audience or co-host wouldn't return to the previous page by default
+        if (widget.events.onEnded != null) {
+          widget.events.onEnded!.call(endEvent, defaultAction);
+        } else {
+          defaultAction.call();
+        }
       }
     }
   }
@@ -384,9 +399,10 @@ class ZegoLivePageState extends State<ZegoLivePage>
       return;
     }
 
-    final canCameraTurnOnByOthers =
-        await widget.config.onCameraTurnOnByOthersConfirmation?.call(context) ??
-            false;
+    final canCameraTurnOnByOthers = await widget
+            .events.audioVideo?.onCameraTurnOnByOthersConfirmation
+            ?.call(context) ??
+        false;
     ZegoLoggerService.logInfo(
       'canMicrophoneTurnOnByOthers:$canCameraTurnOnByOthers',
       tag: 'live streaming',
@@ -416,7 +432,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
     }
 
     final canMicrophoneTurnOnByOthers = await widget
-            .config.onMicrophoneTurnOnByOthersConfirmation
+            .events.audioVideo?.onMicrophoneTurnOnByOthersConfirmation
             ?.call(context) ??
         false;
     ZegoLoggerService.logInfo(
@@ -433,6 +449,6 @@ class ZegoLivePageState extends State<ZegoLivePage>
   }
 
   void onInRoomLocalMessageFinished(ZegoInRoomMessage message) {
-    widget.config.inRoomMessageConfig.onLocalMessageSend?.call(message);
+    widget.events.inRoomMessage.onLocalSend?.call(message);
   }
 }

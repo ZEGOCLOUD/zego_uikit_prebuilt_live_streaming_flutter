@@ -1,0 +1,179 @@
+// Flutter imports:
+import 'package:flutter/cupertino.dart';
+
+// Package imports:
+import 'package:zego_uikit/zego_uikit.dart';
+
+// Project imports:
+import 'package:zego_uikit_prebuilt_live_streaming/src/defines.dart';
+
+typedef ZegoPlayCoHostAudioVideoCallback = bool Function(
+  ZegoUIKitUser localUser,
+  ZegoLiveStreamingRole localRole,
+  ZegoUIKitUser coHost,
+);
+
+/// Extension buttons for the bottom toolbar.
+///
+/// If the built-in buttons do not meet your requirements, you can define your own button to implement custom functionality.
+///
+/// For example:
+///
+/// In this example, an IconButton with a "+" icon is defined as an extension button.
+/// Its index is set to 2, indicating that it will be inserted after the built-in buttons and previous extension buttons in the bottom toolbar.
+/// When the button is clicked, the callback function will be triggered.
+///
+///```dart
+/// hostExtendButtons = [
+///   ZegoMenuBarExtendButton(
+///    index: 2,
+///    child: IconButton(
+///      icon: Icon(Icons.add),
+///      onPressed: () {
+///        // Callback when the extension button is clicked
+///      },
+///    ),
+///  ),
+/// ]
+/// ```
+class ZegoLiveStreamingMenuBarExtendButton extends StatelessWidget {
+  /// Index of buttons within the entire bottom toolbar, including both built-in buttons and extension buttons.
+  ///
+  /// For example, if it's for the host, the index refers to the array index of [hostButtons] + [hostExtendButtons].
+  ///
+  /// If this index is set, the corresponding button will be placed at the specified position in the array of buttons for the corresponding role.
+  ///
+  /// If this index is not set, the button will be placed after the built-in buttons.
+  ///
+  /// The index starts from 0, and -1 indicates that the button will be placed after the built-in buttons by default.
+  ///
+  /// Definition of built-in buttons: an array of type List<[ZegoMenuBarButtonName]>.
+  ///
+  /// Definition of extension buttons: an array of type List<[ZegoLiveStreamingMenuBarExtendButton]>.
+  final int index;
+
+  /// button widget
+  final Widget child;
+
+  const ZegoLiveStreamingMenuBarExtendButton({
+    Key? key,
+    required this.child,
+    this.index = -1,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return child;
+  }
+}
+
+/// Button style for the bottom toolbar, allowing customization of button icons or text.
+///
+/// You can use the [ZegoUIKitPrebuiltLiveStreamingConfig.bottomMenuBarConfig] -> [ZegoLiveStreamingBottomMenuBarConfig.buttonStyle] property to set the properties inside this class.
+///
+/// Example:
+/// ```dart
+/// ZegoBottomMenuBarButtonStyle(
+///   // Customize the enabled chat button icon
+///   chatEnabledButtonIcon: const Icon(Icons.chat),
+///   // Customize the disabled chat button icon
+///   chatDisabledButtonIcon: const Icon(Icons.chat_disabled),
+///   // Customize other button icons...
+/// );
+/// ```
+class ZegoLiveStreamingBottomMenuBarButtonStyle {
+  /// Icon for enabling chat.
+  Widget? chatEnabledButtonIcon;
+
+  /// Icon for disabling chat.
+  Widget? chatDisabledButtonIcon;
+
+  /// Icon for toggling microphone on.
+  Widget? toggleMicrophoneOnButtonIcon;
+
+  /// Icon for toggling microphone off.
+  Widget? toggleMicrophoneOffButtonIcon;
+
+  /// Icon for toggling camera on.
+  Widget? toggleCameraOnButtonIcon;
+
+  /// Icon for toggling camera off.
+  Widget? toggleCameraOffButtonIcon;
+
+  /// Icon for switching camera.
+  Widget? switchCameraButtonIcon;
+
+  /// Icon for switching audio output to speaker.
+  Widget? switchAudioOutputToSpeakerButtonIcon;
+
+  /// Icon for switching audio output to headphone.
+  Widget? switchAudioOutputToHeadphoneButtonIcon;
+
+  /// Icon for switching audio output to Bluetooth.
+  Widget? switchAudioOutputToBluetoothButtonIcon;
+
+  /// Icon for leaving the room.
+  Widget? leaveButtonIcon;
+
+  /// Icon for requesting co-host status.
+  Widget? requestCoHostButtonIcon;
+
+  /// Text for requesting co-host status button.
+  String? requestCoHostButtonText;
+
+  /// Icon for canceling co-host request.
+  Widget? cancelRequestCoHostButtonIcon;
+
+  /// Text for canceling co-host request button.
+  String? cancelRequestCoHostButtonText;
+
+  /// Icon for ending co-host status.
+  Widget? endCoHostButtonIcon;
+
+  /// Text for ending co-host status button.
+  String? endCoHostButtonText;
+
+  /// Icon for beauty effect.
+  Widget? beautyEffectButtonIcon;
+
+  /// Icon for sound effect.
+  Widget? soundEffectButtonIcon;
+
+  /// Icon for enabling chat.
+  Widget? enableChatButtonIcon;
+
+  /// Icon for disabling chat.
+  Widget? disableChatButtonIcon;
+
+  /// Icon for toggling screen sharing on.
+  Widget? toggleScreenSharingOnButtonIcon;
+
+  /// Icon for toggling screen sharing off.
+  Widget? toggleScreenSharingOffButtonIcon;
+
+  ZegoLiveStreamingBottomMenuBarButtonStyle({
+    this.chatEnabledButtonIcon,
+    this.chatDisabledButtonIcon,
+    this.toggleMicrophoneOnButtonIcon,
+    this.toggleMicrophoneOffButtonIcon,
+    this.toggleCameraOnButtonIcon,
+    this.toggleCameraOffButtonIcon,
+    this.switchCameraButtonIcon,
+    this.switchAudioOutputToSpeakerButtonIcon,
+    this.switchAudioOutputToHeadphoneButtonIcon,
+    this.switchAudioOutputToBluetoothButtonIcon,
+    this.leaveButtonIcon,
+    this.requestCoHostButtonIcon,
+    this.requestCoHostButtonText,
+    this.cancelRequestCoHostButtonIcon,
+    this.cancelRequestCoHostButtonText,
+    this.endCoHostButtonIcon,
+    this.endCoHostButtonText,
+    this.beautyEffectButtonIcon,
+    this.soundEffectButtonIcon,
+    this.enableChatButtonIcon,
+    this.disableChatButtonIcon,
+    this.toggleScreenSharingOnButtonIcon,
+    this.toggleScreenSharingOffButtonIcon,
+  });
+}

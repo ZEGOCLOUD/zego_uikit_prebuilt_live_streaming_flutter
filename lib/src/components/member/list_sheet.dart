@@ -11,9 +11,11 @@ import 'package:zego_uikit/zego_uikit.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_sheet_menu.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/inner_text.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/pk_combine_notifier.dart';
@@ -22,14 +24,15 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/internal/pk_combine_notif
 class ZegoMemberListSheet extends StatefulWidget {
   const ZegoMemberListSheet({
     Key? key,
-    this.avatarBuilder,
-    this.itemBuilder,
     required this.isCoHostEnabled,
     required this.hostManager,
     required this.connectManager,
     required this.popUpManager,
     required this.innerText,
-    required this.prebuiltController,
+    required this.config,
+    required this.events,
+    this.avatarBuilder,
+    this.itemBuilder,
   }) : super(key: key);
 
   final bool isCoHostEnabled;
@@ -37,7 +40,8 @@ class ZegoMemberListSheet extends StatefulWidget {
   final ZegoLiveConnectManager connectManager;
   final ZegoPopUpManager popUpManager;
   final ZegoInnerText innerText;
-  final ZegoUIKitPrebuiltLiveStreamingController prebuiltController;
+  final ZegoLiveStreamingMemberListConfig config;
+  final ZegoLiveStreamingMemberListEvents events;
 
   final ZegoAvatarBuilder? avatarBuilder;
   final ZegoMemberListItemBuilder? itemBuilder;
@@ -150,8 +154,7 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
               builder: (context, _, __) {
                 return GestureDetector(
                   onTap: () {
-                    widget.hostManager.config.memberListConfig.onClicked
-                        ?.call(user);
+                    widget.events.onClicked?.call(user);
                   },
                   child: Container(
                     margin: EdgeInsets.only(bottom: 36.zR),
@@ -303,7 +306,9 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
           text: widget.innerText.disagreeButton,
           backgroundColor: const Color(0xffA7A6B7),
           onPressed: () {
-            widget.prebuiltController.connect.hostRejectCoHostRequest(user);
+            ZegoUIKitPrebuiltLiveStreamingController()
+                .coHost
+                .hostRejectCoHostRequest(user);
           },
         ),
         SizedBox(width: 12.zR),
@@ -315,7 +320,9 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
             end: Alignment.bottomRight,
           ),
           onPressed: () {
-            widget.prebuiltController.connect.hostAgreeCoHostRequest(user);
+            ZegoUIKitPrebuiltLiveStreamingController()
+                .coHost
+                .hostAgreeCoHostRequest(user);
           },
         ),
       ],
@@ -387,7 +394,6 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
               hostManager: widget.hostManager,
               connectManager: widget.connectManager,
               popUpManager: widget.popUpManager,
-              prebuiltController: widget.prebuiltController,
               translationText: widget.innerText,
             );
           },
@@ -492,7 +498,8 @@ Future<void> showMemberListSheet({
   required ZegoLiveHostManager hostManager,
   required ZegoLiveConnectManager connectManager,
   required ZegoPopUpManager popUpManager,
-  required ZegoUIKitPrebuiltLiveStreamingController prebuiltController,
+  required ZegoLiveStreamingMemberListConfig config,
+  required ZegoLiveStreamingMemberListEvents events,
   required ZegoInnerText translationText,
 }) async {
   final key = DateTime.now().millisecondsSinceEpoch;
@@ -520,14 +527,15 @@ Future<void> showMemberListSheet({
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: ZegoMemberListSheet(
-              avatarBuilder: avatarBuilder,
-              itemBuilder: itemBuilder,
+              config: config,
+              events: events,
               isCoHostEnabled: isCoHostEnabled,
               hostManager: hostManager,
               connectManager: connectManager,
               popUpManager: popUpManager,
-              prebuiltController: prebuiltController,
               innerText: translationText,
+              avatarBuilder: avatarBuilder,
+              itemBuilder: itemBuilder,
             ),
           ),
         ),

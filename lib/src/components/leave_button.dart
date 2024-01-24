@@ -6,8 +6,12 @@ import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/events.defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/defines.dart';
 
 /// @nodoc
 class ZegoLeaveStreamingButton extends StatefulWidget {
@@ -19,6 +23,11 @@ class ZegoLeaveStreamingButton extends StatefulWidget {
   /// the size of button
   final Size? buttonSize;
   final ZegoUIKitPrebuiltLiveStreamingConfig config;
+  final ZegoUIKitPrebuiltLiveStreamingEvents events;
+  final void Function(ZegoLiveStreamingEndEvent event) defaultEndAction;
+  final Future<bool> Function(
+    ZegoLiveStreamingLeaveConfirmationEvent event,
+  ) defaultLeaveConfirmationAction;
 
   final ZegoLiveHostManager hostManager;
   final ValueNotifier<bool> hostUpdateEnabledNotifier;
@@ -27,6 +36,9 @@ class ZegoLeaveStreamingButton extends StatefulWidget {
   const ZegoLeaveStreamingButton({
     Key? key,
     required this.config,
+    required this.events,
+    required this.defaultEndAction,
+    required this.defaultLeaveConfirmationAction,
     required this.hostManager,
     required this.hostUpdateEnabledNotifier,
     this.isLeaveRequestingNotifier,
@@ -72,8 +84,18 @@ class ZegoLeaveStreamingButtonState extends State<ZegoLeaveStreamingButton> {
         /// prevent controller's leave function call after leave button click
         widget.isLeaveRequestingNotifier?.value = true;
 
-        final canLeave =
-            await widget.config.onLeaveConfirmation?.call(context) ?? true;
+        final endConfirmationEvent = ZegoLiveStreamingLeaveConfirmationEvent(
+          context: context,
+        );
+        defaultAction() async {
+          return widget.defaultLeaveConfirmationAction(endConfirmationEvent);
+        }
+
+        final canLeave = await widget.events.onLeaveConfirmation?.call(
+              endConfirmationEvent,
+              defaultAction,
+            ) ??
+            true;
         if (canLeave) {
           await notifyUserLeaveByMessage();
 
@@ -94,27 +116,19 @@ class ZegoLeaveStreamingButtonState extends State<ZegoLeaveStreamingButton> {
         return canLeave;
       },
       onPress: () async {
-        if (widget.hostManager.isLocalHost) {
-          /// host end/leave live streaming
-          if (widget.config.onLiveStreamingEnded != null) {
-            widget.config.onLiveStreamingEnded!.call(false);
-          } else {
-            /// host will return to the previous page by default
-            Navigator.of(
-              context,
-              rootNavigator: widget.hostManager.config.rootNavigator,
-            ).pop();
-          }
+        final endEvent = ZegoLiveStreamingEndEvent(
+          reason: ZegoLiveStreamingEndReason.localLeave,
+          isFromMinimizing: ZegoLiveStreamingMiniOverlayPageState.minimizing ==
+              ZegoUIKitPrebuiltLiveStreamingController().minimize.state,
+        );
+        defaultAction() {
+          widget.defaultEndAction(endEvent);
+        }
+
+        if (widget.events.onEnded != null) {
+          widget.events.onEnded!.call(endEvent, defaultAction);
         } else {
-          /// audience leave live streaming
-          if (widget.config.onLeaveLiveStreaming != null) {
-            widget.config.onLeaveLiveStreaming!.call(false);
-          } else {
-            Navigator.of(
-              context,
-              rootNavigator: widget.hostManager.config.rootNavigator,
-            ).pop();
-          }
+          defaultAction.call();
         }
 
         /// restore controller's leave status
@@ -129,12 +143,11 @@ class ZegoLeaveStreamingButtonState extends State<ZegoLeaveStreamingButton> {
   }
 
   Future<void> notifyUserLeaveByMessage() async {
-    if (!widget.config.inRoomMessageConfig.notifyUserLeave) {
+    if (!widget.config.inRoomMessage.notifyUserLeave) {
       return;
     }
 
-    final messageAttributes =
-        widget.config.inRoomMessageConfig.attributes?.call();
+    final messageAttributes = widget.config.inRoomMessage.attributes?.call();
     if (messageAttributes?.isEmpty ?? true) {
       await ZegoUIKit().sendInRoomMessage(widget.config.innerText.userLeave);
     } else {

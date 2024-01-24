@@ -27,7 +27,7 @@ class ZegoBeautyEffectButton extends StatefulWidget {
   final ButtonIcon? icon;
   final ZegoInnerText translationText;
   final bool rootNavigator;
-  final ZegoEffectConfig effectConfig;
+  final ZegoLiveStreamingEffectConfig effectConfig;
 
   @override
   State<ZegoBeautyEffectButton> createState() => _ZegoBeautyEffectButtonState();
@@ -49,7 +49,7 @@ class _ZegoBeautyEffectButtonState extends State<ZegoBeautyEffectButton> {
             translationText: widget.translationText,
             rootNavigator: widget.rootNavigator,
             beautyEffects: widget.effectConfig.beautyEffects,
-            effectConfig: widget.effectConfig,
+            config: widget.effectConfig,
           );
         }
       },

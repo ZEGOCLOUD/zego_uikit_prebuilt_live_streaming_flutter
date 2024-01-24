@@ -10,9 +10,10 @@ import 'package:zego_uikit/zego_uikit.dart';
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/member/list_sheet.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_manager.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/inner_text.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/pk_combine_notifier.dart';
 
@@ -20,17 +21,18 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/internal/pk_combine_notif
 class ZegoMemberButton extends StatefulWidget {
   const ZegoMemberButton({
     Key? key,
+    required this.isCoHostEnabled,
+    required this.hostManager,
+    required this.connectManager,
+    required this.popUpManager,
+    required this.translationText,
+    required this.config,
+    required this.events,
     this.avatarBuilder,
     this.itemBuilder,
     this.icon,
     this.builder,
     this.backgroundColor,
-    required this.isCoHostEnabled,
-    required this.hostManager,
-    required this.connectManager,
-    required this.popUpManager,
-    required this.prebuiltController,
-    required this.translationText,
   }) : super(key: key);
 
   /// If you want to redefine the entire button, you can return your own Widget through [builder].
@@ -48,8 +50,9 @@ class ZegoMemberButton extends StatefulWidget {
   final ZegoLiveHostManager hostManager;
   final ZegoLiveConnectManager connectManager;
   final ZegoPopUpManager popUpManager;
-  final ZegoUIKitPrebuiltLiveStreamingController prebuiltController;
   final ZegoInnerText translationText;
+  final ZegoLiveStreamingMemberListConfig config;
+  final ZegoLiveStreamingMemberListEvents events;
 
   @override
   State<ZegoMemberButton> createState() => _ZegoMemberButtonState();
@@ -89,14 +92,15 @@ class _ZegoMemberButtonState extends State<ZegoMemberButton> {
       onTap: () {
         showMemberListSheet(
           context: context,
-          avatarBuilder: widget.avatarBuilder,
-          itemBuilder: widget.itemBuilder,
+          config: widget.config,
+          events: widget.events,
           isCoHostEnabled: widget.isCoHostEnabled,
           hostManager: widget.hostManager,
           connectManager: widget.connectManager,
           popUpManager: widget.popUpManager,
-          prebuiltController: widget.prebuiltController,
           translationText: widget.translationText,
+          avatarBuilder: widget.avatarBuilder,
+          itemBuilder: widget.itemBuilder,
         );
       },
       child: null == widget.builder

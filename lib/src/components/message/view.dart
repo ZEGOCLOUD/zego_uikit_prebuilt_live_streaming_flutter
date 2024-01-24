@@ -1,27 +1,26 @@
 // Flutter imports:
-import 'dart:async';
-
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/inner_text.dart';
 
 /// @nodoc
 class ZegoInRoomLiveMessageView extends StatefulWidget {
-  final ZegoInRoomMessageConfig? config;
+  final ZegoLiveStreamingInRoomMessageConfig? config;
+  final ZegoLiveStreamingInRoomMessageEvents? events;
   final ZegoAvatarBuilder? avatarBuilder;
   final ZegoInnerText innerText;
 
   const ZegoInRoomLiveMessageView({
     Key? key,
     required this.innerText,
-    this.config,
+    required this.config,
+    required this.events,
     this.avatarBuilder,
   }) : super(key: key);
 
@@ -69,8 +68,8 @@ class _ZegoInRoomLiveMessageViewState extends State<ZegoInRoomLiveMessageView> {
                     maxLines: widget.config?.maxLines,
                     nameTextStyle: widget.config?.nameTextStyle,
                     messageTextStyle: widget.config?.messageTextStyle,
-                    onItemClick: widget.config?.onMessageClick,
-                    onItemLongPress: widget.config?.onMessageLongPress,
+                    onItemClick: widget.events?.onClicked,
+                    onItemLongPress: widget.events?.onLongPress,
                   );
                 },
           ),

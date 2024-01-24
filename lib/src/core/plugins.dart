@@ -9,7 +9,7 @@ import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/toast.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/mini_overlay_machine.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/overlay_machine.dart';
 
 /// @nodoc
 enum PluginNetworkState {
@@ -232,7 +232,7 @@ class ZegoPrebuiltPlugins {
     roomHasInitLogin = false;
     tryReLogging = false;
 
-    if (ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine().isMinimizing) {
+    if (ZegoLiveStreamingInternalMiniOverlayMachine().isMinimizing) {
       ZegoLoggerService.logInfo(
         'to minimizing, not need to leave room, logout and uninit',
         tag: 'live streaming',

@@ -96,7 +96,7 @@ class _ZegoInRoomMessageInputBoardButtonState
                     ZegoInRoomMessageInputBoard(
                       translationText: widget.translationText,
                       payloadAttributes: widget
-                          .hostManager.config.inRoomMessageConfig.attributes
+                          .hostManager.config.inRoomMessage.attributes
                           ?.call(),
                       rootNavigator: widget.hostManager.config.rootNavigator,
                     ),

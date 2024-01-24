@@ -21,7 +21,7 @@ class ZegoSoundEffectButton extends StatefulWidget {
   final ZegoInnerText translationText;
   final bool rootNavigator;
 
-  final ZegoEffectConfig effectConfig;
+  final ZegoLiveStreamingEffectConfig effectConfig;
 
   const ZegoSoundEffectButton({
     Key? key,
@@ -58,7 +58,7 @@ class _ZegoSoundEffectButtonState extends State<ZegoSoundEffectButton> {
           voiceChangerSelectedIDNotifier: voiceChangerSelectedIDNotifier,
           reverbEffect: widget.reverbEffect,
           reverbSelectedIDNotifier: reverbSelectedIDNotifier,
-          effectConfig: widget.effectConfig,
+          config: widget.effectConfig,
         );
       },
       child: Container(

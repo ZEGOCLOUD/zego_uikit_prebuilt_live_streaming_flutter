@@ -12,6 +12,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/defines.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
 
 /// @nodoc
@@ -19,12 +20,14 @@ class ZegoLiveStatusManager {
   ZegoLiveConnectManager? connectManager;
   final ZegoLiveHostManager hostManager;
   final ZegoUIKitPrebuiltLiveStreamingConfig config;
+  final ZegoUIKitPrebuiltLiveStreamingEvents events;
 
   bool _initialized = false;
 
   ZegoLiveStatusManager({
     required this.hostManager,
     required this.config,
+    required this.events,
   }) {
     subscriptions.add(
         ZegoUIKit().getRoomPropertiesStream().listen(onRoomPropertiesUpdated));
@@ -68,7 +71,7 @@ class ZegoLiveStatusManager {
       );
       ZegoUIKit().startPlayAllAudioVideo();
 
-      if (config.previewConfig.showPreviewForHost) {
+      if (config.preview.showPreviewForHost) {
         await ZegoUIKit().setRoomProperty(
           RoomPropertyKey.liveStatus.text,
           LiveStatus.notStart.index.toString(),
@@ -110,7 +113,7 @@ class ZegoLiveStatusManager {
         subTag: 'live status manager',
       );
 
-      config.onLiveStreamingStateUpdate?.call(ZegoLiveStreamingState.ended);
+      events.onStateUpdated?.call(ZegoLiveStreamingState.ended);
 
       /// un-normal leave by leave button
       await ZegoUIKit().setRoomProperty(
@@ -208,13 +211,13 @@ class ZegoLiveStatusManager {
   void onLiveStatusUpdated() {
     switch (notifier.value) {
       case LiveStatus.ended:
-        config.onLiveStreamingStateUpdate?.call(ZegoLiveStreamingState.ended);
+        events.onStateUpdated?.call(ZegoLiveStreamingState.ended);
         break;
       case LiveStatus.living:
-        config.onLiveStreamingStateUpdate?.call(ZegoLiveStreamingState.living);
+        events.onStateUpdated?.call(ZegoLiveStreamingState.living);
         break;
       case LiveStatus.notStart:
-        config.onLiveStreamingStateUpdate?.call(ZegoLiveStreamingState.idle);
+        events.onStateUpdated?.call(ZegoLiveStreamingState.idle);
         break;
     }
   }

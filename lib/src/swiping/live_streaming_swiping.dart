@@ -1,3 +1,6 @@
+// Dart imports:
+import 'dart:async';
+
 // Flutter imports:
 import 'package:flutter/material.dart';
 
@@ -26,7 +29,6 @@ class ZegoUIKitPrebuiltLiveStreamingSwiping extends StatefulWidget {
     required this.userName,
     required this.config,
     required this.swipingConfig,
-    this.controller,
     this.events,
   }) : super(key: key);
   final String initialLiveID;
@@ -49,9 +51,6 @@ class ZegoUIKitPrebuiltLiveStreamingSwiping extends StatefulWidget {
   /// same as [ZegoUIKitPrebuiltLiveStreamingPage.config]
   final ZegoUIKitPrebuiltLiveStreamingConfig config;
 
-  /// same as [ZegoUIKitPrebuiltLiveStreamingPage.controller]
-  final ZegoUIKitPrebuiltLiveStreamingController? controller;
-
   /// same as [ZegoUIKitPrebuiltLiveStreamingPage.events]
   final ZegoUIKitPrebuiltLiveStreamingEvents? events;
 
@@ -69,6 +68,8 @@ class _ZegoUIKitPrebuiltLiveStreamingSwipingState
 
   String _targetRoomID = '';
   bool _targetRoomDone = false;
+
+  List<StreamSubscription<dynamic>?> subscriptions = [];
 
   int get currentPageIndex => _pageController.page?.round() ?? 0;
 
@@ -96,14 +97,33 @@ class _ZegoUIKitPrebuiltLiveStreamingSwipingState
     ZegoLiveStreamingManagers().swipingCurrentLiveID = _targetRoomID;
     _targetRoomDone = false;
     roomLoginNotifier?.resetCheckingData(_targetRoomID);
+
+    ZegoUIKitPrebuiltLiveStreamingController().swiping.private.initByPrebuilt(
+          swipingConfig: widget.config.swiping,
+        );
+    subscriptions.add(ZegoUIKitPrebuiltLiveStreamingController()
+        .swiping
+        .private
+        .stream
+        ?.stream
+        .listen(onSwipingRequest));
   }
 
   @override
   void dispose() {
     super.dispose();
 
+    for (final subscription in subscriptions) {
+      subscription?.cancel();
+    }
+
     _pageController.dispose();
     roomLoginNotifier?.notifier.removeListener(onRoomStateChanged);
+
+    ZegoUIKitPrebuiltLiveStreamingController()
+        .swiping
+        .private
+        .uninitByPrebuilt();
   }
 
   @override
@@ -120,28 +140,7 @@ class _ZegoUIKitPrebuiltLiveStreamingSwipingState
         } else if (details.velocity.pixelsPerSecond.dy < 0) {
           targetRoomID = widget.swipingConfig.requireNextLiveID();
         }
-        if (targetRoomID == _targetRoomID) {
-          ZegoLoggerService.logInfo(
-            'PageView.onVerticalDragEnd target room id($targetRoomID) is same as before($_targetRoomID)',
-            tag: 'live streaming',
-            subTag: 'swiping',
-          );
-          return;
-        }
-        if (targetRoomID.isEmpty) {
-          ZegoLoggerService.logInfo(
-            'PageView.onVerticalDragEnd target room id is empty',
-            tag: 'live streaming',
-            subTag: 'swiping',
-          );
-          return;
-        }
-
-        _targetRoomID = targetRoomID;
-        ZegoLiveStreamingManagers().swipingCurrentLiveID = _targetRoomID;
-        _targetRoomDone = false;
-
-        _pageController.jumpToPage(0 == currentPageIndex ? 1 : 0);
+        swipingTo(targetRoomID);
       },
       child: PageView.builder(
         scrollDirection: Axis.vertical,
@@ -181,7 +180,6 @@ class _ZegoUIKitPrebuiltLiveStreamingSwipingState
                 appSign: widget.appSign,
                 userID: widget.userID,
                 userName: widget.userName,
-                controller: widget.controller,
                 events: widget.events,
                 config: widget.config,
               );
@@ -230,5 +228,49 @@ class _ZegoUIKitPrebuiltLiveStreamingSwipingState
     if (expressDone && signalingDone) {
       _targetRoomDone = true;
     }
+  }
+
+  void swipingTo(String targetRoomID) {
+    if (targetRoomID == _targetRoomID) {
+      ZegoLoggerService.logInfo(
+        'swipingTo, '
+        'target room id($targetRoomID) is same as before ($_targetRoomID)',
+        tag: 'live streaming',
+        subTag: 'swiping',
+      );
+      return;
+    }
+
+    if (targetRoomID.isEmpty) {
+      ZegoLoggerService.logInfo(
+        'swipingTo, target room id is empty',
+        tag: 'live streaming',
+        subTag: 'swiping',
+      );
+
+      return;
+    }
+
+    ZegoLoggerService.logInfo(
+      'swipingTo, $targetRoomID',
+      tag: 'live streaming',
+      subTag: 'swiping',
+    );
+
+    _targetRoomID = targetRoomID;
+    ZegoLiveStreamingManagers().swipingCurrentLiveID = _targetRoomID;
+    _targetRoomDone = false;
+
+    _pageController.jumpToPage(0 == currentPageIndex ? 1 : 0);
+  }
+
+  void onSwipingRequest(String targetRoomID) {
+    ZegoLoggerService.logInfo(
+      'onSwipingRequest $targetRoomID',
+      tag: 'live streaming',
+      subTag: 'swiping',
+    );
+
+    swipingTo(targetRoomID);
   }
 }
