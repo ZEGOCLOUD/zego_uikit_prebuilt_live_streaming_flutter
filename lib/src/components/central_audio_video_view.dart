@@ -259,7 +259,9 @@ class ZegoLivePageCentralAudioVideoViewState
           child: SizedBox(
             width: width,
             height: height,
-            child: children,
+            child: ZegoInputBoardWrapper(
+              child: children,
+            ),
           ),
         );
       },

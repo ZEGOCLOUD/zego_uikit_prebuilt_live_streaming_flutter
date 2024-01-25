@@ -1,3 +1,15 @@
+## 3.0.3
+
+- Update canvas size of pk layout 
+
+## 3.0.2
+
+- Update dependency.
+
+## 3.0.1
+
+- Fix the issue of incomplete display of the bottom toolbar.
+
 ## 3.0.0
 
 The 3.0.0 version has standardized and optimized the API and Event, simplifying the usage of most APIs.

@@ -1,11 +1,12 @@
 
 
-# Live Streaming Kit
+# [Live Streaming Kit](https://www.youtube.com/embed/yt3NkjIBoMA)
+
+**Live Streaming Kit** is a feature-rich livestream component, which enables you to build custom live streaming into your apps with only a few lines of code. 
+
+And you can also customize various live streaming features by configuring parameters.
 
 >
-> **Live Streaming Kit** is a feature-rich livestream component, which enables you to build custom live streaming into your apps with only a few lines of code. And you can also customize various live streaming features by configuring parameters.
->
-> [YouTube](https://www.youtube.com/embed/yt3NkjIBoMA)
 > <div style="position: relative; width: 100%; 
 >   padding-top: calc(100% * 720 / 1280); 
 >   border: 2px black solid;">
@@ -24,6 +25,14 @@
 >   </iframe>
 > </div>
 >
+
+> 
+>
+>If you find this package helpful, please help by giving it a 👍 on pub.dev! ↗️
+>
+>Your support and encouragement motivate us to continue improving and maintaining this package.
+>
+>Thank you for recognizing our work! 👏👏
 
 ---
 

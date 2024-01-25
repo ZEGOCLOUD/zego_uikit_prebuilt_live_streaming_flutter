@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 // Project imports:
 import 'layout.dart';
 
-class ZegoPKV2GridMixerLayout extends ZegoPKMixerLayout {
+class ZegoPKV2GridMixerLayout extends ZegoLiveStreamingPKMixerLayout {
   final widthFactor = 160.0;
   final heightFactor = 180.0;
 

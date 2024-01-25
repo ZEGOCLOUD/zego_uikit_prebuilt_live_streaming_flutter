@@ -27,17 +27,18 @@ class ZegoUIKitPrebuiltLiveStreamingPKServiceMixer {
   /// host is muted or not
   var mutedUsersNotifier = ValueNotifier<List<String>>([]);
 
-  ZegoPKMixerLayout? _layout;
+  ZegoLiveStreamingPKMixerLayout? _layout;
 
   String get mixerID => _mixerID;
 
-  ZegoPKMixerLayout get layout => _layout ?? ZegoPKMixerDefaultLayout();
+  ZegoLiveStreamingPKMixerLayout get layout =>
+      _layout ?? ZegoLiveStreamingPKMixerDefaultLayout();
 
   bool isMuted(String targetHostID) =>
       mutedUsersNotifier.value.contains(targetHostID);
 
   void init({
-    required ZegoPKMixerLayout? layout,
+    required ZegoLiveStreamingPKMixerLayout? layout,
   }) async {
     if (_init) {
       return;

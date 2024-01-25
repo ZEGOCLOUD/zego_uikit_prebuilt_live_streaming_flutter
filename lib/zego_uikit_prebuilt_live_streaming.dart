@@ -7,7 +7,7 @@ export 'src/config.dart';
 export 'src/config.defines.dart';
 export 'src/controller.dart';
 export 'src/defines.dart';
-export 'src/deprecated.dart';
+export 'src/deprecated/deprecated.dart';
 export 'src/events.dart';
 export 'src/events.defines.dart';
 export 'src/inner_text.dart';

@@ -5,12 +5,13 @@ import 'package:flutter/services.dart';
 // Project imports:
 import 'layout.dart';
 
-class ZegoPKPreferGridMixerLayout extends ZegoPKMixerLayout {
+class ZegoLiveStreamingPKPreferGridMixerLayout
+    extends ZegoLiveStreamingPKMixerLayout {
   @override
   Size getResolution() {
     return const Size(
-      zegoPK2MixerCanvasWidth,
-      zegoPK2MixerCanvasHeight,
+      zegoLiveStreamingPK2MixerCanvasWidth,
+      zegoLiveStreamingPK2MixerCanvasHeight,
     );
   }
 

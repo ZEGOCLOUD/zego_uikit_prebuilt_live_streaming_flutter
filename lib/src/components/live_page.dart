@@ -160,45 +160,43 @@ class ZegoLivePageState extends State<ZegoLivePage>
           minTextAdapt: true,
           splitScreenMode: true,
           builder: (context, child) {
-            return ZegoInputBoardWrapper(
-              child: clickListener(
-                child: LayoutBuilder(builder: (context, constraints) {
-                  return ValueListenableBuilder<ZegoUIKitUser?>(
-                      valueListenable: widget.hostManager.notifier,
-                      builder: (context, host, _) {
-                        return Stack(
-                          children: [
-                            ...background(
-                              constraints.maxWidth,
-                              constraints.maxHeight,
-                            ),
-                            ZegoLivePageCentralAudioVideoView(
-                              config: widget.config,
-                              hostManager: widget.hostManager,
-                              liveStatusManager: widget.liveStatusManager,
-                              popUpManager: widget.popUpManager,
-                              plugins: widget.plugins,
-                              constraints: constraints,
-                            ),
-                            ZegoLivePageSurface(
-                              config: widget.config,
-                              events: widget.events,
-                              defaultEndAction: widget.defaultEndAction,
-                              defaultLeaveConfirmationAction:
-                                  widget.defaultLeaveConfirmationAction,
-                              hostManager: widget.hostManager,
-                              liveStatusManager: widget.liveStatusManager,
-                              liveDurationManager: widget.liveDurationManager,
-                              popUpManager: widget.popUpManager,
-                              connectManager:
-                                  ZegoLiveStreamingManagers().connectManager!,
-                              plugins: widget.plugins,
-                            ),
-                          ],
-                        );
-                      });
-                }),
-              ),
+            return clickListener(
+              child: LayoutBuilder(builder: (context, constraints) {
+                return ValueListenableBuilder<ZegoUIKitUser?>(
+                    valueListenable: widget.hostManager.notifier,
+                    builder: (context, host, _) {
+                      return Stack(
+                        children: [
+                          ...background(
+                            constraints.maxWidth,
+                            constraints.maxHeight,
+                          ),
+                          ZegoLivePageCentralAudioVideoView(
+                            config: widget.config,
+                            hostManager: widget.hostManager,
+                            liveStatusManager: widget.liveStatusManager,
+                            popUpManager: widget.popUpManager,
+                            plugins: widget.plugins,
+                            constraints: constraints,
+                          ),
+                          ZegoLivePageSurface(
+                            config: widget.config,
+                            events: widget.events,
+                            defaultEndAction: widget.defaultEndAction,
+                            defaultLeaveConfirmationAction:
+                                widget.defaultLeaveConfirmationAction,
+                            hostManager: widget.hostManager,
+                            liveStatusManager: widget.liveStatusManager,
+                            liveDurationManager: widget.liveDurationManager,
+                            popUpManager: widget.popUpManager,
+                            connectManager:
+                                ZegoLiveStreamingManagers().connectManager!,
+                            plugins: widget.plugins,
+                          ),
+                        ],
+                      );
+                    });
+              }),
             );
           },
         ),

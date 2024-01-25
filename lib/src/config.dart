@@ -951,7 +951,7 @@ class ZegoLiveStreamingPKBattleConfig {
   double? pKBattleViewTopPadding;
 
   /// you can custom coordinates and modify the PK layout.
-  ZegoPKMixerLayout? mixerLayout;
+  ZegoLiveStreamingPKMixerLayout? mixerLayout;
 
   /// When the connected host gets offline due to exceptions, SDK defaults to show "Host is reconnecting".
   /// To customize the content that displays when the connected host gets offline.

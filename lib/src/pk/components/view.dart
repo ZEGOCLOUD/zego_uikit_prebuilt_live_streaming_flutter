@@ -43,8 +43,9 @@ class ZegoLiveStreamingPKV2View extends StatefulWidget {
 }
 
 class ZegoLiveStreamingPKV2ViewState extends State<ZegoLiveStreamingPKV2View> {
-  ZegoPKMixerLayout get mixerLayout =>
-      widget.config.pkBattle.mixerLayout ?? ZegoPKMixerDefaultLayout();
+  ZegoLiveStreamingPKMixerLayout get mixerLayout =>
+      widget.config.pkBattle.mixerLayout ??
+      ZegoLiveStreamingPKMixerDefaultLayout();
 
   @override
   Widget build(BuildContext context) {
@@ -55,8 +56,9 @@ class ZegoLiveStreamingPKV2ViewState extends State<ZegoLiveStreamingPKV2View> {
             ZegoUIKitPrebuiltLiveStreamingPK.instance.connectedPKHostsNotifier,
         builder: (context, __, _) {
           final pkHosts = List<ZegoLiveStreamingPKUser>.from(
-              ZegoUIKitPrebuiltLiveStreamingPK
-                  .instance.connectedPKHostsNotifier.value);
+            ZegoUIKitPrebuiltLiveStreamingPK
+                .instance.connectedPKHostsNotifier.value,
+          );
 
           final mixerLayoutResolution = mixerLayout.getResolution();
 

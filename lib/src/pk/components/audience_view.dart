@@ -24,7 +24,7 @@ class ZegoLiveStreamingPKAudienceView extends StatefulWidget {
   }) : super(key: key);
 
   final String mixerStreamID;
-  final ZegoPKMixerLayout mixerLayout;
+  final ZegoLiveStreamingPKMixerLayout mixerLayout;
   final List<ZegoLiveStreamingPKUser> hosts;
 
   final ZegoUIKitPrebuiltLiveStreamingConfig config;

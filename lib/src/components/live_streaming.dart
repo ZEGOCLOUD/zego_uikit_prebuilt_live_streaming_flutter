@@ -112,7 +112,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     );
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
-      log('version: zego_uikit_prebuilt_live_streaming: 3.0.0; $version');
+      log('version: zego_uikit_prebuilt_live_streaming: 3.0.3; $version');
     });
 
     _eventListener = ZegoUIKitLiveStreamingEventListener(widget.events);

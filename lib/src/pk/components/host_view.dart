@@ -21,7 +21,7 @@ class ZegoLiveStreamingPKHostView extends StatefulWidget {
     this.avatarConfig,
   }) : super(key: key);
 
-  final ZegoPKMixerLayout mixerLayout;
+  final ZegoLiveStreamingPKMixerLayout mixerLayout;
   final List<ZegoLiveStreamingPKUser> hosts;
 
   final ZegoUIKitPrebuiltLiveStreamingConfig config;
