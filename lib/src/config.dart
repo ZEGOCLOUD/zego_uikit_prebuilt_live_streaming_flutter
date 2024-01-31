@@ -109,7 +109,8 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   bool useSpeakerWhenJoining;
 
   /// whether to enable the camera by default when you be co-host, the default value is true
-  bool turnOnCameraWhenCohosted;
+  /// Every time you become a co-host again, it will re-read this configuration to check if enable the camera
+  bool Function()? turnOnCameraWhenCohosted;
 
   /// controls whether to automatically stop co-hosting when both the camera and microphone are turned off, the default value is false.
   ///
@@ -240,7 +241,6 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         turnOnCameraWhenJoining = true,
         turnOnMicrophoneWhenJoining = true,
         useSpeakerWhenJoining = true,
-        turnOnCameraWhenCohosted = true,
         stopCoHostingWhenMicCameraOff = false,
         disableCoHostInvitationReceivedDialog = false,
         markAsLargeRoom = false,
@@ -274,7 +274,11 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         ),
         preview = ZegoLiveStreamingPreviewConfig(),
         pkBattle = ZegoLiveStreamingPKBattleConfig(),
-        duration = ZegoLiveStreamingDurationConfig();
+        duration = ZegoLiveStreamingDurationConfig() {
+    turnOnCameraWhenCohosted = () {
+      return true;
+    };
+  }
 
   /// Default initialization parameters for the audience.
   ///
@@ -293,7 +297,6 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         turnOnCameraWhenJoining = false,
         turnOnMicrophoneWhenJoining = false,
         useSpeakerWhenJoining = true,
-        turnOnCameraWhenCohosted = true,
         stopCoHostingWhenMicCameraOff = false,
         disableCoHostInvitationReceivedDialog = false,
         markAsLargeRoom = false,
@@ -320,13 +323,16 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         innerText = ZegoInnerText(),
         preview = ZegoLiveStreamingPreviewConfig(),
         pkBattle = ZegoLiveStreamingPKBattleConfig(),
-        duration = ZegoLiveStreamingDurationConfig();
+        duration = ZegoLiveStreamingDurationConfig() {
+    turnOnCameraWhenCohosted = () {
+      return true;
+    };
+  }
 
   ZegoUIKitPrebuiltLiveStreamingConfig({
     this.turnOnCameraWhenJoining = true,
     this.turnOnMicrophoneWhenJoining = true,
     this.useSpeakerWhenJoining = true,
-    this.turnOnCameraWhenCohosted = true,
     this.stopCoHostingWhenMicCameraOff = false,
     this.disableCoHostInvitationReceivedDialog = false,
     this.markAsLargeRoom = false,
@@ -342,6 +348,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
     this.beauty,
     this.swiping,
     this.avatarBuilder,
+    bool Function()? turnOnCameraWhenCohosted,
     ZegoInnerText? translationText,
     ZegoUIKitVideoConfig? video,
     ZegoLiveStreamingAudioVideoViewConfig? audioVideoView,
@@ -369,6 +376,11 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         preview = preview ?? ZegoLiveStreamingPreviewConfig(),
         pkBattle = pkBattle ?? ZegoLiveStreamingPKBattleConfig(),
         duration = duration ?? ZegoLiveStreamingDurationConfig() {
+    this.turnOnCameraWhenCohosted = turnOnCameraWhenCohosted ??
+        () {
+          return true;
+        };
+
     layout ??= ZegoLayout.pictureInPicture();
   }
 }

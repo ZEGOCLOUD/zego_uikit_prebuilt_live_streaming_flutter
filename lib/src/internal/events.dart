@@ -7,11 +7,11 @@ import 'package:zego_uikit/zego_uikit.dart';
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
 
-class ZegoUIKitLiveStreamingEventListener {
+class ZegoLiveStreamingEventListener {
   final ZegoUIKitPrebuiltLiveStreamingEvents? events;
   final List<StreamSubscription<dynamic>?> _subscriptions = [];
 
-  ZegoUIKitLiveStreamingEventListener(this.events);
+  ZegoLiveStreamingEventListener(this.events);
 
   void init() {
     _subscriptions
@@ -55,28 +55,28 @@ class ZegoUIKitLiveStreamingEventListener {
 
   void _onUserJoin(List<ZegoUIKitUser> users) {
     for (var user in users) {
-      events?.user?.onEnter?.call(user);
+      events?.user.onEnter?.call(user);
     }
   }
 
   void _onUserLeave(List<ZegoUIKitUser> users) {
     for (var user in users) {
-      events?.user?.onLeave?.call(user);
+      events?.user.onLeave?.call(user);
     }
   }
 
   void _onRoomStateChanged() {
-    events?.room?.onStateChanged?.call(ZegoUIKit().getRoomStateStream().value);
+    events?.room.onStateChanged?.call(ZegoUIKit().getRoomStateStream().value);
   }
 
   void _onCameraStateChanged() {
-    events?.audioVideo?.onCameraStateChanged?.call(
+    events?.audioVideo.onCameraStateChanged?.call(
       ZegoUIKit().getCameraStateNotifier(ZegoUIKit().getLocalUser().id).value,
     );
   }
 
   void _onMicrophoneStateChanged() {
-    events?.audioVideo?.onMicrophoneStateChanged?.call(
+    events?.audioVideo.onMicrophoneStateChanged?.call(
       ZegoUIKit()
           .getMicrophoneStateNotifier(ZegoUIKit().getLocalUser().id)
           .value,
@@ -84,7 +84,7 @@ class ZegoUIKitLiveStreamingEventListener {
   }
 
   void _onFrontFacingCameraStateChanged() {
-    events?.audioVideo?.onFrontFacingCameraStateChanged?.call(
+    events?.audioVideo.onFrontFacingCameraStateChanged?.call(
       ZegoUIKit()
           .getUseFrontFacingCameraStateNotifier(ZegoUIKit().getLocalUser().id)
           .value,
@@ -92,7 +92,7 @@ class ZegoUIKitLiveStreamingEventListener {
   }
 
   void _onAudioOutputChanged() {
-    events?.audioVideo?.onAudioOutputChanged?.call(
+    events?.audioVideo.onAudioOutputChanged?.call(
       ZegoUIKit()
           .getAudioOutputDeviceNotifier(ZegoUIKit().getLocalUser().id)
           .value,

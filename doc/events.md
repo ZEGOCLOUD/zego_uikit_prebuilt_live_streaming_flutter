@@ -336,7 +336,7 @@ the user left the chat room while it was in a normal state (i.e., not minimized)
 >ZegoUIKitPrebuiltLiveStreaming(
 >   ...
 >   events: ZegoUIKitPrebuiltLiveStreamingEvents(
->       user: ZegoLiveStreamingUserEvents(
+>       user: ZegoLiveStreamingRoomEvents(
 >           onStateChanged: (state) {
 >               ...
 >           },

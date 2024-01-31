@@ -152,11 +152,15 @@ class ZegoLiveStreamingInternalMiniOverlayMachine {
         .private
         .uninitByPrebuilt();
     ZegoUIKitPrebuiltLiveStreamingController()
-        .swiping
+        .audioVideo
         .private
         .uninitByPrebuilt();
     ZegoUIKitPrebuiltLiveStreamingController()
         .minimize
+        .private
+        .uninitByPrebuilt();
+    ZegoUIKitPrebuiltLiveStreamingController()
+        .swiping
         .private
         .uninitByPrebuilt();
   }

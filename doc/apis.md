@@ -1,5 +1,6 @@
 
 - [ZegoUIKitPrebuiltLiveStreaming](#zegouikitprebuiltlivestreaming)
+- [ZegoUIKitPrebuiltLiveStreamingConfig](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoUIKitPrebuiltLiveStreamingConfig-class.html)
 - [ZegoUIKitPrebuiltLiveStreamingController](#zegouikitprebuiltlivestreamingcontroller)
   - [leave](#leave)
   - [pk](#pk)
@@ -44,6 +45,21 @@
   - [screenSharing](#screensharing)
     - [viewController](#viewcontroller)
     - [showViewInFullscreenMode](#showviewinfullscreenmode)
+  - [audioVideo](#audiovideo)
+    - [microphone](#microphone)
+      - [localState](#localstate)
+      - [localStateNotifier](#localstatenotifier)
+      - [state](#state)
+      - [stateNotifier](#statenotifier)
+      - [turnOn](#turnon)
+      - [switchState](#switchstate)
+    - [camera](#camera)
+      - [localState](#localstate-2)
+      - [localStateNotifier](#localstatenotifier-2)
+      - [state](#state-2)
+      - [stateNotifier](#statenotifier-2)
+      - [turnOn](#turnon-2)
+      - [switchState](#switchstate-2)
   - [room](#room)
     - [property](#property)
       - [updateProperty/updateProperties](#updatepropertyupdateproperties)
@@ -765,15 +781,160 @@ messages that already exist in the room.
 >
 > This function is used to specify whether a certain user enters or exits full-screen mode during screen sharing.
 >
-> You need to provide the user's ID [userID] to determine which user to perform the operation on.
+> You need to provide the user's ID `userID` to determine which user to perform the operation on.
 >
-> By using a boolean value [isFullscreen], you can specify whether the user enters or exits full-screen mode.
+> By using a boolean value `isFullscreen`, you can specify whether the user enters or exits full-screen mode.
 >
 > - function prototype:
 >
 > ```dart
 > void showViewInFullscreenMode(String userID, bool isFullscreen)
 > ```
+
+# audioVideo
+
+> APIs related to audio video
+
+## microphone
+
+> microphone series APIs
+
+### localState
+
+>
+> microphone state of local user
+>
+> - function prototype:
+>
+> ```dart
+> bool get localState
+> ```
+
+### localStateNotifier
+
+>
+> microphone state notifier of local user
+>
+> - function prototype:
+>
+> ```dart
+> ValueNotifier<bool> get localStateNotifier
+> ```
+
+### state
+
+>
+> microphone state of `userID`
+>
+> - function prototype:
+>
+> ```dart
+> bool state(String userID)
+> ```
+
+### stateNotifier
+
+>
+> microphone state notifier of `userID`
+>
+> - function prototype:
+>
+> ```dart
+> ValueNotifier<bool> stateNotifier(String userID)
+> ```
+
+### turnOn
+
+>
+> turn on/off `userID` microphone, if `userID` is empty, then it refers to local user
+>
+> - function prototype:
+>
+> ```dart
+> void turnOn(bool isOn, {String? userID})
+> ```
+
+### switchState
+
+>
+> switch `userID` microphone state, if `userID` is empty, then it refers to local user
+>
+> - function prototype:
+>
+> ```dart
+> void switchState({String? userID})
+> ```
+
+## camera
+
+> camera series APIs
+
+### localState
+
+>
+> camera state of local user
+>
+> - function prototype:
+>
+> ```dart
+> bool get localState
+> ```
+
+### localStateNotifier
+
+>
+> camera state notifier of local user
+>
+> - function prototype:
+>
+> ```dart
+> ValueNotifier<bool> get localStateNotifier
+> ```
+
+### state
+
+>
+> camera state of `userID`
+>
+> - function prototype:
+>
+> ```dart
+> bool state(String userID)
+> ```
+
+### stateNotifier
+
+>
+> camera state notifier of `userID`
+>
+> - function prototype:
+>
+> ```dart
+> ValueNotifier<bool> stateNotifier(String userID)
+> ```
+
+### turnOn
+
+>
+> turn on/off `userID` camera, if `userID` is empty, then it refers to local user
+>
+> - function prototype:
+>
+> ```dart
+> void turnOn(bool isOn, {String? userID})
+> ```
+
+### switchState
+
+>
+> void switchState({String? userID})
+>
+> - function prototype:
+>
+> ```dart
+> switch `userID` camera state, if `userID` is empty, then it refers to local user
+> ```
+
 
 ## room
 
@@ -854,7 +1015,7 @@ messages that already exist in the room.
 
 #### sendCommand
 
-> 
+>
 > send room command
 
 >

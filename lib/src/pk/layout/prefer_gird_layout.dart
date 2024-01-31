@@ -10,8 +10,8 @@ class ZegoLiveStreamingPKPreferGridMixerLayout
   @override
   Size getResolution() {
     return const Size(
-      zegoLiveStreamingPK2MixerCanvasWidth,
-      zegoLiveStreamingPK2MixerCanvasHeight,
+      zegoLiveStreamingPKMixerCanvasWidth,
+      zegoLiveStreamingPKMixerCanvasHeight,
     );
   }
 

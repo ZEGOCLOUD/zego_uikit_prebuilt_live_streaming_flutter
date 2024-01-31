@@ -1,5 +1,35 @@
+## 3.1.6
+
+- Update documents
+
+## 3.1.5
+
+- Update documents
+
+## 3.1.4
+
+- Update documents
+
+## 3.1.3
+
+- Update documents
+
+## 3.1.2
+
+💥 [breaking changes](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/topics/Migration:%20v3.0-topic.html#312)
+- Modify type of `turnOnCameraWhenCohosted` from **bool** to `bool Function()?`, supporting the option for attendees to become co-hosts without automatically turning on the camera
+
+## 3.1.1
+
+- Update documents
+
+## 3.1.0
+
+- add `audioVideo` series APIs in ZegoUIKitPrebuiltLiveStreamingController 
+
 ## 3.0.3
 
+💥 [breaking changes](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/topics/Migration:%20v3.0-topic.html#303)
 - Update canvas size of pk layout 
 
 ## 3.0.2
@@ -16,7 +46,7 @@ The 3.0.0 version has standardized and optimized the API and Event, simplifying 
 
 Most of the changes involve modifications to the calling path, Most of the changes involve modifications to the calling path, such as changing from `ZegoUIKitPrebuiltLiveStreamingController().isMinimizing()` to `ZegoUIKitPrebuiltLiveStreamingController().minimize.isMinimizing`.
 
-💥 [breaking changes](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/topics/Migration:%20from%202.x%20to%203.0-topic.html)
+💥 [breaking changes](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/topics/Migration:%20v3.0-topic.html#30)
 
 - Support quick quit in minimize page
 - Support user/room/audioVideo series events

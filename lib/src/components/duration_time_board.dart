@@ -156,7 +156,7 @@ class CallDurationTimeBoardState extends State<LiveDurationTimeBoard> {
     durationTimer?.cancel();
     durationTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       durationNotifier.value = beginDuration! + Duration(seconds: timer.tick);
-      widget.events.onUpdate?.call(durationNotifier.value);
+      widget.events.onUpdated?.call(durationNotifier.value);
     });
   }
 }

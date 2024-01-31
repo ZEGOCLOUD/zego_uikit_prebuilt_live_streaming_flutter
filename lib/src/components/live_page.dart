@@ -398,7 +398,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
     }
 
     final canCameraTurnOnByOthers = await widget
-            .events.audioVideo?.onCameraTurnOnByOthersConfirmation
+            .events.audioVideo.onCameraTurnOnByOthersConfirmation
             ?.call(context) ??
         false;
     ZegoLoggerService.logInfo(
@@ -430,7 +430,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
     }
 
     final canMicrophoneTurnOnByOthers = await widget
-            .events.audioVideo?.onMicrophoneTurnOnByOthersConfirmation
+            .events.audioVideo.onMicrophoneTurnOnByOthersConfirmation
             ?.call(context) ??
         false;
     ZegoLoggerService.logInfo(

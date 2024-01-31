@@ -158,7 +158,9 @@ class ZegoLiveConnectManager {
         popUpManager: popUpManager,
         kickOutNotifier: kickOutNotifier,
       ).then((value) {
-        ZegoUIKit().turnCameraOn(config.turnOnCameraWhenCohosted);
+        ZegoUIKit().turnCameraOn(
+          config.turnOnCameraWhenCohosted?.call() ?? true,
+        );
         ZegoUIKit().turnMicrophoneOn(true);
 
         updateAudienceConnectState(
@@ -378,7 +380,7 @@ class ZegoLiveConnectManager {
 
   List<Permission> getCoHostPermissions() {
     final permissions = <Permission>[];
-    if (config.turnOnCameraWhenCohosted) {
+    if (config.turnOnCameraWhenCohosted?.call() ?? true) {
       permissions.add(Permission.camera);
     }
 
@@ -584,7 +586,9 @@ class ZegoLiveConnectManager {
         popUpManager: popUpManager,
         kickOutNotifier: kickOutNotifier,
       ).then((value) {
-        ZegoUIKit().turnCameraOn(config.turnOnCameraWhenCohosted);
+        ZegoUIKit().turnCameraOn(
+          config.turnOnCameraWhenCohosted?.call() ?? true,
+        );
         ZegoUIKit().turnMicrophoneOn(true);
 
         updateAudienceConnectState(
@@ -807,7 +811,9 @@ class ZegoLiveConnectManager {
       case ZegoLiveStreamingAudienceConnectState.connecting:
         break;
       case ZegoLiveStreamingAudienceConnectState.connected:
-        ZegoUIKit().turnCameraOn(config.turnOnCameraWhenCohosted);
+        ZegoUIKit().turnCameraOn(
+          config.turnOnCameraWhenCohosted?.call() ?? true,
+        );
         ZegoUIKit().turnMicrophoneOn(true);
 
         ZegoUIKit()

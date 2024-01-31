@@ -19,9 +19,8 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/swiping/live_streaming_sw
 ///
 /// {@category APIs}
 /// {@category Events}
-/// {@category Configs}
-/// {@category Advances}
-/// {@category Migration: from 2.x to 3.0}
+/// {@category Migration: v3.0}
+///
 class ZegoUIKitPrebuiltLiveStreaming extends StatefulWidget {
   const ZegoUIKitPrebuiltLiveStreaming({
     Key? key,

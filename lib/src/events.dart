@@ -12,25 +12,30 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/pk/core/event/defines.dar
 /// You can listen to events that you are interested in here, such as Co-hosting
 class ZegoUIKitPrebuiltLiveStreamingEvents {
   /// events about user
-  ZegoLiveStreamingUserEvents? user;
+  ZegoLiveStreamingUserEvents user;
 
   /// events about room
-  ZegoLiveStreamingRoomEvents? room;
+  ZegoLiveStreamingRoomEvents room;
 
   /// events about audio video
-  ZegoLiveStreamingAudioVideoEvents? audioVideo;
+  ZegoLiveStreamingAudioVideoEvents audioVideo;
 
+  /// events about coHost
   ZegoLiveStreamingCoHostEvents coHost;
 
-  /// pk events
+  /// events about pk
   ZegoLiveStreamingPKEvents pk;
 
+  /// events about top menu bar
   ZegoLiveStreamingTopMenuBarEvents topMenuBar;
 
+  /// events about member list
   ZegoLiveStreamingMemberListEvents memberList;
 
+  /// events about in-room message
   ZegoLiveStreamingInRoomMessageEvents inRoomMessage;
 
+  /// events about duration
   ZegoLiveStreamingDurationEvents duration;
 
   /// Confirmation callback method before leaving the live streaming.
@@ -72,8 +77,25 @@ class ZegoUIKitPrebuiltLiveStreamingEvents {
   /// The [ZegoLiveStreamingEndEvent.isFromMinimizing] it means that the user left the chat room while it was in a minimized state.
   /// You **can not** return to the previous page while it was **in a minimized state**!!!
   /// On the other hand, if the value of the parameter is false, it means that the user left the chat room while it was in a normal state (i.e., not minimized).
+  ///
+  /// Sample Code:
+  ///
+  /// ``` dart
+  /// onEnded: (
+  ///     ZegoLiveStreamingEndEvent event,
+  ///     /// defaultAction to return to the previous page
+  ///     Future<bool> Function() defaultAction,
+  /// ) {
+  ///   debugPrint('onEnded, do whatever you want');
+  ///
+  ///   /// you can call this defaultAction to return to the previous page,
+  ///   return defaultAction.call();
+  /// }
+  /// ```
   void Function(
     ZegoLiveStreamingEndEvent event,
+
+    /// defaultAction to return to the previous page
     VoidCallback defaultAction,
   )? onEnded;
 
@@ -540,7 +562,7 @@ class ZegoLiveStreamingInRoomMessageEvents {
 
 class ZegoLiveStreamingDurationEvents {
   ZegoLiveStreamingDurationEvents({
-    this.onUpdate,
+    this.onUpdated,
   });
 
   /// Call timing callback function, called every second.
@@ -553,5 +575,5 @@ class ZegoLiveStreamingDurationEvents {
   ///   }
   /// }
   /// ```
-  void Function(Duration)? onUpdate;
+  void Function(Duration)? onUpdated;
 }

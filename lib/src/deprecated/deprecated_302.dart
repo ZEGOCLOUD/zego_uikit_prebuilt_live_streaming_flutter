@@ -3,7 +3,8 @@ import 'package:zego_uikit_prebuilt_live_streaming/zego_uikit_prebuilt_live_stre
 
 const deprecatedTipsV302 = ', '
     'deprecated since 3.0.2, '
-    'will be removed after 3.1.0';
+    'will be removed after 3.5.0,'
+    'Migrate Guide:https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/topics/Migration:%20v3.0-topic.html#302';
 
 @Deprecated('Use ZegoLiveStreamingPKMixerLayout instead$deprecatedTipsV302')
 typedef ZegoPKMixerLayout = ZegoLiveStreamingPKMixerLayout;

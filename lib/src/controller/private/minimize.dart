@@ -1,16 +1,16 @@
 part of 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 
 /// @nodoc
-mixin ZegoLiveStreamingControllerMinimizePrivate {
-  final _private = ZegoLiveStreamingControllerMinimizePrivateImpl();
+mixin ZegoLiveStreamingControllerMinimizingPrivate {
+  final _private = ZegoLiveStreamingControllerMinimizingPrivateImpl();
 
   /// Don't call that
-  ZegoLiveStreamingControllerMinimizePrivateImpl get private => _private;
+  ZegoLiveStreamingControllerMinimizingPrivateImpl get private => _private;
 }
 
 /// @nodoc
 /// Here are the APIs related to invitation.
-class ZegoLiveStreamingControllerMinimizePrivateImpl {
+class ZegoLiveStreamingControllerMinimizingPrivateImpl {
   ZegoUIKitPrebuiltLiveStreamingData? get minimizeData => _minimizeData;
 
   ZegoUIKitPrebuiltLiveStreamingData? _minimizeData;

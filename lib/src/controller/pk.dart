@@ -2,13 +2,14 @@ part of 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 
 /// @nodoc
 mixin ZegoLiveStreamingControllerPK {
-  final _pkController = ZegoLiveStreamingPKController();
+  final _pkImpl = ZegoLiveStreamingControllerPKImpl();
 
-  ZegoLiveStreamingPKController get pk => _pkController;
+  ZegoLiveStreamingControllerPKImpl get pk => _pkImpl;
 }
 
 /// Here are the APIs related to PK.
-class ZegoLiveStreamingPKController with ZegoLiveStreamingControllerPKPrivate {
+class ZegoLiveStreamingControllerPKImpl
+    with ZegoLiveStreamingControllerPKPrivate {
   /// pk state stream
   ValueNotifier<ZegoLiveStreamingPKBattleState> get stateNotifier =>
       private.pkStateNotifier;

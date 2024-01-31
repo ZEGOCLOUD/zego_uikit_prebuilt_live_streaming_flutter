@@ -33,6 +33,8 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/pk/core/service/defines.d
 import 'package:zego_uikit_prebuilt_live_streaming/src/pk/core/service/services.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/swiping/config.dart';
 
+part 'controller/audio_video.dart';
+
 part 'controller/co.host.dart';
 
 part 'controller/message.dart';
@@ -49,15 +51,17 @@ part 'controller/swiping.dart';
 
 part 'controller/private/private.dart';
 
-part 'controller/private/co.host.private.dart';
+part 'controller/private/audio_video.dart';
 
-part 'controller/private/minimize.private.dart';
+part 'controller/private/co.host.dart';
 
-part 'controller/private/room.private.dart';
+part 'controller/private/minimize.dart';
 
-part 'controller/private/pk.private.dart';
+part 'controller/private/room.dart';
 
-part 'controller/private/swiping.private.dart';
+part 'controller/private/pk.dart';
+
+part 'controller/private/swiping.dart';
 
 /// Used to control the live streaming functionality.
 ///
@@ -75,7 +79,8 @@ class ZegoUIKitPrebuiltLiveStreamingController
         ZegoLiveStreamingControllerScreen,
         ZegoLiveStreamingControllerCoHost,
         ZegoLiveStreamingControllerPK,
-        ZegoLiveStreamingControllerSwiping {
+        ZegoLiveStreamingControllerSwiping,
+        ZegoLiveStreamingControllerAudioVideo {
   factory ZegoUIKitPrebuiltLiveStreamingController() => instance;
 
   /// This function is used to end the Live Streaming.
@@ -95,8 +100,9 @@ class ZegoUIKitPrebuiltLiveStreamingController
       pk.private.uninitByPrebuilt();
       room.private.uninitByPrebuilt();
       coHost.private.uninitByPrebuilt();
-      swiping.private.uninitByPrebuilt();
+      audioVideo.private.uninitByPrebuilt();
       minimize.private.uninitByPrebuilt();
+      swiping.private.uninitByPrebuilt();
     }
 
     return result;

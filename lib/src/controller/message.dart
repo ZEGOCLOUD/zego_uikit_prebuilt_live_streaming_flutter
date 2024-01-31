@@ -2,13 +2,13 @@ part of 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 
 /// @nodoc
 mixin ZegoLiveStreamingControllerMessage {
-  final _messageController = ZegoLiveStreamingMessageController();
+  final _messageImpl = ZegoLiveStreamingControllerMessageImpl();
 
-  ZegoLiveStreamingMessageController get message => _messageController;
+  ZegoLiveStreamingControllerMessageImpl get message => _messageImpl;
 }
 
 /// Here are the APIs related to message.
-class ZegoLiveStreamingMessageController {
+class ZegoLiveStreamingControllerMessageImpl {
   final _enableProperty = ZegoInRoomMessageEnableProperty();
 
   /// sends the chat message

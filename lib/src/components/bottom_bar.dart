@@ -461,7 +461,7 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
     if (widget.config.plugins.isNotEmpty &&
         ZegoLiveStreamingAudienceConnectState.connected ==
             widget.connectManager.audienceLocalConnectStateNotifier.value) {
-      cameraDefaultOn = widget.config.turnOnCameraWhenCohosted;
+      cameraDefaultOn = widget.config.turnOnCameraWhenCohosted?.call() ?? true;
       microphoneDefaultOn = true;
     }
 

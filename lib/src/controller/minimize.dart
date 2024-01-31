@@ -2,15 +2,15 @@ part of 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 
 /// @nodoc
 mixin ZegoLiveStreamingControllerMinimizing {
-  final _minimizingController = ZegoLiveStreamingMinimizingController();
+  final _minimizingImpl = ZegoLiveStreamingControllerMinimizingImpl();
 
-  ZegoLiveStreamingMinimizingController get minimize => _minimizingController;
+  ZegoLiveStreamingControllerMinimizingImpl get minimize => _minimizingImpl;
 }
 
 /// Here are the APIs related to screen sharing.
-class ZegoLiveStreamingMinimizingController
-    with ZegoLiveStreamingControllerMinimizePrivate {
-  /// minimize state
+class ZegoLiveStreamingControllerMinimizingImpl
+    with ZegoLiveStreamingControllerMinimizingPrivate {
+  /// current minimize state
   ZegoLiveStreamingMiniOverlayPageState get state =>
       ZegoLiveStreamingInternalMiniOverlayMachine().state;
 
@@ -18,7 +18,7 @@ class ZegoLiveStreamingMinimizingController
   bool get isMinimizing =>
       ZegoLiveStreamingInternalMiniOverlayMachine().isMinimizing;
 
-  /// restore the ZegoUIKitPrebuiltLiveStreaming from minimize
+  /// restore the [ZegoUIKitPrebuiltLiveStreaming] from minimize
   bool restore(
     BuildContext context, {
     bool rootNavigator = true,
@@ -86,7 +86,7 @@ class ZegoLiveStreamingMinimizingController
     return true;
   }
 
-  /// To minimize the ZegoUIKitPrebuiltLiveStreaming
+  /// To minimize the [ZegoUIKitPrebuiltLiveStreaming]
   bool minimize(
     BuildContext context, {
     bool rootNavigator = true,

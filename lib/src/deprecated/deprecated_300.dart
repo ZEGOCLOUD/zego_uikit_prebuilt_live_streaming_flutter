@@ -6,8 +6,8 @@ import 'package:zego_uikit_prebuilt_live_streaming/zego_uikit_prebuilt_live_stre
 
 const deprecatedTipsV300 = ', '
     'deprecated since 3.0.0, '
-    'will be removed after 3.1.0,'
-    'Migrate Guide:https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/topics/Migration:%20from%202.x%20to%203.0-topic.html';
+    'will be removed after 3.5.0,'
+    'Migrate Guide:https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/topics/Migration:%20v3.0-topic.html';
 
 @Deprecated(
     'use ZegoUIKitPrebuiltLiveStreamingController().minimize instead$deprecatedTipsV300')

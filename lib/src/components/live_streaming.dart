@@ -84,7 +84,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     extends State<ZegoUIKitPrebuiltLiveStreamingPage>
     with WidgetsBindingObserver {
   List<StreamSubscription<dynamic>?> subscriptions = [];
-  ZegoUIKitLiveStreamingEventListener? _eventListener;
+  ZegoLiveStreamingEventListener? _eventListener;
 
   final popUpManager = ZegoPopUpManager();
 
@@ -112,10 +112,10 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     );
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
-      log('version: zego_uikit_prebuilt_live_streaming: 3.0.3; $version');
+      log('version: zego_uikit_prebuilt_live_streaming: 3.1.6; $version');
     });
 
-    _eventListener = ZegoUIKitLiveStreamingEventListener(widget.events);
+    _eventListener = ZegoLiveStreamingEventListener(widget.events);
     _eventListener?.init();
 
     isFromMinimizing = ZegoLiveStreamingMiniOverlayPageState.idle !=
@@ -235,15 +235,22 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     controller.swiping.private.initByPrebuilt(
       swipingConfig: widget.config.swiping,
     );
+    controller.audioVideo.private.initByPrebuilt(
+      config: widget.config,
+    );
     controller.minimize.private.initByPrebuilt(
       minimizeData: minimizeData,
     );
   }
 
   void _uninitControllerByPrebuilt() {
+    controller.private.uninitByPrebuilt();
+    controller.pk.private.uninitByPrebuilt();
+    controller.room.private.uninitByPrebuilt();
     controller.coHost.private.uninitByPrebuilt();
-    controller.swiping.private.uninitByPrebuilt();
+    controller.audioVideo.private.uninitByPrebuilt();
     controller.minimize.private.uninitByPrebuilt();
+    controller.swiping.private.uninitByPrebuilt();
   }
 
   @override
