@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 /// @nodoc
-class ZegoEffectGridItem<T> {
+class ZegoLiveStreamingEffectGridItem<T> {
   String id;
   T effectType;
 
@@ -14,7 +14,7 @@ class ZegoEffectGridItem<T> {
   String iconText;
   VoidCallback onPressed;
 
-  ZegoEffectGridItem({
+  ZegoLiveStreamingEffectGridItem({
     required this.id,
     required this.effectType,
     required this.icon,
@@ -29,7 +29,7 @@ class ZegoEffectGridModel {
   String title;
 
   ValueNotifier<String> selectedID;
-  List<ZegoEffectGridItem<dynamic>> items = [];
+  List<ZegoLiveStreamingEffectGridItem<dynamic>> items = [];
 
   ZegoEffectGridModel({
     required this.title,
@@ -161,7 +161,8 @@ class _ZegoEffectGridState extends State<ZegoEffectGrid> {
     );
   }
 
-  Widget gridItem(ZegoEffectGridItem<dynamic> item, Size buttonSize) {
+  Widget gridItem(
+      ZegoLiveStreamingEffectGridItem<dynamic> item, Size buttonSize) {
     final selectedIconBorderColor =
         widget.selectedIconBorderColor ?? const Color(0xffA653FF);
     final normalIconBorderColor =

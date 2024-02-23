@@ -11,8 +11,8 @@ import 'package:zego_uikit/zego_uikit.dart';
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/effects/beauty_effect_button.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/components/permissions.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/permissions.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
@@ -21,8 +21,8 @@ import 'dart:math' as math; // import this
 
 /// @nodoc
 /// user should be login before page enter
-class ZegoPreviewPage extends StatefulWidget {
-  const ZegoPreviewPage({
+class ZegoLiveStreamingPreviewPage extends StatefulWidget {
+  const ZegoLiveStreamingPreviewPage({
     Key? key,
     required this.appID,
     required this.appSign,
@@ -45,22 +45,24 @@ class ZegoPreviewPage extends StatefulWidget {
 
   final String liveID;
 
-  final ZegoLiveHostManager hostManager;
+  final ZegoLiveStreamingHostManager hostManager;
   final ValueNotifier<bool> startedNotifier;
 
   final ValueNotifier<bool> liveStreamingPageReady;
 
   final ZegoUIKitPrebuiltLiveStreamingConfig config;
 
-  final ZegoPopUpManager popUpManager;
+  final ZegoLiveStreamingPopUpManager popUpManager;
   final ValueNotifier<bool> kickOutNotifier;
 
   @override
-  State<ZegoPreviewPage> createState() => _ZegoPreviewPageState();
+  State<ZegoLiveStreamingPreviewPage> createState() =>
+      _ZegoLiveStreamingPreviewPageState();
 }
 
 /// @nodoc
-class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
+class _ZegoLiveStreamingPreviewPageState
+    extends State<ZegoLiveStreamingPreviewPage> {
   @override
   void initState() {
     super.initState();
@@ -138,8 +140,8 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
         height: height,
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: PrebuiltLiveStreamingImage.assetImage(
-                PrebuiltLiveStreamingIconUrls.background),
+            image: ZegoLiveStreamingImage.assetImage(
+                ZegoLiveStreamingIconUrls.background),
             fit: BoxFit.cover,
           ),
         ),
@@ -176,12 +178,12 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
                         ? Transform(
                             alignment: Alignment.center,
                             transform: Matrix4.rotationY(math.pi),
-                            child: PrebuiltLiveStreamingImage.asset(
-                              PrebuiltLiveStreamingIconUrls.pageBack,
+                            child: ZegoLiveStreamingImage.asset(
+                              ZegoLiveStreamingIconUrls.pageBack,
                             ),
                           )
-                        : PrebuiltLiveStreamingImage.asset(
-                            PrebuiltLiveStreamingIconUrls.pageBack,
+                        : ZegoLiveStreamingImage.asset(
+                            ZegoLiveStreamingIconUrls.pageBack,
                           )),
               ),
               iconSize: iconSize,
@@ -193,8 +195,8 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
               iconSize: iconSize,
               icon: ButtonIcon(
                 icon: widget.config.preview.switchCameraIcon ??
-                    PrebuiltLiveStreamingImage.asset(
-                        PrebuiltLiveStreamingIconUrls.previewFlipCamera),
+                    ZegoLiveStreamingImage.asset(
+                        ZegoLiveStreamingIconUrls.previewFlipCamera),
                 backgroundColor: Colors.transparent,
               ),
               defaultUseFrontFacingCamera: ZegoUIKit()
@@ -224,7 +226,7 @@ class _ZegoPreviewPageState extends State<ZegoPreviewPage> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ZegoBeautyEffectButton(
+            ZegoLiveStreamingBeautyEffectButton(
               translationText: widget.config.innerText,
               rootNavigator: widget.config.rootNavigator,
               effectConfig: widget.config.effect,

@@ -47,7 +47,7 @@ class ZegoLiveStreamingMenuBarExtendButton extends StatelessWidget {
   ///
   /// The index starts from 0, and -1 indicates that the button will be placed after the built-in buttons by default.
   ///
-  /// Definition of built-in buttons: an array of type List<[ZegoMenuBarButtonName]>.
+  /// Definition of built-in buttons: an array of type List<[ZegoLiveStreamingMenuBarButtonName]>.
   ///
   /// Definition of extension buttons: an array of type List<[ZegoLiveStreamingMenuBarExtendButton]>.
   final int index;

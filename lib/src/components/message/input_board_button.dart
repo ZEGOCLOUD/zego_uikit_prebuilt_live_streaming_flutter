@@ -14,17 +14,17 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/inner_text.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
 
 /// @nodoc
-class ZegoInRoomMessageInputBoardButton extends StatefulWidget {
-  final ZegoLiveHostManager hostManager;
+class ZegoLiveStreamingInRoomMessageInputBoardButton extends StatefulWidget {
+  final ZegoLiveStreamingHostManager hostManager;
   final ButtonIcon? enabledIcon;
   final ButtonIcon? disabledIcon;
   final Size? iconSize;
   final Size? buttonSize;
   final Function(int)? onSheetPopUp;
   final Function(int)? onSheetPop;
-  final ZegoInnerText translationText;
+  final ZegoUIKitPrebuiltLiveStreamingInnerText translationText;
 
-  const ZegoInRoomMessageInputBoardButton({
+  const ZegoLiveStreamingInRoomMessageInputBoardButton({
     Key? key,
     required this.hostManager,
     required this.translationText,
@@ -37,15 +37,15 @@ class ZegoInRoomMessageInputBoardButton extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<ZegoInRoomMessageInputBoardButton> createState() =>
-      _ZegoInRoomMessageInputBoardButtonState();
+  State<ZegoLiveStreamingInRoomMessageInputBoardButton> createState() =>
+      _ZegoLiveStreamingInRoomMessageInputBoardButtonState();
 }
 
 /// @nodoc
-class _ZegoInRoomMessageInputBoardButtonState
-    extends State<ZegoInRoomMessageInputBoardButton> {
+class _ZegoLiveStreamingInRoomMessageInputBoardButtonState
+    extends State<ZegoLiveStreamingInRoomMessageInputBoardButton> {
   var isMessageInputting = false;
-  final _enableProperty = ZegoInRoomMessageEnableProperty();
+  final _enableProperty = ZegoLiveStreamingInRoomMessageEnableProperty();
 
   @override
   void initState() {
@@ -74,11 +74,11 @@ class _ZegoInRoomMessageInputBoardButtonState
         final buttonIcon =
             chatLocalEnabled ? widget.enabledIcon : widget.disabledIcon;
         buttonIcon?.icon ??= chatLocalEnabled
-            ? PrebuiltLiveStreamingImage.asset(
-                PrebuiltLiveStreamingIconUrls.im,
+            ? ZegoLiveStreamingImage.asset(
+                ZegoLiveStreamingIconUrls.im,
               )
-            : PrebuiltLiveStreamingImage.asset(
-                PrebuiltLiveStreamingIconUrls.imDisabled,
+            : ZegoLiveStreamingImage.asset(
+                ZegoLiveStreamingIconUrls.imDisabled,
               );
 
         return ZegoTextIconButton(
@@ -93,7 +93,7 @@ class _ZegoInRoomMessageInputBoardButtonState
                     rootNavigator: widget.hostManager.config.rootNavigator,
                   )
                       .push(
-                    ZegoInRoomMessageInputBoard(
+                    ZegoLiveStreamingInRoomMessageInputBoard(
                       translationText: widget.translationText,
                       payloadAttributes: widget
                           .hostManager.config.inRoomMessage.attributes

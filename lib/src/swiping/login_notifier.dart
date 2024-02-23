@@ -8,8 +8,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 /// @nodoc
-class ZegoRoomLoginNotifier {
-  ZegoRoomLoginNotifier({
+class ZegoLiveStreamingSwipingRoomLoginNotifier {
+  ZegoLiveStreamingSwipingRoomLoginNotifier({
     required List<IZegoUIKitPlugin> configPlugins,
   }) : _configPlugins = configPlugins {
     ZegoLoggerService.logInfo(

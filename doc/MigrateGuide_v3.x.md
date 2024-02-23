@@ -1,12 +1,65 @@
 
-- [3.1.2](#312)
+>
+> This document aims to help users understand the APIs changes and feature improvements, and provide a migration guide for the upgrade process.
+>
+> <br />
+>
+> It is an `incompatible change` if marked with `breaking changes`.
+> All remaining changes is compatible and uses the deprecated prompt. Of course, it will also be completely abandoned in the version after a certain period of time.
+>
+> <br />
+>
+> You can run this command in `the root directory of your project` to output warnings and partial error prompts to assist you in finding deprecated parameters/functions or errors after upgrading.
+> ```shell
+> dart analyze | grep zego
+> ```
+
+
+<br />
+<br />
+
+# Versions
+
+- [3.1.7](#317)
+- [3.1.2](#312)  **(💥 breaking changes)**
+- [3.1.0](#310)
 - [3.0.3](#303)
 - [3.0.2](#302)
-- [3.0](#30)
-
+- [3.0](#30)  **(💥 breaking changes)**
 
 <br />
 <br />
+
+
+# 3.1.7
+---
+
+## Introduction
+
+>
+> In this migration guide, we will explain how to upgrade from version 3.1.6 to the latest 3.1.7 version.
+
+## Major Interface Changes
+
+- rename **ZegoInnerText** to `ZegoUIKitPrebuiltLiveStreamingInnerText`
+- rename **ZegoMenuBarButtonName** to `ZegoLiveStreamingMenuBarButtonName`
+- rename **ZegoDialogInfo** to `ZegoLiveStreamingDialogInfo`
+- rename **ZegoStartLiveButtonBuilder** to `ZegoLiveStreamingStartLiveButtonBuilder`
+- rename **ZegoIncomingPKBattleRequestTimeoutEvent** to `ZegoLiveStreamingIncomingPKBattleRequestTimeoutEvent`
+- rename **ZegoIncomingPKBattleRequestCancelledEvent** to `ZegoLiveStreamingIncomingPKBattleRequestCancelledEvent`
+- rename **ZegoOutgoingPKBattleRequestAcceptedEvent** to `ZegoLiveStreamingOutgoingPKBattleRequestAcceptedEvent`
+- rename **ZegoOutgoingPKBattleRequestRejectedEvent** to `ZegoLiveStreamingOutgoingPKBattleRequestRejectedEvent`
+- rename **ZegoOutgoingPKBattleRequestTimeoutEvent** to `ZegoLiveStreamingOutgoingPKBattleRequestTimeoutEvent`
+- rename **ZegoPKBattleEndedEvent** to `ZegoLiveStreamingPKBattleEndedEvent`
+- rename **ZegoPKBattleUserOfflineEvent** to `ZegoLiveStreamingPKBattleUserOfflineEvent`
+- rename **ZegoPKBattleUserQuitEvent** to `ZegoLiveStreamingPKBattleUserQuitEvent`
+
+<br />
+<br />
+<br />
+<br />
+<br />
+
 
 # 3.1.2
 ---
@@ -14,12 +67,11 @@
 ## Introduction
 
 >
-> In this migration guide, we will explain how to upgrade from version 3.1.1 to the latest 3.1.2 version. This document aims to help users understand the interface changes and feature improvements,
-> and provide a migration guide for the upgrade process.
+> In this migration guide, we will explain how to upgrade from version 3.1.1 to the latest 3.1.2 version.
 
 ## Major Interface Changes
 
-- ZegoUIKitPrebuiltLiveStreamingConfig
+- ZegoUIKitPrebuiltLiveStreamingConfig  **(💥 breaking changes)**
 
 type of `turnOnCameraWhenCohosted`, change from **bool** to `bool Function()?`.
 
@@ -68,19 +120,36 @@ type of `turnOnCameraWhenCohosted`, change from **bool** to `bool Function()?`.
 <br />
 <br />
 
+# 3.1.0
+---
+
+## Introduction
+
+>
+> In this migration guide, we will explain how to upgrade from version 3.0.3 to the latest 3.1.0 version.
+
+## Major Interface Changes
+
+- rename **ZegoLiveStreamingPKController** to `ZegoLiveStreamingControllerPKImpl`
+
+<br />
+<br />
+<br />
+<br />
+<br />
+
 # 3.0.3
 ---
 
 ## Introduction
 
 >
-> In this migration guide, we will explain how to upgrade from version 3.0.2 to the latest 3.0.3 version. This document aims to help users understand the interface changes and feature improvements,
-> and provide a migration guide for the upgrade process.
+> In this migration guide, we will explain how to upgrade from version 3.0.2 to the latest 3.0.3 version.
 
 ## Major Interface Changes
 
 - ZegoLiveStreamingDurationEvents
-  - rename **onUpdate** to `onUpdated`
+    - rename **onUpdate** to `onUpdated`
 
 <br />
 <br />
@@ -94,8 +163,7 @@ type of `turnOnCameraWhenCohosted`, change from **bool** to `bool Function()?`.
 ## Introduction
 
 >
-> In this migration guide, we will explain how to upgrade from version 3.0.1 to the latest 3.0.2 version. This document aims to help users understand the interface changes and feature improvements,
-> and provide a migration guide for the upgrade process.
+> In this migration guide, we will explain how to upgrade from version 3.0.1 to the latest 3.0.2 version.
 
 ## Major Interface Changes
 
@@ -128,47 +196,47 @@ type of `turnOnCameraWhenCohosted`, change from **bool** to `bool Function()?`.
 - [ZegoUIKitPrebuiltLiveStreamingController](#zegouikitprebuiltlivestreamingcontroller)
 
 - ZegoUIKitPrebuiltLiveStreaming
-  - [controller](#zegouikitprebuiltlivestreamingcontroller)
+    - [controller](#zegouikitprebuiltlivestreamingcontroller)
 
 - ZegoUIKitPrebuiltLiveStreamingSwiping
-  - [controller](#zegouikitprebuiltlivestreamingcontroller)
+    - [controller](#zegouikitprebuiltlivestreamingcontroller)
 
 - [ZegoUIKitPrebuiltLiveStreamingEvents](#zegouikitprebuiltlivestreamingevents)
-  - [coHost](#cohost)
+    - [coHost](#cohost)
 
 - [ZegoUIKitPrebuiltLiveStreamingConfig](#zegouikitprebuiltlivestreamingconfig)
-  - [startLiveButtonBuilder](#startlivebuttonbuilder)
-  - [Unified class prefix as "ZegoLiveStreaming"](#unified-class-prefix-as-zegolivestreaming)
-  - [Remove "Config" suffix from the variable names](#removed-config-suffix-from-the-variable-names)
-  - [Move event to ZegoUIKitPrebuiltLiveStreamingEvents](#move-event-to-zegouikitprebuiltlivestreamingevents)
-    - [onLeaveConfirmation](#onleaveconfirmation)
-    - [onLeaveLiveStreaming/onLiveStreamingEnded/onMeRemovedFromRoom](#onleavelivestreamingonlivestreamingendedonmeremovedfromroom)
+    - [startLiveButtonBuilder](#startlivebuttonbuilder)
+    - [Unified class prefix as "ZegoLiveStreaming"](#unified-class-prefix-as-zegolivestreaming)
+    - [Remove "Config" suffix from the variable names](#removed-config-suffix-from-the-variable-names)
+    - [Move event to ZegoUIKitPrebuiltLiveStreamingEvents](#move-event-to-zegouikitprebuiltlivestreamingevents)
+        - [onLeaveConfirmation](#onleaveconfirmation)
+        - [onLeaveLiveStreaming/onLiveStreamingEnded/onMeRemovedFromRoom](#onleavelivestreamingonlivestreamingendedonmeremovedfromroom)
 
 - [PK](#pk)
-  - [ZegoUIKitPrebuiltLiveStreamingPKService](#zegouikitprebuiltlivestreamingpkservice)
+    - [ZegoUIKitPrebuiltLiveStreamingPKService](#zegouikitprebuiltlivestreamingpkservice)
 
 - [ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine](#zegouikitprebuiltlivestreamingminioverlaymachine)
-  - rename **PrebuiltLiveStreamingMiniOverlayPageState** to `ZegoLiveStreamingMiniOverlayPageState`
-  
+    - rename **PrebuiltLiveStreamingMiniOverlayPageState** to `ZegoLiveStreamingMiniOverlayPageState`
+
 - Deprecated Removed
-  - ZegoUIKitPrebuiltLiveStreaming
-    - remove **onDispose**
-    - remove **appDesignSize**
-  - ZegoUIKitPrebuiltLiveStreamingController
-    - move **showScreenSharingViewInFullscreenMode** to `screen.showViewInFullscreenMode`
-    - move **removeCoHost** to `coHost.removeCoHost`
-    - move **makeAudienceCoHost** to `coHost.hostSendCoHostInvitationToAudience`
-  - ZegoUIKitPrebuiltLiveStreamingConfig
-    - rename **inRoomMessageViewConfig** to `inRoomMessageConfig`
-    - rename **translationText** to `innerText`
-    - rename **ZegoInRoomMessageViewConfig** to `ZegoInRoomMessageConfig`
-    - ZegoMemberListConfig
-      - remove **showMicrophoneState**
-      - remove **showCameraState**
-  - ZegoUIKitPrebuiltLiveStreamingConfig
-    - remove **ZegoLiveStreamingPKBattleEvents(PK V1)**
-  - rename **ZegoMiniOverlayPage** to `ZegoUIKitPrebuiltLiveStreamingMiniOverlayPage`
-  - rename **ZegoTranslationText** to `ZegoInnerText`
+    - ZegoUIKitPrebuiltLiveStreaming
+        - remove **onDispose**
+        - remove **appDesignSize**
+    - ZegoUIKitPrebuiltLiveStreamingController
+        - move **showScreenSharingViewInFullscreenMode** to `screen.showViewInFullscreenMode`
+        - move **removeCoHost** to `coHost.removeCoHost`
+        - move **makeAudienceCoHost** to `coHost.hostSendCoHostInvitationToAudience`
+    - ZegoUIKitPrebuiltLiveStreamingConfig
+        - rename **inRoomMessageViewConfig** to `inRoomMessageConfig`
+        - rename **translationText** to `innerText`
+        - rename **ZegoInRoomMessageViewConfig** to `ZegoInRoomMessageConfig`
+        - ZegoMemberListConfig
+            - remove **showMicrophoneState**
+            - remove **showCameraState**
+    - ZegoUIKitPrebuiltLiveStreamingConfig
+        - remove **ZegoLiveStreamingPKBattleEvents(PK V1)**
+    - rename **ZegoMiniOverlayPage** to `ZegoUIKitPrebuiltLiveStreamingMiniOverlayPage`
+    - rename **ZegoTranslationText** to `ZegoInnerText`
 
 ## Introduction
 
@@ -178,9 +246,7 @@ type of `turnOnCameraWhenCohosted`, change from **bool** to `bool Function()?`.
 
 ## Major Interface Changes
 
-
 ### ZegoUIKitPrebuiltLiveStreamingController
-
 
 > In version 2.x, the ZegoUIKitPrebuiltLiveStreamingController required declaring the variable and passing to ZegoUIKitPrebuiltLiveStreaming to be initialized.
 >
@@ -308,6 +374,7 @@ type of `turnOnCameraWhenCohosted`, change from **bool** to `bool Function()?`.
 </details>
 
 #### Unified class prefix as "ZegoLiveStreaming"
+
 >
 > - rename **ZegoPrebuiltAudioVideoViewConfig** to `ZegoLiveStreamingAudioVideoViewConfig`
 > - rename **ZegoTopMenuBarConfig** to `ZegoLiveStreamingTopMenuBarConfig`
@@ -338,20 +405,19 @@ type of `turnOnCameraWhenCohosted`, change from **bool** to `bool Function()?`.
 >- rename **pkBattleConfig** to `pkBattle`
 >- rename **durationConfig** to `duration`
 
-
-#### move event to ZegoUIKitPrebuiltLiveStreamingEvents
+#### move event to ZegoUIKitPrebuiltLiveStreamingEvents  **(💥 breaking changes)**
 
 >
 > - move **onLiveStreamingStateUpdate** from **ZegoUIKitPrebuiltLiveStreamingConfig** to `ZegoUIKitPrebuiltLiveStreamingEvents` and rename to `onStateUpdate`
->- move **onCameraTurnOnByOthersConfirmation** from **ZegoUIKitPrebuiltLiveStreamingConfig** to `ZegoUIKitPrebuiltLiveStreamingEvents.audioVideo`
->- move **onMicrophoneTurnOnByOthersConfirmation** from **ZegoUIKitPrebuiltLiveStreamingConfig** to `ZegoUIKitPrebuiltLiveStreamingEvents.audioVideo`
->
->- move **onHostAvatarClicked** from **ZegoTopMenuBarConfig** to `ZegoUIKitPrebuiltLiveStreamingEvents.topMenuBar`
->- move **onClicked** from **ZegoMemberListConfig** to `ZegoUIKitPrebuiltLiveStreamingEvents.memberList`
->- move **onLocalMessageSend** from **ZegoInRoomMessageConfig** to `ZegoUIKitPrebuiltLiveStreamingEvents.inRoomMessage.onLocalSend`
->- move **onMessageClick** from **ZegoInRoomMessageConfig** to `ZegoUIKitPrebuiltLiveStreamingEvents.inRoomMessage.onClicked`
->- move **onMessageLongPress** from **ZegoInRoomMessageConfig** to `ZegoUIKitPrebuiltLiveStreamingEvents.inRoomMessage.onLongPress`
->- move **onDurationUpdate** from **ZegoLiveDurationConfig** to `ZegoUIKitPrebuiltLiveStreamingEvents.duration.onUpdate`
+> - move **onCameraTurnOnByOthersConfirmation** from **ZegoUIKitPrebuiltLiveStreamingConfig** to `ZegoUIKitPrebuiltLiveStreamingEvents.audioVideo`
+> - move **onMicrophoneTurnOnByOthersConfirmation** from **ZegoUIKitPrebuiltLiveStreamingConfig** to `ZegoUIKitPrebuiltLiveStreamingEvents.audioVideo`
+> 
+> - move **onHostAvatarClicked** from **ZegoTopMenuBarConfig** to `ZegoUIKitPrebuiltLiveStreamingEvents.topMenuBar`
+> - move **onClicked** from **ZegoMemberListConfig** to `ZegoUIKitPrebuiltLiveStreamingEvents.memberList`
+> - move **onLocalMessageSend** from **ZegoInRoomMessageConfig** to `ZegoUIKitPrebuiltLiveStreamingEvents.inRoomMessage.onLocalSend`
+> - move **onMessageClick** from **ZegoInRoomMessageConfig** to `ZegoUIKitPrebuiltLiveStreamingEvents.inRoomMessage.onClicked`
+> - move **onMessageLongPress** from **ZegoInRoomMessageConfig** to `ZegoUIKitPrebuiltLiveStreamingEvents.inRoomMessage.onLongPress`
+> - move **onDurationUpdate** from **ZegoLiveDurationConfig** to `ZegoUIKitPrebuiltLiveStreamingEvents.duration.onUpdate`
 
 
 
@@ -456,7 +522,7 @@ type of `turnOnCameraWhenCohosted`, change from **bool** to `bool Function()?`.
 
 </details>
 
-##### onLeaveConfirmation
+##### onLeaveConfirmation  **(💥 breaking changes)**
 
 >
 > You can use defaultAction.call() to perform the internal default action, which returns to the previous page.
@@ -539,16 +605,20 @@ type of `turnOnCameraWhenCohosted`, change from **bool** to `bool Function()?`.
 
 </details>
 
-##### onLeaveLiveStreaming/onLiveStreamingEnded/onMeRemovedFromRoom
+##### onLeaveLiveStreaming/onLiveStreamingEnded/onMeRemovedFromRoom  **(💥 breaking changes)**
 
 >
-> Due to the fact that all three events indicate the end of a live streaming, they will be consolidated into `ZegoUIKitPrebuiltLiveStreamingEvents.onEnded` and differentiated by the `ZegoLiveStreamingEndEvent.reason`.
+> Due to the fact that all three events indicate the end of a live streaming, they will be consolidated into `ZegoUIKitPrebuiltLiveStreamingEvents.onEnded` and differentiated by
+> the `ZegoLiveStreamingEndEvent.reason`.
 >
 >And you can use `defaultAction.call()` to perform the internal default action, which returns to the previous page.
 >
->- move **onLeaveLiveStreaming** from **ZegoUIKitPrebuiltLiveStreamingConfig** to `ZegoUIKitPrebuiltLiveStreamingEvents.onEnded`(ZegoLiveStreamingEndEvent(reason:ZegoLiveStreamingEndReason.`localLeave`), defaultAction)
->- move **onLiveStreamingEnded** from **ZegoUIKitPrebuiltLiveStreamingConfig** to `ZegoUIKitPrebuiltLiveStreamingEvents.onEnded`(ZegoLiveStreamingEndEvent(reason:ZegoLiveStreamingEndReason.`hostEnd`), defaultAction)
->- move **onMeRemovedFromRoom** from **ZegoUIKitPrebuiltLiveStreamingConfig** to `ZegoUIKitPrebuiltLiveStreamingEvents.onEnded`(ZegoLiveStreamingEndEvent(reason:ZegoLiveStreamingEndReason.`kickOut`), defaultAction)
+>- move **onLeaveLiveStreaming** from **ZegoUIKitPrebuiltLiveStreamingConfig** to `ZegoUIKitPrebuiltLiveStreamingEvents.onEnded`(ZegoLiveStreamingEndEvent(reason:
+   ZegoLiveStreamingEndReason.`localLeave`), defaultAction)
+>- move **onLiveStreamingEnded** from **ZegoUIKitPrebuiltLiveStreamingConfig** to `ZegoUIKitPrebuiltLiveStreamingEvents.onEnded`(ZegoLiveStreamingEndEvent(reason:ZegoLiveStreamingEndReason.`hostEnd`),
+   defaultAction)
+>- move **onMeRemovedFromRoom** from **ZegoUIKitPrebuiltLiveStreamingConfig** to `ZegoUIKitPrebuiltLiveStreamingEvents.onEnded`(ZegoLiveStreamingEndEvent(reason:ZegoLiveStreamingEndReason.`kickOut`),
+   defaultAction)
 
 
 <details>
@@ -666,7 +736,6 @@ type of `turnOnCameraWhenCohosted`, change from **bool** to `bool Function()?`.
 
 </details>
 
-
 ### ZegoUIKitPrebuiltLiveStreamingEvents
 
 #### coHost
@@ -681,7 +750,7 @@ type of `turnOnCameraWhenCohosted`, change from **bool** to `bool Function()?`.
 >- host
 >   - rename **onCoHostRequestReceived** to `onRequestReceived`
 >   - rename **onCoHostRequestCanceled** to `onRequestCanceled`
->   - rename **onCoHostRequestTimeout** to `onRequestTimeout`
+>   - rename **onCoHostRequestTimeout** to `onRequestTimeout` 
 >   - rename **onActionAcceptCoHostRequest** to `onActionAcceptRequest`
 >   - rename **onActionRefuseCoHostRequest** to `onActionRefuseRequest`
 >   - rename **onCoHostInvitationSent** to `onInvitationSent`
@@ -774,7 +843,7 @@ type of `turnOnCameraWhenCohosted`, change from **bool** to `bool Function()?`.
 
 >
 >- rename **ZegoLiveStreamingPKBattleStateV2** to `ZegoLiveStreamingPKBattleState`
-> 
+>
 >- ZegoUIKitPrebuiltLiveStreamingConfig
 >    - rename **ZegoLiveStreamingPKBattleV2Config** to  `ZegoLiveStreamingPKBattleConfig`
 >    - rename **pkBattleV2Config** to `pkBattle`
@@ -853,45 +922,65 @@ type of `turnOnCameraWhenCohosted`, change from **bool** to `bool Function()?`.
 
 </details>
 
-
 #### ZegoUIKitPrebuiltLiveStreamingPKService
 
 >
 > - rename **ZegoUIKitPrebuiltLiveStreamingPKUser** -> `ZegoLiveStreamingPKUser`
 >
-> 
+>
 >If you migrate below version **v2.23**, which will migrate from the old version of two-player PK to the new version of multiplayer PK, please refer to the following:
 >
 >- APIs
 >
->The methods in **ZegoUIKitPrebuiltLiveStreamingPKService** can be replaced with the methods in [`ZegoUIKitPrebuiltLiveStreamingController().pk`](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingPKController-class.html).
+>The methods in **ZegoUIKitPrebuiltLiveStreamingPKService** can be replaced with the methods
+> in [`ZegoUIKitPrebuiltLiveStreamingController().pk`](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingPKController-class.html)
+> .
 >
 >| ZegoUIKitPrebuiltLiveStreamingPKService |ZegoUIKitPrebuiltLiveStreamingController().pk| description |
->|-|-|-|
->|sendPKBattleRequest|[sendRequest](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingPKController/sendRequest.html)|The requestID is the ID of the current PK session.|
->|cancelPKBattleRequest|[cancelRequest](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingPKController/cancelRequest.html)||
->|acceptIncomingPKBattleRequest|[acceptRequest](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingPKController/acceptRequest.html)|The requestID is the event.requestID that you received in the onIncomingRequestReceived event. |
->|rejectIncomingPKBattleRequest|[rejectRequest](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingPKController/rejectRequest.html)|The requestID is the same as the event.requestID that you received in the onIncomingRequestReceived event.|
->|stopPKBattle|[stop](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingPKController/stop.html)|The requestID is the result.requestID returned by the sendRequest function.|
->|muteAnotherHostAudio|[muteAudios](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingPKController/muteAudios.html)||
->|startPKBattleWith|none|After accepting the PK invitation, the interface will automatically switch to the PK screen, and no further action is required.<br><br>If you want the other party to directly enter the PK after the invitation is sent, you can set the isAutoAccept parameter to true in the sendRequest function.|
+> |-|-|-|
+> |sendPKBattleRequest|[sendRequest](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingPKController/sendRequest.html)|The
+> requestID is the ID of the current PK session.|
+> |cancelPKBattleRequest|[cancelRequest](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingPKController/cancelRequest.html)||
 >
-> For example, if you previously used **ZegoUIKitPrebuiltLiveStreamingService().sendPKBattleRequest(hostUserID)** to send a PK invitation, now you should use **ZegoUIKitPrebuiltLiveStreamingController().pk.sendRequest([hostUserID])**.
+|acceptIncomingPKBattleRequest|[acceptRequest](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingPKController/acceptRequest.html)
+|The requestID is the event.requestID that you received in the onIncomingRequestReceived event. |
+>
+|rejectIncomingPKBattleRequest|[rejectRequest](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingPKController/rejectRequest.html)
+|The requestID is the same as the event.requestID that you received in the onIncomingRequestReceived event.|
+> |stopPKBattle|[stop](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingPKController/stop.html)|The requestID is the
+> result.requestID returned by the sendRequest function.|
+> |muteAnotherHostAudio|[muteAudios](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingPKController/muteAudios.html)||
+> |startPKBattleWith|none|After accepting the PK invitation, the interface will automatically switch to the PK screen, and no further action is required.<br><br>If you want the other party to directly
+> enter the PK after the invitation is sent, you can set the isAutoAccept parameter to true in the sendRequest function.|
+>
+> For example, if you previously used **ZegoUIKitPrebuiltLiveStreamingService().sendPKBattleRequest(hostUserID)** to send a PK invitation, now you should use **
+> ZegoUIKitPrebuiltLiveStreamingController().pk.sendRequest([hostUserID])**.
 >
 >- Events
 >
 >The events in **ZegoUIKitPrebuiltLiveStreamingConfig.pkBattleEvents** can be replaced with the events in **ZegoUIKitPrebuiltLiveStreamingEvents.pk**.
 >
 >| ZegoUIKitPrebuiltLiveStreamingConfig.pkBattleEvents |ZegoUIKitPrebuiltLiveStreamingEvents.pk | description |
->|-|-|-|
->|onIncomingRequestReceived|[onIncomingRequestReceived](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingPKEvents/onIncomingRequestReceived.html)|The requestID parameter from the event will be required when using the acceptRequest or rejectRequest functions.|
->|onIncomingRequestCancelled|[onIncomingRequestCancelled](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingPKEvents/onIncomingRequestCancelled.html)||
->|onIncomingRequestTimeout|[onIncomingRequestTimeout](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingPKEvents/onIncomingRequestTimeout.html)||
->|onOutgoingRequestAccepted|[onOutgoingRequestAccepted](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingPKEvents/onOutgoingRequestAccepted.html)||
->|onOutgoingRequestRejected|[onOutgoingRequestRejected](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingPKEvents/onOutgoingRequestRejected.html)||
->|onOutgoingRequestTimeout|[onOutgoingRequestTimeout](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingPKEvents/onOutgoingRequestTimeout.html)||
->|onPKBattleEndedByAnotherHost|[onEnded](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingPKEvents/onEnded.html)||
-
+> |-|-|-|
+>
+|onIncomingRequestReceived|[onIncomingRequestReceived](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingPKEvents/onIncomingRequestReceived.html)
+|The requestID parameter from the event will be required when using the acceptRequest or rejectRequest functions.|
+>
+|onIncomingRequestCancelled|[onIncomingRequestCancelled](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingPKEvents/onIncomingRequestCancelled.html)
+||
+>
+|onIncomingRequestTimeout|[onIncomingRequestTimeout](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingPKEvents/onIncomingRequestTimeout.html)
+||
+>
+|onOutgoingRequestAccepted|[onOutgoingRequestAccepted](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingPKEvents/onOutgoingRequestAccepted.html)
+||
+>
+|onOutgoingRequestRejected|[onOutgoingRequestRejected](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingPKEvents/onOutgoingRequestRejected.html)
+||
+>
+|onOutgoingRequestTimeout|[onOutgoingRequestTimeout](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingPKEvents/onOutgoingRequestTimeout.html)
+||
+> |onPKBattleEndedByAnotherHost|[onEnded](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingPKEvents/onEnded.html)||
 
 ### ZegoUIKitPrebuiltLiveStreamingMiniOverlayMachine
 

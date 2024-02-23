@@ -14,13 +14,13 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/core_managers.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/swiping/config.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/swiping/loading.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/swiping/loading_builder.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/swiping/login_notifier.dart';
 
 /// The encapsulation layer of the "Live Streaming Widget" includes the
 /// functionality of swiping up and down to switch between live streams.
-class ZegoUIKitPrebuiltLiveStreamingSwiping extends StatefulWidget {
-  const ZegoUIKitPrebuiltLiveStreamingSwiping({
+class ZegoLiveStreamingSwipingPage extends StatefulWidget {
+  const ZegoLiveStreamingSwipingPage({
     Key? key,
     required this.initialLiveID,
     required this.appID,
@@ -36,34 +36,34 @@ class ZegoUIKitPrebuiltLiveStreamingSwiping extends StatefulWidget {
   /// swiping config
   final ZegoLiveStreamingSwipingConfig swipingConfig;
 
-  /// same as [ZegoUIKitPrebuiltLiveStreamingPage.appID]
+  /// same as [ZegoLiveStreamingPage.appID]
   final int appID;
 
-  /// same as [ZegoUIKitPrebuiltLiveStreamingPage.appSign]
+  /// same as [ZegoLiveStreamingPage.appSign]
   final String appSign;
 
-  /// same as [ZegoUIKitPrebuiltLiveStreamingPage.userID]
+  /// same as [ZegoLiveStreamingPage.userID]
   final String userID;
 
-  /// same as [ZegoUIKitPrebuiltLiveStreamingPage.userName]
+  /// same as [ZegoLiveStreamingPage.userName]
   final String userName;
 
-  /// same as [ZegoUIKitPrebuiltLiveStreamingPage.config]
+  /// same as [ZegoLiveStreamingPage.config]
   final ZegoUIKitPrebuiltLiveStreamingConfig config;
 
-  /// same as [ZegoUIKitPrebuiltLiveStreamingPage.events]
+  /// same as [ZegoLiveStreamingPage.events]
   final ZegoUIKitPrebuiltLiveStreamingEvents? events;
 
   /// @nodoc
   @override
-  State<ZegoUIKitPrebuiltLiveStreamingSwiping> createState() =>
-      _ZegoUIKitPrebuiltLiveStreamingSwipingState();
+  State<ZegoLiveStreamingSwipingPage> createState() =>
+      _ZegoLiveStreamingSwipingPageState();
 }
 
 /// @nodoc
-class _ZegoUIKitPrebuiltLiveStreamingSwipingState
-    extends State<ZegoUIKitPrebuiltLiveStreamingSwiping> {
-  ZegoRoomLoginNotifier? roomLoginNotifier;
+class _ZegoLiveStreamingSwipingPageState
+    extends State<ZegoLiveStreamingSwipingPage> {
+  ZegoLiveStreamingSwipingRoomLoginNotifier? roomLoginNotifier;
   late final PageController _pageController;
 
   String _targetRoomID = '';
@@ -83,7 +83,10 @@ class _ZegoUIKitPrebuiltLiveStreamingSwipingState
   void initState() {
     super.initState();
 
-    roomLoginNotifier = ZegoRoomLoginNotifier(
+    /// when swiping, cannot cancel event listening, otherwise there will be timing problems, resulting in no more event callbacks
+    ZegoUIKit().enableEventUninitOnRoomLeaved(false);
+
+    roomLoginNotifier = ZegoLiveStreamingSwipingRoomLoginNotifier(
       configPlugins: widget.config.plugins,
     );
     roomLoginNotifier?.notifier.addListener(onRoomStateChanged);
@@ -112,6 +115,8 @@ class _ZegoUIKitPrebuiltLiveStreamingSwipingState
   @override
   void dispose() {
     super.dispose();
+
+    ZegoUIKit().enableEventUninitOnRoomLeaved(true);
 
     for (final subscription in subscriptions) {
       subscription?.cancel();
@@ -161,7 +166,7 @@ class _ZegoUIKitPrebuiltLiveStreamingSwipingState
             subTag: 'swiping',
           );
 
-          return ZegoSwipingRoomLoadingBuilder(
+          return ZegoLiveStreamingSwipingRoomLoadingBuilder(
             targetRoomID: _targetRoomID,
             loadingBuilder: widget.swipingConfig.loadingBuilder,
             roomBuilder: () {
@@ -174,7 +179,7 @@ class _ZegoUIKitPrebuiltLiveStreamingSwipingState
               ///wait express room and signaling room login result
               roomLoginNotifier?.resetCheckingData(_targetRoomID);
 
-              return ZegoUIKitPrebuiltLiveStreamingPage(
+              return ZegoLiveStreamingPage(
                 liveID: _targetRoomID,
                 appID: widget.appID,
                 appSign: widget.appSign,

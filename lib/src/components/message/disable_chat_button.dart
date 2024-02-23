@@ -9,13 +9,13 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/components/message/define
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
 
 /// @nodoc
-class ZegoDisableChatButton extends StatefulWidget {
+class ZegoLiveStreamingDisableChatButton extends StatefulWidget {
   final Size? iconSize;
   final Size? buttonSize;
   final ButtonIcon? enableIcon;
   final ButtonIcon? disableIcon;
 
-  const ZegoDisableChatButton({
+  const ZegoLiveStreamingDisableChatButton({
     Key? key,
     this.enableIcon,
     this.disableIcon,
@@ -24,11 +24,13 @@ class ZegoDisableChatButton extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<ZegoDisableChatButton> createState() => _ZegoDisableChatButtonState();
+  State<ZegoLiveStreamingDisableChatButton> createState() =>
+      _ZegoLiveStreamingDisableChatButtonState();
 }
 
 /// @nodoc
-class _ZegoDisableChatButtonState extends State<ZegoDisableChatButton> {
+class _ZegoLiveStreamingDisableChatButtonState
+    extends State<ZegoLiveStreamingDisableChatButton> {
   bool isChatEnabled = true;
   bool isUpdatingRoomProperty = false;
 
@@ -48,11 +50,11 @@ class _ZegoDisableChatButtonState extends State<ZegoDisableChatButton> {
 
     final icon = isChatEnabled ? widget.enableIcon : widget.disableIcon;
     icon?.icon ??= isChatEnabled
-        ? PrebuiltLiveStreamingImage.asset(
-            PrebuiltLiveStreamingIconUrls.enableIM,
+        ? ZegoLiveStreamingImage.asset(
+            ZegoLiveStreamingIconUrls.enableIM,
           )
-        : PrebuiltLiveStreamingImage.asset(
-            PrebuiltLiveStreamingIconUrls.disableIM,
+        : ZegoLiveStreamingImage.asset(
+            ZegoLiveStreamingIconUrls.disableIM,
           );
 
     return GestureDetector(

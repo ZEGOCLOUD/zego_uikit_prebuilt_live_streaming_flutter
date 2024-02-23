@@ -84,7 +84,8 @@ And you can also customize various live streaming features by configuring parame
 
 ## Migration Guides
 
-- [Migrating to 3.0](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/topics/Migration:%20v3.0-topic.html).
+- [Migrating from 3.1.1 to 3.1.2](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/topics/Migration_v3.x-topic.html#312).
+- [Migrating from 2.x to 3.0](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/topics/Migration_v3.x-topic.html#30).
 
 ## More
 

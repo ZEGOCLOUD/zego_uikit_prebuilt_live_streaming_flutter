@@ -11,11 +11,11 @@ import 'package:zego_uikit/zego_uikit.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/message/defines.dart';
 
 /// @nodoc
-class ZegoInRoomMessageEnableProperty {
+class ZegoLiveStreamingInRoomMessageEnableProperty {
   final _valueNotifier = ValueNotifier<bool>(true);
   final List<StreamSubscription<dynamic>?> _subscriptions = [];
 
-  ZegoInRoomMessageEnableProperty() {
+  ZegoLiveStreamingInRoomMessageEnableProperty() {
     _subscriptions.add(
         ZegoUIKit().getRoomPropertiesStream().listen(onRoomPropertiesUpdated));
   }

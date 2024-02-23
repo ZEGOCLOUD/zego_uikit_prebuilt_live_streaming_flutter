@@ -32,15 +32,15 @@ class ZegoUIKitPrebuiltLiveStreamingPK
   ValueNotifier<List<ZegoLiveStreamingPKUser>> get connectedPKHostsNotifier =>
       _data.currentPKUsers;
 
-  ValueNotifier<ZegoIncomingPKBattleRequestReceivedEvent?>
+  ValueNotifier<ZegoLiveStreamingIncomingPKBattleRequestReceivedEvent?>
       get pkBattleRequestReceivedEventInMinimizingNotifier =>
           _data.pkBattleRequestReceivedEventInMinimizingNotifier;
 
   void init({
     required ZegoUIKitPrebuiltLiveStreamingConfig config,
     required ZegoUIKitPrebuiltLiveStreamingEvents events,
-    required ZegoInnerText innerText,
-    required ZegoLiveHostManager hostManager,
+    required ZegoUIKitPrebuiltLiveStreamingInnerText innerText,
+    required ZegoLiveStreamingHostManager hostManager,
     required ValueNotifier<LiveStatus> liveStatusNotifier,
     required ValueNotifier<bool> startedByLocalNotifier,
     required BuildContext Function()? contextQuery,

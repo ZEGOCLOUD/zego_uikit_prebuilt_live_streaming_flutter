@@ -11,8 +11,8 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/inner_text.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
 
 /// @nodoc
-class ZegoBeautyEffectButton extends StatefulWidget {
-  const ZegoBeautyEffectButton({
+class ZegoLiveStreamingBeautyEffectButton extends StatefulWidget {
+  const ZegoLiveStreamingBeautyEffectButton({
     Key? key,
     required this.effectConfig,
     required this.translationText,
@@ -25,16 +25,18 @@ class ZegoBeautyEffectButton extends StatefulWidget {
   final Size? iconSize;
   final Size? buttonSize;
   final ButtonIcon? icon;
-  final ZegoInnerText translationText;
+  final ZegoUIKitPrebuiltLiveStreamingInnerText translationText;
   final bool rootNavigator;
   final ZegoLiveStreamingEffectConfig effectConfig;
 
   @override
-  State<ZegoBeautyEffectButton> createState() => _ZegoBeautyEffectButtonState();
+  State<ZegoLiveStreamingBeautyEffectButton> createState() =>
+      _ZegoLiveStreamingBeautyEffectButtonState();
 }
 
 /// @nodoc
-class _ZegoBeautyEffectButtonState extends State<ZegoBeautyEffectButton> {
+class _ZegoLiveStreamingBeautyEffectButtonState
+    extends State<ZegoLiveStreamingBeautyEffectButton> {
   @override
   Widget build(BuildContext context) {
     final containerSize = widget.buttonSize ?? Size(96.zR, 96.zR);
@@ -63,8 +65,8 @@ class _ZegoBeautyEffectButtonState extends State<ZegoBeautyEffectButton> {
         child: SizedBox.fromSize(
           size: sizeBoxSize,
           child: widget.icon?.icon ??
-              PrebuiltLiveStreamingImage.asset(
-                PrebuiltLiveStreamingIconUrls.toolbarBeautyEffect,
+              ZegoLiveStreamingImage.asset(
+                ZegoLiveStreamingIconUrls.toolbarBeautyEffect,
               ),
         ),
       ),

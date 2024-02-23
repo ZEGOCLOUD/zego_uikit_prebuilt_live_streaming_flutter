@@ -8,29 +8,29 @@ import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/defines.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_manager.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_sheet_menu.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/pop_up_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/pop_up_sheet_menu.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/inner_text.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
 
 /// @nodoc
-class ZegoAudioVideoForeground extends StatelessWidget {
+class ZegoLiveStreamingAudioVideoForeground extends StatelessWidget {
   final Size size;
   final ZegoUIKitUser? user;
 
   final bool isPluginEnabled;
-  final ZegoLiveHostManager hostManager;
-  final ZegoLiveConnectManager connectManager;
-  final ZegoPopUpManager popUpManager;
-  final ZegoInnerText translationText;
+  final ZegoLiveStreamingHostManager hostManager;
+  final ZegoLiveStreamingConnectManager connectManager;
+  final ZegoLiveStreamingPopUpManager popUpManager;
+  final ZegoUIKitPrebuiltLiveStreamingInnerText translationText;
 
   final bool showMicrophoneStateOnView;
   final bool showCameraStateOnView;
   final bool showUserNameOnView;
 
-  const ZegoAudioVideoForeground({
+  const ZegoLiveStreamingAudioVideoForeground({
     Key? key,
     this.user,
     required this.size,
@@ -145,7 +145,7 @@ class ZegoAudioVideoForeground extends StatelessWidget {
       return Container();
     }
 
-    final popupItems = <PopupItem>[];
+    final popupItems = <ZegoLiveStreamingPopupItem>[];
 
     // if (user.id != hostManager.notifier.value?.id &&
     //     isCoHost(user) &&
@@ -160,8 +160,8 @@ class ZegoAudioVideoForeground extends StatelessWidget {
       return Container();
     }
 
-    popupItems.add(PopupItem(
-      PopupItemValue.cancel,
+    popupItems.add(ZegoLiveStreamingPopupItem(
+      ZegoLiveStreamingPopupItemValue.cancel,
       translationText.cancelMenuDialogButton,
     ));
 
@@ -190,8 +190,8 @@ class ZegoAudioVideoForeground extends StatelessWidget {
             iconSize: Size(28.zR, 28.zR),
             icon: ButtonIcon(
               backgroundColor: Colors.black.withOpacity(0.6),
-              icon: PrebuiltLiveStreamingImage.asset(
-                  PrebuiltLiveStreamingIconUrls.bottomBarMore),
+              icon: ZegoLiveStreamingImage.asset(
+                  ZegoLiveStreamingIconUrls.bottomBarMore),
             ),
           ),
         ),

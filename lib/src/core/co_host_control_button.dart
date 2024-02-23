@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
-import 'package:zego_uikit_prebuilt_live_streaming/src/components/toast.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/toast.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
@@ -17,8 +17,8 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/pk_combine_notifier.dart';
 
 /// @nodoc
-class ZegoCoHostControlButton extends StatefulWidget {
-  const ZegoCoHostControlButton({
+class ZegoLiveStreamingCoHostControlButton extends StatefulWidget {
+  const ZegoLiveStreamingCoHostControlButton({
     Key? key,
     required this.hostManager,
     required this.connectManager,
@@ -31,9 +31,9 @@ class ZegoCoHostControlButton extends StatefulWidget {
     this.endCoHostButtonText,
   }) : super(key: key);
 
-  final ZegoLiveHostManager hostManager;
-  final ZegoLiveConnectManager connectManager;
-  final ZegoInnerText translationText;
+  final ZegoLiveStreamingHostManager hostManager;
+  final ZegoLiveStreamingConnectManager connectManager;
+  final ZegoUIKitPrebuiltLiveStreamingInnerText translationText;
 
   final ButtonIcon? requestCoHostButtonIcon;
   final ButtonIcon? cancelRequestCoHostButtonIcon;
@@ -43,12 +43,13 @@ class ZegoCoHostControlButton extends StatefulWidget {
   final String? endCoHostButtonText;
 
   @override
-  State<ZegoCoHostControlButton> createState() =>
-      _ZegoCoHostControlButtonState();
+  State<ZegoLiveStreamingCoHostControlButton> createState() =>
+      _ZegoLiveStreamingCoHostControlButtonState();
 }
 
 /// @nodoc
-class _ZegoCoHostControlButtonState extends State<ZegoCoHostControlButton> {
+class _ZegoLiveStreamingCoHostControlButtonState
+    extends State<ZegoLiveStreamingCoHostControlButton> {
   bool get hostExist =>
       widget.hostManager.notifier.value?.id.isNotEmpty ?? false;
 
@@ -56,8 +57,8 @@ class _ZegoCoHostControlButtonState extends State<ZegoCoHostControlButton> {
       widget.connectManager.liveStatusNotifier.value == LiveStatus.living;
 
   ButtonIcon get buttonIcon => ButtonIcon(
-        icon: PrebuiltLiveStreamingImage.asset(
-            PrebuiltLiveStreamingIconUrls.toolbarCoHost),
+        icon: ZegoLiveStreamingImage.asset(
+            ZegoLiveStreamingIconUrls.toolbarCoHost),
         backgroundColor: Colors.transparent,
       );
 

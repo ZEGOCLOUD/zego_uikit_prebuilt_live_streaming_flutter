@@ -50,9 +50,9 @@ extension PKServiceConnectedUsers on ZegoUIKitPrebuiltLiveStreamingPKServices {
   }
 
   void updatePKUsers(
-    List<ZegoLiveStreamingPKUser> updatedPKUsers,
+    List<ZegoLiveStreamingPKUser> tempUpdatedPKUsers,
   ) {
-    updatedPKUsers = removeDuplicatePKUsers(updatedPKUsers);
+    var updatedPKUsers = removeDuplicatePKUsers(tempUpdatedPKUsers);
 
     final currentPKUserIDs =
         _coreData.currentPKUsers.value.map((e) => e.userInfo.id).toList();

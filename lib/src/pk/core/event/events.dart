@@ -4,8 +4,9 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
     on ZegoUIKitPrebuiltLiveStreamingPKServices {
   bool get rootNavigator => _coreData.prebuiltConfig?.rootNavigator ?? false;
 
-  ZegoInnerText get innerText =>
-      _coreData.prebuiltConfig?.innerText ?? ZegoInnerText();
+  ZegoUIKitPrebuiltLiveStreamingInnerText get innerText =>
+      _coreData.prebuiltConfig?.innerText ??
+      ZegoUIKitPrebuiltLiveStreamingInnerText();
 
   void initEvents() {
     if (_eventInitialized) {
@@ -214,7 +215,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
         break;
       case ZegoSignalingPluginInvitationUserState.quited:
         _coreData.events?.pk.onUserQuited?.call(
-            ZegoPKBattleUserQuitEvent(
+            ZegoLiveStreamingPKBattleUserQuitEvent(
               requestID: requestID,
               fromHost: ZegoUIKit().getLocalUser(),
             ),
@@ -275,7 +276,8 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
         var isRequestFromLocal =
             ZegoUIKit().getLocalUser().id == sessionInitiator?.userID;
         if (isRequestFromLocal) {
-          _onInvitationAccepted(ZegoOutgoingPKBattleRequestAcceptedEvent(
+          _onInvitationAccepted(
+              ZegoLiveStreamingOutgoingPKBattleRequestAcceptedEvent(
             requestID: requestID,
             fromHost: fromHost,
             fromLiveID: fromLiveID,
@@ -311,7 +313,8 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
           final int refuseCode = extendedDataMap['code'] ??
               ZegoLiveStreamingPKBattleRejectCode.reject.index;
           final String fromHostUserName = extendedDataMap['invitee_name'] ?? '';
-          _onInvitationRefused(ZegoOutgoingPKBattleRequestRejectedEvent(
+          _onInvitationRefused(
+              ZegoLiveStreamingOutgoingPKBattleRequestRejectedEvent(
             requestID: requestID,
             fromHost: ZegoUIKitUser(
                 id: remoteUserInfo.userID, name: fromHostUserName),
@@ -327,7 +330,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
         break;
       case ZegoSignalingPluginInvitationUserState.timeout:
         _onInvitationResponseTimeout(
-          ZegoOutgoingPKBattleRequestTimeoutEvent(
+          ZegoLiveStreamingOutgoingPKBattleRequestTimeoutEvent(
             requestID: requestID,
             fromHost: ZegoUIKitUser(id: remoteUserInfo.userID, name: ''),
           ),
@@ -335,7 +338,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
         break;
       case ZegoSignalingPluginInvitationUserState.offline:
         _onInvitationUserOffline(
-          ZegoPKBattleUserOfflineEvent(
+          ZegoLiveStreamingPKBattleUserOfflineEvent(
             requestID: requestID,
             fromHost: ZegoUIKitUser(id: remoteUserInfo.userID, name: ''),
           ),
@@ -344,7 +347,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
       case ZegoSignalingPluginInvitationUserState.quited:
         final String fromHostUserName = extendedDataMap['invitee_name'] ?? '';
         _onInvitationUserQuit(
-          ZegoPKBattleUserQuitEvent(
+          ZegoLiveStreamingPKBattleUserQuitEvent(
             requestID: requestID,
             fromHost: ZegoUIKitUser(
               id: remoteUserInfo.userID,
@@ -510,7 +513,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
           }
         }
 
-        return ZegoIncomingPKBattleRequestReceivedEvent(
+        return ZegoLiveStreamingIncomingPKBattleRequestReceivedEvent(
           fromLiveID: inviterLiveID,
           fromHost: inviter,
           startTimestampSecond: createTimestampSecond,
@@ -535,7 +538,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
 
         final ZegoUIKitUser fromHost = params['inviter']!;
         final String requestID = params['invitation_id']!;
-        return ZegoIncomingPKBattleRequestCancelledEvent(
+        return ZegoLiveStreamingIncomingPKBattleRequestCancelledEvent(
           requestID: requestID,
           fromHost: fromHost,
           customData: 'customData',
@@ -557,7 +560,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
 
         final ZegoUIKitUser fromHost = params['inviter']!;
         final String requestID = params['invitation_id']!;
-        return ZegoIncomingPKBattleRequestTimeoutEvent(
+        return ZegoLiveStreamingIncomingPKBattleRequestTimeoutEvent(
           requestID: requestID,
           fromHost: fromHost,
         );
@@ -593,7 +596,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
                 .getAdvanceInitiator(requestID)
                 ?.userID;
 
-        return ZegoPKBattleEndedEvent(
+        return ZegoLiveStreamingPKBattleEndedEvent(
           isRequestFromLocal: isRequestFromLocal,
           requestID: requestID,
           fromHost: fromHost,
@@ -760,7 +763,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
   }
 
   void _onInvitationReceived(
-    ZegoIncomingPKBattleRequestReceivedEvent event,
+    ZegoLiveStreamingIncomingPKBattleRequestReceivedEvent event,
   ) async {
     ZegoLoggerService.logInfo(
       'onInvitationReceived, event:$event, state:${pkStateNotifier.value}',
@@ -826,7 +829,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
   }
 
   Future<void> autoAcceptReceivedInvitation(
-    ZegoIncomingPKBattleRequestReceivedEvent event,
+    ZegoLiveStreamingIncomingPKBattleRequestReceivedEvent event,
   ) async {
     defaultAction() async {
       await acceptPKBattleRequest(
@@ -847,11 +850,11 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
   }
 
   Future<void> waitForeProcessingReceivedInvitation(
-    ZegoIncomingPKBattleRequestReceivedEvent event,
+    ZegoLiveStreamingIncomingPKBattleRequestReceivedEvent event,
   ) async {
     /// check if minimizing
     _coreData.clearRequestReceivedEventInMinimizing();
-    if (ZegoLiveStreamingInternalMiniOverlayMachine().isMinimizing) {
+    if (ZegoLiveStreamingMiniOverlayMachine().isMinimizing) {
       ZegoLoggerService.logInfo(
         'is minimizing now, cache the event:$event',
         tag: 'ZegoLiveStreamingPKBattleService',
@@ -912,7 +915,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
   }
 
   void _onInvitationAccepted(
-    ZegoOutgoingPKBattleRequestAcceptedEvent event,
+    ZegoLiveStreamingOutgoingPKBattleRequestAcceptedEvent event,
   ) async {
     ZegoLoggerService.logInfo(
       'onInvitationAccepted, event:$event, ',
@@ -952,7 +955,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
   }
 
   void _onInvitationCanceled(
-    ZegoIncomingPKBattleRequestCancelledEvent event,
+    ZegoLiveStreamingIncomingPKBattleRequestCancelledEvent event,
   ) {
     ZegoLoggerService.logInfo(
       'onInvitationCanceled, event:$event',
@@ -969,7 +972,8 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
     _coreData.events?.pk.onIncomingRequestCancelled?.call(event, () {});
   }
 
-  void _onInvitationRefused(ZegoOutgoingPKBattleRequestRejectedEvent event) {
+  void _onInvitationRefused(
+      ZegoLiveStreamingOutgoingPKBattleRequestRejectedEvent event) {
     var message = '';
     if (event.refuseCode == ZegoLiveStreamingPKBattleRejectCode.busy.index) {
       message = 'The host is busy.';
@@ -1027,7 +1031,8 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
     }
   }
 
-  void _onInvitationTimeout(ZegoIncomingPKBattleRequestTimeoutEvent event) {
+  void _onInvitationTimeout(
+      ZegoLiveStreamingIncomingPKBattleRequestTimeoutEvent event) {
     ZegoLoggerService.logInfo(
       'onInvitationTimeout, '
       'event:$event, '
@@ -1055,7 +1060,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
   }
 
   void _onInvitationResponseTimeout(
-    ZegoOutgoingPKBattleRequestTimeoutEvent event,
+    ZegoLiveStreamingOutgoingPKBattleRequestTimeoutEvent event,
   ) {
     ZegoLoggerService.logInfo(
       'onInvitationResponseTimeout, '
@@ -1070,7 +1075,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
     _coreData.events?.pk.onOutgoingRequestTimeout?.call(event, () {});
   }
 
-  void _onInvitationEnded(ZegoPKBattleEndedEvent event) {
+  void _onInvitationEnded(ZegoLiveStreamingPKBattleEndedEvent event) {
     ZegoLoggerService.logInfo(
       'onInvitationEnded, event:$event, ',
       tag: 'live streaming',
@@ -1093,7 +1098,8 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
     }
   }
 
-  void _onInvitationUserOffline(ZegoPKBattleUserOfflineEvent event) {
+  void _onInvitationUserOffline(
+      ZegoLiveStreamingPKBattleUserOfflineEvent event) {
     ZegoLoggerService.logInfo(
       '_onInvitationUserOffline, '
       'event:$event, '
@@ -1114,7 +1120,8 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
     _coreData.events?.pk.onUserOffline?.call(event, () {});
   }
 
-  void _onInvitationUserQuit(ZegoPKBattleUserQuitEvent event) async {
+  void _onInvitationUserQuit(
+      ZegoLiveStreamingPKBattleUserQuitEvent event) async {
     ZegoLoggerService.logInfo(
       '_onInvitationUserQuit, '
       'event:$event, '
@@ -1135,11 +1142,11 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
     _coreData.events?.pk.onUserQuited?.call(event, () {});
   }
 
-  List<ZegoIncomingPKBattleRequestUser> _parseSessionHosts(
+  List<ZegoLiveStreamingIncomingPKBattleRequestUser> _parseSessionHosts(
     String requestID,
     List<Map<String, dynamic>> sessionHostParamList,
   ) {
-    var sessionHosts = <ZegoIncomingPKBattleRequestUser>[];
+    var sessionHosts = <ZegoLiveStreamingIncomingPKBattleRequestUser>[];
 
     /// session hosts
     for (var sessionHostParam in sessionHostParamList) {
@@ -1151,7 +1158,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
       final tempSessionHost = _getSessionHostNameAndLiveIDFromExtendedData(
         sessionHostParam['data'] ?? '',
       );
-      var sessionHost = ZegoIncomingPKBattleRequestUser(
+      var sessionHost = ZegoLiveStreamingIncomingPKBattleRequestUser(
         id: sessionHostID,
         name: tempSessionHost.name,
         fromLiveID: tempSessionHost.fromLiveID,
@@ -1165,15 +1172,15 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
     return sessionHosts;
   }
 
-  ZegoIncomingPKBattleRequestUser _getSessionHostNameAndLiveIDFromExtendedData(
-      String extendedData) {
+  ZegoLiveStreamingIncomingPKBattleRequestUser
+      _getSessionHostNameAndLiveIDFromExtendedData(String extendedData) {
     if (extendedData.isEmpty) {
-      return ZegoIncomingPKBattleRequestUser();
+      return ZegoLiveStreamingIncomingPKBattleRequestUser();
     }
 
     /// session host's name and live id
 
-    var user = ZegoIncomingPKBattleRequestUser();
+    var user = ZegoLiveStreamingIncomingPKBattleRequestUser();
     try {
       final acceptData =
           AdvanceInvitationAcceptData.fromJson(jsonDecode(extendedData));

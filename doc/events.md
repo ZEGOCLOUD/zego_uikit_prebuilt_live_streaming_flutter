@@ -37,6 +37,10 @@
     - [onInvitationTimeout](#oninvitationtimeout-2)
     - [onActionAcceptInvitation](#onactionacceptinvitation)
     - [onActionRefuseInvitation](#onactionrefuseinvitation)
+  - [coHost](#cohost-2)
+    - [onLocalConnectStateUpdated](#onlocalconnectstateupdated)
+    - [onLocalConnected](#onlocalconnected)
+    - [onLocalDisconnected](#onlocaldisconnected)
 - [pk](#pk)
   - [onIncomingRequestReceived](#onincomingrequestreceived)
   - [onIncomingRequestCancelled](#onincomingrequestcancelled)
@@ -1115,6 +1119,85 @@ co-hosts.
 >   ...
 > );
 >```
+
+
+## coHost
+
+### onLocalConnectStateUpdated
+
+>
+> local connect state updated
+>
+>- function prototype:
+>```dart
+>Function(ZegoLiveStreamingAudienceConnectState)? onLocalConnectStateUpdated
+>```
+>- example:
+>```dart
+> ZegoUIKitPrebuiltLiveStreaming(
+>   ...
+>   events: ZegoUIKitPrebuiltLiveStreamingEvents(
+>     coHost: ZegoLiveStreamingCoHostEvents(
+>       coHost: ZegoLiveStreamingCoHostCoHostEvents(
+>         onLocalConnectStateUpdated: (state) {
+>         },
+>       ),
+>     ),  
+>   ),
+>   ...
+> );
+>```
+
+### onLocalConnected
+
+>
+> Audience becomes Cohost
+>
+>- function prototype:
+>```dart
+>Function()? onLocalConnected
+>```
+>- example:
+>```dart
+> ZegoUIKitPrebuiltLiveStreaming(
+>   ...
+>   events: ZegoUIKitPrebuiltLiveStreamingEvents(
+>     coHost: ZegoLiveStreamingCoHostEvents(
+>       coHost: ZegoLiveStreamingCoHostCoHostEvents(
+>         onLocalConnected: () {
+>         },
+>       ),
+>     ),  
+>   ),
+>   ...
+> );
+>```
+
+### onLocalDisconnected
+
+>
+> Cohost becomes Audience
+>
+>- function prototype:
+>```dart
+>Function()? onLocalDisconnected
+>```
+>- example:
+>```dart
+> ZegoUIKitPrebuiltLiveStreaming(
+>   ...
+>   events: ZegoUIKitPrebuiltLiveStreamingEvents(
+>     coHost: ZegoLiveStreamingCoHostEvents(
+>       coHost: ZegoLiveStreamingCoHostCoHostEvents(
+>         onLocalDisconnected: () {
+>         },
+>       ),
+>     ),  
+>   ),
+>   ...
+> );
+>```
+
 
 # pk
 

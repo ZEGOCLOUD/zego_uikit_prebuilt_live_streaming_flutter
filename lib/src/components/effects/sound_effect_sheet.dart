@@ -11,8 +11,8 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/inner_text.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
 
 /// @nodoc
-class ZegoSoundEffectSheet extends StatefulWidget {
-  final ZegoInnerText translationText;
+class ZegoLiveStreamingSoundEffectSheet extends StatefulWidget {
+  final ZegoUIKitPrebuiltLiveStreamingInnerText translationText;
   final bool rootNavigator;
 
   final List<VoiceChangerType> voiceChangerEffect;
@@ -23,7 +23,7 @@ class ZegoSoundEffectSheet extends StatefulWidget {
 
   final ZegoLiveStreamingEffectConfig config;
 
-  const ZegoSoundEffectSheet({
+  const ZegoLiveStreamingSoundEffectSheet({
     Key? key,
     required this.translationText,
     required this.rootNavigator,
@@ -35,11 +35,13 @@ class ZegoSoundEffectSheet extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<ZegoSoundEffectSheet> createState() => _ZegoSoundEffectSheetState();
+  State<ZegoLiveStreamingSoundEffectSheet> createState() =>
+      _ZegoLiveStreamingSoundEffectSheetState();
 }
 
 /// @nodoc
-class _ZegoSoundEffectSheetState extends State<ZegoSoundEffectSheet> {
+class _ZegoLiveStreamingSoundEffectSheetState
+    extends State<ZegoLiveStreamingSoundEffectSheet> {
   late ZegoEffectGridModel voiceChangerModel;
   late ZegoEffectGridModel reverbPresetModel;
 
@@ -110,8 +112,8 @@ class _ZegoSoundEffectSheetState extends State<ZegoSoundEffectSheet> {
               width: 70.zR,
               height: 70.zR,
               child: widget.config.backIcon ??
-                  PrebuiltLiveStreamingImage.asset(
-                    PrebuiltLiveStreamingIconUrls.back,
+                  ZegoLiveStreamingImage.asset(
+                    ZegoLiveStreamingIconUrls.back,
                   ),
             ),
           ),
@@ -145,7 +147,7 @@ class _ZegoSoundEffectSheetState extends State<ZegoSoundEffectSheet> {
       selectedID: widget.voiceChangerSelectedIDNotifier,
       items: voiceChangerEffect
           .map(
-            (effect) => ZegoEffectGridItem<VoiceChangerType>(
+            (effect) => ZegoLiveStreamingEffectGridItem<VoiceChangerType>(
               id: effect.index.toString(),
               effectType: effect,
               icon: ButtonIcon(
@@ -154,7 +156,7 @@ class _ZegoSoundEffectSheetState extends State<ZegoSoundEffectSheet> {
                     widget.config.normalIconColor ?? const Color(0xffCCCCCC),
                     BlendMode.srcATop,
                   ),
-                  child: PrebuiltLiveStreamingImage.asset(
+                  child: ZegoLiveStreamingImage.asset(
                     voiceChangerIconPath(effect.name),
                   ),
                 ),
@@ -165,7 +167,7 @@ class _ZegoSoundEffectSheetState extends State<ZegoSoundEffectSheet> {
                     widget.config.selectedIconColor ?? const Color(0xffA653FF),
                     BlendMode.srcATop,
                   ),
-                  child: PrebuiltLiveStreamingImage.asset(
+                  child: ZegoLiveStreamingImage.asset(
                     voiceChangerIconPath(effect.name),
                   ),
                 ),
@@ -198,11 +200,11 @@ class _ZegoSoundEffectSheetState extends State<ZegoSoundEffectSheet> {
       selectedID: widget.reverbSelectedIDNotifier,
       items: reverbEffect
           .map(
-            (effect) => ZegoEffectGridItem<ReverbType>(
+            (effect) => ZegoLiveStreamingEffectGridItem<ReverbType>(
               id: effect.index.toString(),
               effectType: effect,
               icon: ButtonIcon(
-                icon: PrebuiltLiveStreamingImage.asset(
+                icon: ZegoLiveStreamingImage.asset(
                   reverbPresetIconPath(effect.name),
                 ),
               ),
@@ -279,7 +281,7 @@ class _ZegoSoundEffectSheetState extends State<ZegoSoundEffectSheet> {
 
 void showSoundEffectSheet(
   BuildContext context, {
-  required ZegoInnerText translationText,
+  required ZegoUIKitPrebuiltLiveStreamingInnerText translationText,
   required bool rootNavigator,
   required List<VoiceChangerType> voiceChangeEffect,
   required List<ReverbType> reverbEffect,
@@ -309,7 +311,7 @@ void showSoundEffectSheet(
           padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
           child: SizedBox(
             height: 600.zR,
-            child: ZegoSoundEffectSheet(
+            child: ZegoLiveStreamingSoundEffectSheet(
               translationText: translationText,
               rootNavigator: rootNavigator,
               voiceChangerEffect: voiceChangeEffect,

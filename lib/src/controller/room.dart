@@ -1,6 +1,5 @@
 part of 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 
-/// @nodoc
 mixin ZegoLiveStreamingControllerRoom {
   final _roomImpl = ZegoLiveStreamingControllerRoomImpl();
 

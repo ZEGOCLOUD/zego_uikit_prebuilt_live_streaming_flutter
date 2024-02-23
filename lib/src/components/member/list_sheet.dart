@@ -9,8 +9,8 @@ import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/defines.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_manager.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_sheet_menu.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/pop_up_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/pop_up_sheet_menu.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect_manager.dart';
@@ -21,8 +21,8 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/pk_combine_notifier.dart';
 
 /// @nodoc
-class ZegoMemberListSheet extends StatefulWidget {
-  const ZegoMemberListSheet({
+class ZegoLiveStreamingMemberListSheet extends StatefulWidget {
+  const ZegoLiveStreamingMemberListSheet({
     Key? key,
     required this.isCoHostEnabled,
     required this.hostManager,
@@ -36,10 +36,10 @@ class ZegoMemberListSheet extends StatefulWidget {
   }) : super(key: key);
 
   final bool isCoHostEnabled;
-  final ZegoLiveHostManager hostManager;
-  final ZegoLiveConnectManager connectManager;
-  final ZegoPopUpManager popUpManager;
-  final ZegoInnerText innerText;
+  final ZegoLiveStreamingHostManager hostManager;
+  final ZegoLiveStreamingConnectManager connectManager;
+  final ZegoLiveStreamingPopUpManager popUpManager;
+  final ZegoUIKitPrebuiltLiveStreamingInnerText innerText;
   final ZegoLiveStreamingMemberListConfig config;
   final ZegoLiveStreamingMemberListEvents events;
 
@@ -47,11 +47,13 @@ class ZegoMemberListSheet extends StatefulWidget {
   final ZegoMemberListItemBuilder? itemBuilder;
 
   @override
-  State<ZegoMemberListSheet> createState() => _ZegoMemberListSheetState();
+  State<ZegoLiveStreamingMemberListSheet> createState() =>
+      _ZegoLiveStreamingMemberListSheetState();
 }
 
 /// @nodoc
-class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
+class _ZegoLiveStreamingMemberListSheetState
+    extends State<ZegoLiveStreamingMemberListSheet> {
   @override
   void initState() {
     super.initState();
@@ -190,8 +192,8 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
             child: SizedBox(
               width: 70.zR,
               height: 70.zR,
-              child: PrebuiltLiveStreamingImage.asset(
-                  PrebuiltLiveStreamingIconUrls.back),
+              child:
+                  ZegoLiveStreamingImage.asset(ZegoLiveStreamingIconUrls.back),
             ),
           ),
           SizedBox(width: 10.zR),
@@ -336,12 +338,12 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
       builder: (context, isInPK, _) {
         final needHideCoHostWidget = isInPK;
 
-        final popupItems = <PopupItem>[];
+        final popupItems = <ZegoLiveStreamingPopupItem>[];
         if (user.id != widget.hostManager.notifier.value?.id &&
             widget.connectManager.isCoHost(user) &&
             (widget.isCoHostEnabled)) {
-          popupItems.add(PopupItem(
-            PopupItemValue.kickCoHost,
+          popupItems.add(ZegoLiveStreamingPopupItem(
+            ZegoLiveStreamingPopupItemValue.kickCoHost,
             widget.innerText.removeCoHostButton,
           ));
         }
@@ -351,25 +353,25 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
             user.id != widget.hostManager.notifier.value?.id &&
             !widget.connectManager.isCoHost(user) &&
             !needHideCoHostWidget) {
-          popupItems.add(PopupItem(
-              PopupItemValue.inviteConnect,
-              widget.innerText.inviteCoHostButton
-                  .replaceFirst(ZegoInnerText.param_1, user.name)));
+          popupItems.add(ZegoLiveStreamingPopupItem(
+              ZegoLiveStreamingPopupItemValue.inviteConnect,
+              widget.innerText.inviteCoHostButton.replaceFirst(
+                  ZegoUIKitPrebuiltLiveStreamingInnerText.param_1, user.name)));
         }
 
         if (user.id != widget.hostManager.notifier.value?.id) {
-          popupItems.add(PopupItem(
-              PopupItemValue.kickOutAttendance,
-              widget.innerText.removeUserMenuDialogButton
-                  .replaceFirst(ZegoInnerText.param_1, user.name)));
+          popupItems.add(ZegoLiveStreamingPopupItem(
+              ZegoLiveStreamingPopupItemValue.kickOutAttendance,
+              widget.innerText.removeUserMenuDialogButton.replaceFirst(
+                  ZegoUIKitPrebuiltLiveStreamingInnerText.param_1, user.name)));
         }
 
         if (popupItems.isEmpty) {
           return Container();
         }
 
-        popupItems.add(PopupItem(
-          PopupItemValue.cancel,
+        popupItems.add(ZegoLiveStreamingPopupItem(
+          ZegoLiveStreamingPopupItemValue.cancel,
           widget.innerText.cancelMenuDialogButton,
         ));
 
@@ -377,8 +379,8 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
           buttonSize: Size(60.zR, 60.zR),
           iconSize: Size(60.zR, 60.zR),
           icon: ButtonIcon(
-            icon: PrebuiltLiveStreamingImage.asset(
-                PrebuiltLiveStreamingIconUrls.memberMore),
+            icon: ZegoLiveStreamingImage.asset(
+                ZegoLiveStreamingIconUrls.memberMore),
           ),
           onPressed: () {
             /// product manager say close sheet together
@@ -495,12 +497,12 @@ Future<void> showMemberListSheet({
   ZegoMemberListItemBuilder? itemBuilder,
   required bool isCoHostEnabled,
   required BuildContext context,
-  required ZegoLiveHostManager hostManager,
-  required ZegoLiveConnectManager connectManager,
-  required ZegoPopUpManager popUpManager,
+  required ZegoLiveStreamingHostManager hostManager,
+  required ZegoLiveStreamingConnectManager connectManager,
+  required ZegoLiveStreamingPopUpManager popUpManager,
   required ZegoLiveStreamingMemberListConfig config,
   required ZegoLiveStreamingMemberListEvents events,
-  required ZegoInnerText translationText,
+  required ZegoUIKitPrebuiltLiveStreamingInnerText translationText,
 }) async {
   final key = DateTime.now().millisecondsSinceEpoch;
   popUpManager.addAPopUpSheet(key);
@@ -526,7 +528,7 @@ Future<void> showMemberListSheet({
           duration: const Duration(milliseconds: 50),
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: ZegoMemberListSheet(
+            child: ZegoLiveStreamingMemberListSheet(
               config: config,
               events: events,
               isCoHostEnabled: isCoHostEnabled,

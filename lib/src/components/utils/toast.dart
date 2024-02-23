@@ -16,13 +16,14 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/overlay_machin
 typedef ContextQuery = BuildContext Function();
 
 /// @nodoc
-class ZegoToast {
+class ZegoLiveStreamingToast {
   ContextQuery? contextQuery;
 
-  ZegoToast._internal();
+  ZegoLiveStreamingToast._internal();
 
-  factory ZegoToast() => instance;
-  static final ZegoToast instance = ZegoToast._internal();
+  factory ZegoLiveStreamingToast() => instance;
+  static final ZegoLiveStreamingToast instance =
+      ZegoLiveStreamingToast._internal();
 
   TextStyle get textStyle => TextStyle(
         fontSize: 28.zR,
@@ -56,38 +57,40 @@ class ZegoToast {
 
 /// @nodoc
 void showToast(String message) {
-  if (ZegoLiveStreamingInternalMiniOverlayMachine().isMinimizing) {
+  if (ZegoLiveStreamingMiniOverlayMachine().isMinimizing) {
     return;
   }
 
-  ZegoToast.instance.show(message);
+  ZegoLiveStreamingToast.instance.show(message);
 }
 
 /// @nodoc
 void showDebugToast(String message) {
-  if (ZegoLiveStreamingInternalMiniOverlayMachine().isMinimizing) {
+  if (ZegoLiveStreamingMiniOverlayMachine().isMinimizing) {
     return;
   }
 
   if (kDebugMode) {
-    ZegoToast.instance.show(message);
+    ZegoLiveStreamingToast.instance.show(message);
   }
 }
 
 /// @nodoc
 void showSuccess(String message) {
-  if (ZegoLiveStreamingInternalMiniOverlayMachine().isMinimizing) {
+  if (ZegoLiveStreamingMiniOverlayMachine().isMinimizing) {
     return;
   }
 
-  ZegoToast.instance.show(message, backgroundColor: const Color(0xff55BC9E));
+  ZegoLiveStreamingToast.instance
+      .show(message, backgroundColor: const Color(0xff55BC9E));
 }
 
 /// @nodoc
 void showError(String message) {
-  if (ZegoLiveStreamingInternalMiniOverlayMachine().isMinimizing) {
+  if (ZegoLiveStreamingMiniOverlayMachine().isMinimizing) {
     return;
   }
 
-  ZegoToast.instance.show(message, backgroundColor: const Color(0xffBD5454));
+  ZegoLiveStreamingToast.instance
+      .show(message, backgroundColor: const Color(0xffBD5454));
 }

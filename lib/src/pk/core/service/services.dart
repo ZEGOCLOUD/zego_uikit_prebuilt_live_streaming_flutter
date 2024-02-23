@@ -11,7 +11,7 @@ import 'package:collection/collection.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
-import 'package:zego_uikit_prebuilt_live_streaming/src/components/dialogs.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/dialogs.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/inner_text.dart';

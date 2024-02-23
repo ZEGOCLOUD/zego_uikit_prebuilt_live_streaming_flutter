@@ -6,17 +6,17 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
-import 'package:zego_uikit_prebuilt_live_streaming/src/components/dialogs.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/dialogs.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/inner_text.dart';
 
 /// @nodoc
 Future<void> checkPermissions({
   required BuildContext context,
-  required ZegoInnerText translationText,
+  required ZegoUIKitPrebuiltLiveStreamingInnerText translationText,
   required bool rootNavigator,
-  required ZegoPopUpManager popUpManager,
+  required ZegoLiveStreamingPopUpManager popUpManager,
   required ValueNotifier<bool> kickOutNotifier,
   List<Permission> permissions = const [
     Permission.camera,
@@ -60,9 +60,9 @@ Future<void> checkPermissions({
 /// @nodoc
 Future<void> requestPermissions({
   required BuildContext context,
-  required ZegoInnerText translationText,
+  required ZegoUIKitPrebuiltLiveStreamingInnerText translationText,
   required bool rootNavigator,
-  required ZegoPopUpManager popUpManager,
+  required ZegoLiveStreamingPopUpManager popUpManager,
   required ValueNotifier<bool> kickOutNotifier,
   List<Permission> permissions = const [
     Permission.camera,
@@ -112,9 +112,9 @@ Future<void> requestPermissions({
 /// @nodoc
 Future<bool> showAppSettingsDialog({
   required BuildContext context,
-  required ZegoDialogInfo dialogInfo,
+  required ZegoLiveStreamingDialogInfo dialogInfo,
   required bool rootNavigator,
-  required ZegoPopUpManager popUpManager,
+  required ZegoLiveStreamingPopUpManager popUpManager,
   required ValueNotifier<bool> kickOutNotifier,
 }) async {
   if (kickOutNotifier.value) {

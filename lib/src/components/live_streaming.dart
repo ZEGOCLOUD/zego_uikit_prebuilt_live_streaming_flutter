@@ -12,12 +12,12 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
-import 'package:zego_uikit_prebuilt_live_streaming/src/components/dialogs.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/live_page.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/components/permissions.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/preview_page.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/components/toast.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/dialogs.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/permissions.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/pop_up_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/toast.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/core_managers.dart';
@@ -25,9 +25,9 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/events.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/data.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/overlay_machine.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/prebuilt_data.dart';
 
 /// Live Streaming Widget.
 ///
@@ -35,8 +35,8 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/prebuilt_data.
 ///
 /// You can refer to our [documentation](https://docs.zegocloud.com/article/14846), [documentation with cohosting](https://docs.zegocloud.com/article/14882)
 /// or our [sample code](https://github.com/ZEGOCLOUD/zego_uikit_prebuilt_live_streaming_example_flutter).
-class ZegoUIKitPrebuiltLiveStreamingPage extends StatefulWidget {
-  const ZegoUIKitPrebuiltLiveStreamingPage({
+class ZegoLiveStreamingPage extends StatefulWidget {
+  const ZegoLiveStreamingPage({
     Key? key,
     required this.appID,
     required this.appSign,
@@ -75,18 +75,17 @@ class ZegoUIKitPrebuiltLiveStreamingPage extends StatefulWidget {
 
   /// @nodoc
   @override
-  State<ZegoUIKitPrebuiltLiveStreamingPage> createState() =>
+  State<ZegoLiveStreamingPage> createState() =>
       _ZegoUIKitPrebuiltLiveStreamingState();
 }
 
 /// @nodoc
-class _ZegoUIKitPrebuiltLiveStreamingState
-    extends State<ZegoUIKitPrebuiltLiveStreamingPage>
+class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
     with WidgetsBindingObserver {
   List<StreamSubscription<dynamic>?> subscriptions = [];
   ZegoLiveStreamingEventListener? _eventListener;
 
-  final popUpManager = ZegoPopUpManager();
+  final popUpManager = ZegoLiveStreamingPopUpManager();
 
   var readyNotifier = ValueNotifier<bool>(false);
   var startedByLocalNotifier = ValueNotifier<bool>(false);
@@ -112,14 +111,14 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     );
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
-      log('version: zego_uikit_prebuilt_live_streaming: 3.1.6; $version');
+      log('version: zego_uikit_prebuilt_live_streaming: 3.2.0; $version');
     });
 
     _eventListener = ZegoLiveStreamingEventListener(widget.events);
     _eventListener?.init();
 
     isFromMinimizing = ZegoLiveStreamingMiniOverlayPageState.idle !=
-        ZegoLiveStreamingInternalMiniOverlayMachine().state;
+        ZegoLiveStreamingMiniOverlayMachine().state;
 
     if (!isFromMinimizing) {
       ZegoLiveStreamingManagers().initPluginAndManagers(
@@ -141,7 +140,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
         return context;
       });
     }
-    ZegoToast.instance.init(contextQuery: () {
+    ZegoLiveStreamingToast.instance.init(contextQuery: () {
       return context;
     });
 
@@ -153,7 +152,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
       ..add(ZegoUIKit().getErrorStream().listen(onUIKitError));
 
     _initControllerByPrebuilt(
-      minimizeData: ZegoUIKitPrebuiltLiveStreamingData(
+      minimizeData: ZegoLiveStreamingMinimizeData(
         appID: widget.appID,
         appSign: widget.appSign,
         liveID: widget.liveID,
@@ -168,7 +167,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     startedByLocalNotifier.addListener(onStartedByLocalValueChanged);
 
     ZegoLoggerService.logInfo(
-      'mini machine state is ${ZegoLiveStreamingInternalMiniOverlayMachine().state}',
+      'mini machine state is ${ZegoLiveStreamingMiniOverlayMachine().state}',
       tag: 'live streaming',
       subTag: 'prebuilt',
     );
@@ -196,7 +195,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     startedByLocalNotifier.removeListener(onStartedByLocalValueChanged);
     WidgetsBinding.instance.removeObserver(this);
 
-    if (!ZegoLiveStreamingInternalMiniOverlayMachine().isMinimizing) {
+    if (!ZegoLiveStreamingMiniOverlayMachine().isMinimizing) {
       ZegoLiveStreamingManagers().uninitPluginAndManagers().then((value) {
         uninitContext();
       });
@@ -224,7 +223,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
   }
 
   void _initControllerByPrebuilt({
-    required ZegoUIKitPrebuiltLiveStreamingData minimizeData,
+    required ZegoLiveStreamingMinimizeData minimizeData,
   }) {
     controller.private.initByPrebuilt();
     controller.pk.private.initByPrebuilt();
@@ -417,9 +416,9 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     }
 
     final useBeautyEffect = widget.config.bottomMenuBar.hostButtons
-            .contains(ZegoMenuBarButtonName.beautyEffectButton) ||
+            .contains(ZegoLiveStreamingMenuBarButtonName.beautyEffectButton) ||
         widget.config.bottomMenuBar.coHostButtons
-            .contains(ZegoMenuBarButtonName.beautyEffectButton);
+            .contains(ZegoLiveStreamingMenuBarButtonName.beautyEffectButton);
     if (useBeautyEffect) {
       await ZegoUIKit()
           .startEffectsEnv()
@@ -602,7 +601,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
   }
 
   Widget previewPage() {
-    return ZegoPreviewPage(
+    return ZegoLiveStreamingPreviewPage(
       appID: widget.appID,
       appSign: widget.appSign,
       userID: widget.userID,
@@ -618,7 +617,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
   }
 
   Widget livePage() {
-    return ZegoLivePage(
+    return ZegoLiveStreamingLivePage(
       appID: widget.appID,
       appSign: widget.appSign,
       userID: widget.userID,

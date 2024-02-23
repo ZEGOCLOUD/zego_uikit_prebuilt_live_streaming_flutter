@@ -9,7 +9,7 @@ enum LiveStatus {
 }
 
 /// @nodoc
-class PrebuiltLiveStreamingImage {
+class ZegoLiveStreamingImage {
   static Image asset(String name) {
     return Image.asset(name, package: 'zego_uikit_prebuilt_live_streaming');
   }
@@ -20,7 +20,7 @@ class PrebuiltLiveStreamingImage {
 }
 
 /// @nodoc
-class PrebuiltLiveStreamingIconUrls {
+class ZegoLiveStreamingIconUrls {
   static const String im = 'assets/icons/toolbar_im.png';
   static const String imDisabled = 'assets/icons/toolbar_im_disabled.png';
   static const String enableIM = 'assets/icons/toolbar_enable_chat.png';

@@ -19,12 +19,13 @@ class ZegoLiveStreamingPKBattleStateCombineNotifier {
   ValueNotifier<ZegoLiveStreamingPKBattleState>? _v2StateNotifier;
 
   final hasRequestEvent = ValueNotifier<bool>(false);
-  ValueNotifier<ZegoIncomingPKBattleRequestReceivedEvent?>?
+  ValueNotifier<ZegoLiveStreamingIncomingPKBattleRequestReceivedEvent?>?
       _v2RequestReceivedEventInMinimizingNotifier;
 
   void init({
     required ValueNotifier<ZegoLiveStreamingPKBattleState> v2StateNotifier,
-    required ValueNotifier<ZegoIncomingPKBattleRequestReceivedEvent?>
+    required ValueNotifier<
+            ZegoLiveStreamingIncomingPKBattleRequestReceivedEvent?>
         v2RequestReceivedEventInMinimizingNotifier,
   }) {
     ZegoLoggerService.logInfo(

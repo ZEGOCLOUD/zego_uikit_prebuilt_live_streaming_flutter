@@ -297,6 +297,9 @@ class ZegoLiveStreamingCoHostEvents {
   /// audience's events about.
   ZegoLiveStreamingCoHostAudienceEvents audience;
 
+  /// co-host's events about.
+  ZegoLiveStreamingCoHostCoHostEvents coHost;
+
   /// This callback is triggered when the maximum count of co-hosts is reached.
   void Function(int count)? onMaxCountReached;
 
@@ -309,8 +312,10 @@ class ZegoLiveStreamingCoHostEvents {
     this.onMaxCountReached,
     ZegoLiveStreamingCoHostHostEvents? host,
     ZegoLiveStreamingCoHostAudienceEvents? audience,
+    ZegoLiveStreamingCoHostCoHostEvents? coHost,
   })  : host = host ?? ZegoLiveStreamingCoHostHostEvents(),
-        audience = audience ?? ZegoLiveStreamingCoHostAudienceEvents();
+        audience = audience ?? ZegoLiveStreamingCoHostAudienceEvents(),
+        coHost = coHost ?? ZegoLiveStreamingCoHostCoHostEvents();
 }
 
 /// Host Related Events of CoHost
@@ -378,7 +383,7 @@ class ZegoLiveStreamingCoHostAudienceEvents {
   /// the host's co-host invitation has timed out.
   Function()? onInvitationTimeout;
 
-  /// audience refuse co-host invitation from the host.
+  /// audience accept co-host invitation from the host.
   Function()? onActionAcceptInvitation;
 
   /// audience refuse co-host invitation from the host.
@@ -397,6 +402,24 @@ class ZegoLiveStreamingCoHostAudienceEvents {
   });
 }
 
+/// Co-Host Related Events of CoHost
+class ZegoLiveStreamingCoHostCoHostEvents {
+  /// local connect state updated
+  Function(ZegoLiveStreamingAudienceConnectState)? onLocalConnectStateUpdated;
+
+  /// Audience becomes Cohost
+  Function()? onLocalConnected;
+
+  /// Cohost becomes Audience
+  Function()? onLocalDisconnected;
+
+  ZegoLiveStreamingCoHostCoHostEvents({
+    this.onLocalConnectStateUpdated,
+    this.onLocalConnected,
+    this.onLocalDisconnected,
+  });
+}
+
 /// pk related events
 ///
 /// The [defaultAction] is the internal default behavior (popup).
@@ -410,7 +433,7 @@ class ZegoLiveStreamingPKEvents {
   /// receive callback notifications or customize your business logic by
   /// listening to or setting up the [onIncomingRequestReceived].
   void Function(
-    ZegoIncomingPKBattleRequestReceivedEvent event,
+    ZegoLiveStreamingIncomingPKBattleRequestReceivedEvent event,
     VoidCallback defaultAction,
   )? onIncomingRequestReceived;
 
@@ -420,7 +443,7 @@ class ZegoLiveStreamingPKEvents {
   /// by listening to or setting up the [onIncomingRequestCancelled]
   /// when the PK battle request has been canceled.
   Function(
-    ZegoIncomingPKBattleRequestCancelledEvent event,
+    ZegoLiveStreamingIncomingPKBattleRequestCancelledEvent event,
     VoidCallback defaultAction,
   )? onIncomingRequestCancelled;
 
@@ -430,7 +453,7 @@ class ZegoLiveStreamingPKEvents {
   /// by listening to or setting up the [onIncomingRequestTimeout]
   /// when the received PK battle request has timed out.
   void Function(
-    ZegoIncomingPKBattleRequestTimeoutEvent event,
+    ZegoLiveStreamingIncomingPKBattleRequestTimeoutEvent event,
     VoidCallback defaultAction,
   )? onIncomingRequestTimeout;
 
@@ -441,7 +464,7 @@ class ZegoLiveStreamingPKEvents {
   /// Once it starts, you can receive callback notifications or customize
   /// your business logic by listening to or setting up the [onOutgoingRequestAccepted].
   void Function(
-    ZegoOutgoingPKBattleRequestAcceptedEvent event,
+    ZegoLiveStreamingOutgoingPKBattleRequestAcceptedEvent event,
     VoidCallback defaultAction,
   )? onOutgoingRequestAccepted;
 
@@ -456,7 +479,7 @@ class ZegoLiveStreamingPKEvents {
   /// Busy state: the host has not initiated his live stream yet, the host is
   /// in a PK battle with others, the host is being invited, and the host is sending a PK battle request to others.
   void Function(
-    ZegoOutgoingPKBattleRequestRejectedEvent event,
+    ZegoLiveStreamingOutgoingPKBattleRequestRejectedEvent event,
     VoidCallback defaultAction,
   )? onOutgoingRequestRejected;
 
@@ -468,25 +491,25 @@ class ZegoLiveStreamingPKEvents {
   /// You can receive callback notifications or customize your business
   /// logic by listening to or setting up the onOutgoingPKBattleRequestTimeout.
   void Function(
-    ZegoOutgoingPKBattleRequestTimeoutEvent event,
+    ZegoLiveStreamingOutgoingPKBattleRequestTimeoutEvent event,
     VoidCallback defaultAction,
   )? onOutgoingRequestTimeout;
 
   /// PK invitation had been ended by [event.fromHost]
   void Function(
-    ZegoPKBattleEndedEvent event,
+    ZegoLiveStreamingPKBattleEndedEvent event,
     VoidCallback defaultAction,
   )? onEnded;
 
   /// PK host offline
   void Function(
-    ZegoPKBattleUserOfflineEvent event,
+    ZegoLiveStreamingPKBattleUserOfflineEvent event,
     VoidCallback defaultAction,
   )? onUserOffline;
 
   /// PK host quit
   void Function(
-    ZegoPKBattleUserQuitEvent event,
+    ZegoLiveStreamingPKBattleUserQuitEvent event,
     VoidCallback defaultAction,
   )? onUserQuited;
 

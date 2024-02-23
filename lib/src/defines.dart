@@ -50,7 +50,7 @@ enum ZegoLiveStreamingState {
 /// The Live Streaming SDK simply defaults to defining which buttons can be displayed on the corresponding role's toolbar.
 ///
 /// For example, if you don't want co-hosts to control their own microphone, you can exclude the toggleMicrophoneButton from [ZegoBottomMenuBarConfig.coHostButtons].
-enum ZegoMenuBarButtonName {
+enum ZegoLiveStreamingMenuBarButtonName {
   /// Button for controlling the camera switch.
   toggleCameraButton,
 
@@ -109,7 +109,7 @@ enum ZegoMenuBarButtonName {
 /// Used to control whether certain features display a dialog, such as whether to show a confirmation dialog when request camera permission.
 ///
 /// This class is used for setting some text in ZegoInnerText.
-class ZegoDialogInfo {
+class ZegoLiveStreamingDialogInfo {
   /// Dialog title
   final String title;
 
@@ -122,7 +122,7 @@ class ZegoDialogInfo {
   /// Text content on the confirm button. Default value is 'OK'.
   String confirmButtonName;
 
-  ZegoDialogInfo({
+  ZegoLiveStreamingDialogInfo({
     required this.title,
     required this.message,
     this.cancelButtonName = 'Cancel',
@@ -144,7 +144,7 @@ enum ZegoLiveStreamingAudienceConnectState {
 
 /// A callback function for customizing the start live button
 /// It should return a Widget that represents the custom start live button.
-typedef ZegoStartLiveButtonBuilder = Widget Function(
+typedef ZegoLiveStreamingStartLiveButtonBuilder = Widget Function(
   BuildContext context,
 
   /// **must be called** to transition from the preview page to the live page

@@ -15,7 +15,7 @@ SizedBox get zegoLiveButtonPadding =>
     SizedBox.fromSize(size: Size.fromRadius(8.zR));
 
 /// @nodoc
-enum PopupItemValue {
+enum ZegoLiveStreamingPopupItemValue {
   inviteConnect,
   kickCoHost,
   kickOutAttendance,
@@ -23,11 +23,11 @@ enum PopupItemValue {
 }
 
 /// @nodoc
-class PopupItem {
-  final PopupItemValue value;
+class ZegoLiveStreamingPopupItem {
+  final ZegoLiveStreamingPopupItemValue value;
   final String text;
 
-  const PopupItem(this.value, this.text);
+  const ZegoLiveStreamingPopupItem(this.value, this.text);
 }
 
 /// @nodoc

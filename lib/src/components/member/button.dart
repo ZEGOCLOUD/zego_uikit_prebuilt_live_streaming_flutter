@@ -9,7 +9,7 @@ import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/member/list_sheet.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
@@ -18,8 +18,8 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/inner_text.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/pk_combine_notifier.dart';
 
 /// @nodoc
-class ZegoMemberButton extends StatefulWidget {
-  const ZegoMemberButton({
+class ZegoLiveStreamingMemberButton extends StatefulWidget {
+  const ZegoLiveStreamingMemberButton({
     Key? key,
     required this.isCoHostEnabled,
     required this.hostManager,
@@ -47,19 +47,21 @@ class ZegoMemberButton extends StatefulWidget {
   final bool isCoHostEnabled;
   final ZegoAvatarBuilder? avatarBuilder;
   final ZegoMemberListItemBuilder? itemBuilder;
-  final ZegoLiveHostManager hostManager;
-  final ZegoLiveConnectManager connectManager;
-  final ZegoPopUpManager popUpManager;
-  final ZegoInnerText translationText;
+  final ZegoLiveStreamingHostManager hostManager;
+  final ZegoLiveStreamingConnectManager connectManager;
+  final ZegoLiveStreamingPopUpManager popUpManager;
+  final ZegoUIKitPrebuiltLiveStreamingInnerText translationText;
   final ZegoLiveStreamingMemberListConfig config;
   final ZegoLiveStreamingMemberListEvents events;
 
   @override
-  State<ZegoMemberButton> createState() => _ZegoMemberButtonState();
+  State<ZegoLiveStreamingMemberButton> createState() =>
+      _ZegoLiveStreamingMemberButtonState();
 }
 
 /// @nodoc
-class _ZegoMemberButtonState extends State<ZegoMemberButton> {
+class _ZegoLiveStreamingMemberButtonState
+    extends State<ZegoLiveStreamingMemberButton> {
   var redPointNotifier = ValueNotifier<bool>(false);
   var memberCountNotifier = ValueNotifier<int>(0);
   StreamSubscription<dynamic>? userListSubscription;

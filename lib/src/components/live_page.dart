@@ -11,7 +11,7 @@ import 'package:zego_uikit/zego_uikit.dart';
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/central_audio_video_view.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/live_page_surface.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/core_managers.dart';
@@ -28,8 +28,8 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/pk/core/service/services.
 
 /// @nodoc
 /// user and sdk should be login and init before page enter
-class ZegoLivePage extends StatefulWidget {
-  const ZegoLivePage({
+class ZegoLiveStreamingLivePage extends StatefulWidget {
+  const ZegoLiveStreamingLivePage({
     Key? key,
     required this.appID,
     required this.appSign,
@@ -62,18 +62,18 @@ class ZegoLivePage extends StatefulWidget {
     ZegoLiveStreamingLeaveConfirmationEvent event,
   ) defaultLeaveConfirmationAction;
 
-  final ZegoLiveHostManager hostManager;
-  final ZegoLiveStatusManager liveStatusManager;
-  final ZegoLiveDurationManager liveDurationManager;
-  final ZegoPopUpManager popUpManager;
-  final ZegoPrebuiltPlugins? plugins;
+  final ZegoLiveStreamingHostManager hostManager;
+  final ZegoLiveStreamingStatusManager liveStatusManager;
+  final ZegoLiveStreamingDurationManager liveDurationManager;
+  final ZegoLiveStreamingPopUpManager popUpManager;
+  final ZegoLiveStreamingPlugins? plugins;
 
   @override
-  State<ZegoLivePage> createState() => ZegoLivePageState();
+  State<ZegoLiveStreamingLivePage> createState() =>
+      _ZegoLiveStreamingLivePageState();
 }
 
-/// @nodoc
-class ZegoLivePageState extends State<ZegoLivePage>
+class _ZegoLiveStreamingLivePageState extends State<ZegoLiveStreamingLivePage>
     with SingleTickerProviderStateMixin {
   List<StreamSubscription<dynamic>?> subscriptions = [];
 
@@ -171,7 +171,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
                             constraints.maxWidth,
                             constraints.maxHeight,
                           ),
-                          ZegoLivePageCentralAudioVideoView(
+                          ZegoLiveStreamingCentralAudioVideoView(
                             config: widget.config,
                             hostManager: widget.hostManager,
                             liveStatusManager: widget.liveStatusManager,
@@ -179,7 +179,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
                             plugins: widget.plugins,
                             constraints: constraints,
                           ),
-                          ZegoLivePageSurface(
+                          ZegoLiveStreamingLivePageSurface(
                             config: widget.config,
                             events: widget.events,
                             defaultEndAction: widget.defaultEndAction,
@@ -325,8 +325,8 @@ class ZegoLivePageState extends State<ZegoLivePage>
           height: height,
           decoration: BoxDecoration(
             image: DecorationImage(
-              image: PrebuiltLiveStreamingImage.assetImage(
-                PrebuiltLiveStreamingIconUrls.background,
+              image: ZegoLiveStreamingImage.assetImage(
+                ZegoLiveStreamingIconUrls.background,
               ),
               fit: BoxFit.cover,
             ),

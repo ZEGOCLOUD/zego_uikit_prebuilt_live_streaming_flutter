@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/live_streaming.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/swiping/live_streaming_swiping.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/swiping/page.dart';
 
 /// Live Streaming Widget.
 ///
@@ -19,7 +19,8 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/swiping/live_streaming_sw
 ///
 /// {@category APIs}
 /// {@category Events}
-/// {@category Migration: v3.0}
+/// {@category Configs}
+/// {@category Migration_v3.x}
 ///
 class ZegoUIKitPrebuiltLiveStreaming extends StatefulWidget {
   const ZegoUIKitPrebuiltLiveStreaming({
@@ -59,19 +60,17 @@ class ZegoUIKitPrebuiltLiveStreaming extends StatefulWidget {
   /// You can listen to events that you are interested in here.
   final ZegoUIKitPrebuiltLiveStreamingEvents? events;
 
-  /// @nodoc
   @override
   State<ZegoUIKitPrebuiltLiveStreaming> createState() =>
       _ZegoUIKitPrebuiltLiveStreamingState();
 }
 
-/// @nodoc
 class _ZegoUIKitPrebuiltLiveStreamingState
     extends State<ZegoUIKitPrebuiltLiveStreaming> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return null == widget.config.swiping
-        ? ZegoUIKitPrebuiltLiveStreamingPage(
+        ? ZegoLiveStreamingPage(
             appID: widget.appID,
             appSign: widget.appSign,
             userID: widget.userID,
@@ -80,7 +79,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
             config: widget.config,
             events: widget.events,
           )
-        : ZegoUIKitPrebuiltLiveStreamingSwiping(
+        : ZegoLiveStreamingSwipingPage(
             initialLiveID: widget.liveID,
             appID: widget.appID,
             appSign: widget.appSign,

@@ -16,13 +16,76 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/pk_combine_notifier.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/data.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/overlay_machine.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/prebuilt_data.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/pk/components/view.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/pk/core/core.dart';
 
-/// @nodoc
+/// The page can be minimized within the app
+///
+/// To support the minimize functionality in the app:
+///
+/// 1. Add a minimize button.
+/// ```dart
+/// ZegoUIKitPrebuiltLiveStreamingConfig.topMenuBar.buttons.add(ZegoLiveStreamingMenuBarButtonName.minimizingButton)
+/// ```
+/// Alternatively, if you have defined your own button, you can call:
+/// ```dart
+/// ZegoUIKitPrebuiltLiveStreamingController().minimize.minimize().
+/// ```
+///
+/// 2. Nest the `ZegoUIKitPrebuiltLiveStreamingMiniOverlayPage` within your MaterialApp widget. Make sure to return the correct context in the `contextQuery` parameter.
+///
+/// How to add in MaterialApp, example:
+/// ```dart
+///
+/// void main() {
+///   WidgetsFlutterBinding.ensureInitialized();
+///
+///   final navigatorKey = GlobalKey<NavigatorState>();
+///   runApp(MyApp(
+///     navigatorKey: navigatorKey,
+///   ));
+/// }
+///
+/// class MyApp extends StatefulWidget {
+///   final GlobalKey<NavigatorState> navigatorKey;
+///
+///   const MyApp({
+///     required this.navigatorKey,
+///     Key? key,
+///   }) : super(key: key);
+///
+///   @override
+///   State<StatefulWidget> createState() => MyAppState();
+/// }
+///
+/// class MyAppState extends State<MyApp> {
+///   @override
+///   Widget build(BuildContext context) {
+///     return MaterialApp(
+///       title: 'Flutter Demo',
+///       home: HomePage(),
+///       navigatorKey: widget.navigatorKey,
+///       builder: (BuildContext context, Widget? child) {
+///         return Stack(
+///           children: [
+///             child!,
+///
+///             /// support minimizing
+///             ZegoUIKitPrebuiltLiveStreamingMiniOverlayPage(
+///               contextQuery: () {
+///                 return widget.navigatorKey.currentState!.context;
+///               },
+///             ),
+///           ],
+///         );
+///       },
+///     );
+///   }
+/// }
+/// ```
 class ZegoUIKitPrebuiltLiveStreamingMiniOverlayPage extends StatefulWidget {
   const ZegoUIKitPrebuiltLiveStreamingMiniOverlayPage({
     Key? key,
@@ -91,7 +154,7 @@ class _ZegoUIKitPrebuiltLiveStreamingMiniOverlayPageState
   final activeUserIDNotifier = ValueNotifier<String?>(null);
   final Map<String, List<double>> rangeSoundLevels = {};
 
-  ZegoUIKitPrebuiltLiveStreamingData? get prebuiltData =>
+  ZegoLiveStreamingMinimizeData? get prebuiltData =>
       ZegoUIKitPrebuiltLiveStreamingController().minimize.private.minimizeData;
 
   @override
@@ -101,11 +164,10 @@ class _ZegoUIKitPrebuiltLiveStreamingMiniOverlayPageState
     topLeft = widget.topLeft;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ZegoLiveStreamingInternalMiniOverlayMachine()
+      ZegoLiveStreamingMiniOverlayMachine()
           .registerStateChanged(onMiniOverlayMachineStateChanged);
 
-      if (null !=
-          ZegoLiveStreamingInternalMiniOverlayMachine().machine.current) {
+      if (null != ZegoLiveStreamingMiniOverlayMachine().machine.current) {
         syncState();
       }
     });
@@ -120,7 +182,7 @@ class _ZegoUIKitPrebuiltLiveStreamingMiniOverlayPageState
 
     audioVideoListSubscription?.cancel();
 
-    ZegoLiveStreamingInternalMiniOverlayMachine()
+    ZegoLiveStreamingMiniOverlayMachine()
         .unregisterStateChanged(onMiniOverlayMachineStateChanged);
   }
 
@@ -368,7 +430,7 @@ class _ZegoUIKitPrebuiltLiveStreamingMiniOverlayPageState
       left: 0,
       right: 0,
       top: 2.zR,
-      child: LiveDurationTimeBoard(
+      child: ZegoLiveStreamingDurationTimeBoard(
         config:
             prebuiltData?.config.duration ?? ZegoLiveStreamingDurationConfig(),
         events:
@@ -396,7 +458,7 @@ class _ZegoUIKitPrebuiltLiveStreamingMiniOverlayPageState
         .isCoHost(ZegoUIKit().getLocalUser())) {
       localRole = ZegoLiveStreamingRole.coHost;
     }
-    var bottomButtons = <ZegoMenuBarButtonName>[];
+    var bottomButtons = <ZegoLiveStreamingMenuBarButtonName>[];
     switch (localRole) {
       case ZegoLiveStreamingRole.host:
         bottomButtons = prebuiltData?.config.bottomMenuBar.hostButtons ?? [];
@@ -409,10 +471,10 @@ class _ZegoUIKitPrebuiltLiveStreamingMiniOverlayPageState
             prebuiltData?.config.bottomMenuBar.audienceButtons ?? [];
         break;
     }
-    final cameraEnabled =
-        bottomButtons.contains(ZegoMenuBarButtonName.toggleCameraButton);
-    final microphoneEnabled =
-        bottomButtons.contains(ZegoMenuBarButtonName.toggleMicrophoneButton);
+    final cameraEnabled = bottomButtons
+        .contains(ZegoLiveStreamingMenuBarButtonName.toggleCameraButton);
+    final microphoneEnabled = bottomButtons
+        .contains(ZegoLiveStreamingMenuBarButtonName.toggleMicrophoneButton);
     return Positioned(
       left: 0,
       right: 0,
@@ -542,7 +604,7 @@ class _ZegoUIKitPrebuiltLiveStreamingMiniOverlayPageState
 
   void syncState() {
     setState(() {
-      currentState = ZegoLiveStreamingInternalMiniOverlayMachine().state;
+      currentState = ZegoLiveStreamingMiniOverlayMachine().state;
       visibility =
           currentState == ZegoLiveStreamingMiniOverlayPageState.minimizing;
 
@@ -627,8 +689,8 @@ class _ZegoUIKitPrebuiltLiveStreamingMiniOverlayPageState
         Container(
           decoration: BoxDecoration(
             image: DecorationImage(
-              image: PrebuiltLiveStreamingImage.assetImage(
-                PrebuiltLiveStreamingIconUrls.background,
+              image: ZegoLiveStreamingImage.assetImage(
+                ZegoLiveStreamingIconUrls.background,
               ),
               fit: BoxFit.cover,
             ),

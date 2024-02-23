@@ -13,14 +13,14 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/core/live_duration_manage
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
 
 /// @nodoc
-class LiveDurationTimeBoard extends StatefulWidget {
+class ZegoLiveStreamingDurationTimeBoard extends StatefulWidget {
   final ZegoLiveStreamingDurationConfig config;
   final ZegoLiveStreamingDurationEvents events;
-  final ZegoLiveDurationManager manager;
+  final ZegoLiveStreamingDurationManager manager;
 
   final double? fontSize;
 
-  const LiveDurationTimeBoard({
+  const ZegoLiveStreamingDurationTimeBoard({
     Key? key,
     required this.config,
     required this.events,
@@ -29,11 +29,12 @@ class LiveDurationTimeBoard extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => CallDurationTimeBoardState();
+  State<StatefulWidget> createState() =>
+      _ZegoLiveStreamingDurationTimeBoardState();
 }
 
-/// @nodoc
-class CallDurationTimeBoardState extends State<LiveDurationTimeBoard> {
+class _ZegoLiveStreamingDurationTimeBoardState
+    extends State<ZegoLiveStreamingDurationTimeBoard> {
   Timer? durationTimer;
   Duration? beginDuration;
   var durationNotifier = ValueNotifier<Duration>(Duration.zero);

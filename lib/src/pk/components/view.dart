@@ -28,7 +28,7 @@ class ZegoLiveStreamingPKV2View extends StatefulWidget {
     this.avatarConfig,
   }) : super(key: key);
 
-  final ZegoLiveHostManager hostManager;
+  final ZegoLiveStreamingHostManager hostManager;
 
   final BoxConstraints constraints;
 
@@ -39,10 +39,10 @@ class ZegoLiveStreamingPKV2View extends StatefulWidget {
 
   @override
   State<ZegoLiveStreamingPKV2View> createState() =>
-      ZegoLiveStreamingPKV2ViewState();
+      _ZegoLiveStreamingPKV2ViewState();
 }
 
-class ZegoLiveStreamingPKV2ViewState extends State<ZegoLiveStreamingPKV2View> {
+class _ZegoLiveStreamingPKV2ViewState extends State<ZegoLiveStreamingPKV2View> {
   ZegoLiveStreamingPKMixerLayout get mixerLayout =>
       widget.config.pkBattle.mixerLayout ??
       ZegoLiveStreamingPKMixerDefaultLayout();

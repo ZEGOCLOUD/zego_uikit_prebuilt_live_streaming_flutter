@@ -9,10 +9,10 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
-import 'package:zego_uikit_prebuilt_live_streaming/src/components/dialogs.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/components/permissions.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_manager.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/components/toast.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/dialogs.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/permissions.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/pop_up_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/toast.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/defines.dart';
@@ -24,8 +24,8 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/overlay_machine.dart';
 
 /// @nodoc
-class ZegoLiveConnectManager {
-  ZegoLiveConnectManager({
+class ZegoLiveStreamingConnectManager {
+  ZegoLiveStreamingConnectManager({
     required this.hostManager,
     required this.popUpManager,
     required this.liveStatusNotifier,
@@ -42,8 +42,8 @@ class ZegoLiveConnectManager {
 
   final ZegoUIKitPrebuiltLiveStreamingEvents events;
 
-  final ZegoLiveHostManager hostManager;
-  final ZegoPopUpManager popUpManager;
+  final ZegoLiveStreamingHostManager hostManager;
+  final ZegoLiveStreamingPopUpManager popUpManager;
   final ValueNotifier<LiveStatus> liveStatusNotifier;
   final ValueNotifier<bool> kickOutNotifier;
 
@@ -69,7 +69,7 @@ class ZegoLiveConnectManager {
   /// co-host total count
   final coHostCount = ValueNotifier<int>(0);
 
-  ZegoInnerText get innerText => config.innerText;
+  ZegoUIKitPrebuiltLiveStreamingInnerText get innerText => config.innerText;
 
   int get maxCoHostCount => config.maxCoHostCount;
 
@@ -366,8 +366,8 @@ class ZegoLiveConnectManager {
             List<ZegoUIKitUser>.from(requestCoHostUsersNotifier.value)
               ..add(inviter);
 
-        showSuccess(translation.message
-            .replaceFirst(ZegoInnerText.param_1, inviter.name));
+        showSuccess(translation.message.replaceFirst(
+            ZegoUIKitPrebuiltLiveStreamingInnerText.param_1, inviter.name));
       }
     } else {
       if (ZegoInvitationType.inviteToJoinCoHost == invitationType) {
@@ -414,7 +414,7 @@ class ZegoLiveConnectManager {
     events.coHost.audience.onInvitationReceived?.call(host);
 
     inviterOfInvitedToJoinCoHostInMinimizing = null;
-    if (ZegoLiveStreamingInternalMiniOverlayMachine().isMinimizing) {
+    if (ZegoLiveStreamingMiniOverlayMachine().isMinimizing) {
       ZegoLoggerService.logInfo(
         'is minimizing now, cache the inviter:$host',
         tag: 'live streaming',
@@ -632,7 +632,7 @@ class ZegoLiveConnectManager {
       audienceIDsOfInvitingConnect.remove(invitee.id);
 
       showError(innerText.audienceRejectInvitationToast.replaceFirst(
-        ZegoInnerText.param_1,
+        ZegoUIKitPrebuiltLiveStreamingInnerText.param_1,
         ZegoUIKit().getUser(invitee.id).name,
       ));
     } else {
@@ -828,6 +828,25 @@ class ZegoLiveConnectManager {
         break;
     }
 
+    events.coHost.coHost.onLocalConnectStateUpdated?.call(state);
+
+    final localRequestConnected =
+        ZegoLiveStreamingAudienceConnectState.connecting ==
+                audienceLocalConnectStateNotifier.value &&
+            ZegoLiveStreamingAudienceConnectState.connected == state;
+    final hostInvitedConnected = ZegoLiveStreamingAudienceConnectState.idle ==
+            audienceLocalConnectStateNotifier.value &&
+        ZegoLiveStreamingAudienceConnectState.connected == state;
+    if (localRequestConnected || hostInvitedConnected) {
+      /// idle|connecting -> connected
+      events.coHost.coHost.onLocalConnected?.call();
+    } else if (ZegoLiveStreamingAudienceConnectState.connected ==
+            audienceLocalConnectStateNotifier.value &&
+        ZegoLiveStreamingAudienceConnectState.idle == state) {
+      /// connected -> idle
+      events.coHost.coHost.onLocalDisconnected?.call();
+    }
+
     audienceLocalConnectStateNotifier.value = state;
   }
 
@@ -866,7 +885,7 @@ class ZegoLiveConnectManager {
   }
 }
 
-extension ZegoLiveConnectManagerCoHostCount on ZegoLiveConnectManager {
+extension ZegoLiveConnectManagerCoHostCount on ZegoLiveStreamingConnectManager {
   void initCoHostMixin() {
     subscriptions
       ..add(ZegoUIKit().getUserListStream().listen(onUserListUpdated))

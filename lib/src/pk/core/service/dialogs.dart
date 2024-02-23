@@ -2,7 +2,7 @@ part of 'services.dart';
 
 extension PKServiceV2Dialogs on ZegoUIKitPrebuiltLiveStreamingPKServices {
   Future<bool> showRequestReceivedDialog(
-    ZegoIncomingPKBattleRequestReceivedEvent event,
+    ZegoLiveStreamingIncomingPKBattleRequestReceivedEvent event,
   ) async {
     popupPKBattleEndedDialog();
     popupOutgoingPKBattleRequestRejectedDialog();
@@ -18,8 +18,9 @@ extension PKServiceV2Dialogs on ZegoUIKitPrebuiltLiveStreamingPKServices {
         context: context,
         rootNavigator: rootNavigator,
         title: dialogInfo.title,
-        content: dialogInfo.message
-            .replaceFirst(ZegoInnerText.param_1, event.fromHost.name),
+        content: dialogInfo.message.replaceFirst(
+            ZegoUIKitPrebuiltLiveStreamingInnerText.param_1,
+            event.fromHost.name),
         leftButtonText: dialogInfo.cancelButtonName,
         leftButtonCallback: () {
           Navigator.of(
@@ -58,7 +59,7 @@ extension PKServiceV2Dialogs on ZegoUIKitPrebuiltLiveStreamingPKServices {
   }
 
   Future<void> showPKBattleEndedDialog(
-    ZegoPKBattleEndedEvent event,
+    ZegoLiveStreamingPKBattleEndedEvent event,
   ) async {
     if (event.isRequestFromLocal) {
       return;
@@ -75,8 +76,9 @@ extension PKServiceV2Dialogs on ZegoUIKitPrebuiltLiveStreamingPKServices {
         context: context!,
         rootNavigator: rootNavigator,
         title: dialogInfo.title,
-        content: dialogInfo.message
-            .replaceFirst(ZegoInnerText.param_1, event.fromHost.name),
+        content: dialogInfo.message.replaceFirst(
+            ZegoUIKitPrebuiltLiveStreamingInnerText.param_1,
+            event.fromHost.name),
         rightButtonText: dialogInfo.confirmButtonName,
       ).then((value) {
         _coreData.showingPKBattleEndedDialog = false;
@@ -98,7 +100,7 @@ extension PKServiceV2Dialogs on ZegoUIKitPrebuiltLiveStreamingPKServices {
   }
 
   Future<void> showOutgoingPKBattleRequestRejectedDialog(
-    ZegoOutgoingPKBattleRequestRejectedEvent event,
+    ZegoLiveStreamingOutgoingPKBattleRequestRejectedEvent event,
   ) async {
     if (_coreData.showOutgoingPKBattleRequestRejectedDialog) {
       popupOutgoingPKBattleRequestRejectedDialog();
@@ -122,8 +124,9 @@ extension PKServiceV2Dialogs on ZegoUIKitPrebuiltLiveStreamingPKServices {
         context: context,
         rootNavigator: rootNavigator,
         title: dialogInfo.title,
-        content: dialogInfo.message
-            .replaceFirst(ZegoInnerText.param_1, event.fromHost.name),
+        content: dialogInfo.message.replaceFirst(
+            ZegoUIKitPrebuiltLiveStreamingInnerText.param_1,
+            event.fromHost.name),
         rightButtonText: dialogInfo.confirmButtonName,
       ).then((value) {
         _coreData.showOutgoingPKBattleRequestRejectedDialog = false;

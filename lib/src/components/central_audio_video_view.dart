@@ -10,7 +10,7 @@ import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/audio_video_view_foreground.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/core_managers.dart';
@@ -25,8 +25,8 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/pk/core/core.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/pk/core/service/defines.dart';
 
 /// @nodoc
-class ZegoLivePageCentralAudioVideoView extends StatefulWidget {
-  const ZegoLivePageCentralAudioVideoView({
+class ZegoLiveStreamingCentralAudioVideoView extends StatefulWidget {
+  const ZegoLiveStreamingCentralAudioVideoView({
     Key? key,
     required this.config,
     required this.hostManager,
@@ -38,21 +38,21 @@ class ZegoLivePageCentralAudioVideoView extends StatefulWidget {
 
   final ZegoUIKitPrebuiltLiveStreamingConfig config;
 
-  final ZegoLiveHostManager hostManager;
-  final ZegoLiveStatusManager liveStatusManager;
-  final ZegoPopUpManager popUpManager;
-  final ZegoPrebuiltPlugins? plugins;
+  final ZegoLiveStreamingHostManager hostManager;
+  final ZegoLiveStreamingStatusManager liveStatusManager;
+  final ZegoLiveStreamingPopUpManager popUpManager;
+  final ZegoLiveStreamingPlugins? plugins;
 
   final BoxConstraints constraints;
 
   @override
-  State<ZegoLivePageCentralAudioVideoView> createState() =>
-      ZegoLivePageCentralAudioVideoViewState();
+  State<ZegoLiveStreamingCentralAudioVideoView> createState() =>
+      ZegoLiveStreamingCentralAudioVideoViewState();
 }
 
 /// @nodoc
-class ZegoLivePageCentralAudioVideoViewState
-    extends State<ZegoLivePageCentralAudioVideoView> {
+class ZegoLiveStreamingCentralAudioVideoViewState
+    extends State<ZegoLiveStreamingCentralAudioVideoView> {
   /// had sort the host be first
   bool audioVideoContainerHostHadSorted = false;
   List<StreamSubscription<dynamic>?> subscriptions = [];
@@ -323,7 +323,7 @@ class ZegoLivePageCentralAudioVideoViewState
             valueListenable:
                 ZegoUIKit().getMicrophoneStateNotifier(user?.id ?? ''),
             builder: (context, isMicrophoneEnabled, _) {
-              return ZegoAudioVideoForeground(
+              return ZegoLiveStreamingAudioVideoForeground(
                 size: size,
                 user: user,
                 hostManager: widget.hostManager,

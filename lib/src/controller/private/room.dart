@@ -92,7 +92,7 @@ class ZegoLiveStreamingControllerRoomPrivateImpl {
     }
 
     final confirmDialogInfo = config?.confirmDialogInfo ??
-        ZegoDialogInfo(
+        ZegoLiveStreamingDialogInfo(
           title: 'Stop the live',
           message: 'Are you sure to stop the live?',
           cancelButtonName: 'Cancel',
@@ -143,7 +143,7 @@ class ZegoLiveStreamingControllerRoomPrivateImpl {
     );
   }
 
-  ZegoLiveHostManager? get hostManager =>
+  ZegoLiveStreamingHostManager? get hostManager =>
       ZegoLiveStreamingManagers().hostManager;
 
   ZegoUIKitPrebuiltLiveStreamingConfig? config;

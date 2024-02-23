@@ -10,8 +10,8 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
 
 /// @nodoc
-class ZegoUIKitPrebuiltLiveStreamingMinimizingButton extends StatefulWidget {
-  const ZegoUIKitPrebuiltLiveStreamingMinimizingButton({
+class ZegoLiveStreamingMinimizingButton extends StatefulWidget {
+  const ZegoLiveStreamingMinimizingButton({
     Key? key,
     this.afterClicked,
     this.icon,
@@ -31,13 +31,13 @@ class ZegoUIKitPrebuiltLiveStreamingMinimizingButton extends StatefulWidget {
   final Size? buttonSize;
 
   @override
-  State<ZegoUIKitPrebuiltLiveStreamingMinimizingButton> createState() =>
-      _ZegoUIKitPrebuiltLiveStreamingMinimizingButtonState();
+  State<ZegoLiveStreamingMinimizingButton> createState() =>
+      _ZegoLiveStreamingMinimizingButtonState();
 }
 
 /// @nodoc
-class _ZegoUIKitPrebuiltLiveStreamingMinimizingButtonState
-    extends State<ZegoUIKitPrebuiltLiveStreamingMinimizingButton> {
+class _ZegoLiveStreamingMinimizingButtonState
+    extends State<ZegoLiveStreamingMinimizingButton> {
   @override
   void initState() {
     super.initState();
@@ -78,8 +78,8 @@ class _ZegoUIKitPrebuiltLiveStreamingMinimizingButtonState
         child: SizedBox.fromSize(
           size: iconSize,
           child: widget.icon?.icon ??
-              PrebuiltLiveStreamingImage.asset(
-                PrebuiltLiveStreamingIconUrls.minimizing,
+              ZegoLiveStreamingImage.asset(
+                ZegoLiveStreamingIconUrls.minimizing,
               ),
         ),
       ),

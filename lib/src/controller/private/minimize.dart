@@ -11,11 +11,11 @@ mixin ZegoLiveStreamingControllerMinimizingPrivate {
 /// @nodoc
 /// Here are the APIs related to invitation.
 class ZegoLiveStreamingControllerMinimizingPrivateImpl {
-  ZegoUIKitPrebuiltLiveStreamingData? get minimizeData => _minimizeData;
+  ZegoLiveStreamingMinimizeData? get minimizeData => _minimizeData;
 
-  ZegoUIKitPrebuiltLiveStreamingData? _minimizeData;
+  ZegoLiveStreamingMinimizeData? _minimizeData;
 
-  ZegoLiveConnectManager? get _connectManager =>
+  ZegoLiveStreamingConnectManager? get _connectManager =>
       ZegoLiveStreamingManagers().connectManager;
 
   bool get isLiving =>
@@ -23,7 +23,7 @@ class ZegoLiveStreamingControllerMinimizingPrivateImpl {
 
   /// Please do not call this interface. It is the internal logic of Prebuilt.
   void initByPrebuilt({
-    required ZegoUIKitPrebuiltLiveStreamingData minimizeData,
+    required ZegoLiveStreamingMinimizeData minimizeData,
   }) {
     ZegoLoggerService.logInfo(
       'init by prebuilt',

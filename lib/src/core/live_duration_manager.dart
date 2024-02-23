@@ -11,14 +11,14 @@ import 'package:zego_uikit/zego_uikit.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
 
 /// @nodoc
-class ZegoLiveDurationManager {
-  final ZegoLiveHostManager hostManager;
+class ZegoLiveStreamingDurationManager {
+  final ZegoLiveStreamingHostManager hostManager;
 
   bool _initialized = false;
 
   bool get isValid => notifier.value.millisecondsSinceEpoch > 0;
 
-  ZegoLiveDurationManager({
+  ZegoLiveStreamingDurationManager({
     required this.hostManager,
   }) {
     roomPropertySubscription =

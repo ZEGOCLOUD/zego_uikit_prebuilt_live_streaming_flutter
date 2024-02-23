@@ -10,13 +10,13 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/inner_text.dart';
 
 /// @nodoc
-class ZegoInRoomLiveMessageView extends StatefulWidget {
+class ZegoLiveStreamingInRoomLiveMessageView extends StatefulWidget {
   final ZegoLiveStreamingInRoomMessageConfig? config;
   final ZegoLiveStreamingInRoomMessageEvents? events;
   final ZegoAvatarBuilder? avatarBuilder;
-  final ZegoInnerText innerText;
+  final ZegoUIKitPrebuiltLiveStreamingInnerText innerText;
 
-  const ZegoInRoomLiveMessageView({
+  const ZegoLiveStreamingInRoomLiveMessageView({
     Key? key,
     required this.innerText,
     required this.config,
@@ -25,12 +25,13 @@ class ZegoInRoomLiveMessageView extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<ZegoInRoomLiveMessageView> createState() =>
-      _ZegoInRoomLiveMessageViewState();
+  State<ZegoLiveStreamingInRoomLiveMessageView> createState() =>
+      _ZegoLiveStreamingInRoomLiveMessageViewState();
 }
 
 /// @nodoc
-class _ZegoInRoomLiveMessageViewState extends State<ZegoInRoomLiveMessageView> {
+class _ZegoLiveStreamingInRoomLiveMessageViewState
+    extends State<ZegoLiveStreamingInRoomLiveMessageView> {
   @override
   Widget build(BuildContext context) {
     return Directionality(

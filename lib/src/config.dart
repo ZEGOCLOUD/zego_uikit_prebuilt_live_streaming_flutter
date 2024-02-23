@@ -42,16 +42,16 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   /// Configuration related to the bottom member list, including displaying the member list, member list styles, and more.
   ZegoLiveStreamingMemberListConfig memberList;
 
-  /// configs about message
+  /// Control options for the bottom-left message list.
   ZegoLiveStreamingInRoomMessageConfig inRoomMessage;
 
-  /// You can use it to modify your voice, apply beauty effects, and control reverb.
+  /// Configuration options for voice changer, beauty effects and reverberation effects.
   ZegoLiveStreamingEffectConfig effect;
 
-  /// preview config
+  /// Used to configure the parameters related to the preview of the live streaming.
   ZegoLiveStreamingPreviewConfig preview;
 
-  /// pk version 2's config,
+  /// Used to configure the parameters related to PK battles
   /// if you want to listen event, please refer [ZegoUIKitPrebuiltLiveStreamingEvents.pk]
   ZegoLiveStreamingPKBattleConfig pkBattle;
 
@@ -79,6 +79,8 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   /// The role change after joining is not constrained by this property.
   ZegoLiveStreamingRole role = ZegoLiveStreamingRole.audience;
 
+  /// Plugins, currently supports signaling, beauty.
+  /// if you need cohost function, you need to install [ZegoUIKitSignalingPlugin]
   List<IZegoUIKitPlugin> plugins = [];
 
   /// Whether to open the camera when joining the live streaming.
@@ -144,12 +146,12 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   ///  )
   /// ```
   ///<img src="https://doc.oa.zego.im/Pics/ZegoUIKit/live/live_confirm.gif" width=50%/>
-  ZegoDialogInfo? confirmDialogInfo;
+  ZegoLiveStreamingDialogInfo? confirmDialogInfo;
 
   /// Configuration options for modifying all text content on the UI.
   ///
   /// All visible text content on the UI can be modified using this single property.
-  ZegoInnerText innerText;
+  ZegoUIKitPrebuiltLiveStreamingInnerText innerText;
 
   /// Layout-related configuration. You can choose your layout here. such as [layout = ZegoLayout.gallery()]
   ZegoLayout? layout;
@@ -259,14 +261,14 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
           audienceButtons: plugins?.isEmpty ?? true
               ? []
               //  host maybe change to be an audience
-              : const [ZegoMenuBarButtonName.coHostControlButton],
+              : const [ZegoLiveStreamingMenuBarButtonName.coHostControlButton],
         ),
         memberButton = ZegoLiveStreamingMemberButtonConfig(),
         memberList = ZegoLiveStreamingMemberListConfig(),
         inRoomMessage = ZegoLiveStreamingInRoomMessageConfig(),
         effect = ZegoLiveStreamingEffectConfig(),
-        innerText = ZegoInnerText(),
-        confirmDialogInfo = ZegoDialogInfo(
+        innerText = ZegoUIKitPrebuiltLiveStreamingInnerText(),
+        confirmDialogInfo = ZegoLiveStreamingDialogInfo(
           title: 'Stop the live',
           message: 'Are you sure to stop the live?',
           cancelButtonName: 'Cancel',
@@ -314,13 +316,13 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         bottomMenuBar = ZegoLiveStreamingBottomMenuBarConfig(
           audienceButtons: plugins?.isEmpty ?? true
               ? []
-              : const [ZegoMenuBarButtonName.coHostControlButton],
+              : const [ZegoLiveStreamingMenuBarButtonName.coHostControlButton],
         ),
         memberButton = ZegoLiveStreamingMemberButtonConfig(),
         memberList = ZegoLiveStreamingMemberListConfig(),
         inRoomMessage = ZegoLiveStreamingInRoomMessageConfig(),
         effect = ZegoLiveStreamingEffectConfig(),
-        innerText = ZegoInnerText(),
+        innerText = ZegoUIKitPrebuiltLiveStreamingInnerText(),
         preview = ZegoLiveStreamingPreviewConfig(),
         pkBattle = ZegoLiveStreamingPKBattleConfig(),
         duration = ZegoLiveStreamingDurationConfig() {
@@ -349,7 +351,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
     this.swiping,
     this.avatarBuilder,
     bool Function()? turnOnCameraWhenCohosted,
-    ZegoInnerText? translationText,
+    ZegoUIKitPrebuiltLiveStreamingInnerText? translationText,
     ZegoUIKitVideoConfig? video,
     ZegoLiveStreamingAudioVideoViewConfig? audioVideoView,
     ZegoLiveStreamingEffectConfig? effect,
@@ -372,7 +374,8 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         memberButton = memberButton ?? ZegoLiveStreamingMemberButtonConfig(),
         inRoomMessage = message ?? ZegoLiveStreamingInRoomMessageConfig(),
         effect = effect ?? ZegoLiveStreamingEffectConfig(),
-        innerText = translationText ?? ZegoInnerText(),
+        innerText =
+            translationText ?? ZegoUIKitPrebuiltLiveStreamingInnerText(),
         preview = preview ?? ZegoLiveStreamingPreviewConfig(),
         pkBattle = pkBattle ?? ZegoLiveStreamingPKBattleConfig(),
         duration = duration ?? ZegoLiveStreamingDurationConfig() {
@@ -391,9 +394,9 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
 ///
 /// These options allow you to customize the display effects of the audio/video views, such as showing microphone status and usernames.
 ///
-/// If you need to customize the foreground or background of the audio/video view, you can use foregroundBuilder and backgroundBuilder.
+/// If you need to customize the foreground or background of the audio/video view, you can use [foregroundBuilder] and [backgroundBuilder].
 ///
-/// If you want to hide user avatars or sound waveforms in audio mode, you can set showAvatarInAudioMode and showSoundWavesInAudioMode to false.
+/// If you want to hide user avatars or sound waveforms in audio mode, you can set [showAvatarInAudioMode] and [showSoundWavesInAudioMode] to false.
 class ZegoLiveStreamingAudioVideoViewConfig {
   /// show target user's audio video view or not
   /// return false if you don't want to show target user's audio video view.
@@ -481,7 +484,7 @@ class ZegoLiveStreamingAudioVideoViewConfig {
 class ZegoLiveStreamingTopMenuBarConfig {
   /// These buttons will displayed on the menu bar, order by the list
   /// only support [minimizingButton] right now
-  List<ZegoMenuBarButtonName> buttons;
+  List<ZegoLiveStreamingMenuBarButtonName> buttons;
 
   /// padding for the top menu bar.
   EdgeInsetsGeometry? padding;
@@ -521,13 +524,13 @@ class ZegoLiveStreamingBottomMenuBarConfig {
   bool showInRoomMessageButton;
 
   /// The list of predefined buttons to be displayed when the user role is set to host.
-  List<ZegoMenuBarButtonName> hostButtons = [];
+  List<ZegoLiveStreamingMenuBarButtonName> hostButtons = [];
 
   /// The list of predefined buttons to be displayed when the user role is set to co-host.
-  List<ZegoMenuBarButtonName> coHostButtons = [];
+  List<ZegoLiveStreamingMenuBarButtonName> coHostButtons = [];
 
   /// The list of predefined buttons to be displayed when the user role is set to audience.
-  List<ZegoMenuBarButtonName> audienceButtons = [];
+  List<ZegoLiveStreamingMenuBarButtonName> audienceButtons = [];
 
   /// List of extension buttons for the host.
   /// These buttons will be added to the menu bar in the specified order and automatically added to the overflow menu when the [maxCount] limit is exceeded.
@@ -568,19 +571,19 @@ class ZegoLiveStreamingBottomMenuBarConfig {
   ZegoLiveStreamingBottomMenuBarConfig({
     this.showInRoomMessageButton = true,
     this.hostButtons = const [
-      ZegoMenuBarButtonName.beautyEffectButton,
-      ZegoMenuBarButtonName.soundEffectButton,
-      ZegoMenuBarButtonName.switchCameraButton,
-      ZegoMenuBarButtonName.toggleCameraButton,
-      ZegoMenuBarButtonName.toggleMicrophoneButton,
+      ZegoLiveStreamingMenuBarButtonName.beautyEffectButton,
+      ZegoLiveStreamingMenuBarButtonName.soundEffectButton,
+      ZegoLiveStreamingMenuBarButtonName.switchCameraButton,
+      ZegoLiveStreamingMenuBarButtonName.toggleCameraButton,
+      ZegoLiveStreamingMenuBarButtonName.toggleMicrophoneButton,
     ],
     this.coHostButtons = const [
-      ZegoMenuBarButtonName.switchCameraButton,
-      ZegoMenuBarButtonName.toggleCameraButton,
-      ZegoMenuBarButtonName.toggleMicrophoneButton,
-      ZegoMenuBarButtonName.coHostControlButton,
-      ZegoMenuBarButtonName.beautyEffectButton,
-      ZegoMenuBarButtonName.soundEffectButton,
+      ZegoLiveStreamingMenuBarButtonName.switchCameraButton,
+      ZegoLiveStreamingMenuBarButtonName.toggleCameraButton,
+      ZegoLiveStreamingMenuBarButtonName.toggleMicrophoneButton,
+      ZegoLiveStreamingMenuBarButtonName.coHostControlButton,
+      ZegoLiveStreamingMenuBarButtonName.beautyEffectButton,
+      ZegoLiveStreamingMenuBarButtonName.soundEffectButton,
     ],
     this.audienceButtons = const [],
     this.hostExtendButtons = const [],
@@ -617,23 +620,23 @@ class ZegoLiveStreamingMemberButtonConfig {
 ///
 /// You can use the [ZegoUIKitPrebuiltLiveStreamingConfig.memberList] property to set the properties inside this class.
 ///
-/// If you want to use a custom member list item view, you can set the [ZegoLiveStreamingMemberListConfig.itemBuilder] property, and pass your custom view's builder function to it.
-///
-/// For example, suppose you have implemented a `CustomMemberListItem` component that can render a member list item view based on the user information. You can set it up like this:
-///
-///```dart
-/// ZegoMemberListConfig(
-///   itemBuilder: (BuildContext context, Size size, ZegoUIKitUser user, Map<String, dynamic> extraInfo) {
-///     return CustomMemberListItem(user: user);
-///   },
-/// );
-///```
-///
-/// In this example, we pass the builder function of the custom view, `CustomMemberListItem`, to the [itemBuilder] property so that the member list item will be rendered using the custom component.
-///
-/// In addition, you can listen for item click events through [onClicked].
+/// In addition, you can listen for item click events through [ZegoUIKitPrebuiltLiveStreamingEvents.memberList.onClicked].
 class ZegoLiveStreamingMemberListConfig {
   /// Custom member list item view.
+  ///
+  /// If you want to use a custom member list item view, you can set the [ZegoLiveStreamingMemberListConfig.itemBuilder] property, and pass your custom view's builder function to it.
+  ///
+  /// For example, suppose you have implemented a `CustomMemberListItem` component that can render a member list item view based on the user information. You can set it up like this:
+  ///
+  ///```dart
+  /// ZegoMemberListConfig(
+  ///   itemBuilder: (BuildContext context, Size size, ZegoUIKitUser user, Map<String, dynamic> extraInfo) {
+  ///     return CustomMemberListItem(user: user);
+  ///   },
+  /// );
+  ///```
+  ///
+  /// In this example, we pass the builder function of the custom view, `CustomMemberListItem`, to the [itemBuilder] property so that the member list item will be rendered using the custom component.
   ZegoMemberListItemBuilder? itemBuilder;
 
   ZegoLiveStreamingMemberListConfig({
@@ -645,24 +648,25 @@ class ZegoLiveStreamingMemberListConfig {
 ///
 /// This class is used for the [ZegoUIKitPrebuiltLiveStreamingConfig.message] property.
 ///
-/// If you want to customize chat messages, you can specify the [ZegoLiveStreamingInRoomMessageConfig.itemBuilder].
-///
-/// Example:
-/// ```dart
-/// ZegoInRoomMessageConfig(
-///   itemBuilder: (BuildContext context, ZegoRoomMessage message) {
-///     return ListTile(
-///       title: Text(message.message),
-///       subtitle: Text(message.user.id),
-///     );
-///   },
-///   opacity: 0.8,
-/// );
-///```
 /// Of course, we also provide a range of styles for you to customize, such as display size, background color, font style, and so on.
 class ZegoLiveStreamingInRoomMessageConfig {
   /// Use this to customize the style and content of each chat message list item.
   /// For example, you can modify the background color, opacity, border radius, or add additional information like the sender's level or role.
+  ///
+  /// If you want to customize chat messages, you can specify the [ZegoLiveStreamingInRoomMessageConfig.itemBuilder].
+  ///
+  /// Example:
+  /// ```dart
+  /// ZegoInRoomMessageConfig(
+  ///   itemBuilder: (BuildContext context, ZegoRoomMessage message) {
+  ///     return ListTile(
+  ///       title: Text(message.message),
+  ///       subtitle: Text(message.user.id),
+  ///     );
+  ///   },
+  ///   opacity: 0.8,
+  /// );
+  ///```
   ZegoInRoomMessageItemBuilder? itemBuilder;
 
   /// A more granular builder for customizing the widget on the leading of the avatar part, default is empty.
@@ -921,20 +925,16 @@ class ZegoLiveStreamingEffectConfig {
     this.sliderThumbRadius,
   });
 
-  /// @nodoc
   ZegoLiveStreamingEffectConfig.none({
     this.beautyEffects = const [],
     this.voiceChangeEffect = const [],
     this.reverbEffect = const [],
   });
 
-  /// @nodoc
   bool get isSupportBeauty => beautyEffects.isNotEmpty;
 
-  /// @nodoc
   bool get isSupportVoiceChange => voiceChangeEffect.isNotEmpty;
 
-  /// @nodoc
   bool get isSupportReverb => reverbEffect.isNotEmpty;
 }
 
@@ -1042,7 +1042,7 @@ class ZegoLiveStreamingPreviewConfig {
   ///     );
   ///   }
   /// ```
-  ZegoStartLiveButtonBuilder? startLiveButtonBuilder;
+  ZegoLiveStreamingStartLiveButtonBuilder? startLiveButtonBuilder;
 
   ZegoLiveStreamingPreviewConfig({
     this.showPreviewForHost = true,

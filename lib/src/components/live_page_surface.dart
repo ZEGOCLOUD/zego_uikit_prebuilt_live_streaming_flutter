@@ -12,8 +12,8 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/components/bottom_bar.dar
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/duration_time_board.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/message/view.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/top_bar.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect_manager.dart';
@@ -26,8 +26,8 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.defines.dart';
 
 /// @nodoc
-class ZegoLivePageSurface extends StatefulWidget {
-  const ZegoLivePageSurface({
+class ZegoLiveStreamingLivePageSurface extends StatefulWidget {
+  const ZegoLiveStreamingLivePageSurface({
     Key? key,
     required this.config,
     required this.events,
@@ -48,19 +48,20 @@ class ZegoLivePageSurface extends StatefulWidget {
     ZegoLiveStreamingLeaveConfirmationEvent event,
   ) defaultLeaveConfirmationAction;
 
-  final ZegoLiveHostManager hostManager;
-  final ZegoLiveStatusManager liveStatusManager;
-  final ZegoLiveDurationManager liveDurationManager;
-  final ZegoPopUpManager popUpManager;
-  final ZegoPrebuiltPlugins? plugins;
-  final ZegoLiveConnectManager connectManager;
+  final ZegoLiveStreamingHostManager hostManager;
+  final ZegoLiveStreamingStatusManager liveStatusManager;
+  final ZegoLiveStreamingDurationManager liveDurationManager;
+  final ZegoLiveStreamingPopUpManager popUpManager;
+  final ZegoLiveStreamingPlugins? plugins;
+  final ZegoLiveStreamingConnectManager connectManager;
 
   @override
-  State<ZegoLivePageSurface> createState() => ZegoLivePageSurfaceState();
+  State<ZegoLiveStreamingLivePageSurface> createState() =>
+      _ZegoLiveStreamingLivePageSurfaceState();
 }
 
-/// @nodoc
-class ZegoLivePageSurfaceState extends State<ZegoLivePageSurface>
+class _ZegoLiveStreamingLivePageSurfaceState
+    extends State<ZegoLiveStreamingLivePageSurface>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<Offset> _animation;
@@ -115,10 +116,10 @@ class ZegoLivePageSurfaceState extends State<ZegoLivePageSurface>
     return LayoutBuilder(builder: (context, constraints) {
       return Stack(
         children: [
+          durationTimeBoard(),
           topBar(),
           bottomBar(),
           messageList(),
-          durationTimeBoard(),
           foreground(
             constraints.maxWidth,
             constraints.maxHeight,
@@ -131,12 +132,12 @@ class ZegoLivePageSurfaceState extends State<ZegoLivePageSurface>
   Widget topBar() {
     final isCoHostEnabled = (widget.plugins?.isEnabled ?? false) &&
         widget.config.bottomMenuBar.audienceButtons
-            .contains(ZegoMenuBarButtonName.coHostControlButton);
+            .contains(ZegoLiveStreamingMenuBarButtonName.coHostControlButton);
     return Positioned(
       left: 0,
       right: 0,
       top: 64.zR,
-      child: ZegoTopBar(
+      child: ZegoLiveStreamingTopBar(
         config: widget.config,
         events: widget.events,
         defaultEndAction: widget.defaultEndAction,
@@ -156,7 +157,7 @@ class ZegoLivePageSurfaceState extends State<ZegoLivePageSurface>
   Widget bottomBar() {
     return Align(
       alignment: Alignment.bottomCenter,
-      child: ZegoBottomBar(
+      child: ZegoLiveStreamingBottomBar(
         buttonSize: zegoLiveButtonSize,
         config: widget.config,
         events: widget.events,
@@ -193,7 +194,7 @@ class ZegoLivePageSurfaceState extends State<ZegoLivePageSurface>
       bottom: 124.zR + (widget.config.inRoomMessage.bottomLeft?.dy ?? 0),
       child: ConstrainedBox(
         constraints: BoxConstraints.loose(listSize),
-        child: ZegoInRoomLiveMessageView(
+        child: ZegoLiveStreamingInRoomLiveMessageView(
           config: widget.config.inRoomMessage,
           events: widget.events.inRoomMessage,
           innerText: widget.config.innerText,
@@ -212,7 +213,7 @@ class ZegoLivePageSurfaceState extends State<ZegoLivePageSurface>
       left: 0,
       right: 0,
       top: 10,
-      child: LiveDurationTimeBoard(
+      child: ZegoLiveStreamingDurationTimeBoard(
         config: widget.config.duration,
         events: widget.events.duration,
         manager: widget.liveDurationManager,

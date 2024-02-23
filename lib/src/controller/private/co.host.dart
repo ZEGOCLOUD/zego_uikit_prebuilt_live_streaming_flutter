@@ -31,10 +31,10 @@ class ZegoLiveStreamingControllerCoHostPrivateImpl {
   ZegoUIKitPrebuiltLiveStreamingConfig? get prebuiltConfig =>
       ZegoLiveStreamingManagers().hostManager?.config;
 
-  ZegoLiveHostManager? get hostManager =>
+  ZegoLiveStreamingHostManager? get hostManager =>
       ZegoLiveStreamingManagers().hostManager;
 
-  ZegoLiveConnectManager? get connectManager =>
+  ZegoLiveStreamingConnectManager? get connectManager =>
       ZegoLiveStreamingManagers().connectManager;
 
   bool get isLocalHost => hostManager?.isLocalHost ?? false;
@@ -113,7 +113,7 @@ class ZegoLiveStreamingControllerCoHostPrivateImpl {
       subTag: 'controller.connect.invite.p',
     );
 
-    events = events;
+    this.events = events;
 
     for (final subscription in _subscriptions) {
       subscription?.cancel();

@@ -6,8 +6,8 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
 
 /// @nodoc
-class ZegoUIKitPrebuiltLiveStreamingData {
-  const ZegoUIKitPrebuiltLiveStreamingData({
+class ZegoLiveStreamingMinimizeData {
+  const ZegoLiveStreamingMinimizeData({
     required this.appID,
     required this.appSign,
     required this.userID,

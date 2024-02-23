@@ -40,17 +40,18 @@ class ZegoUIKitPrebuiltLiveStreamingPKData
 
   /// When the UI is minimized, and the host receives a pk battle request.
   final _pkBattleRequestReceivedEventInMinimizingNotifier =
-      ValueNotifier<ZegoIncomingPKBattleRequestReceivedEvent?>(null);
+      ValueNotifier<ZegoLiveStreamingIncomingPKBattleRequestReceivedEvent?>(
+          null);
 
-  ValueNotifier<ZegoIncomingPKBattleRequestReceivedEvent?>
+  ValueNotifier<ZegoLiveStreamingIncomingPKBattleRequestReceivedEvent?>
       get pkBattleRequestReceivedEventInMinimizingNotifier =>
           _pkBattleRequestReceivedEventInMinimizingNotifier;
 
   void init({
     required ZegoUIKitPrebuiltLiveStreamingConfig config,
     required ZegoUIKitPrebuiltLiveStreamingEvents events,
-    required ZegoInnerText innerText,
-    required ZegoLiveHostManager hostManager,
+    required ZegoUIKitPrebuiltLiveStreamingInnerText innerText,
+    required ZegoLiveStreamingHostManager hostManager,
     required ValueNotifier<LiveStatus> liveStatusNotifier,
     required ValueNotifier<bool> startedByLocalNotifier,
     required BuildContext Function()? contextQuery,
@@ -110,7 +111,7 @@ class ZegoUIKitPrebuiltLiveStreamingPKData
   }
 
   void cacheRequestReceivedEventInMinimizing(
-    ZegoIncomingPKBattleRequestReceivedEvent event,
+    ZegoLiveStreamingIncomingPKBattleRequestReceivedEvent event,
   ) {
     ZegoLoggerService.logInfo(
       'cacheRequestReceivedEventInMinimizing, event:$event',
@@ -133,10 +134,10 @@ class ZegoUIKitPrebuiltLiveStreamingPKData
 }
 
 mixin ZegoUIKitPrebuiltLiveStreamingPKExternalData {
-  ZegoLiveHostManager? hostManager;
+  ZegoLiveStreamingHostManager? hostManager;
   var liveStatusNotifier = ValueNotifier<LiveStatus>(LiveStatus.notStart);
   var startedByLocalNotifier = ValueNotifier<bool>(false);
-  ZegoInnerText? innerText;
+  ZegoUIKitPrebuiltLiveStreamingInnerText? innerText;
   BuildContext Function()? contextQuery;
   ZegoUIKitPrebuiltLiveStreamingConfig? prebuiltConfig;
   ZegoUIKitPrebuiltLiveStreamingEvents? events;

@@ -13,13 +13,13 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect_manager.dart
 import 'package:zego_uikit_prebuilt_live_streaming/src/defines.dart';
 
 /// @nodoc
-class ZegoLiveHostManager {
-  ZegoLiveConnectManager? connectManager;
+class ZegoLiveStreamingHostManager {
+  ZegoLiveStreamingConnectManager? connectManager;
   final ZegoUIKitPrebuiltLiveStreamingConfig config;
 
   bool _initialized = false;
 
-  ZegoLiveHostManager({
+  ZegoLiveStreamingHostManager({
     required this.config,
   }) {
     configIsHost = ZegoLiveStreamingRole.host == config.role;
@@ -253,7 +253,7 @@ class ZegoLiveHostManager {
     }
   }
 
-  void setConnectManger(ZegoLiveConnectManager manager) {
+  void setConnectManger(ZegoLiveStreamingConnectManager manager) {
     connectManager = manager;
 
     ZegoLoggerService.logInfo(

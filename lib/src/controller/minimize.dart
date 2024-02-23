@@ -1,6 +1,5 @@
 part of 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 
-/// @nodoc
 mixin ZegoLiveStreamingControllerMinimizing {
   final _minimizingImpl = ZegoLiveStreamingControllerMinimizingImpl();
 
@@ -12,11 +11,10 @@ class ZegoLiveStreamingControllerMinimizingImpl
     with ZegoLiveStreamingControllerMinimizingPrivate {
   /// current minimize state
   ZegoLiveStreamingMiniOverlayPageState get state =>
-      ZegoLiveStreamingInternalMiniOverlayMachine().state;
+      ZegoLiveStreamingMiniOverlayMachine().state;
 
   /// Is it currently in the minimized state or not
-  bool get isMinimizing =>
-      ZegoLiveStreamingInternalMiniOverlayMachine().isMinimizing;
+  bool get isMinimizing => ZegoLiveStreamingMiniOverlayMachine().isMinimizing;
 
   /// restore the [ZegoUIKitPrebuiltLiveStreaming] from minimize
   bool restore(
@@ -46,7 +44,7 @@ class ZegoLiveStreamingControllerMinimizingImpl
     }
 
     /// re-enter prebuilt live streaming
-    ZegoLiveStreamingInternalMiniOverlayMachine().changeState(
+    ZegoLiveStreamingMiniOverlayMachine().changeState(
       ZegoLiveStreamingMiniOverlayPageState.living,
     );
 
@@ -91,7 +89,7 @@ class ZegoLiveStreamingControllerMinimizingImpl
     BuildContext context, {
     bool rootNavigator = true,
   }) {
-    if (ZegoLiveStreamingInternalMiniOverlayMachine().isMinimizing) {
+    if (ZegoLiveStreamingMiniOverlayMachine().isMinimizing) {
       ZegoLoggerService.logInfo(
         'is minimizing, ignore',
         tag: 'live streaming',
@@ -111,7 +109,7 @@ class ZegoLiveStreamingControllerMinimizingImpl
       return false;
     }
 
-    ZegoLiveStreamingInternalMiniOverlayMachine().changeState(
+    ZegoLiveStreamingMiniOverlayMachine().changeState(
       ZegoLiveStreamingMiniOverlayPageState.minimizing,
     );
 
@@ -137,7 +135,7 @@ class ZegoLiveStreamingControllerMinimizingImpl
   /// if live streaming ended in minimizing state, not need to navigate, just
   /// hide the minimize widget.
   void hide() {
-    ZegoLiveStreamingInternalMiniOverlayMachine().changeState(
+    ZegoLiveStreamingMiniOverlayMachine().changeState(
       ZegoLiveStreamingMiniOverlayPageState.idle,
     );
   }

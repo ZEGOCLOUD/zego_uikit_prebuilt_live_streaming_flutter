@@ -7,7 +7,7 @@ import 'package:zego_uikit/zego_uikit.dart';
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/components.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/leave_button.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
@@ -18,7 +18,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/inner_text.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/mini_button.dart';
 
 /// @nodoc
-class ZegoTopBar extends StatefulWidget {
+class ZegoLiveStreamingTopBar extends StatefulWidget {
   final bool isCoHostEnabled;
   final ZegoUIKitPrebuiltLiveStreamingConfig config;
   final ZegoUIKitPrebuiltLiveStreamingEvents events;
@@ -27,17 +27,17 @@ class ZegoTopBar extends StatefulWidget {
     ZegoLiveStreamingLeaveConfirmationEvent event,
   ) defaultLeaveConfirmationAction;
 
-  final ZegoLiveHostManager hostManager;
+  final ZegoLiveStreamingHostManager hostManager;
   final ValueNotifier<bool> hostUpdateEnabledNotifier;
 
-  final ZegoLiveConnectManager connectManager;
-  final ZegoPopUpManager popUpManager;
+  final ZegoLiveStreamingConnectManager connectManager;
+  final ZegoLiveStreamingPopUpManager popUpManager;
 
-  final ZegoInnerText translationText;
+  final ZegoUIKitPrebuiltLiveStreamingInnerText translationText;
 
   final ValueNotifier<bool>? isLeaveRequestingNotifier;
 
-  const ZegoTopBar({
+  const ZegoLiveStreamingTopBar({
     Key? key,
     required this.isCoHostEnabled,
     required this.config,
@@ -53,11 +53,12 @@ class ZegoTopBar extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<ZegoTopBar> createState() => _ZegoTopBarState();
+  State<ZegoLiveStreamingTopBar> createState() =>
+      _ZegoLiveStreamingTopBarState();
 }
 
 /// @nodoc
-class _ZegoTopBarState extends State<ZegoTopBar> {
+class _ZegoLiveStreamingTopBarState extends State<ZegoLiveStreamingTopBar> {
   @override
   void initState() {
     super.initState();
@@ -87,7 +88,7 @@ class _ZegoTopBarState extends State<ZegoTopBar> {
             children: [
               minimizingButton(),
               SizedBox(width: 20.zR),
-              ZegoMemberButton(
+              ZegoLiveStreamingMemberButton(
                 config: widget.config.memberList,
                 events: widget.events.memberList,
                 isCoHostEnabled: widget.isCoHostEnabled,
@@ -113,8 +114,8 @@ class _ZegoTopBarState extends State<ZegoTopBar> {
 
   Widget minimizingButton() {
     return widget.config.topMenuBar.buttons
-            .contains(ZegoMenuBarButtonName.minimizingButton)
-        ? ZegoUIKitPrebuiltLiveStreamingMinimizingButton(
+            .contains(ZegoLiveStreamingMenuBarButtonName.minimizingButton)
+        ? ZegoLiveStreamingMinimizingButton(
             buttonSize: Size(52.zR, 52.zR),
             iconSize: Size(24.zR, 24.zR),
           )
@@ -123,7 +124,7 @@ class _ZegoTopBarState extends State<ZegoTopBar> {
 
   Widget closeButton() {
     return widget.config.topMenuBar.showCloseButton
-        ? ZegoLeaveStreamingButton(
+        ? ZegoLiveStreamingLeaveButton(
             buttonSize: Size(52.zR, 52.zR),
             iconSize: Size(24.zR, 24.zR),
             icon: ButtonIcon(

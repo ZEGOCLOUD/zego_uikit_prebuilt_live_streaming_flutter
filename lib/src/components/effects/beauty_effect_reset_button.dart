@@ -8,13 +8,13 @@ import 'package:zego_uikit/zego_uikit.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
 
 /// @nodoc
-class ZegoBeautyEffectResetButton extends StatefulWidget {
+class ZegoLiveStreamingBeautyEffectResetButton extends StatefulWidget {
   final ButtonIcon? icon;
   final Size? iconSize;
   final Size? buttonSize;
   final VoidCallback? onPressed;
 
-  const ZegoBeautyEffectResetButton({
+  const ZegoLiveStreamingBeautyEffectResetButton({
     Key? key,
     this.icon,
     this.iconSize,
@@ -23,13 +23,13 @@ class ZegoBeautyEffectResetButton extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<ZegoBeautyEffectResetButton> createState() =>
-      _ZegoBeautyEffectResetButtonState();
+  State<ZegoLiveStreamingBeautyEffectResetButton> createState() =>
+      _ZegoLiveStreamingBeautyEffectResetButtonState();
 }
 
 /// @nodoc
-class _ZegoBeautyEffectResetButtonState
-    extends State<ZegoBeautyEffectResetButton> {
+class _ZegoLiveStreamingBeautyEffectResetButtonState
+    extends State<ZegoLiveStreamingBeautyEffectResetButton> {
   @override
   Widget build(BuildContext context) {
     return ZegoTextIconButton(
@@ -40,8 +40,8 @@ class _ZegoBeautyEffectResetButtonState
       },
       icon: ButtonIcon(
         icon: widget.icon?.icon ??
-            PrebuiltLiveStreamingImage.asset(
-              PrebuiltLiveStreamingIconUrls.effectReset,
+            ZegoLiveStreamingImage.asset(
+              ZegoLiveStreamingIconUrls.effectReset,
             ),
         backgroundColor: widget.icon?.backgroundColor,
       ),

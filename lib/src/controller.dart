@@ -10,9 +10,9 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
-import 'package:zego_uikit_prebuilt_live_streaming/src/components/dialogs.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/message/enable_property.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/components/toast.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/dialogs.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/toast.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/core_managers.dart';
@@ -24,9 +24,9 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/events.defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/pk_combine_notifier.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/data.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/overlay_machine.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/prebuilt_data.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/pk/core/core.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/pk/core/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/pk/core/service/defines.dart';

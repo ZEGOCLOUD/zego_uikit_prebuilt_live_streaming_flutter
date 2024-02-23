@@ -1,3 +1,37 @@
+## 3.2.0
+
+- Add `onLocalConnectStateUpdated`, `onLocalConnected` and `onLocalDisconnected` in `ZegoUIKitPrebuiltLiveStreamingEvents.coHost.coHost`, it will be triggered when the audience become Co-Host
+  or Co-Host disconnected. Note that this only takes effect for local role changes.
+
+## 3.1.13
+
+- Update dependency.
+
+## 3.1.12
+
+- Update dependency.
+
+## 3.1.11
+
+- Fix live not updated when swiping
+
+## 3.1.10
+
+- Update documents
+
+## 3.1.9
+
+- Add configs document
+
+## 3.1.8
+
+- Update canvas size of pk layout
+
+## 3.1.7
+
+- Fix the issue where cohost events are not being called when calling the cohost APIs
+- rename some variables. [migrate guide](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/topics/Migration_v3.x-topic.html#317)
+
 ## 3.1.6
 
 - Update documents
@@ -16,8 +50,10 @@
 
 ## 3.1.2
 
-💥 [breaking changes](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/topics/Migration:%20v3.0-topic.html#312)
-- Modify type of `turnOnCameraWhenCohosted` from **bool** to `bool Function()?`, supporting the option for attendees to become co-hosts without automatically turning on the camera
+- > Modify type of `turnOnCameraWhenCohosted` from **bool** to `bool Function()?`, supporting the option for attendees to become co-hosts without automatically turning on the camera
+
+>
+> 💥 [breaking changes](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/topics/Migration_v3.x-topic.html#312)
 
 ## 3.1.1
 
@@ -25,14 +61,19 @@
 
 ## 3.1.0
 
-- add `audioVideo` series APIs in ZegoUIKitPrebuiltLiveStreamingController 
+- rename some variables. [migrate guide](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/topics/Migration_v3.x-topic.html#310)
+
+- add `audioVideo` series APIs in ZegoUIKitPrebuiltLiveStreamingController
 
 ## 3.0.3
 
-💥 [breaking changes](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/topics/Migration:%20v3.0-topic.html#303)
-- Update canvas size of pk layout 
+- rename some variables. [migrate guide](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/topics/Migration_v3.x-topic.html#303)
+
+- Update canvas size of pk layout
 
 ## 3.0.2
+
+- rename some variables.[migrate guide](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/topics/Migration_v3.x-topic.html#302)
 
 - Update dependency.
 
@@ -42,11 +83,12 @@
 
 ## 3.0.0
 
-The 3.0.0 version has standardized and optimized the API and Event, simplifying the usage of most APIs.
-
-Most of the changes involve modifications to the calling path, Most of the changes involve modifications to the calling path, such as changing from `ZegoUIKitPrebuiltLiveStreamingController().isMinimizing()` to `ZegoUIKitPrebuiltLiveStreamingController().minimize.isMinimizing`.
-
-💥 [breaking changes](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/topics/Migration:%20v3.0-topic.html#30)
+> The 3.0.0 version has standardized and optimized the API and Event, simplifying the usage of most APIs.
+>
+> Most of the changes involve modifications to the calling path, Most of the changes involve modifications to the calling path, such as changing
+> from `ZegoUIKitPrebuiltLiveStreamingController().isMinimizing()` to `ZegoUIKitPrebuiltLiveStreamingController().minimize.isMinimizing`.
+>
+> 💥 [breaking changes](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/topics/Migration_v3.x-topic.html#30)
 
 - Support quick quit in minimize page
 - Support user/room/audioVideo series events

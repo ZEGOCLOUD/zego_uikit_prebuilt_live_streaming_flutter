@@ -12,13 +12,13 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/events.defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/defines.dart';
 
 /// @nodoc
-typedef PrebuiltLiveStreamingMiniOverlayMachineStateChanged = void Function(
+typedef ZegoLiveStreamingMiniOverlayMachineStateChanged = void Function(
   ZegoLiveStreamingMiniOverlayPageState,
 );
 
 /// @nodoc
-class ZegoLiveStreamingInternalMiniOverlayMachine {
-  factory ZegoLiveStreamingInternalMiniOverlayMachine() => _instance;
+class ZegoLiveStreamingMiniOverlayMachine {
+  factory ZegoLiveStreamingMiniOverlayMachine() => _instance;
 
   sm.Machine<ZegoLiveStreamingMiniOverlayPageState> get machine => _machine;
 
@@ -30,7 +30,7 @@ class ZegoLiveStreamingInternalMiniOverlayMachine {
       ZegoLiveStreamingMiniOverlayPageState.idle;
 
   void registerStateChanged(
-    PrebuiltLiveStreamingMiniOverlayMachineStateChanged listener,
+    ZegoLiveStreamingMiniOverlayMachineStateChanged listener,
   ) {
     _onStateChangedListeners.add(listener);
 
@@ -42,7 +42,7 @@ class ZegoLiveStreamingInternalMiniOverlayMachine {
   }
 
   void unregisterStateChanged(
-    PrebuiltLiveStreamingMiniOverlayMachineStateChanged listener,
+    ZegoLiveStreamingMiniOverlayMachineStateChanged listener,
   ) {
     _onStateChangedListeners.remove(listener);
 
@@ -167,15 +167,15 @@ class ZegoLiveStreamingInternalMiniOverlayMachine {
 
   /// private variables
 
-  ZegoLiveStreamingInternalMiniOverlayMachine._internal() {
+  ZegoLiveStreamingMiniOverlayMachine._internal() {
     _init();
   }
 
-  static final ZegoLiveStreamingInternalMiniOverlayMachine _instance =
-      ZegoLiveStreamingInternalMiniOverlayMachine._internal();
+  static final ZegoLiveStreamingMiniOverlayMachine _instance =
+      ZegoLiveStreamingMiniOverlayMachine._internal();
 
   final _machine = sm.Machine<ZegoLiveStreamingMiniOverlayPageState>();
-  final List<PrebuiltLiveStreamingMiniOverlayMachineStateChanged>
+  final List<ZegoLiveStreamingMiniOverlayMachineStateChanged>
       _onStateChangedListeners = [];
 
   late sm.State<ZegoLiveStreamingMiniOverlayPageState> _stateIdle;

@@ -5,8 +5,8 @@ const String roomPropKeyPKUsers = "pk_users";
 const String roomPropKeyHost = "host";
 const String roomPropKeyRequestID = "r_id";
 
-class ZegoIncomingPKBattleRequestReceivedEvent {
-  const ZegoIncomingPKBattleRequestReceivedEvent({
+class ZegoLiveStreamingIncomingPKBattleRequestReceivedEvent {
+  const ZegoLiveStreamingIncomingPKBattleRequestReceivedEvent({
     required this.requestID,
     required this.fromHost,
     required this.fromLiveID,
@@ -33,7 +33,7 @@ class ZegoIncomingPKBattleRequestReceivedEvent {
 
   /// The hosts already involved in the same PK session,
   /// meaning the hosts that have already participated in the PK when you receive the PK invitation.
-  final List<ZegoIncomingPKBattleRequestUser> sessionHosts;
+  final List<ZegoLiveStreamingIncomingPKBattleRequestUser> sessionHosts;
 
   @override
   String toString() => '{requestID:$requestID, '
@@ -47,8 +47,8 @@ class ZegoIncomingPKBattleRequestReceivedEvent {
       '}';
 }
 
-class ZegoIncomingPKBattleRequestUser {
-  ZegoIncomingPKBattleRequestUser({
+class ZegoLiveStreamingIncomingPKBattleRequestUser {
+  ZegoLiveStreamingIncomingPKBattleRequestUser({
     this.id = '',
     this.state = ZegoSignalingPluginInvitationUserState.unknown,
     this.customData = '',
@@ -75,8 +75,8 @@ class ZegoIncomingPKBattleRequestUser {
 }
 
 /// @nodoc
-class ZegoIncomingPKBattleRequestTimeoutEvent {
-  const ZegoIncomingPKBattleRequestTimeoutEvent({
+class ZegoLiveStreamingIncomingPKBattleRequestTimeoutEvent {
+  const ZegoLiveStreamingIncomingPKBattleRequestTimeoutEvent({
     required this.requestID,
     required this.fromHost,
   });
@@ -90,8 +90,8 @@ class ZegoIncomingPKBattleRequestTimeoutEvent {
       'anotherHost:$fromHost}';
 }
 
-class ZegoIncomingPKBattleRequestCancelledEvent {
-  const ZegoIncomingPKBattleRequestCancelledEvent({
+class ZegoLiveStreamingIncomingPKBattleRequestCancelledEvent {
+  const ZegoLiveStreamingIncomingPKBattleRequestCancelledEvent({
     required this.requestID,
     required this.fromHost,
     required this.customData,
@@ -109,8 +109,8 @@ class ZegoIncomingPKBattleRequestCancelledEvent {
 }
 
 /// @nodoc
-class ZegoOutgoingPKBattleRequestAcceptedEvent {
-  const ZegoOutgoingPKBattleRequestAcceptedEvent({
+class ZegoLiveStreamingOutgoingPKBattleRequestAcceptedEvent {
+  const ZegoLiveStreamingOutgoingPKBattleRequestAcceptedEvent({
     required this.requestID,
     required this.fromHost,
     required this.fromLiveID,
@@ -128,8 +128,8 @@ class ZegoOutgoingPKBattleRequestAcceptedEvent {
 }
 
 /// @nodoc
-class ZegoOutgoingPKBattleRequestRejectedEvent {
-  const ZegoOutgoingPKBattleRequestRejectedEvent({
+class ZegoLiveStreamingOutgoingPKBattleRequestRejectedEvent {
+  const ZegoLiveStreamingOutgoingPKBattleRequestRejectedEvent({
     required this.requestID,
     required this.fromHost,
     required this.refuseCode,
@@ -148,8 +148,8 @@ class ZegoOutgoingPKBattleRequestRejectedEvent {
 }
 
 /// @nodoc
-class ZegoOutgoingPKBattleRequestTimeoutEvent {
-  const ZegoOutgoingPKBattleRequestTimeoutEvent({
+class ZegoLiveStreamingOutgoingPKBattleRequestTimeoutEvent {
+  const ZegoLiveStreamingOutgoingPKBattleRequestTimeoutEvent({
     required this.requestID,
     required this.fromHost,
   });
@@ -164,8 +164,8 @@ class ZegoOutgoingPKBattleRequestTimeoutEvent {
 }
 
 /// @nodoc
-class ZegoPKBattleEndedEvent {
-  const ZegoPKBattleEndedEvent({
+class ZegoLiveStreamingPKBattleEndedEvent {
+  const ZegoLiveStreamingPKBattleEndedEvent({
     required this.requestID,
     required this.isRequestFromLocal,
     required this.fromHost,
@@ -196,8 +196,8 @@ class ZegoPKBattleEndedEvent {
 }
 
 /// @nodoc
-class ZegoPKBattleUserOfflineEvent {
-  const ZegoPKBattleUserOfflineEvent({
+class ZegoLiveStreamingPKBattleUserOfflineEvent {
+  const ZegoLiveStreamingPKBattleUserOfflineEvent({
     required this.requestID,
     required this.fromHost,
   });
@@ -211,8 +211,8 @@ class ZegoPKBattleUserOfflineEvent {
 }
 
 /// @nodoc
-class ZegoPKBattleUserQuitEvent {
-  const ZegoPKBattleUserQuitEvent({
+class ZegoLiveStreamingPKBattleUserQuitEvent {
+  const ZegoLiveStreamingPKBattleUserQuitEvent({
     required this.requestID,
     required this.fromHost,
   });

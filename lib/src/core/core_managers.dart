@@ -8,7 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
-import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect_manager.dart';
@@ -50,7 +50,7 @@ class ZegoLiveStreamingManagers {
     String liveID,
     ZegoUIKitPrebuiltLiveStreamingConfig config,
     ZegoUIKitPrebuiltLiveStreamingEvents events,
-    ZegoPopUpManager popUpManager,
+    ZegoLiveStreamingPopUpManager popUpManager,
     ValueNotifier<bool> startedByLocalNotifier,
     BuildContext Function()? contextQuery,
   ) {
@@ -72,18 +72,18 @@ class ZegoLiveStreamingManagers {
 
     _initialized = true;
 
-    hostManager = ZegoLiveHostManager(config: config);
-    liveStatusManager = ZegoLiveStatusManager(
+    hostManager = ZegoLiveStreamingHostManager(config: config);
+    liveStatusManager = ZegoLiveStreamingStatusManager(
       hostManager: hostManager!,
       config: config,
       events: events,
     );
-    liveDurationManager = ZegoLiveDurationManager(
+    liveDurationManager = ZegoLiveStreamingDurationManager(
       hostManager: hostManager!,
     );
 
     if (config.plugins.isNotEmpty) {
-      plugins = ZegoPrebuiltPlugins(
+      plugins = ZegoLiveStreamingPlugins(
         appID: appID,
         appSign: appSign,
         userID: userID,
@@ -113,7 +113,7 @@ class ZegoLiveStreamingManagers {
       );
     }
 
-    connectManager = ZegoLiveConnectManager(
+    connectManager = ZegoLiveStreamingConnectManager(
       config: config,
       events: events,
       hostManager: hostManager!,
@@ -193,11 +193,11 @@ class ZegoLiveStreamingManagers {
 
   List<StreamSubscription<dynamic>?> subscriptions = [];
 
-  ZegoLiveHostManager? hostManager;
-  ZegoLiveStatusManager? liveStatusManager;
-  ZegoLiveDurationManager? liveDurationManager;
-  ZegoLiveConnectManager? connectManager;
-  ZegoPrebuiltPlugins? plugins;
+  ZegoLiveStreamingHostManager? hostManager;
+  ZegoLiveStreamingStatusManager? liveStatusManager;
+  ZegoLiveStreamingDurationManager? liveDurationManager;
+  ZegoLiveStreamingConnectManager? connectManager;
+  ZegoLiveStreamingPlugins? plugins;
 
   String _swipingCurrentLiveID = '';
 

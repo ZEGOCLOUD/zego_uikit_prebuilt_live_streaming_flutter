@@ -8,19 +8,19 @@ import 'package:flutter/cupertino.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
-import 'package:zego_uikit_prebuilt_live_streaming/src/components/toast.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/toast.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/overlay_machine.dart';
 
 /// @nodoc
-enum PluginNetworkState {
+enum ZegoLiveStreamingPluginNetworkState {
   unknown,
   offline,
   online,
 }
 
 /// @nodoc
-class ZegoPrebuiltPlugins {
-  ZegoPrebuiltPlugins({
+class ZegoLiveStreamingPlugins {
+  ZegoLiveStreamingPlugins({
     required this.appID,
     required this.appSign,
     required this.userID,
@@ -50,7 +50,8 @@ class ZegoPrebuiltPlugins {
 
   Function(ZegoUIKitError)? onError;
 
-  PluginNetworkState networkState = PluginNetworkState.unknown;
+  ZegoLiveStreamingPluginNetworkState networkState =
+      ZegoLiveStreamingPluginNetworkState.unknown;
   List<StreamSubscription<dynamic>?> subscriptions = [];
   ValueNotifier<ZegoSignalingPluginConnectionState> pluginUserStateNotifier =
       ValueNotifier<ZegoSignalingPluginConnectionState>(
@@ -232,7 +233,7 @@ class ZegoPrebuiltPlugins {
     roomHasInitLogin = false;
     tryReLogging = false;
 
-    if (ZegoLiveStreamingInternalMiniOverlayMachine().isMinimizing) {
+    if (ZegoLiveStreamingMiniOverlayMachine().isMinimizing) {
       ZegoLoggerService.logInfo(
         'to minimizing, not need to leave room, logout and uninit',
         tag: 'live streaming',
@@ -396,7 +397,7 @@ class ZegoPrebuiltPlugins {
     switch (networkMode) {
       case ZegoNetworkMode.Offline:
       case ZegoNetworkMode.Unknown:
-        networkState = PluginNetworkState.offline;
+        networkState = ZegoLiveStreamingPluginNetworkState.offline;
         break;
       case ZegoNetworkMode.Ethernet:
       case ZegoNetworkMode.WiFi:
@@ -404,11 +405,11 @@ class ZegoPrebuiltPlugins {
       case ZegoNetworkMode.Mode3G:
       case ZegoNetworkMode.Mode4G:
       case ZegoNetworkMode.Mode5G:
-        if (PluginNetworkState.offline == networkState) {
+        if (ZegoLiveStreamingPluginNetworkState.offline == networkState) {
           tryReLogin();
         }
 
-        networkState = PluginNetworkState.online;
+        networkState = ZegoLiveStreamingPluginNetworkState.online;
         break;
     }
   }
@@ -480,7 +481,7 @@ class ZegoPrebuiltPlugins {
       return false;
     }
 
-    if (networkState != PluginNetworkState.online) {
+    if (networkState != ZegoLiveStreamingPluginNetworkState.online) {
       ZegoLoggerService.logInfo(
         '[plugin] tryReEnterRoom, network is not connected',
         tag: 'live streaming',

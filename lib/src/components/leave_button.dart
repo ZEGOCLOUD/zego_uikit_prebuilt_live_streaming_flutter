@@ -14,7 +14,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/defines.dart';
 
 /// @nodoc
-class ZegoLeaveStreamingButton extends StatefulWidget {
+class ZegoLiveStreamingLeaveButton extends StatefulWidget {
   final ButtonIcon? icon;
 
   /// the size of button's icon
@@ -29,11 +29,11 @@ class ZegoLeaveStreamingButton extends StatefulWidget {
     ZegoLiveStreamingLeaveConfirmationEvent event,
   ) defaultLeaveConfirmationAction;
 
-  final ZegoLiveHostManager hostManager;
+  final ZegoLiveStreamingHostManager hostManager;
   final ValueNotifier<bool> hostUpdateEnabledNotifier;
   final ValueNotifier<bool>? isLeaveRequestingNotifier;
 
-  const ZegoLeaveStreamingButton({
+  const ZegoLiveStreamingLeaveButton({
     Key? key,
     required this.config,
     required this.events,
@@ -48,12 +48,12 @@ class ZegoLeaveStreamingButton extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<ZegoLeaveStreamingButton> createState() =>
-      ZegoLeaveStreamingButtonState();
+  State<ZegoLiveStreamingLeaveButton> createState() =>
+      _ZegoLiveStreamingLeaveButtonState();
 }
 
-/// @nodoc
-class ZegoLeaveStreamingButtonState extends State<ZegoLeaveStreamingButton> {
+class _ZegoLiveStreamingLeaveButtonState
+    extends State<ZegoLiveStreamingLeaveButton> {
   final hangupButtonClickableNotifier = ValueNotifier<bool>(true);
 
   @override

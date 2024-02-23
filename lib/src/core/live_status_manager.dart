@@ -16,15 +16,15 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
 
 /// @nodoc
-class ZegoLiveStatusManager {
-  ZegoLiveConnectManager? connectManager;
-  final ZegoLiveHostManager hostManager;
+class ZegoLiveStreamingStatusManager {
+  ZegoLiveStreamingConnectManager? connectManager;
+  final ZegoLiveStreamingHostManager hostManager;
   final ZegoUIKitPrebuiltLiveStreamingConfig config;
   final ZegoUIKitPrebuiltLiveStreamingEvents events;
 
   bool _initialized = false;
 
-  ZegoLiveStatusManager({
+  ZegoLiveStreamingStatusManager({
     required this.hostManager,
     required this.config,
     required this.events,
@@ -129,7 +129,7 @@ class ZegoLiveStatusManager {
     }
   }
 
-  void setConnectManger(ZegoLiveConnectManager manager) {
+  void setConnectManger(ZegoLiveStreamingConnectManager manager) {
     connectManager = manager;
 
     ZegoLoggerService.logInfo(

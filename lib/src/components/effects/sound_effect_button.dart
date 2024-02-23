@@ -11,19 +11,19 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/inner_text.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
 
 /// @nodoc
-class ZegoSoundEffectButton extends StatefulWidget {
+class ZegoLiveStreamingSoundEffectButton extends StatefulWidget {
   final List<VoiceChangerType> voiceChangeEffect;
   final List<ReverbType> reverbEffect;
 
   final Size? iconSize;
   final Size? buttonSize;
   final ButtonIcon? icon;
-  final ZegoInnerText translationText;
+  final ZegoUIKitPrebuiltLiveStreamingInnerText translationText;
   final bool rootNavigator;
 
   final ZegoLiveStreamingEffectConfig effectConfig;
 
-  const ZegoSoundEffectButton({
+  const ZegoLiveStreamingSoundEffectButton({
     Key? key,
     required this.translationText,
     required this.rootNavigator,
@@ -36,11 +36,13 @@ class ZegoSoundEffectButton extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<ZegoSoundEffectButton> createState() => _ZegoSoundEffectButtonState();
+  State<ZegoLiveStreamingSoundEffectButton> createState() =>
+      _ZegoLiveStreamingSoundEffectButtonState();
 }
 
 /// @nodoc
-class _ZegoSoundEffectButtonState extends State<ZegoSoundEffectButton> {
+class _ZegoLiveStreamingSoundEffectButtonState
+    extends State<ZegoLiveStreamingSoundEffectButton> {
   var voiceChangerSelectedIDNotifier = ValueNotifier<String>('');
   var reverbSelectedIDNotifier = ValueNotifier<String>('');
 
@@ -71,8 +73,8 @@ class _ZegoSoundEffectButtonState extends State<ZegoSoundEffectButton> {
         child: SizedBox.fromSize(
           size: sizeBoxSize,
           child: widget.icon?.icon ??
-              PrebuiltLiveStreamingImage.asset(
-                PrebuiltLiveStreamingIconUrls.toolbarSoundEffect,
+              ZegoLiveStreamingImage.asset(
+                ZegoLiveStreamingIconUrls.toolbarSoundEffect,
               ),
         ),
       ),

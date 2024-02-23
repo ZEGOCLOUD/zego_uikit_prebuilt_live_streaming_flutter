@@ -12,13 +12,13 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/inner_text.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
 
 /// @nodoc
-class ZegoBeautyEffectSheet extends StatefulWidget {
-  final ZegoInnerText translationText;
+class ZegoLiveStreamingBeautyEffectSheet extends StatefulWidget {
+  final ZegoUIKitPrebuiltLiveStreamingInnerText translationText;
   final bool rootNavigator;
   final List<BeautyEffectType> beautyEffects;
   final ZegoLiveStreamingEffectConfig config;
 
-  const ZegoBeautyEffectSheet({
+  const ZegoLiveStreamingBeautyEffectSheet({
     Key? key,
     required this.translationText,
     required this.rootNavigator,
@@ -27,7 +27,8 @@ class ZegoBeautyEffectSheet extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<ZegoBeautyEffectSheet> createState() => _ZegoBeautyEffectSheetState();
+  State<ZegoLiveStreamingBeautyEffectSheet> createState() =>
+      _ZegoLiveStreamingBeautyEffectSheetState();
 }
 
 /// @nodoc
@@ -49,7 +50,8 @@ double get _besLineToSheetPadding => 36.zR;
 double get _besLineHeight => 1.zR;
 
 /// @nodoc
-class _ZegoBeautyEffectSheetState extends State<ZegoBeautyEffectSheet> {
+class _ZegoLiveStreamingBeautyEffectSheetState
+    extends State<ZegoLiveStreamingBeautyEffectSheet> {
   late ZegoEffectGridModel beauty;
   var selectedIDNotifier = ValueNotifier<String>('');
   var selectedEffectTypeNotifier =
@@ -69,7 +71,7 @@ class _ZegoBeautyEffectSheetState extends State<ZegoBeautyEffectSheet> {
       selectedID: selectedIDNotifier,
       items: beautyEffects
           .map(
-            (effect) => ZegoEffectGridItem<BeautyEffectType>(
+            (effect) => ZegoLiveStreamingEffectGridItem<BeautyEffectType>(
               id: effect.index.toString(),
               effectType: effect,
               icon: ButtonIcon(
@@ -78,7 +80,7 @@ class _ZegoBeautyEffectSheetState extends State<ZegoBeautyEffectSheet> {
                     widget.config.normalIconColor ?? const Color(0xffCCCCCC),
                     BlendMode.srcATop,
                   ),
-                  child: PrebuiltLiveStreamingImage.asset(
+                  child: ZegoLiveStreamingImage.asset(
                     faceBeautyIconPath(effect.name),
                   ),
                 ),
@@ -89,7 +91,7 @@ class _ZegoBeautyEffectSheetState extends State<ZegoBeautyEffectSheet> {
                     widget.config.selectedIconColor ?? const Color(0xffA653FF),
                     BlendMode.srcATop,
                   ),
-                  child: PrebuiltLiveStreamingImage.asset(
+                  child: ZegoLiveStreamingImage.asset(
                     faceBeautyIconPath(effect.name),
                   ),
                 ),
@@ -228,8 +230,8 @@ class _ZegoBeautyEffectSheetState extends State<ZegoBeautyEffectSheet> {
               width: 70.zR,
               height: 70.zR,
               child: widget.config.backIcon ??
-                  PrebuiltLiveStreamingImage.asset(
-                    PrebuiltLiveStreamingIconUrls.back,
+                  ZegoLiveStreamingImage.asset(
+                    ZegoLiveStreamingIconUrls.back,
                   ),
             ),
           ),
@@ -244,7 +246,7 @@ class _ZegoBeautyEffectSheetState extends State<ZegoBeautyEffectSheet> {
                 ),
           ),
           Expanded(child: Container()),
-          ZegoBeautyEffectResetButton(
+          ZegoLiveStreamingBeautyEffectResetButton(
             icon: ButtonIcon(icon: widget.config.resetIcon),
             iconSize: Size(38.zR, 38.zR),
             buttonSize: Size(_besHeaderHeight, _besHeaderHeight),
@@ -280,7 +282,7 @@ class _ZegoBeautyEffectSheetState extends State<ZegoBeautyEffectSheet> {
 /// @nodoc
 void showBeautyEffectSheet(
   BuildContext context, {
-  required ZegoInnerText translationText,
+  required ZegoUIKitPrebuiltLiveStreamingInnerText translationText,
   required bool rootNavigator,
   required ZegoLiveStreamingEffectConfig config,
   required List<BeautyEffectType> beautyEffects,
@@ -298,7 +300,7 @@ void showBeautyEffectSheet(
         duration: const Duration(milliseconds: 50),
         child: SizedBox(
           height: _besSheetTotalHeight + (_besSliderHeight + _besSliderPadding),
-          child: ZegoBeautyEffectSheet(
+          child: ZegoLiveStreamingBeautyEffectSheet(
             translationText: translationText,
             rootNavigator: rootNavigator,
             beautyEffects: beautyEffects,

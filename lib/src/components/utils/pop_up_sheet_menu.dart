@@ -8,15 +8,15 @@ import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/defines.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/components/pop_up_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/inner_text.dart';
 
 /// @nodoc
-class ZegoPopUpSheetMenu extends StatefulWidget {
-  const ZegoPopUpSheetMenu({
+class ZegoLiveStreamingPopUpSheetMenu extends StatefulWidget {
+  const ZegoLiveStreamingPopUpSheetMenu({
     Key? key,
     required this.targetUser,
     required this.popupItems,
@@ -26,19 +26,21 @@ class ZegoPopUpSheetMenu extends StatefulWidget {
     this.onPressed,
   }) : super(key: key);
 
-  final List<PopupItem> popupItems;
+  final List<ZegoLiveStreamingPopupItem> popupItems;
   final ZegoUIKitUser targetUser;
-  final ZegoLiveHostManager hostManager;
-  final ZegoLiveConnectManager connectManager;
-  final void Function(PopupItemValue)? onPressed;
-  final ZegoInnerText translationText;
+  final ZegoLiveStreamingHostManager hostManager;
+  final ZegoLiveStreamingConnectManager connectManager;
+  final void Function(ZegoLiveStreamingPopupItemValue)? onPressed;
+  final ZegoUIKitPrebuiltLiveStreamingInnerText translationText;
 
   @override
-  State<ZegoPopUpSheetMenu> createState() => _ZegoPopUpSheetMenuState();
+  State<ZegoLiveStreamingPopUpSheetMenu> createState() =>
+      _ZegoLiveStreamingPopUpSheetMenuState();
 }
 
 /// @nodoc
-class _ZegoPopUpSheetMenuState extends State<ZegoPopUpSheetMenu> {
+class _ZegoLiveStreamingPopUpSheetMenuState
+    extends State<ZegoLiveStreamingPopUpSheetMenu> {
   @override
   void initState() {
     super.initState();
@@ -68,7 +70,7 @@ class _ZegoPopUpSheetMenuState extends State<ZegoPopUpSheetMenu> {
     });
   }
 
-  Widget popUpItemWidget(int index, PopupItem popupItem) {
+  Widget popUpItemWidget(int index, ZegoLiveStreamingPopupItem popupItem) {
     return GestureDetector(
       onTap: () {
         ZegoLoggerService.logInfo(
@@ -78,12 +80,12 @@ class _ZegoPopUpSheetMenuState extends State<ZegoPopUpSheetMenu> {
         );
 
         switch (popupItem.value) {
-          case PopupItemValue.kickCoHost:
+          case ZegoLiveStreamingPopupItemValue.kickCoHost:
             ZegoUIKitPrebuiltLiveStreamingController()
                 .coHost
                 .removeCoHost(widget.targetUser);
             break;
-          case PopupItemValue.inviteConnect:
+          case ZegoLiveStreamingPopupItemValue.inviteConnect:
             ZegoUIKitPrebuiltLiveStreamingController()
                 .coHost
                 .hostSendCoHostInvitationToAudience(
@@ -91,7 +93,7 @@ class _ZegoPopUpSheetMenuState extends State<ZegoPopUpSheetMenu> {
                   withToast: true,
                 );
             break;
-          case PopupItemValue.kickOutAttendance:
+          case ZegoLiveStreamingPopupItemValue.kickOutAttendance:
             ZegoUIKit()
                 .removeUserFromRoom([widget.targetUser.id]).then((result) {
               ZegoLoggerService.logInfo(
@@ -143,11 +145,11 @@ class _ZegoPopUpSheetMenuState extends State<ZegoPopUpSheetMenu> {
 Future<void> showPopUpSheet({
   required BuildContext context,
   required ZegoUIKitUser user,
-  required List<PopupItem> popupItems,
-  required ZegoInnerText translationText,
-  required ZegoLiveConnectManager connectManager,
-  required ZegoPopUpManager popUpManager,
-  required ZegoLiveHostManager hostManager,
+  required List<ZegoLiveStreamingPopupItem> popupItems,
+  required ZegoUIKitPrebuiltLiveStreamingInnerText translationText,
+  required ZegoLiveStreamingConnectManager connectManager,
+  required ZegoLiveStreamingPopUpManager popUpManager,
+  required ZegoLiveStreamingHostManager hostManager,
 }) async {
   final key = DateTime.now().millisecondsSinceEpoch;
   popUpManager.addAPopUpSheet(key);
@@ -173,7 +175,7 @@ Future<void> showPopUpSheet({
         child: Container(
           height: (popupItems.length * 101).zR,
           padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-          child: ZegoPopUpSheetMenu(
+          child: ZegoLiveStreamingPopUpSheetMenu(
             targetUser: user,
             popupItems: popupItems,
             translationText: translationText,

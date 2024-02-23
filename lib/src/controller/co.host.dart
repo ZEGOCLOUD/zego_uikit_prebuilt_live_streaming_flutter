@@ -2,7 +2,6 @@ part of 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 
 typedef ZegoLiveStreamingConnectEvent = void Function(ZegoUIKitUser audience);
 
-/// @nodoc
 mixin ZegoLiveStreamingControllerCoHost {
   final _coHostImpl = ZegoLiveStreamingControllerCoHostImpl();
 
