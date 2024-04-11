@@ -20,6 +20,8 @@
 
 # Versions
 
+- [3.4.0](#340)
+- [3.3.0](#330)
 - [3.1.7](#317)
 - [3.1.2](#312)  **(💥 breaking changes)**
 - [3.1.0](#310)
@@ -29,6 +31,44 @@
 
 <br />
 <br />
+
+# 3.4.0
+---
+
+## Introduction
+
+>
+> In this migration guide, we will explain how to upgrade from version 3.3.0 to the latest 3.4.0 version.
+
+## Major Interface Changes
+
+- ZegoUIKitPrebuiltLiveStreamingConfig
+    - move **maxCoHostCount** to `coHost.maxCoHostCount`
+    - move **stopCoHostingWhenMicCameraOff** to `coHost.stopCoHostingWhenMicCameraOff`
+    - move **disableCoHostInvitationReceivedDialog** to `coHost.disableCoHostInvitationReceivedDialog`
+    - move **turnOnCameraWhenCohosted** to `coHost.turnOnCameraWhenCohosted`
+
+
+# 3.3.0
+---
+
+## Introduction
+
+>
+> In this migration guide, we will explain how to upgrade from version 3.2.0 to the latest 3.3.0 version.
+
+## Major Interface Changes
+
+- ZegoLiveStreamingPKBattleConfig
+  - rename **pKBattleViewTopPadding** to `topPadding`
+  - rename **pkBattleViewTopBuilder** to `topBuilder`
+  - rename **pkBattleViewBottomBuilder** to `bottomBuilder`
+  - rename **pkBattleViewForegroundBuilder** to `foregroundBuilder`
+
+<br />
+<br />
+<br />
+
 
 
 # 3.1.7

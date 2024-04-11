@@ -54,14 +54,40 @@ class ZegoLiveStreamingMemberListSheet extends StatefulWidget {
 /// @nodoc
 class _ZegoLiveStreamingMemberListSheetState
     extends State<ZegoLiveStreamingMemberListSheet> {
+  List<StreamSubscription<dynamic>?> subscriptions = [];
+  late StreamController<List<ZegoUIKitUser>> streamControllerMemberList;
+
   @override
   void initState() {
     super.initState();
+
+    streamControllerMemberList =
+        StreamController<List<ZegoUIKitUser>>.broadcast();
+
+    ZegoUIKitPrebuiltLiveStreamingController()
+        .room
+        .private
+        .pseudoMemberListNotifier
+        .addListener(onPseudoMemberListUpdated);
+
+    subscriptions
+        .add(ZegoUIKit().getUserListStream().listen(onKitMembersUpdated));
   }
 
   @override
   void dispose() {
     super.dispose();
+
+    ZegoUIKitPrebuiltLiveStreamingController()
+        .room
+        .private
+        .pseudoMemberListNotifier
+        .removeListener(onPseudoMemberListUpdated);
+    streamControllerMemberList.close();
+
+    for (final subscription in subscriptions) {
+      subscription?.cancel();
+    }
   }
 
   @override
@@ -92,8 +118,14 @@ class _ZegoLiveStreamingMemberListSheetState
 
   Widget memberListView() {
     return ZegoMemberList(
+      stream: streamControllerMemberList.stream,
       showCameraState: false,
       showMicrophoneState: false,
+      pseudoUsers: ZegoUIKitPrebuiltLiveStreamingController()
+          .room
+          .private
+          .pseudoMemberListNotifier
+          .value,
       sortUserList: (ZegoUIKitUser localUser, List<ZegoUIKitUser> remoteUsers) {
         /// host
         remoteUsers.removeWhere((remoteUser) =>
@@ -134,11 +166,19 @@ class _ZegoLiveStreamingMemberListSheetState
         sortUsers += usersInRequestCoHost;
         sortUsers += remoteUsers;
 
-        // remove other room's users
+        /// remove other room's users
         final currentRoomUsers = ZegoUIKit().getAllUsers();
-        sortUsers.removeWhere((element) {
+        sortUsers.removeWhere((targetUser) {
+          if (ZegoUIKitPrebuiltLiveStreamingController()
+              .room
+              .private
+              .isPseudoMember(targetUser)) {
+            /// skip pseudo member
+            return false;
+          }
+
           final targetIndex =
-              currentRoomUsers.indexWhere((user) => element.id == user.id);
+              currentRoomUsers.indexWhere((user) => targetUser.id == user.id);
           return targetIndex == -1;
         });
 
@@ -488,6 +528,22 @@ class _ZegoLiveStreamingMemberListSheetState
     return -1 !=
         widget.connectManager.requestCoHostUsersNotifier.value
             .indexWhere((requestCoHostUser) => userID == requestCoHostUser.id);
+  }
+
+  void onPseudoMemberListUpdated() {
+    onKitMembersUpdated(ZegoUIKit().getAllUsers());
+  }
+
+  void onKitMembersUpdated(List<ZegoUIKitUser> members) {
+    var allMembers = List<ZegoUIKitUser>.from(members);
+    allMembers.addAll(
+      ZegoUIKitPrebuiltLiveStreamingController()
+          .room
+          .private
+          .pseudoMemberListNotifier
+          .value,
+    );
+    streamControllerMemberList.add(allMembers);
   }
 }
 

@@ -72,5 +72,6 @@ tips.txt
 tree.txt
 release.sh
 client.txt
-
-zego-uikit-flutter.zip
+Podfile.lock
+pubspec_overrides.yaml
+melos*.iml

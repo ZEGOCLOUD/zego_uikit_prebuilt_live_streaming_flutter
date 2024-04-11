@@ -465,7 +465,8 @@ class _ZegoLiveStreamingBottomBarState
     if (widget.config.plugins.isNotEmpty &&
         ZegoLiveStreamingAudienceConnectState.connected ==
             widget.connectManager.audienceLocalConnectStateNotifier.value) {
-      cameraDefaultOn = widget.config.turnOnCameraWhenCohosted?.call() ?? true;
+      cameraDefaultOn =
+          widget.config.coHost.turnOnCameraWhenCohosted?.call() ?? true;
       microphoneDefaultOn = true;
     }
 
@@ -482,7 +483,7 @@ class _ZegoLiveStreamingBottomBarState
               ZegoLiveStreamingPKBattleStateCombineNotifier.instance.state,
           builder: (context, isInPK, _) {
             final needUserMuteMode =
-                (!widget.config.stopCoHostingWhenMicCameraOff) || isInPK;
+                (!widget.config.coHost.stopCoHostingWhenMicCameraOff) || isInPK;
             return ZegoToggleMicrophoneButton(
               buttonSize: buttonSize,
               iconSize: iconSize,

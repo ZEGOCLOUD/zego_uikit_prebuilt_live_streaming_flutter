@@ -148,6 +148,10 @@ class ZegoLiveStreamingMiniOverlayMachine {
     ZegoUIKitPrebuiltLiveStreamingController().pk.private.uninitByPrebuilt();
     ZegoUIKitPrebuiltLiveStreamingController().room.private.uninitByPrebuilt();
     ZegoUIKitPrebuiltLiveStreamingController()
+        .message
+        .private
+        .uninitByPrebuilt();
+    ZegoUIKitPrebuiltLiveStreamingController()
         .coHost
         .private
         .uninitByPrebuilt();

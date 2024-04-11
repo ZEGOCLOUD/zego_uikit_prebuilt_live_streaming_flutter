@@ -33,6 +33,7 @@ class ZegoLiveStreamingControllerCoHostImpl
   Future<bool> hostSendCoHostInvitationToAudience(
     ZegoUIKitUser audience, {
     bool withToast = false,
+    int timeoutSecond = 60,
   }) async {
     ZegoLoggerService.logInfo(
       'make audience: ${audience.id} to be a co-host',
@@ -79,7 +80,7 @@ class ZegoLiveStreamingControllerCoHostImpl
 
     if (private.connectManager!.isMaxCoHostReached) {
       private.events?.coHost.onMaxCountReached
-          ?.call(private.prebuiltConfig!.maxCoHostCount);
+          ?.call(private.prebuiltConfig!.coHost.maxCoHostCount);
       ZegoLoggerService.logInfo(
         'co-host max count had reached, can not invite',
         tag: 'live streaming',
@@ -113,7 +114,10 @@ class ZegoLiveStreamingControllerCoHostImpl
       return false;
     }
 
-    return private.connectManager!.inviteAudienceConnect(audience);
+    return private.connectManager!.inviteAudienceConnect(
+      audience,
+      timeoutSecond: timeoutSecond,
+    );
   }
 
   Future<bool> audienceAgreeCoHostInvitation({
@@ -142,7 +146,7 @@ class ZegoLiveStreamingControllerCoHostImpl
 
     if (private.connectManager!.isMaxCoHostReached) {
       private.events?.coHost.onMaxCountReached?.call(
-        private.prebuiltConfig!.maxCoHostCount,
+        private.prebuiltConfig!.coHost.maxCoHostCount,
       );
 
       ZegoLoggerService.logInfo(
@@ -487,7 +491,7 @@ class ZegoLiveStreamingControllerCoHostImpl
 
     if (private.connectManager!.isMaxCoHostReached) {
       private.events?.coHost.onMaxCountReached?.call(
-        private.prebuiltConfig!.maxCoHostCount,
+        private.prebuiltConfig!.coHost.maxCoHostCount,
       );
 
       ZegoLoggerService.logInfo(
@@ -602,7 +606,7 @@ class ZegoLiveStreamingControllerCoHostImpl
             private.agreeRequestingUserIDs.length >=
         private.connectManager!.maxCoHostCount) {
       private.events?.coHost.onMaxCountReached
-          ?.call(private.prebuiltConfig!.maxCoHostCount);
+          ?.call(private.prebuiltConfig!.coHost.maxCoHostCount);
 
       ZegoLoggerService.logInfo(
         'co-host max count had reached, can not agree',

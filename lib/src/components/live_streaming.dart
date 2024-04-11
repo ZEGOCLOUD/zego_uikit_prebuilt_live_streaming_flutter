@@ -111,7 +111,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
     );
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
-      log('version: zego_uikit_prebuilt_live_streaming: 3.2.0; $version');
+      log('version: zego_uikit_prebuilt_live_streaming: 3.5.0; $version');
     });
 
     _eventListener = ZegoLiveStreamingEventListener(widget.events);
@@ -228,6 +228,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
     controller.private.initByPrebuilt();
     controller.pk.private.initByPrebuilt();
     controller.room.private.initByPrebuilt();
+    controller.message.private.initByPrebuilt();
     controller.coHost.private.initByPrebuilt(
       events: widget.events,
     );
@@ -246,6 +247,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
     controller.private.uninitByPrebuilt();
     controller.pk.private.uninitByPrebuilt();
     controller.room.private.uninitByPrebuilt();
+    controller.message.private.uninitByPrebuilt();
     controller.coHost.private.uninitByPrebuilt();
     controller.audioVideo.private.uninitByPrebuilt();
     controller.minimize.private.uninitByPrebuilt();
@@ -374,6 +376,12 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
           ..turnCameraOn(widget.config.turnOnCameraWhenJoining)
           ..turnMicrophoneOn(widget.config.turnOnMicrophoneWhenJoining)
           ..setAudioOutputToSpeaker(widget.config.useSpeakerWhenJoining);
+        if (widget.config.role == ZegoLiveStreamingRole.audience &&
+            null != widget.config.audienceAudioVideoResourceMode) {
+          ZegoUIKit().setAudioVideoResourceMode(
+            widget.config.audienceAudioVideoResourceMode!,
+          );
+        }
 
         ZegoUIKit()
             .joinRoom(
@@ -469,6 +477,12 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
   }
 
   Future<void> uninitContext() async {
+    if (null != widget.config.audienceAudioVideoResourceMode) {
+      ZegoUIKit().setAudioVideoResourceMode(
+        ZegoAudioVideoResourceMode.defaultMode,
+      );
+    }
+
     await ZegoUIKit().resetSoundEffect();
     await ZegoUIKit().resetBeautyEffect();
 

@@ -71,9 +71,10 @@ class ZegoLiveStreamingConnectManager {
 
   ZegoUIKitPrebuiltLiveStreamingInnerText get innerText => config.innerText;
 
-  int get maxCoHostCount => config.maxCoHostCount;
+  int get maxCoHostCount => config.coHost.maxCoHostCount;
 
-  bool get isMaxCoHostReached => coHostCount.value >= config.maxCoHostCount;
+  bool get isMaxCoHostReached =>
+      coHostCount.value >= config.coHost.maxCoHostCount;
 
   List<String> audienceIDsOfInvitingConnect = [];
   List<StreamSubscription<dynamic>?> subscriptions = [];
@@ -159,7 +160,7 @@ class ZegoLiveStreamingConnectManager {
         kickOutNotifier: kickOutNotifier,
       ).then((value) {
         ZegoUIKit().turnCameraOn(
-          config.turnOnCameraWhenCohosted?.call() ?? true,
+          config.coHost.turnOnCameraWhenCohosted?.call() ?? true,
         );
         ZegoUIKit().turnMicrophoneOn(true);
 
@@ -290,7 +291,10 @@ class ZegoLiveStreamingConnectManager {
     });
   }
 
-  Future<bool> inviteAudienceConnect(ZegoUIKitUser invitee) async {
+  Future<bool> inviteAudienceConnect(
+    ZegoUIKitUser invitee, {
+    int timeoutSecond = 60,
+  }) async {
     ZegoLoggerService.logInfo(
       'invite audience connect, ${invitee.id} ${invitee.name}',
       tag: 'live streaming',
@@ -314,7 +318,7 @@ class ZegoLiveStreamingConnectManager {
           inviterID: ZegoUIKit().getLocalUser().id,
           inviterName: ZegoUIKit().getLocalUser().name,
           invitees: [invitee.id],
-          timeout: 60,
+          timeout: timeoutSecond,
           type: ZegoInvitationType.inviteToJoinCoHost.value,
           data: '',
         )
@@ -359,13 +363,12 @@ class ZegoLiveStreamingConnectManager {
 
     if (hostManager.isLocalHost) {
       if (ZegoInvitationType.requestCoHost == invitationType) {
-        final translation = innerText.receivedCoHostRequestDialogInfo;
-
         events.coHost.host.onRequestReceived?.call(inviter);
         requestCoHostUsersNotifier.value =
             List<ZegoUIKitUser>.from(requestCoHostUsersNotifier.value)
               ..add(inviter);
 
+        final translation = innerText.receivedCoHostRequestDialogInfo;
         showSuccess(translation.message.replaceFirst(
             ZegoUIKitPrebuiltLiveStreamingInnerText.param_1, inviter.name));
       }
@@ -380,7 +383,7 @@ class ZegoLiveStreamingConnectManager {
 
   List<Permission> getCoHostPermissions() {
     final permissions = <Permission>[];
-    if (config.turnOnCameraWhenCohosted?.call() ?? true) {
+    if (config.coHost.turnOnCameraWhenCohosted?.call() ?? true) {
       permissions.add(Permission.camera);
     }
 
@@ -400,7 +403,7 @@ class ZegoLiveStreamingConnectManager {
     }
 
     if (isMaxCoHostReached) {
-      events.coHost.onMaxCountReached?.call(config.maxCoHostCount);
+      events.coHost.onMaxCountReached?.call(config.coHost.maxCoHostCount);
 
       ZegoLoggerService.logInfo(
         'co-host max count had reached, ignore current co-host invitation',
@@ -426,7 +429,7 @@ class ZegoLiveStreamingConnectManager {
       return;
     }
 
-    if (config.disableCoHostInvitationReceivedDialog) {
+    if (config.coHost.disableCoHostInvitationReceivedDialog) {
       ZegoLoggerService.logInfo(
         'config set not show co-host invitation dialog',
         tag: 'live streaming',
@@ -492,7 +495,7 @@ class ZegoLiveStreamingConnectManager {
 
         do {
           if (isMaxCoHostReached) {
-            events.coHost.onMaxCountReached?.call(config.maxCoHostCount);
+            events.coHost.onMaxCountReached?.call(config.coHost.maxCoHostCount);
 
             ZegoLoggerService.logInfo(
               'co-host max count had reached, ignore current accept co-host invite',
@@ -587,7 +590,7 @@ class ZegoLiveStreamingConnectManager {
         kickOutNotifier: kickOutNotifier,
       ).then((value) {
         ZegoUIKit().turnCameraOn(
-          config.turnOnCameraWhenCohosted?.call() ?? true,
+          config.coHost.turnOnCameraWhenCohosted?.call() ?? true,
         );
         ZegoUIKit().turnMicrophoneOn(true);
 
@@ -812,7 +815,7 @@ class ZegoLiveStreamingConnectManager {
         break;
       case ZegoLiveStreamingAudienceConnectState.connected:
         ZegoUIKit().turnCameraOn(
-          config.turnOnCameraWhenCohosted?.call() ?? true,
+          config.coHost.turnOnCameraWhenCohosted?.call() ?? true,
         );
         ZegoUIKit().turnMicrophoneOn(true);
 
@@ -915,7 +918,7 @@ extension ZegoLiveConnectManagerCoHostCount on ZegoLiveStreamingConnectManager {
           return left.streamTimestamp.compareTo(right.streamTimestamp);
         });
 
-      final kickCount = coHosts.length - config.maxCoHostCount;
+      final kickCount = coHosts.length - config.coHost.maxCoHostCount;
       final kickUsers = coHosts.sublist(0, kickCount);
       ZegoLoggerService.logInfo(
         'audio video list changed, max co-host count reach, '

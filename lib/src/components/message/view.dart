@@ -1,3 +1,6 @@
+// Dart imports:
+import 'dart:async';
+
 // Flutter imports:
 import 'package:flutter/material.dart';
 
@@ -15,12 +18,14 @@ class ZegoLiveStreamingInRoomLiveMessageView extends StatefulWidget {
   final ZegoLiveStreamingInRoomMessageEvents? events;
   final ZegoAvatarBuilder? avatarBuilder;
   final ZegoUIKitPrebuiltLiveStreamingInnerText innerText;
+  final Stream<ZegoInRoomMessage>? pseudoStream;
 
   const ZegoLiveStreamingInRoomLiveMessageView({
     Key? key,
     required this.innerText,
     required this.config,
     required this.events,
+    this.pseudoStream,
     this.avatarBuilder,
   }) : super(key: key);
 
@@ -32,6 +37,38 @@ class ZegoLiveStreamingInRoomLiveMessageView extends StatefulWidget {
 /// @nodoc
 class _ZegoLiveStreamingInRoomLiveMessageViewState
     extends State<ZegoLiveStreamingInRoomLiveMessageView> {
+  List<ZegoInRoomMessage> messageList = [];
+  late StreamController<List<ZegoInRoomMessage>> streamControllerMessageList;
+  List<StreamSubscription<dynamic>?> subscriptions = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    messageList = List<ZegoInRoomMessage>.from(ZegoUIKit().getInRoomMessages());
+
+    streamControllerMessageList =
+        StreamController<List<ZegoInRoomMessage>>.broadcast();
+
+    subscriptions
+      ..add(ZegoUIKit().getInRoomMessageStream().listen(onKitMessageUpdated))
+      ..add(ZegoUIKit()
+          .getInRoomLocalMessageStream()
+          .listen(onKitLocalMessageUpdated))
+      ..add(widget.pseudoStream?.listen(onPseudoMessageUpdated));
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    streamControllerMessageList.close();
+
+    for (final subscription in subscriptions) {
+      subscription?.cancel();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Directionality(
@@ -47,7 +84,7 @@ class _ZegoLiveStreamingInRoomLiveMessageViewState
           ),
           ZegoInRoomMessageView(
             historyMessages: ZegoUIKit().getInRoomMessages(),
-            stream: ZegoUIKit().getInRoomMessageListStream(),
+            stream: streamControllerMessageList.stream,
             itemBuilder: widget.config?.itemBuilder ??
                 (BuildContext context, ZegoInRoomMessage message, _) {
                   return ZegoInRoomMessageViewItem(
@@ -77,5 +114,32 @@ class _ZegoLiveStreamingInRoomLiveMessageViewState
         ],
       ),
     );
+  }
+
+  void sortMessages() {
+    messageList.sort((left, right) {
+      return left.timestamp.compareTo(right.timestamp);
+    });
+  }
+
+  void onKitMessageUpdated(ZegoInRoomMessage message) {
+    messageList.add(message);
+    sortMessages();
+
+    streamControllerMessageList.add(List<ZegoInRoomMessage>.from(messageList));
+  }
+
+  void onKitLocalMessageUpdated(ZegoInRoomMessage message) {
+    messageList.add(message);
+    sortMessages();
+
+    streamControllerMessageList.add(List<ZegoInRoomMessage>.from(messageList));
+  }
+
+  void onPseudoMessageUpdated(ZegoInRoomMessage message) {
+    messageList.add(message);
+    sortMessages();
+
+    streamControllerMessageList.add(List<ZegoInRoomMessage>.from(messageList));
   }
 }

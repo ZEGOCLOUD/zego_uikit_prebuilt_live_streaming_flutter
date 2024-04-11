@@ -103,7 +103,7 @@ class ZegoLiveStreamingCentralAudioVideoViewState
             return ValueListenableBuilder<ZegoUIKitUser?>(
               valueListenable: widget.hostManager.notifier,
               builder: (context, host, _) {
-                return audioVideoContainer(
+                return audioVideoView(
                   host,
                   widget.constraints.maxWidth,
                   widget.constraints.maxHeight,
@@ -120,35 +120,37 @@ class ZegoLiveStreamingCentralAudioVideoViewState
   Widget pkBattleView({
     required BoxConstraints constraints,
   }) {
-    final topPadding = widget.config.pkBattle.pKBattleViewTopPadding ?? 164.zR;
+    final topPadding = widget.config.pkBattle.topPadding ?? 164.zR;
 
     final displayConstraints = BoxConstraints(
       maxWidth: constraints.maxWidth,
       maxHeight: constraints.maxHeight - topPadding - 2.zR,
     );
 
-    return Positioned(
-      top: topPadding,
-      child: ZegoLiveStreamingPKV2View(
-        constraints: displayConstraints,
-        hostManager: widget.hostManager,
-        config: widget.config,
-        foregroundBuilder: widget.config.audioVideoView.foregroundBuilder,
-        backgroundBuilder: widget.config.audioVideoView.backgroundBuilder,
-        avatarConfig: ZegoAvatarConfig(
-          showInAudioMode: widget.config.audioVideoView.showAvatarInAudioMode,
-          showSoundWavesInAudioMode:
-              widget.config.audioVideoView.showSoundWavesInAudioMode,
-          builder: widget.config.avatarBuilder,
-        ),
+    final view = ZegoLiveStreamingPKV2View(
+      constraints: displayConstraints,
+      hostManager: widget.hostManager,
+      config: widget.config,
+      foregroundBuilder: widget.config.audioVideoView.foregroundBuilder,
+      backgroundBuilder: widget.config.audioVideoView.backgroundBuilder,
+      avatarConfig: ZegoAvatarConfig(
+        showInAudioMode: widget.config.audioVideoView.showAvatarInAudioMode,
+        showSoundWavesInAudioMode:
+            widget.config.audioVideoView.showSoundWavesInAudioMode,
+        builder: widget.config.avatarBuilder,
       ),
     );
+
+    final customRect = widget.config.pkBattle.containerRect?.call();
+    return null != customRect
+        ? Positioned.fromRect(rect: customRect, child: view)
+        : Positioned(top: topPadding, child: view);
   }
 
-  Widget audioVideoContainer(
+  Widget audioVideoView(
     ZegoUIKitUser? host,
-    double maxWidth,
-    double maxHeight,
+    double preferWidth,
+    double preferHeight,
     bool withScreenSharing,
   ) {
     return host != null
@@ -165,8 +167,8 @@ class ZegoLiveStreamingCentralAudioVideoViewState
                   }
 
                   return audioVideoWidget(
-                    maxWidth,
-                    maxHeight,
+                    preferWidth,
+                    preferHeight,
                     withScreenSharing,
                   );
                 },
@@ -174,33 +176,29 @@ class ZegoLiveStreamingCentralAudioVideoViewState
             },
           )
         : audioVideoWidget(
-            maxWidth,
-            maxHeight,
+            preferWidth,
+            preferHeight,
             withScreenSharing,
           );
   }
 
   Widget audioVideoWidget(
-    double width,
-    double height,
+    double preferWidth,
+    double preferHeight,
     bool withScreenSharing,
   ) {
     return ValueListenableBuilder(
       valueListenable: widget.liveStatusManager.notifier,
       builder: (context, LiveStatus liveStatusValue, Widget? child) {
-        final audioVideoContainerLayout = getAudioVideoContainerLayout(
-          withScreenSharing,
-        );
-
         Widget children = Container();
 
-        if (LiveStatus.living == liveStatusValue) {
-          children = ZegoAudioVideoContainer(
-            layout: audioVideoContainerLayout,
-            foregroundBuilder: audioVideoViewForeground,
+        audioVideoViewCreator(ZegoUIKitUser user) {
+          return ZegoAudioVideoView(
+            user: user,
             backgroundBuilder: audioVideoViewBackground,
-            sortAudioVideo: audioVideoViewSorter,
-            filterAudioVideo: audioVideoViewFilter,
+            foregroundBuilder: audioVideoViewForeground,
+            borderRadius: 18.0.zW,
+            borderColor: Colors.transparent,
             avatarConfig: ZegoAvatarConfig(
               showInAudioMode:
                   widget.config.audioVideoView.showAvatarInAudioMode,
@@ -208,11 +206,34 @@ class ZegoLiveStreamingCentralAudioVideoViewState
                   widget.config.audioVideoView.showSoundWavesInAudioMode,
               builder: widget.config.avatarBuilder,
             ),
-            screenSharingViewController:
-                ZegoUIKitPrebuiltLiveStreamingController()
-                    .screenSharing
-                    .viewController,
           );
+        }
+
+        final audioVideoContainer =
+            null != widget.config.audioVideoView.containerBuilder
+                ? StreamBuilder<List<ZegoUIKitUser>>(
+                    stream: ZegoUIKit().getUserListStream(),
+                    builder: (context, snapshot) {
+                      final allUsers = ZegoUIKit().getAllUsers();
+                      return StreamBuilder<List<ZegoUIKitUser>>(
+                        stream: ZegoUIKit().getAudioVideoListStream(),
+                        builder: (context, snapshot) {
+                          return widget.config.audioVideoView.containerBuilder
+                                  ?.call(
+                                context,
+                                allUsers,
+                                ZegoUIKit().getAudioVideoList(),
+                                audioVideoViewCreator,
+                              ) ??
+                              defaultAudioVideoContainer(withScreenSharing);
+                        },
+                      );
+                    },
+                  )
+                : defaultAudioVideoContainer(withScreenSharing);
+
+        if (LiveStatus.living == liveStatusValue) {
+          children = audioVideoContainer;
         } else if (LiveStatus.living != liveStatusValue &&
             null != widget.hostManager.notifier.value) {
           /// support local co-host view in host preparing
@@ -229,42 +250,40 @@ class ZegoLiveStreamingCentralAudioVideoViewState
                   }
 
                   /// local open camera or microphone
-                  return ZegoAudioVideoContainer(
-                    layout: audioVideoContainerLayout,
-                    backgroundBuilder: audioVideoViewBackground,
-                    foregroundBuilder: audioVideoViewForeground,
-                    sortAudioVideo: audioVideoViewSorter,
-                    filterAudioVideo: audioVideoViewFilter,
-                    avatarConfig: ZegoAvatarConfig(
-                      showInAudioMode:
-                          widget.config.audioVideoView.showAvatarInAudioMode,
-                      showSoundWavesInAudioMode: widget
-                          .config.audioVideoView.showSoundWavesInAudioMode,
-                      builder: widget.config.avatarBuilder,
-                    ),
-                    screenSharingViewController:
-                        ZegoUIKitPrebuiltLiveStreamingController()
-                            .screenSharing
-                            .viewController,
-                  );
+                  return audioVideoContainer;
                 },
               );
             },
           );
         }
 
-        return Positioned(
-          top: 0,
-          left: 0,
-          child: SizedBox(
-            width: width,
-            height: height,
-            child: ZegoInputBoardWrapper(
-              child: children,
-            ),
-          ),
+        return Positioned.fromRect(
+          rect: widget.config.audioVideoView.containerRect?.call() ??
+              Rect.fromLTWH(0, 0, preferWidth, preferHeight),
+          child: null != widget.config.audioVideoView.containerRect
+              ? children
+              : ZegoInputBoardWrapper(child: children),
         );
       },
+    );
+  }
+
+  Widget defaultAudioVideoContainer(bool withScreenSharing) {
+    return ZegoAudioVideoContainer(
+      layout: getAudioVideoContainerLayout(withScreenSharing),
+      foregroundBuilder: audioVideoViewForeground,
+      backgroundBuilder: audioVideoViewBackground,
+      sortAudioVideo: audioVideoViewSorter,
+      filterAudioVideo: audioVideoViewFilter,
+      avatarConfig: ZegoAvatarConfig(
+        showInAudioMode: widget.config.audioVideoView.showAvatarInAudioMode,
+        showSoundWavesInAudioMode:
+            widget.config.audioVideoView.showSoundWavesInAudioMode,
+        builder: widget.config.avatarBuilder,
+      ),
+      screenSharingViewController: ZegoUIKitPrebuiltLiveStreamingController()
+          .screenSharing
+          .viewController,
     );
   }
 

@@ -110,6 +110,20 @@
 >
 >  Set it to false if you don't want to show sound waveforms in audio mode.
 
+- ZegoLiveStreamingAudioVideoContainerBuilder? `containerBuilder`:
+>
+> Custom audio/video view. ( not for PK!! )
+>
+> If you don't want to use the default view components, you can pass a custom component through this parameter.
+>
+> and if return null, will be display the default view
+
+- Rect Function()? `containerRect`:
+>
+> Specify the rect of the audio & video container.
+>
+> if not specified, it defaults to display full.
+
 - ZegoAudioVideoViewForegroundBuilder? `foregroundBuilder`:
 >
 >  You can customize the foreground of the audio/video view, which refers to the widget positioned on top of the view.
@@ -195,6 +209,52 @@
 >  Clicking on it will display a panel showing other buttons that cannot be displayed in the menu bar (toolbar).
 
 - [ZegoLiveStreamingBottomMenuBarButtonStyle](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingBottomMenuBarButtonStyle-class.html)? `buttonStyle`: button style for the bottom menu bar.
+    
+    - Widget? `chatEnabledButtonIcon`: Icon for enabling chat.
+
+    - Widget? `chatDisabledButtonIcon`: Icon for disabling chat.
+
+    - Widget? `toggleMicrophoneOnButtonIcon`: Icon for toggling microphone on.
+
+    - Widget? `toggleMicrophoneOffButtonIcon`: Icon for toggling microphone off.
+
+    - Widget? `toggleCameraOnButtonIcon`: Icon for toggling camera on.
+
+    - Widget? `toggleCameraOffButtonIcon`: Icon for toggling camera off.
+
+    - Widget? `switchCameraButtonIcon`: Icon for switching camera.
+
+    - Widget? `switchAudioOutputToSpeakerButtonIcon`: Icon for switching audio output to speaker.
+
+    - Widget? `switchAudioOutputToHeadphoneButtonIcon`: Icon for switching audio output to headphone.
+
+    - Widget? `switchAudioOutputToBluetoothButtonIcon`: Icon for switching audio output to Bluetooth.
+
+    - Widget? `leaveButtonIcon`: Icon for leaving the room.
+
+    - Widget? `requestCoHostButtonIcon`: Icon for requesting co-host status.
+
+    - String? `requestCoHostButtonText`: Text for requesting co-host status button.
+
+    - Widget? `cancelRequestCoHostButtonIcon`: Icon for canceling co-host request.
+
+    - String? `cancelRequestCoHostButtonText`: Text for canceling co-host request button.
+
+    - Widget? `endCoHostButtonIcon`: Icon for ending co-host status.
+
+    - String? `endCoHostButtonText`: Text for ending co-host status button.
+
+    - Widget? `beautyEffectButtonIcon`: Icon for beauty effect.
+
+    - Widget? `soundEffectButtonIcon`: Icon for sound effect.
+
+    - Widget? `enableChatButtonIcon`: Icon for enabling chat.
+
+    - Widget? `disableChatButtonIcon`: Icon for disabling chat.
+
+    - Widget? `toggleScreenSharingOnButtonIcon`: Icon for toggling screen sharing on.
+
+    - Widget? `toggleScreenSharingOffButtonIcon`: Icon for toggling screen sharing off.
 
 - EdgeInsetsGeometry? `padding`: padding for the bottom menu bar.
 
@@ -583,6 +643,39 @@
 
 - Widget Function(String liveID)? `loadingBuilder`: customize room loading effects
 
+## [ZegoLiveStreamingCoHostConfig](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingCoHostConfig-class.html)? coHost
+
+- bool Function()? `turnOnCameraWhenCohosted`:
+>
+>  whether to enable the camera by default when you be co-host, the default value is true
+>  Every time you become a co-host again, it will re-read this configuration to check if enable the camera
+
+- bool `stopCoHostingWhenMicCameraOff`:
+>
+>  controls whether to automatically stop co-hosting when both the camera and microphone are turned off, the default value is false.
+>
+>  If the value is set to true, the user will stop co-hosting automatically when both camera and microphone are off.
+>  If the value is set to false, the user will keep co-hosting until manually stop co-hosting by clicking the "End" button.
+
+- bool `disableCoHostInvitationReceivedDialog`:
+>
+>  used to determine whether to display a confirmation dialog to the
+>  audience when they receive a co-host invitation, the default value is false
+>
+>  If the value is True, the confirmation dialog will not be displayed.
+>  If the value is False, the confirmation dialog will be displayed.
+>
+>  You can adjust and set this variable according to your specific requirements.
+
+- int `maxCoHostCount`:
+>
+>  Maximum number of co-hosts.
+>
+>  If exceeded, other audience members cannot become co-hosts.
+>  The default value is 12.
+
+- int `inviteTimeoutSecond`: timeout second when invite other to co-host
+
 ## [ZegoLiveStreamingRole](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingRole.html) role
 
 >
@@ -644,31 +737,6 @@
 >
 >  The default value is `true`.
 >  If this value is set to `false`, the system's default playback device, such as the earpiece or Bluetooth headset, will be used for audio playback.
-
-## bool Function()? turnOnCameraWhenCohosted
-
->
->  whether to enable the camera by default when you be co-host, the default value is true
->  Every time you become a co-host again, it will re-read this configuration to check if enable the camera
-
-## bool stopCoHostingWhenMicCameraOff
-
->
->  controls whether to automatically stop co-hosting when both the camera and microphone are turned off, the default value is false.
->
->  If the value is set to true, the user will stop co-hosting automatically when both camera and microphone are off.
->  If the value is set to false, the user will keep co-hosting until manually stop co-hosting by clicking the "End" button.
-
-## bool disableCoHostInvitationReceivedDialog
-
->
->  used to determine whether to display a confirmation dialog to the
->  audience when they receive a co-host invitation, the default value is false
->
->  If the value is True, the confirmation dialog will not be displayed.
->  If the value is False, the confirmation dialog will be displayed.
->
->  You can adjust and set this variable according to your specific requirements.
 
 ## [ZegoLiveStreamingDialogInfo](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingDialogInfo-class.html)? confirmDialogInfo
 
@@ -777,13 +845,6 @@
 >   );
 >  ```
 
-## int maxCoHostCount
-
->
->  Maximum number of co-hosts.
->
->  If exceeded, other audience members cannot become co-hosts.
->  The default value is 12.
 
 ## bool showBackgroundTips
 

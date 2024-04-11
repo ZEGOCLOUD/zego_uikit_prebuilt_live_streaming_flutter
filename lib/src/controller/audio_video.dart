@@ -39,7 +39,7 @@ class ZegoLiveStreamingControllerAudioVideoMicrophoneImpl
   /// turn on/off [userID] microphone, if [userID] is empty, then it refers to local user
   void turnOn(bool isOn, {String? userID}) {
     final needUseMuteMode =
-        (!(private.config?.stopCoHostingWhenMicCameraOff ?? false)) ||
+        (!(private.config?.coHost.stopCoHostingWhenMicCameraOff ?? false)) ||
             ZegoUIKitPrebuiltLiveStreamingController().pk.isInPK;
 
     ZegoLoggerService.logInfo(

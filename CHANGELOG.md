@@ -1,3 +1,28 @@
+## 3.5.0
+
+- Support set audio video resource mode for audience by `ZegoUIKitPrebuiltLiveStreamingConfig.audienceAudioVideoResourceMode`
+- Update dependency.
+
+## 3.4.1
+
+- Update dependency.
+
+## 3.4.0
+
+- Add `coHost(ZegoLiveStreamingCoHostConfig)` in `ZegoUIKitPrebuiltLiveStreamingConfig`, and support set `inviteTimeoutSecond` in it.
+- move `maxCoHostCount`, `stopCoHostingWhenMicCameraOff`, `disableCoHostInvitationReceivedDialog` and `turnOnCameraWhenCohosted` to `coHost` in `ZegoUIKitPrebuiltLiveStreamingConfig`. [migrate guide](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/topics/Migration_v3.x-topic.html#340)
+- Support `sendFakeMessage` in `ZegoUIKitPrebuiltLiveStreamingController().message`
+- Support `addFakeUser` and `removeFakeUser` in `ZegoUIKitPrebuiltLiveStreamingController().room`
+
+## 3.3.1
+
+- Update dependency.
+
+## 3.3.0
+
+- Support fully customizable audio & video large window by `containerRect` and `containerBuilder` in `ZegoUIKitPrebuiltLiveStreamingConfig.audioVideoView`.[document](https://docs.zegocloud.com/article/16484)
+- rename some variables. [migrate guide](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/topics/Migration_v3.x-topic.html#330)
+
 ## 3.2.0
 
 - Add `onLocalConnectStateUpdated`, `onLocalConnected` and `onLocalDisconnected` in `ZegoUIKitPrebuiltLiveStreamingEvents.coHost.coHost`, it will be triggered when the audience become Co-Host

@@ -55,6 +55,8 @@ part 'controller/private/audio_video.dart';
 
 part 'controller/private/co.host.dart';
 
+part 'controller/private/message.dart';
+
 part 'controller/private/minimize.dart';
 
 part 'controller/private/room.dart';
@@ -99,6 +101,7 @@ class ZegoUIKitPrebuiltLiveStreamingController
       private.uninitByPrebuilt();
       pk.private.uninitByPrebuilt();
       room.private.uninitByPrebuilt();
+      message.private.uninitByPrebuilt();
       coHost.private.uninitByPrebuilt();
       audioVideo.private.uninitByPrebuilt();
       minimize.private.uninitByPrebuilt();

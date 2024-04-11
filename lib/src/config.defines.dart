@@ -13,6 +13,13 @@ typedef ZegoPlayCoHostAudioVideoCallback = bool Function(
   ZegoUIKitUser coHost,
 );
 
+typedef ZegoLiveStreamingAudioVideoContainerBuilder = Widget? Function(
+  BuildContext context,
+  List<ZegoUIKitUser> allUsers,
+  List<ZegoUIKitUser> audioVideoUsers,
+  ZegoAudioVideoView Function(ZegoUIKitUser) audioVideoViewCreator,
+);
+
 /// Extension buttons for the bottom toolbar.
 ///
 /// If the built-in buttons do not meet your requirements, you can define your own button to implement custom functionality.
@@ -175,5 +182,45 @@ class ZegoLiveStreamingBottomMenuBarButtonStyle {
     this.disableChatButtonIcon,
     this.toggleScreenSharingOnButtonIcon,
     this.toggleScreenSharingOffButtonIcon,
+  });
+}
+
+class ZegoLiveStreamingCoHostConfig {
+  static const defaultMaxCoHostCount = 12;
+
+  /// whether to enable the camera by default when you be co-host, the default value is true
+  /// Every time you become a co-host again, it will re-read this configuration to check if enable the camera
+  bool Function()? turnOnCameraWhenCohosted;
+
+  /// controls whether to automatically stop co-hosting when both the camera and microphone are turned off, the default value is false.
+  ///
+  /// If the value is set to true, the user will stop co-hosting automatically when both camera and microphone are off.
+  /// If the value is set to false, the user will keep co-hosting until manually stop co-hosting by clicking the "End" button.
+  bool stopCoHostingWhenMicCameraOff;
+
+  /// used to determine whether to display a confirmation dialog to the
+  /// audience when they receive a co-host invitation, the default value is false
+  ///
+  /// If the value is True, the confirmation dialog will not be displayed.
+  /// If the value is False, the confirmation dialog will be displayed.
+  ///
+  /// You can adjust and set this variable according to your specific requirements.
+  bool disableCoHostInvitationReceivedDialog;
+
+  /// Maximum number of co-hosts.
+  ///
+  /// If exceeded, other audience members cannot become co-hosts.
+  /// The default value is 12.
+  int maxCoHostCount;
+
+  /// timeout second when invite other to co-host
+  int inviteTimeoutSecond;
+
+  ZegoLiveStreamingCoHostConfig({
+    this.maxCoHostCount = defaultMaxCoHostCount,
+    this.turnOnCameraWhenCohosted,
+    this.inviteTimeoutSecond = 60,
+    this.stopCoHostingWhenMicCameraOff = false,
+    this.disableCoHostInvitationReceivedDialog = false,
   });
 }

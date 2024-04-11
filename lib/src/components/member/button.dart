@@ -11,6 +11,7 @@ import 'package:zego_uikit/zego_uikit.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/member/list_sheet.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
@@ -70,9 +71,20 @@ class _ZegoLiveStreamingMemberButtonState
   void initState() {
     super.initState();
 
-    memberCountNotifier.value = ZegoUIKit().getAllUsers().length;
+    memberCountNotifier.value = ZegoUIKit().getAllUsers().length +
+        ZegoUIKitPrebuiltLiveStreamingController()
+            .room
+            .private
+            .pseudoMemberListNotifier
+            .value
+            .length;
     userListSubscription =
         ZegoUIKit().getUserListStream().listen(onUserListUpdated);
+    ZegoUIKitPrebuiltLiveStreamingController()
+        .room
+        .private
+        .pseudoMemberListNotifier
+        .addListener(onPseudoMemberUpdated);
 
     onRequestCoHostUsersUpdated();
     widget.connectManager.requestCoHostUsersNotifier
@@ -82,6 +94,12 @@ class _ZegoLiveStreamingMemberButtonState
   @override
   void dispose() {
     super.dispose();
+
+    ZegoUIKitPrebuiltLiveStreamingController()
+        .room
+        .private
+        .pseudoMemberListNotifier
+        .removeListener(onPseudoMemberUpdated);
 
     userListSubscription?.cancel();
     widget.connectManager.requestCoHostUsersNotifier
@@ -206,8 +224,24 @@ class _ZegoLiveStreamingMemberButtonState
     );
   }
 
+  void onPseudoMemberUpdated() {
+    memberCountNotifier.value = ZegoUIKit().getAllUsers().length +
+        ZegoUIKitPrebuiltLiveStreamingController()
+            .room
+            .private
+            .pseudoMemberListNotifier
+            .value
+            .length;
+  }
+
   void onUserListUpdated(List<ZegoUIKitUser> users) {
-    memberCountNotifier.value = users.length;
+    memberCountNotifier.value = users.length +
+        ZegoUIKitPrebuiltLiveStreamingController()
+            .room
+            .private
+            .pseudoMemberListNotifier
+            .value
+            .length;
   }
 
   void onRequestCoHostUsersUpdated() {

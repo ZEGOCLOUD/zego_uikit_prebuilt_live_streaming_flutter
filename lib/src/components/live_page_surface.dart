@@ -199,6 +199,12 @@ class _ZegoLiveStreamingLivePageSurfaceState
           events: widget.events.inRoomMessage,
           innerText: widget.config.innerText,
           avatarBuilder: widget.config.avatarBuilder,
+          pseudoStream: ZegoUIKitPrebuiltLiveStreamingController()
+                  .message
+                  .private
+                  .streamControllerPseudoMessage
+                  ?.stream ??
+              const Stream.empty(),
         ),
       ),
     );

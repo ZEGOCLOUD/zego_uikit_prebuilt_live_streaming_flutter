@@ -70,7 +70,7 @@ class _ZegoLiveStreamingPKV2ViewState extends State<ZegoLiveStreamingPKV2View> {
             );
             return Column(
               children: [
-                widget.config.pkBattle.pkBattleViewTopBuilder?.call(
+                widget.config.pkBattle.topBuilder?.call(
                       context,
                       pkHosts.map((e) => e.userInfo).toList(),
                       {},
@@ -86,9 +86,7 @@ class _ZegoLiveStreamingPKV2ViewState extends State<ZegoLiveStreamingPKV2View> {
                     ),
                     ConstrainedBox(
                       constraints: centralConstraints,
-                      child: widget
-                              .config.pkBattle.pkBattleViewForegroundBuilder
-                              ?.call(
+                      child: widget.config.pkBattle.foregroundBuilder?.call(
                             context,
                             pkHosts.map((e) => e.userInfo).toList(),
                             {},
@@ -97,7 +95,7 @@ class _ZegoLiveStreamingPKV2ViewState extends State<ZegoLiveStreamingPKV2View> {
                     ),
                   ],
                 ),
-                widget.config.pkBattle.pkBattleViewBottomBuilder?.call(
+                widget.config.pkBattle.bottomBuilder?.call(
                       context,
                       pkHosts.map((e) => e.userInfo).toList(),
                       {},

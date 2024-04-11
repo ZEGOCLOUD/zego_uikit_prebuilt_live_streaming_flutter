@@ -7,6 +7,7 @@ import 'package:zego_uikit/zego_uikit.dart';
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/defines.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/deprecated/deprecated.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/inner_text.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/pk/layout/layout.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/swiping/config.dart';
@@ -15,8 +16,6 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/swiping/config.dart';
 ///
 /// This class is used as the [ZegoUIKitPrebuiltLiveStreaming.config] parameter for the constructor of [ZegoUIKitPrebuiltLiveStreaming].
 class ZegoUIKitPrebuiltLiveStreamingConfig {
-  static const defaultMaxCoHostCount = 12;
-
   /// configuration parameters for audio and video streaming, such as Resolution, Frame rate, Bit rate..
   ZegoUIKitVideoConfig video;
 
@@ -75,6 +74,9 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   /// the [liveID] will be the initial live id of swiping
   ZegoLiveStreamingSwipingConfig? swiping;
 
+  /// co-cohost config
+  ZegoLiveStreamingCoHostConfig coHost;
+
   /// Specifies the initial role when joining the live streaming.
   /// The role change after joining is not constrained by this property.
   ZegoLiveStreamingRole role = ZegoLiveStreamingRole.audience;
@@ -109,25 +111,6 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   /// The default value is `true`.
   /// If this value is set to `false`, the system's default playback device, such as the earpiece or Bluetooth headset, will be used for audio playback.
   bool useSpeakerWhenJoining;
-
-  /// whether to enable the camera by default when you be co-host, the default value is true
-  /// Every time you become a co-host again, it will re-read this configuration to check if enable the camera
-  bool Function()? turnOnCameraWhenCohosted;
-
-  /// controls whether to automatically stop co-hosting when both the camera and microphone are turned off, the default value is false.
-  ///
-  /// If the value is set to true, the user will stop co-hosting automatically when both camera and microphone are off.
-  /// If the value is set to false, the user will keep co-hosting until manually stop co-hosting by clicking the "End" button.
-  bool stopCoHostingWhenMicCameraOff;
-
-  /// used to determine whether to display a confirmation dialog to the
-  /// audience when they receive a co-host invitation, the default value is false
-  ///
-  /// If the value is True, the confirmation dialog will not be displayed.
-  /// If the value is False, the confirmation dialog will be displayed.
-  ///
-  /// You can adjust and set this variable according to your specific requirements.
-  bool disableCoHostInvitationReceivedDialog;
 
   /// Confirmation dialog information when leaving the live streaming.
   ///
@@ -215,18 +198,15 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   /// ```
   Widget? background;
 
-  /// Maximum number of co-hosts.
-  ///
-  /// If exceeded, other audience members cannot become co-hosts.
-  /// The default value is 12.
-  int maxCoHostCount;
-
   /// show background tips of live or not, default tips is 'No host is online.'
   bool showBackgroundTips;
 
   /// Set advanced engine configuration, Used to enable advanced functions.
   /// For details, please consult ZEGO technical support.
   Map<String, String> advanceConfigs;
+
+  /// audio video resource mode for audience
+  ZegoAudioVideoResourceMode? audienceAudioVideoResourceMode;
 
   /// Default initialization parameters for the host.
   /// If a configuration item does not meet your expectations, you can directly override its value.
@@ -243,12 +223,9 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         turnOnCameraWhenJoining = true,
         turnOnMicrophoneWhenJoining = true,
         useSpeakerWhenJoining = true,
-        stopCoHostingWhenMicCameraOff = false,
-        disableCoHostInvitationReceivedDialog = false,
         markAsLargeRoom = false,
         slideSurfaceToHide = true,
         rootNavigator = false,
-        maxCoHostCount = defaultMaxCoHostCount,
         showBackgroundTips = false,
         advanceConfigs = {},
         mediaPlayer = ZegoLiveStreamingMediaPlayerConfig(),
@@ -276,8 +253,12 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         ),
         preview = ZegoLiveStreamingPreviewConfig(),
         pkBattle = ZegoLiveStreamingPKBattleConfig(),
-        duration = ZegoLiveStreamingDurationConfig() {
-    turnOnCameraWhenCohosted = () {
+        duration = ZegoLiveStreamingDurationConfig(),
+        coHost = ZegoLiveStreamingCoHostConfig(
+          stopCoHostingWhenMicCameraOff: false,
+          disableCoHostInvitationReceivedDialog: false,
+        ) {
+    coHost.turnOnCameraWhenCohosted = () {
       return true;
     };
   }
@@ -292,19 +273,16 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   /// ZegoUIKitPrebuiltLiveStreamingConfig.audience()
   /// ..turnOnMicrophoneWhenJoining = false
   /// ```
-  ZegoUIKitPrebuiltLiveStreamingConfig.audience(
-      {List<IZegoUIKitPlugin>? plugins})
-      : role = ZegoLiveStreamingRole.audience,
+  ZegoUIKitPrebuiltLiveStreamingConfig.audience({
+    List<IZegoUIKitPlugin>? plugins,
+  })  : role = ZegoLiveStreamingRole.audience,
         plugins = plugins ?? [],
         turnOnCameraWhenJoining = false,
         turnOnMicrophoneWhenJoining = false,
         useSpeakerWhenJoining = true,
-        stopCoHostingWhenMicCameraOff = false,
-        disableCoHostInvitationReceivedDialog = false,
         markAsLargeRoom = false,
         slideSurfaceToHide = true,
         rootNavigator = false,
-        maxCoHostCount = defaultMaxCoHostCount,
         showBackgroundTips = false,
         advanceConfigs = {},
         mediaPlayer = ZegoLiveStreamingMediaPlayerConfig(),
@@ -325,8 +303,12 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         innerText = ZegoUIKitPrebuiltLiveStreamingInnerText(),
         preview = ZegoLiveStreamingPreviewConfig(),
         pkBattle = ZegoLiveStreamingPKBattleConfig(),
-        duration = ZegoLiveStreamingDurationConfig() {
-    turnOnCameraWhenCohosted = () {
+        duration = ZegoLiveStreamingDurationConfig(),
+        coHost = ZegoLiveStreamingCoHostConfig(
+          stopCoHostingWhenMicCameraOff: false,
+          disableCoHostInvitationReceivedDialog: false,
+        ) {
+    coHost.turnOnCameraWhenCohosted = () {
       return true;
     };
   }
@@ -335,12 +317,9 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
     this.turnOnCameraWhenJoining = true,
     this.turnOnMicrophoneWhenJoining = true,
     this.useSpeakerWhenJoining = true,
-    this.stopCoHostingWhenMicCameraOff = false,
-    this.disableCoHostInvitationReceivedDialog = false,
     this.markAsLargeRoom = false,
     this.slideSurfaceToHide = true,
     this.rootNavigator = false,
-    this.maxCoHostCount = defaultMaxCoHostCount,
     this.showBackgroundTips = false,
     this.advanceConfigs = const {},
     this.layout,
@@ -350,6 +329,17 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
     this.beauty,
     this.swiping,
     this.avatarBuilder,
+    this.audienceAudioVideoResourceMode,
+    @Deprecated('Use coHost.maxCoHostCount instead$deprecatedTipsV340')
+    int? maxCoHostCount,
+    @Deprecated(
+        'Use coHost.stopCoHostingWhenMicCameraOff instead$deprecatedTipsV340')
+    bool? stopCoHostingWhenMicCameraOff,
+    @Deprecated(
+        'Use coHost.disableCoHostInvitationReceivedDialog instead$deprecatedTipsV340')
+    bool? disableCoHostInvitationReceivedDialog,
+    @Deprecated(
+        'Use coHost.turnOnCameraWhenCohosted instead$deprecatedTipsV340')
     bool Function()? turnOnCameraWhenCohosted,
     ZegoUIKitPrebuiltLiveStreamingInnerText? translationText,
     ZegoUIKitVideoConfig? video,
@@ -364,6 +354,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
     ZegoLiveStreamingPreviewConfig? preview,
     ZegoLiveStreamingPKBattleConfig? pkBattle,
     ZegoLiveStreamingMediaPlayerConfig? media,
+    ZegoLiveStreamingCoHostConfig? coHost,
   })  : mediaPlayer = media ?? ZegoLiveStreamingMediaPlayerConfig(),
         video = video ?? ZegoUIKitVideoConfig.preset360P(),
         audioVideoView =
@@ -378,11 +369,22 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
             translationText ?? ZegoUIKitPrebuiltLiveStreamingInnerText(),
         preview = preview ?? ZegoLiveStreamingPreviewConfig(),
         pkBattle = pkBattle ?? ZegoLiveStreamingPKBattleConfig(),
-        duration = duration ?? ZegoLiveStreamingDurationConfig() {
-    this.turnOnCameraWhenCohosted = turnOnCameraWhenCohosted ??
+        duration = duration ?? ZegoLiveStreamingDurationConfig(),
+        coHost = coHost ?? ZegoLiveStreamingCoHostConfig() {
+    this.coHost.turnOnCameraWhenCohosted = turnOnCameraWhenCohosted ??
         () {
           return true;
         };
+    if (null != maxCoHostCount) {
+      this.coHost.maxCoHostCount = maxCoHostCount;
+    }
+    if (null != stopCoHostingWhenMicCameraOff) {
+      this.coHost.stopCoHostingWhenMicCameraOff = stopCoHostingWhenMicCameraOff;
+    }
+    if (null != disableCoHostInvitationReceivedDialog) {
+      this.coHost.disableCoHostInvitationReceivedDialog =
+          disableCoHostInvitationReceivedDialog;
+    }
 
     layout ??= ZegoLayout.pictureInPicture();
   }
@@ -454,6 +456,15 @@ class ZegoLiveStreamingAudioVideoViewConfig {
   /// Set it to false if you don't want to show sound waveforms in audio mode.
   bool showSoundWavesInAudioMode;
 
+  /// Custom audio/video view. ( not for PK!! )
+  /// If you don't want to use the default view components, you can pass a custom component through this parameter.
+  /// and if return null, will be display the default view
+  ZegoLiveStreamingAudioVideoContainerBuilder? containerBuilder;
+
+  /// Specify the rect of the audio & video container.
+  /// If not specified, it defaults to display full.
+  Rect Function()? containerRect;
+
   /// You can customize the foreground of the audio/video view, which refers to the widget positioned on top of the view.
   ///
   /// You can return any widget, and we will place it at the top of the audio/video view.
@@ -477,6 +488,7 @@ class ZegoLiveStreamingAudioVideoViewConfig {
     this.playCoHostVideo,
     this.foregroundBuilder,
     this.backgroundBuilder,
+    this.containerRect,
   });
 }
 
@@ -958,10 +970,6 @@ class ZegoLiveStreamingPKBattleConfig {
   /// [ZegoUIKitPrebuiltLiveStreamingPKEvents.onUserDisconnected] will be triggered
   int userDisconnectedSecond;
 
-  /// The distance that the top edge is inset from the top of the stack.
-  /// default is 164.r
-  double? pKBattleViewTopPadding;
-
   /// you can custom coordinates and modify the PK layout.
   ZegoLiveStreamingPKMixerLayout? mixerLayout;
 
@@ -969,25 +977,46 @@ class ZegoLiveStreamingPKBattleConfig {
   /// To customize the content that displays when the connected host gets offline.
   ZegoLiveStreamingPKBattleHostReconnectingBuilder? hostReconnectingBuilder;
 
+  /// The distance that the top edge is inset from the top of the stack.
+  /// If [containerRect] is set, then [topPadding] will be invalid
+  double? topPadding;
+
+  /// view rect, default is full
+  Rect Function()? containerRect;
+
   /// To overlay custom components on the PKBattleView.
-  ZegoLiveStreamingPKBattleViewBuilder? pkBattleViewForegroundBuilder;
+  ZegoLiveStreamingPKBattleViewBuilder? foregroundBuilder;
 
   /// To add custom components on the top edge of the PKBattleView.
-  ZegoLiveStreamingPKBattleViewBuilder? pkBattleViewTopBuilder;
+  ZegoLiveStreamingPKBattleViewBuilder? topBuilder;
 
   /// To add custom components on the bottom edge of the PKBattleView.
-  ZegoLiveStreamingPKBattleViewBuilder? pkBattleViewBottomBuilder;
+  ZegoLiveStreamingPKBattleViewBuilder? bottomBuilder;
 
   ZegoLiveStreamingPKBattleConfig({
     this.userReconnectingSecond = 5,
     this.userDisconnectedSecond = 90,
     this.mixerLayout,
-    this.pKBattleViewTopPadding,
+    this.containerRect,
+    this.topPadding,
     this.hostReconnectingBuilder,
-    this.pkBattleViewForegroundBuilder,
-    this.pkBattleViewTopBuilder,
-    this.pkBattleViewBottomBuilder,
-  });
+    this.foregroundBuilder,
+    this.topBuilder,
+    this.bottomBuilder,
+    @Deprecated('Use topPadding instead$deprecatedTipsV330')
+    double? pKBattleViewTopPadding,
+    @Deprecated('Use foregroundBuilder instead$deprecatedTipsV330')
+    ZegoLiveStreamingPKBattleViewBuilder? pkBattleViewForegroundBuilder,
+    @Deprecated('Use topBuilder instead$deprecatedTipsV330')
+    ZegoLiveStreamingPKBattleViewBuilder? pkBattleViewTopBuilder,
+    @Deprecated('Use bottomBuilder instead$deprecatedTipsV330')
+    ZegoLiveStreamingPKBattleViewBuilder? pkBattleViewBottomBuilder,
+  }) {
+    topPadding ??= pKBattleViewTopPadding;
+    foregroundBuilder ??= pkBattleViewForegroundBuilder;
+    topBuilder ??= pkBattleViewTopBuilder;
+    bottomBuilder ??= pkBattleViewBottomBuilder;
+  }
 }
 
 /// Used to configure the parameters related to the preview of the live streaming.

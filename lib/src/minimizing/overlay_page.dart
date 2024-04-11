@@ -571,9 +571,9 @@ class _ZegoUIKitPrebuiltLiveStreamingMiniOverlayPageState
                   ZegoUIKit().turnMicrophoneOn(
                     !isMicrophoneEnabled,
                     userID: activeUser.id,
-                    muteMode:
-                        !(prebuiltData?.config.stopCoHostingWhenMicCameraOff ??
-                            true),
+                    muteMode: !(prebuiltData
+                            ?.config.coHost.stopCoHostingWhenMicCameraOff ??
+                        true),
                   );
                 }
               : null,

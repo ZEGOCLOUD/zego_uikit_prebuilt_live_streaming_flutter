@@ -7,7 +7,8 @@ mixin ZegoLiveStreamingControllerMessage {
 }
 
 /// Here are the APIs related to message.
-class ZegoLiveStreamingControllerMessageImpl {
+class ZegoLiveStreamingControllerMessageImpl
+    with ZegoLiveStreamingControllerMessagePrivate {
   final _enableProperty = ZegoLiveStreamingInRoomMessageEnableProperty();
 
   /// sends the chat message
@@ -73,5 +74,28 @@ class ZegoLiveStreamingControllerMessageImpl {
   /// ```
   Stream<List<ZegoInRoomMessage>> stream() {
     return ZegoUIKit().getInRoomMessageListStream();
+  }
+
+  /// send fake message in message list,
+  /// please make sure [message].timestamp has valid value
+  void sendFakeMessage({
+    required ZegoUIKitUser sender,
+    required String message,
+    Map<String, String>? attributes,
+  }) {
+    private.streamControllerPseudoMessage?.add(
+      ZegoInRoomMessage(
+        user: sender,
+        message: (attributes?.isEmpty ?? true)
+            ? message
+            : ZegoInRoomMessage.jsonBody(
+                message: message,
+                attributes: attributes!,
+              ),
+        timestamp: ZegoUIKit().getNetworkTime().value?.millisecondsSinceEpoch ??
+            DateTime.now().millisecondsSinceEpoch,
+        messageID: -1,
+      ),
+    );
   }
 }

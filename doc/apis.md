@@ -36,6 +36,7 @@
     - [send](#send)
     - [list](#list)
     - [stream](#stream)
+    - [sendFakeMessage](#sendfakemessage)
   - [minimize](#minimize)
     - [state](#state)
     - [isMinimizing](#isminimizing)
@@ -69,6 +70,9 @@
     - [command](#command)
       - [sendCommand](#sendcommand)
       - [commandReceivedStream](#commandreceivedstream)
+    - [fake user](#fake-user)
+      - [addFakeUser](#addfakeuser)
+      - [removeFakeUser](#removefakeuser)
 
 ---
 # ZegoUIKitPrebuiltLiveStreaming
@@ -699,6 +703,22 @@ messages that already exist in the room.
 >   )
 > ```
 
+### sendFakeMessage
+
+>
+> send fake message in message list.
+> please make sure [message].timestamp has valid value.
+>
+> - function prototype:
+>
+> ```dart
+> void sendFakeMessage({
+>     required ZegoUIKitUser sender,
+>     required String message,
+>     Map<String, String>? attributes,
+> })
+> ```
+
 ## minimize
 
 ### state
@@ -1061,4 +1081,29 @@ messages that already exist in the room.
 >   final int timestamp;
 >   final int orderKey;
 > }
+> ```
+
+### fake user
+
+#### addFakeUser
+
+>
+> add fake user
+>
+> - function prototype:
+>
+> ```dart
+> void addFakeUser(ZegoUIKitUser user)
+> ```
+
+
+#### removeFakeUser
+
+>
+> remove fake user
+>
+> - function prototype:
+>
+> ```dart
+> void removeFakeUser(ZegoUIKitUser user)
 > ```

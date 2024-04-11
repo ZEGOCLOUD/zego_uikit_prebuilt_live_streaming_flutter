@@ -79,21 +79,59 @@ class _ZegoLiveStreamingPopUpSheetMenuState
           subTag: 'pop-up sheet',
         );
 
+        final isPseudoMember = ZegoUIKitPrebuiltLiveStreamingController()
+            .room
+            .private
+            .isPseudoMember(widget.targetUser);
         switch (popupItem.value) {
           case ZegoLiveStreamingPopupItemValue.kickCoHost:
+            if (isPseudoMember) {
+              /// pseudo user can't be co-host
+              ZegoLoggerService.logInfo(
+                'pseudo user, ignore',
+                tag: 'live streaming',
+                subTag: 'pop-up sheet',
+              );
+              break;
+            }
+
             ZegoUIKitPrebuiltLiveStreamingController()
                 .coHost
                 .removeCoHost(widget.targetUser);
             break;
           case ZegoLiveStreamingPopupItemValue.inviteConnect:
+            if (isPseudoMember) {
+              /// pseudo user can't be co-host
+              ZegoLoggerService.logInfo(
+                'pseudo user, ignore',
+                tag: 'live streaming',
+                subTag: 'pop-up sheet',
+              );
+              break;
+            }
+
             ZegoUIKitPrebuiltLiveStreamingController()
                 .coHost
                 .hostSendCoHostInvitationToAudience(
                   widget.targetUser,
                   withToast: true,
+                  timeoutSecond:
+                      widget.connectManager.config.coHost.inviteTimeoutSecond,
                 );
             break;
           case ZegoLiveStreamingPopupItemValue.kickOutAttendance:
+            if (isPseudoMember) {
+              ZegoLoggerService.logInfo(
+                'pseudo user, remove',
+                tag: 'live streaming',
+                subTag: 'pop-up sheet',
+              );
+              ZegoUIKitPrebuiltLiveStreamingController()
+                  .room
+                  .removeFakeUser(widget.targetUser);
+              break;
+            }
+
             ZegoUIKit()
                 .removeUserFromRoom([widget.targetUser.id]).then((result) {
               ZegoLoggerService.logInfo(
