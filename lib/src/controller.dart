@@ -43,6 +43,8 @@ part 'controller/minimize.dart';
 
 part 'controller/room.dart';
 
+part 'controller/user.dart';
+
 part 'controller/screen.dart';
 
 part 'controller/pk.dart';
@@ -61,6 +63,8 @@ part 'controller/private/minimize.dart';
 
 part 'controller/private/room.dart';
 
+part 'controller/private/user.dart';
+
 part 'controller/private/pk.dart';
 
 part 'controller/private/swiping.dart';
@@ -78,6 +82,7 @@ class ZegoUIKitPrebuiltLiveStreamingController
         ZegoLiveStreamingControllerMessage,
         ZegoLiveStreamingControllerMinimizing,
         ZegoLiveStreamingControllerRoom,
+        ZegoLiveStreamingControllerUser,
         ZegoLiveStreamingControllerScreen,
         ZegoLiveStreamingControllerCoHost,
         ZegoLiveStreamingControllerPK,
@@ -101,6 +106,7 @@ class ZegoUIKitPrebuiltLiveStreamingController
       private.uninitByPrebuilt();
       pk.private.uninitByPrebuilt();
       room.private.uninitByPrebuilt();
+      user.private.uninitByPrebuilt();
       message.private.uninitByPrebuilt();
       coHost.private.uninitByPrebuilt();
       audioVideo.private.uninitByPrebuilt();

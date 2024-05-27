@@ -1,9 +1,10 @@
 // Project imports:
-import 'package:zego_uikit_prebuilt_live_streaming/zego_uikit_prebuilt_live_streaming.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/defines.dart';
 
 const deprecatedTipsV330 = ', '
     'deprecated since 3.3.0, '
-    'will be removed after 3.5.0'
+    'will be removed after 3.10.0'
     'Migrate Guide:https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/topics/Migration_v3.x-topic.html#330';
 
 extension ZegoLiveStreamingPKBattleConfigDeprecatedExtension

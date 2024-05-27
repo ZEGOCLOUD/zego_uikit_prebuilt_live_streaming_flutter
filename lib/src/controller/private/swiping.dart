@@ -15,7 +15,7 @@ class ZegoLiveStreamingControllerSwipingPrivateImpl {
 
   StreamController<String>? stream;
 
-  /// Please do not call this interface. It is the internal logic of ZegoUIKitPrebuiltCall.
+  /// Please do not call this interface. It is the internal logic of Prebuilt.
   void initByPrebuilt({
     required ZegoLiveStreamingSwipingConfig? swipingConfig,
   }) {
@@ -29,7 +29,7 @@ class ZegoLiveStreamingControllerSwipingPrivateImpl {
     config = swipingConfig;
   }
 
-  /// Please do not call this interface. It is the internal logic of ZegoUIKitPrebuiltCall.
+  /// Please do not call this interface. It is the internal logic of Prebuilt.
   void uninitByPrebuilt() {
     ZegoLoggerService.logInfo(
       'un-init by prebuilt',

@@ -6,7 +6,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/zego_uikit_prebuilt_live_stre
 
 const deprecatedTipsV300 = ', '
     'deprecated since 3.0.0, '
-    'will be removed after 3.5.0,'
+    'will be removed after 3.10.0'
     'Migrate Guide:https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/topics/Migration_v3.0-topic.html';
 
 @Deprecated(
@@ -339,27 +339,33 @@ extension ZegoLiveStreamingEventsDeprecated
 extension ZegoLiveStreamingHostEventsExtension
     on ZegoUIKitPrebuiltLiveStreamingHostEvents {
   @Deprecated('Use onRequestReceived instead$deprecatedTipsV300')
-  Function(ZegoUIKitUser audience)? get onCoHostRequestReceived =>
-      onRequestReceived;
+  Function(ZegoLiveStreamingCoHostHostEventRequestReceivedData)?
+      get onCoHostRequestReceived => onRequestReceived;
 
   @Deprecated('Use onRequestReceived instead$deprecatedTipsV300')
-  set onCoHostRequestReceived(Function(ZegoUIKitUser audience)? value) =>
+  set onCoHostRequestReceived(
+          Function(ZegoLiveStreamingCoHostHostEventRequestReceivedData)?
+              value) =>
       onRequestReceived = value;
 
   @Deprecated('Use onRequestCanceled instead$deprecatedTipsV300')
-  Function(ZegoUIKitUser audience)? get onCoHostRequestCanceled =>
-      onRequestCanceled;
+  Function(ZegoLiveStreamingCoHostHostEventRequestCanceledData)?
+      get onCoHostRequestCanceled => onRequestCanceled;
 
   @Deprecated('Use onRequestCanceled instead$deprecatedTipsV300')
-  set onCoHostRequestCanceled(Function(ZegoUIKitUser audience)? value) =>
+  set onCoHostRequestCanceled(
+          Function(ZegoLiveStreamingCoHostHostEventRequestCanceledData)?
+              value) =>
       onRequestCanceled = value;
 
   @Deprecated('Use onRequestTimeout instead$deprecatedTipsV300')
-  Function(ZegoUIKitUser audience)? get onCoHostRequestTimeout =>
-      onRequestTimeout;
+  Function(ZegoLiveStreamingCoHostHostEventRequestTimeoutData)?
+      get onCoHostRequestTimeout => onRequestTimeout;
 
   @Deprecated('Use onRequestTimeout instead$deprecatedTipsV300')
-  set onCoHostRequestTimeout(Function(ZegoUIKitUser audience)? value) =>
+  set onCoHostRequestTimeout(
+          Function(ZegoLiveStreamingCoHostHostEventRequestTimeoutData)?
+              value) =>
       onRequestTimeout = value;
 
   @Deprecated('Use onActionAcceptRequest instead$deprecatedTipsV300')
@@ -377,35 +383,43 @@ extension ZegoLiveStreamingHostEventsExtension
       onActionRefuseRequest = value;
 
   @Deprecated('Use onInvitationSent instead$deprecatedTipsV300')
-  Function(ZegoUIKitUser audience)? get onCoHostInvitationSent =>
-      onInvitationSent;
+  Function(ZegoLiveStreamingCoHostHostEventInvitationSentData)?
+      get onCoHostInvitationSent => onInvitationSent;
 
   @Deprecated('Use onInvitationSent instead$deprecatedTipsV300')
-  set onCoHostInvitationSent(Function(ZegoUIKitUser audience)? value) =>
+  set onCoHostInvitationSent(
+          Function(ZegoLiveStreamingCoHostHostEventInvitationSentData)?
+              value) =>
       onInvitationSent = value;
 
   @Deprecated('Use onInvitationTimeout instead$deprecatedTipsV300')
-  Function(ZegoUIKitUser audience)? get onCoHostInvitationTimeout =>
-      onInvitationTimeout;
+  Function(ZegoLiveStreamingCoHostHostEventInvitationTimeoutData)?
+      get onCoHostInvitationTimeout => onInvitationTimeout;
 
   @Deprecated('Use onInvitationTimeout instead$deprecatedTipsV300')
-  set onCoHostInvitationTimeout(Function(ZegoUIKitUser audience)? value) =>
+  set onCoHostInvitationTimeout(
+          Function(ZegoLiveStreamingCoHostHostEventInvitationTimeoutData)?
+              value) =>
       onInvitationTimeout = value;
 
   @Deprecated('Use onInvitationAccepted instead$deprecatedTipsV300')
-  Function(ZegoUIKitUser audience)? get onCoHostInvitationAccepted =>
-      onInvitationAccepted;
+  Function(ZegoLiveStreamingCoHostHostEventInvitationAcceptedData)?
+      get onCoHostInvitationAccepted => onInvitationAccepted;
 
   @Deprecated('Use onInvitationAccepted instead$deprecatedTipsV300')
-  set onCoHostInvitationAccepted(Function(ZegoUIKitUser audience)? value) =>
+  set onCoHostInvitationAccepted(
+          Function(ZegoLiveStreamingCoHostHostEventInvitationAcceptedData)?
+              value) =>
       onInvitationAccepted = value;
 
   @Deprecated('Use onInvitationRefused instead$deprecatedTipsV300')
-  Function(ZegoUIKitUser audience)? get onCoHostInvitationRefused =>
-      onInvitationRefused;
+  Function(ZegoLiveStreamingCoHostHostEventInvitationRefusedData)?
+      get onCoHostInvitationRefused => onInvitationRefused;
 
   @Deprecated('Use onInvitationRefused instead$deprecatedTipsV300')
-  set onCoHostInvitationRefused(Function(ZegoUIKitUser audience)? value) =>
+  set onCoHostInvitationRefused(
+          Function(ZegoLiveStreamingCoHostHostEventInvitationRefusedData)?
+              value) =>
       onInvitationRefused = value;
 }
 
@@ -433,23 +447,34 @@ extension ZegoLiveStreamingAudienceEventsExtension
   set onCoHostRequestTimeout(Function()? value) => onRequestTimeout = value;
 
   @Deprecated('Use onRequestAccepted instead$deprecatedTipsV300')
-  Function()? get onCoHostRequestAccepted => onRequestAccepted;
+  Function(ZegoLiveStreamingCoHostAudienceEventRequestAcceptedData)?
+      get onCoHostRequestAccepted => onRequestAccepted;
 
   @Deprecated('Use onRequestAccepted instead$deprecatedTipsV300')
-  set onCoHostRequestAccepted(Function()? value) => onRequestAccepted = value;
+  set onCoHostRequestAccepted(
+          Function(ZegoLiveStreamingCoHostAudienceEventRequestAcceptedData)?
+              value) =>
+      onRequestAccepted = value;
 
   @Deprecated('Use onRequestRefused instead$deprecatedTipsV300')
-  Function()? get onCoHostRequestRefused => onRequestRefused;
+  Function(ZegoLiveStreamingCoHostAudienceEventRequestRefusedData)?
+      get onCoHostRequestRefused => onRequestRefused;
 
   @Deprecated('Use onRequestRefused instead$deprecatedTipsV300')
-  set onCoHostRequestRefused(Function()? value) => onRequestRefused = value;
+  set onCoHostRequestRefused(
+          Function(ZegoLiveStreamingCoHostAudienceEventRequestRefusedData)?
+              value) =>
+      onRequestRefused = value;
 
   @Deprecated('Use onInvitationReceived instead$deprecatedTipsV300')
-  Function(ZegoUIKitUser host)? get onCoHostInvitationReceived =>
-      onInvitationReceived;
+  Function(ZegoLiveStreamingCoHostAudienceEventRequestReceivedData)?
+      get onCoHostInvitationReceived => onInvitationReceived;
 
   @Deprecated('Use onInvitationReceived instead$deprecatedTipsV300')
-  set onCoHostInvitationReceived(void Function(ZegoUIKitUser host)? value) =>
+  set onCoHostInvitationReceived(
+          void Function(
+                  ZegoLiveStreamingCoHostAudienceEventRequestReceivedData)?
+              value) =>
       onInvitationReceived = value;
 
   @Deprecated('Use onInvitationTimeout instead$deprecatedTipsV300')

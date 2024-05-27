@@ -72,8 +72,13 @@ class ZegoLiveStreamingControllerMessageImpl
   ///     ),
   ///   )
   /// ```
-  Stream<List<ZegoInRoomMessage>> stream() {
-    return ZegoUIKit().getInRoomMessageListStream();
+  Stream<List<ZegoInRoomMessage>> stream({
+    bool includeFakeMessage = true,
+  }) {
+    return includeFakeMessage
+        ? (private.streamControllerList?.stream ??
+            ZegoUIKit().getInRoomMessageListStream())
+        : ZegoUIKit().getInRoomMessageListStream();
   }
 
   /// send fake message in message list,

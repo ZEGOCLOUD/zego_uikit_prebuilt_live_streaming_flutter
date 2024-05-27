@@ -10,7 +10,7 @@ mixin ZegoLiveStreamingControllerPrivate {
 
 /// @nodoc
 class ZegoLiveStreamingControllerPrivateImpl {
-  /// Please do not call this interface. It is the internal logic of ZegoUIKitPrebuiltLiveStreaming.
+  /// Please do not call this interface. It is the internal logic of Prebuilt.
   /// DO NOT CALL!!!
   /// Call Inside By Prebuilt
   void initByPrebuilt() {
@@ -21,7 +21,7 @@ class ZegoLiveStreamingControllerPrivateImpl {
     );
   }
 
-  /// Please do not call this interface. It is the internal logic of ZegoUIKitPrebuiltLiveStreaming.
+  /// Please do not call this interface. It is the internal logic of Prebuilt.
   /// DO NOT CALL!!!
   /// Call Inside By Prebuilt
   void uninitByPrebuilt() {

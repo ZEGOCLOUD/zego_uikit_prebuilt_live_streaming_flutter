@@ -15,6 +15,10 @@ class ZegoLiveStreamingControllerAudioVideoImpl
 
   /// camera series APIs
   ZegoLiveStreamingControllerAudioVideoCameraImpl get camera => private._camera;
+
+  /// audio output series APIs
+  ZegoLiveStreamingControllerAudioVideoAudioOutputImpl get audioOutput =>
+      private._audioOutput;
 }
 
 class ZegoLiveStreamingControllerAudioVideoMicrophoneImpl
@@ -104,5 +108,34 @@ class ZegoLiveStreamingControllerAudioVideoCameraImpl
         ZegoUIKit().getCameraStateNotifier(targetUserID).value;
 
     turnOn(!currentCameraState, userID: targetUserID);
+  }
+
+  /// local use front facing camera
+  void switchFrontFacing(bool isFrontFacing) {
+    ZegoUIKit().useFrontFacingCamera(isFrontFacing);
+  }
+
+  /// set video mirror mode
+  void switchVideoMirroring(bool isVideoMirror) {
+    ZegoUIKit().enableVideoMirroring(isVideoMirror);
+  }
+}
+
+class ZegoLiveStreamingControllerAudioVideoAudioOutputImpl
+    with ZegoLiveStreamingControllerAudioVideoDeviceImplPrivate {
+  /// local audio output device notifier
+  ValueNotifier<ZegoUIKitAudioRoute> get localNotifier =>
+      notifier(ZegoUIKit().getLocalUser().id);
+
+  /// get audio output device notifier
+  ValueNotifier<ZegoUIKitAudioRoute> notifier(
+    String userID,
+  ) {
+    return ZegoUIKit().getAudioOutputDeviceNotifier(userID);
+  }
+
+  /// set audio output to speaker or earpiece(telephone receiver)
+  void switchToSpeaker(bool isSpeaker) {
+    ZegoUIKit().setAudioOutputToSpeaker(isSpeaker);
   }
 }

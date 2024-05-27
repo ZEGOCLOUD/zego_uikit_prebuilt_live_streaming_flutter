@@ -1,6 +1,3 @@
-// Dart imports:
-import 'dart:async';
-
 // Flutter imports:
 import 'package:flutter/material.dart';
 
@@ -64,27 +61,10 @@ class ZegoLiveStreamingMemberButton extends StatefulWidget {
 class _ZegoLiveStreamingMemberButtonState
     extends State<ZegoLiveStreamingMemberButton> {
   var redPointNotifier = ValueNotifier<bool>(false);
-  var memberCountNotifier = ValueNotifier<int>(0);
-  StreamSubscription<dynamic>? userListSubscription;
 
   @override
   void initState() {
     super.initState();
-
-    memberCountNotifier.value = ZegoUIKit().getAllUsers().length +
-        ZegoUIKitPrebuiltLiveStreamingController()
-            .room
-            .private
-            .pseudoMemberListNotifier
-            .value
-            .length;
-    userListSubscription =
-        ZegoUIKit().getUserListStream().listen(onUserListUpdated);
-    ZegoUIKitPrebuiltLiveStreamingController()
-        .room
-        .private
-        .pseudoMemberListNotifier
-        .addListener(onPseudoMemberUpdated);
 
     onRequestCoHostUsersUpdated();
     widget.connectManager.requestCoHostUsersNotifier
@@ -95,13 +75,6 @@ class _ZegoLiveStreamingMemberButtonState
   void dispose() {
     super.dispose();
 
-    ZegoUIKitPrebuiltLiveStreamingController()
-        .room
-        .private
-        .pseudoMemberListNotifier
-        .removeListener(onPseudoMemberUpdated);
-
-    userListSubscription?.cancel();
     widget.connectManager.requestCoHostUsersNotifier
         .removeListener(onRequestCoHostUsersUpdated);
   }
@@ -147,7 +120,8 @@ class _ZegoLiveStreamingMemberButtonState
               ],
             )
           : ValueListenableBuilder<int>(
-              valueListenable: memberCountNotifier,
+              valueListenable:
+                  ZegoUIKitPrebuiltLiveStreamingController().user.countNotifier,
               builder: (context, memberCount, _) {
                 return widget.builder!.call(memberCount);
               },
@@ -208,7 +182,8 @@ class _ZegoLiveStreamingMemberButtonState
       height: 56.zR,
       child: Center(
         child: ValueListenableBuilder<int>(
-          valueListenable: memberCountNotifier,
+          valueListenable:
+              ZegoUIKitPrebuiltLiveStreamingController().user.countNotifier,
           builder: (context, memberCount, _) {
             return Text(
               memberCount.toString(),
@@ -222,26 +197,6 @@ class _ZegoLiveStreamingMemberButtonState
         ),
       ),
     );
-  }
-
-  void onPseudoMemberUpdated() {
-    memberCountNotifier.value = ZegoUIKit().getAllUsers().length +
-        ZegoUIKitPrebuiltLiveStreamingController()
-            .room
-            .private
-            .pseudoMemberListNotifier
-            .value
-            .length;
-  }
-
-  void onUserListUpdated(List<ZegoUIKitUser> users) {
-    memberCountNotifier.value = users.length +
-        ZegoUIKitPrebuiltLiveStreamingController()
-            .room
-            .private
-            .pseudoMemberListNotifier
-            .value
-            .length;
   }
 
   void onRequestCoHostUsersUpdated() {

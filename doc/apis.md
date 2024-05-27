@@ -70,9 +70,12 @@
     - [command](#command)
       - [sendCommand](#sendcommand)
       - [commandReceivedStream](#commandreceivedstream)
-    - [fake user](#fake-user)
-      - [addFakeUser](#addfakeuser)
-      - [removeFakeUser](#removefakeuser)
+  - [user](#user)
+    - [countNotifier](#countnotifier)
+    - [stream](#stream-1)
+    - [remove](#remove)
+    - [addFakeUser](#addfakeuser)
+    - [removeFakeUser](#removefakeuser)
 
 ---
 # ZegoUIKitPrebuiltLiveStreaming
@@ -478,6 +481,7 @@
 > ```dart
 > Future<bool> audienceSendCoHostRequest({
 >   bool withToast = false,
+>   String customData = '',
 > }) async
 > ```
 
@@ -491,7 +495,9 @@
 > - function prototype:
 >
 > ```dart
-> Future<bool> audienceCancelCoHostRequest() async
+> Future<bool> audienceCancelCoHostRequest({
+>   String customData = '',
+> }) async
 > ```
 
 ### startCoHost
@@ -535,7 +541,10 @@
 > - function prototype:
 >
 > ```dart
-> Future<bool> hostAgreeCoHostRequest(ZegoUIKitUser audience) async
+> Future<bool> hostAgreeCoHostRequest(
+>  ZegoUIKitUser audience, {
+>  String customData = '',
+> }) async
 > ```
 
 ### hostRejectCoHostRequest
@@ -548,7 +557,10 @@
 > - function prototype:
 >
 > ```dart
-> Future<bool> hostRejectCoHostRequest(ZegoUIKitUser audience) async
+> Future<bool> hostRejectCoHostRequest(
+>  ZegoUIKitUser audience, {
+>  String customData = '',
+> }) async
 > ```
 
 ### removeCoHost
@@ -561,7 +573,10 @@
 > - function prototype:
 >
 > ```dart
-> Future<bool> removeCoHost(ZegoUIKitUser coHost) async
+> Future<bool> removeCoHost(
+>  ZegoUIKitUser coHost, {
+>  String customData = '',
+> }) async
 > ```
 
 ### hostSendCoHostInvitationToAudience
@@ -579,6 +594,8 @@
 > Future<bool> hostSendCoHostInvitationToAudience(
 >   ZegoUIKitUser audience, {
 >   bool withToast = false,
+>   int timeoutSecond = 60,
+>   String customData = '',
 > }) async
 > ```
 
@@ -592,6 +609,7 @@
 > ```dart
 > Future<bool> audienceAgreeCoHostInvitation({
 >   bool withToast = false,
+    String customData = '',
 > }) async
 > ```
 
@@ -603,7 +621,9 @@
 > - function prototype:
 >
 > ```dart
-> Future<bool> audienceRejectCoHostInvitation() async
+> Future<bool> audienceRejectCoHostInvitation({
+>    String customData = '',
+> }) async
 > ```
 
 ## message
@@ -670,7 +690,7 @@ messages that already exist in the room.
 > - function prototype:
 >
 > ```dart
-> Stream<List<ZegoInRoomMessage>> stream()
+> Stream<List<ZegoInRoomMessage>> stream({bool includeFakeMessage = true,})
 > ```
 >
 > - Example
@@ -1083,7 +1103,40 @@ messages that already exist in the room.
 > }
 > ```
 
-### fake user
+### user
+
+#### countNotifier
+
+>
+> user list count notifier
+>
+> - function prototype:
+>
+> ```dart
+> ValueNotifier<int> get countNotifier
+> ```
+
+#### stream
+
+>
+> user list stream
+>
+> - function prototype:
+>
+> ```dart
+>   Stream<List<ZegoUIKitUser>> stream({bool includeFakeUser = true,})
+> ```
+
+#### remove
+
+>
+> remove user from live, kick out
+>
+> - function prototype:
+>
+> ```dart
+> Future<bool> remove(List<String> userIDs)
+> ```
 
 #### addFakeUser
 

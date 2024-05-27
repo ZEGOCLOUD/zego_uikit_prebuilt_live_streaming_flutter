@@ -111,7 +111,8 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
     );
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
-      log('version: zego_uikit_prebuilt_live_streaming: 3.5.0; $version');
+      log('version: zego_uikit_prebuilt_live_streaming: 3.8.0; $version, '
+          'config:${widget.config}, ');
     });
 
     _eventListener = ZegoLiveStreamingEventListener(widget.events);
@@ -228,6 +229,9 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
     controller.private.initByPrebuilt();
     controller.pk.private.initByPrebuilt();
     controller.room.private.initByPrebuilt();
+    controller.user.private.initByPrebuilt(
+      config: widget.config,
+    );
     controller.message.private.initByPrebuilt();
     controller.coHost.private.initByPrebuilt(
       events: widget.events,
@@ -247,6 +251,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
     controller.private.uninitByPrebuilt();
     controller.pk.private.uninitByPrebuilt();
     controller.room.private.uninitByPrebuilt();
+    controller.user.private.uninitByPrebuilt();
     controller.message.private.uninitByPrebuilt();
     controller.coHost.private.uninitByPrebuilt();
     controller.audioVideo.private.uninitByPrebuilt();
@@ -366,7 +371,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
         _setBeautyConfig();
 
         ZegoUIKit()
-          ..useFrontFacingCamera(true)
+          ..useFrontFacingCamera(widget.config.useFrontFacingCamera)
           ..updateVideoViewMode(
             widget.config.audioVideoView.useVideoViewAspectFill,
           )

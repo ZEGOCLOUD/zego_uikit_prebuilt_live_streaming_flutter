@@ -44,14 +44,14 @@ class ZegoLiveStreamingControllerCoHostPrivateImpl {
   bool get isLiving =>
       connectManager?.liveStatusNotifier.value == LiveStatus.living;
 
-  ZegoLiveStreamingConnectEvent? get onRequestCoHostEvent =>
-      events?.coHost.host.onRequestReceived;
+  Function(ZegoLiveStreamingCoHostHostEventRequestReceivedData)?
+      get onRequestCoHostEvent => events?.coHost.host.onRequestReceived;
 
-  ZegoLiveStreamingConnectEvent? get onCancelCoHostEvent =>
-      events?.coHost.host.onRequestCanceled;
+  Function(ZegoLiveStreamingCoHostHostEventRequestCanceledData)?
+      get onCancelCoHostEvent => events?.coHost.host.onRequestCanceled;
 
-  ZegoLiveStreamingConnectEvent? get onRequestCoHostTimeoutEvent =>
-      events?.coHost.host.onRequestTimeout;
+  Function(ZegoLiveStreamingCoHostHostEventRequestTimeoutData)?
+      get onRequestCoHostTimeoutEvent => events?.coHost.host.onRequestTimeout;
 
   void _onAudioVideoListUpdated(List<ZegoUIKitUser> users) {
     agreeRequestingUserIDs.removeWhere(
@@ -101,7 +101,7 @@ class ZegoLiveStreamingControllerCoHostPrivateImpl {
         ZegoLiveStreamingManagers().hostManager?.notifier.value;
   }
 
-  /// Please do not call this interface. It is the internal logic of ZegoUIKitPrebuiltLiveStreaming.
+  /// Please do not call this interface. It is the internal logic of Prebuilt.
   /// DO NOT CALL
   /// Call Inside By Prebuilt
   void initByPrebuilt({

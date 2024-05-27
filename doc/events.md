@@ -672,7 +672,12 @@ co-hosts.
 >
 >- function prototype:
 >```dart
->Function(ZegoUIKitUser audience)? onRequestReceived
+>Function(ZegoLiveStreamingCoHostHostEventRequestReceivedData data)? onRequestReceived
+>
+> class ZegoLiveStreamingCoHostHostEventRequestReceivedData {
+>   ZegoUIKitUser audience;
+>   String customData;
+> }
 >```
 >- example:
 >```dart
@@ -681,7 +686,7 @@ co-hosts.
 >   events: ZegoUIKitPrebuiltLiveStreamingEvents(
 >     coHost: ZegoLiveStreamingCoHostEvents(
 >       host: ZegoLiveStreamingHostEvents(
->         onRequestReceived: (ZegoUIKitUser audience) {
+>         onRequestReceived: (ZegoLiveStreamingCoHostHostEventRequestReceivedData data) {
 >         },
 >       ),
 >     ),
@@ -697,7 +702,12 @@ co-hosts.
 >
 >- function prototype:
 >```dart
->Function(ZegoUIKitUser audience)? onRequestCanceled
+>Function(ZegoLiveStreamingCoHostHostEventRequestCanceledData data)? onRequestCanceled
+>
+> class ZegoLiveStreamingCoHostHostEventRequestCanceledData {
+>   ZegoUIKitUser audience;
+>   String customData;
+> }
 >```
 >- example:
 >```dart
@@ -706,7 +716,7 @@ co-hosts.
 >   events: ZegoUIKitPrebuiltLiveStreamingEvents(
 >     coHost: ZegoLiveStreamingCoHostEvents(
 >       host: ZegoLiveStreamingHostEvents(
->         onRequestCanceled: (ZegoUIKitUser audience) {
+>         onRequestCanceled: (ZegoLiveStreamingCoHostHostEventRequestCanceledData data) {
 >         },
 >       ),
 >     ),
@@ -722,7 +732,12 @@ co-hosts.
 >
 >- function prototype:
 >```dart
->Function(ZegoUIKitUser audience)? onRequestTimeout
+>Function(ZegoLiveStreamingCoHostHostEventRequestTimeoutData data)? onRequestTimeout
+>
+> class ZegoLiveStreamingCoHostHostEventRequestTimeoutData {
+>   ZegoUIKitUser audience;
+> }
+
 >```
 >- example:
 >```dart
@@ -731,7 +746,7 @@ co-hosts.
 >   events: ZegoUIKitPrebuiltLiveStreamingEvents(
 >     coHost: ZegoLiveStreamingCoHostEvents(
 >       host: ZegoLiveStreamingHostEvents(
->         onRequestTimeout: (ZegoUIKitUser audience) {
+>         onRequestTimeout: (ZegoLiveStreamingCoHostHostEventRequestTimeoutData data) {
 >         },
 >       ),
 >     ),
@@ -797,7 +812,11 @@ co-hosts.
 >
 >- function prototype:
 >```dart
->Function(ZegoUIKitUser audience)? onInvitationSent
+>Function(ZegoLiveStreamingCoHostHostEventInvitationSentData data)? onInvitationSent
+>
+> class ZegoLiveStreamingCoHostHostEventInvitationSentData {
+>   ZegoUIKitUser audience;
+> }
 >```
 >- example:
 >```dart
@@ -806,7 +825,7 @@ co-hosts.
 >   events: ZegoUIKitPrebuiltLiveStreamingEvents(
 >     coHost: ZegoLiveStreamingCoHostEvents(
 >       host: ZegoLiveStreamingHostEvents(
->         onInvitationSent: (ZegoUIKitUser audience) {
+>         onInvitationSent: (ZegoLiveStreamingCoHostHostEventInvitationSentData data) {
 >         },
 >       ),
 >     ),,
@@ -822,7 +841,11 @@ co-hosts.
 >
 >- function prototype:
 >```dart
->Function(ZegoUIKitUser audience)? onInvitationTimeout
+>Function(ZegoLiveStreamingCoHostHostEventInvitationTimeoutData data)? onInvitationTimeout
+>
+> class ZegoLiveStreamingCoHostHostEventInvitationTimeoutData {
+>   ZegoUIKitUser audience;
+> }
 >```
 >- example:
 >```dart
@@ -831,7 +854,7 @@ co-hosts.
 >   events: ZegoUIKitPrebuiltLiveStreamingEvents(
 >     coHost: ZegoLiveStreamingCoHostEvents(
 >       host: ZegoLiveStreamingHostEvents(
->         onInvitationTimeout: (ZegoUIKitUser audience) {
+>         onInvitationTimeout: (ZegoLiveStreamingCoHostHostEventInvitationTimeoutData data) {
 >         },
 >       ),
 >     ),
@@ -847,7 +870,12 @@ co-hosts.
 >
 >- function prototype:
 >```dart
->void Function(ZegoUIKitUser audience)? onInvitationAccepted
+>void Function(ZegoLiveStreamingCoHostHostEventInvitationAcceptedData data)? onInvitationAccepted
+>
+> class ZegoLiveStreamingCoHostHostEventInvitationAcceptedData {
+>   ZegoUIKitUser audience;
+>   String customData;
+> }
 >```
 >- example:
 >```dart
@@ -856,7 +884,7 @@ co-hosts.
 >   events: ZegoUIKitPrebuiltLiveStreamingEvents(
 >     coHost: ZegoLiveStreamingCoHostEvents(
 >       host: ZegoLiveStreamingHostEvents(
->         onInvitationAccepted: (ZegoUIKitUser audience) {
+>         onInvitationAccepted: (ZegoLiveStreamingCoHostHostEventInvitationAcceptedData data) {
 >         },
 >       ),
 >     ),
@@ -872,7 +900,12 @@ co-hosts.
 >
 >- function prototype:
 >```dart
->void Function(ZegoUIKitUser audience)? onInvitationRefused
+>void Function(ZegoLiveStreamingCoHostHostEventInvitationRefusedData data)? onInvitationRefused
+>
+> class ZegoLiveStreamingCoHostHostEventInvitationRefusedData {
+>   ZegoUIKitUser audience;
+>   String customData;
+> }
 >```
 >- example:
 >```dart
@@ -881,7 +914,7 @@ co-hosts.
 >   events: ZegoUIKitPrebuiltLiveStreamingEvents(
 >     coHost: ZegoLiveStreamingCoHostEvents(
 >       host: ZegoLiveStreamingHostEvents(
->         onInvitationRefused: (ZegoUIKitUser audience) {
+>         onInvitationRefused: (ZegoLiveStreamingCoHostHostEventInvitationRefusedData data) {
 >         },
 >       ),
 >     ),
@@ -977,7 +1010,11 @@ co-hosts.
 >
 >- function prototype:
 >```dart
->Function()? onRequestAccepted
+>Function(ZegoLiveStreamingCoHostAudienceEventRequestAcceptedData data)? onRequestAccepted
+>
+> class ZegoLiveStreamingCoHostAudienceEventRequestAcceptedData {
+>   String customData;
+> }
 >```
 >- example:
 >```dart
@@ -986,7 +1023,7 @@ co-hosts.
 >   events: ZegoUIKitPrebuiltLiveStreamingEvents(
 >     coHost: ZegoLiveStreamingCoHostEvents(
 >       audience: ZegoLiveStreamingAudienceEvents(
->         onRequestAccepted: () {
+>         onRequestAccepted: (ZegoLiveStreamingCoHostAudienceEventRequestAcceptedData data) {
 >         },
 >       ),
 >     ),
@@ -1002,7 +1039,11 @@ co-hosts.
 >
 >- function prototype:
 >```dart
->Function()? onRequestRefused
+>Function(ZegoLiveStreamingCoHostAudienceEventRequestRefusedData data)? onRequestRefused
+>
+> class ZegoLiveStreamingCoHostAudienceEventRequestRefusedData {
+>   String customData;
+> }
 >```
 >- example:
 >```dart
@@ -1011,7 +1052,7 @@ co-hosts.
 >   events: ZegoUIKitPrebuiltLiveStreamingEvents(
 >     coHost: ZegoLiveStreamingCoHostEvents(
 >       audience: ZegoLiveStreamingAudienceEvents(
->         onRequestRefused: () {
+>         onRequestRefused: (ZegoLiveStreamingCoHostAudienceEventRequestRefusedData data) {
 >         },
 >       ),
 >     ),
@@ -1027,7 +1068,12 @@ co-hosts.
 >
 >- function prototype:
 >```dart
->void Function(ZegoUIKitUser host)? onInvitationReceived
+>void Function(ZegoLiveStreamingCoHostAudienceEventRequestReceivedData data)? onInvitationReceived
+>
+> class ZegoLiveStreamingCoHostAudienceEventRequestReceivedData {
+>   ZegoUIKitUser host;
+>   String customData;
+> }
 >```
 >- example:
 >```dart
@@ -1036,7 +1082,7 @@ co-hosts.
 >   events: ZegoUIKitPrebuiltLiveStreamingEvents(
 >     coHost: ZegoLiveStreamingCoHostEvents(
 >       audience: ZegoLiveStreamingAudienceEvents(
->         onInvitationReceived: (ZegoUIKitUser host) {
+>         onInvitationReceived: (ZegoLiveStreamingCoHostAudienceEventRequestReceivedData data) {
 >         },
 >       ),
 >     ),

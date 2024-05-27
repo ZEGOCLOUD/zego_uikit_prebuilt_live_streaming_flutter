@@ -220,9 +220,13 @@ class _ZegoLiveStreamingLivePageState extends State<ZegoLiveStreamingLivePage>
     if (null !=
         ZegoLiveStreamingManagers()
             .connectManager!
-            .inviterOfInvitedToJoinCoHostInMinimizing) {
+            .dataOfInvitedToJoinCoHostInMinimizing) {
+      final dataOfInvitedToJoinCoHostInMinimizing = ZegoLiveStreamingManagers()
+          .connectManager!
+          .dataOfInvitedToJoinCoHostInMinimizing!;
+
       ZegoLoggerService.logInfo(
-        'exist a invite to join co-host when minimizing, show now',
+        'exist a invite to join co-host when minimizing($dataOfInvitedToJoinCoHostInMinimizing), show now',
         tag: 'live streaming',
         subTag: 'live page',
       );
@@ -230,9 +234,8 @@ class _ZegoLiveStreamingLivePageState extends State<ZegoLiveStreamingLivePage>
         ZegoLiveStreamingManagers()
             .connectManager!
             .onAudienceReceivedCoHostInvitation(
-              ZegoLiveStreamingManagers()
-                  .connectManager!
-                  .inviterOfInvitedToJoinCoHostInMinimizing!,
+              dataOfInvitedToJoinCoHostInMinimizing.host,
+              dataOfInvitedToJoinCoHostInMinimizing.customData,
             );
       });
     }

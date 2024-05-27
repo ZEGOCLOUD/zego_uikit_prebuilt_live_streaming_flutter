@@ -195,10 +195,10 @@ class ZegoLiveStreamingCentralAudioVideoViewState
         audioVideoViewCreator(ZegoUIKitUser user) {
           return ZegoAudioVideoView(
             user: user,
-            backgroundBuilder: audioVideoViewBackground,
-            foregroundBuilder: audioVideoViewForeground,
             borderRadius: 18.0.zW,
             borderColor: Colors.transparent,
+            backgroundBuilder: audioVideoViewBackground,
+            foregroundBuilder: audioVideoViewForeground,
             avatarConfig: ZegoAvatarConfig(
               showInAudioMode:
                   widget.config.audioVideoView.showAvatarInAudioMode,
@@ -259,7 +259,12 @@ class ZegoLiveStreamingCentralAudioVideoViewState
 
         return Positioned.fromRect(
           rect: widget.config.audioVideoView.containerRect?.call() ??
-              Rect.fromLTWH(0, 0, preferWidth, preferHeight),
+              Rect.fromLTWH(
+                0,
+                0,
+                preferWidth,
+                preferHeight,
+              ),
           child: null != widget.config.audioVideoView.containerRect
               ? children
               : ZegoInputBoardWrapper(child: children),

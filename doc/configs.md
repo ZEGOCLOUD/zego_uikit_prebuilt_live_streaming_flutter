@@ -298,6 +298,8 @@
 >
 >  In this example, we pass the builder function of the custom view, `CustomMemberListItem`, to the [itemBuilder] property so that the member list item will be rendered using the custom component.
 
+- bool `showFakeUser`: show fake user or not
+
 ## [ZegoLiveStreamingInRoomMessageConfig](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingInRoomMessageConfig-class.html) inRoomMessage
 
 >
@@ -421,6 +423,8 @@
 
 - Widget? `resendIcon`: resend button icon
 
+- bool `showFakeMessage`: show fake message or not
+
 ## [ZegoLiveStreamingEffectConfig](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingEffectConfig-class.html) effect
 
 >
@@ -540,6 +544,20 @@
 >  );
 >}
 >```
+
+- [ZegoLiveStreamingPreviewTopBarConfig](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingPreviewTopBarConfig-class.html)  `topBar`:
+>
+>  config about top bar.
+>
+> - `isVisible`: display or not display
+
+- [ZegoLiveStreamingPreviewBottomBarConfig](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingPreviewBottomBarConfig-class.html)  `bottomBar`:
+>
+>  config about top bar.
+>
+> - `isVisible`: display or not display
+> - `showBeautyEffectButton`: show beauty effect button or not.
+
 
 ## [ZegoLiveStreamingPKBattleConfig](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingPKBattleConfig-class.html) pkBattle
 

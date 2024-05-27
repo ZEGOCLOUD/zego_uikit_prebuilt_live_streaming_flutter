@@ -10,44 +10,14 @@ mixin ZegoLiveStreamingControllerRoomPrivate {
 
 /// @nodoc
 class ZegoLiveStreamingControllerRoomPrivateImpl {
-  List<StreamSubscription<dynamic>?> subscriptions = [];
-
   ZegoUIKitPrebuiltLiveStreamingConfig? config;
   ZegoUIKitPrebuiltLiveStreamingEvents? events;
 
   final ValueNotifier<bool> isLeaveRequestingNotifier =
       ValueNotifier<bool>(false);
 
-  final pseudoMemberListNotifier = ValueNotifier<List<ZegoUIKitUser>>([]);
-  StreamController<ZegoUIKitUser>? streamControllerPseudoMemberEnter;
-  StreamController<ZegoUIKitUser>? streamControllerPseudoMemberLeave;
-
   ZegoLiveStreamingHostManager? get hostManager =>
       ZegoLiveStreamingManagers().hostManager;
-
-  bool isPseudoMember(ZegoUIKitUser user) {
-    return -1 !=
-        pseudoMemberListNotifier.value
-            .indexWhere((pseudoMember) => user.id == pseudoMember.id);
-  }
-
-  void onPseudoMemberEnter(ZegoUIKitUser member) {
-    final targetIndex = pseudoMemberListNotifier.value
-        .indexWhere((user) => member.id == user.id);
-    if (-1 == targetIndex) {
-      pseudoMemberListNotifier.value = List.from(pseudoMemberListNotifier.value)
-        ..add(member);
-    }
-  }
-
-  void onPseudoMemberLeaved(ZegoUIKitUser member) {
-    final targetIndex = pseudoMemberListNotifier.value
-        .indexWhere((user) => member.id == user.id);
-    if (-1 != targetIndex) {
-      pseudoMemberListNotifier.value = List.from(pseudoMemberListNotifier.value)
-        ..removeAt(targetIndex);
-    }
-  }
 
   Future<void> defaultEndAction(
     ZegoLiveStreamingEndEvent event,
@@ -88,7 +58,7 @@ class ZegoLiveStreamingControllerRoomPrivateImpl {
     }
   }
 
-  /// Please do not call this interface. It is the internal logic of ZegoUIKitPrebuiltLiveStreaming.
+  /// Please do not call this interface. It is the internal logic of Prebuilt.
   /// DO NOT CALL!!!
   /// Call Inside By Prebuilt
   void initByPrebuilt({
@@ -101,25 +71,13 @@ class ZegoLiveStreamingControllerRoomPrivateImpl {
       subTag: 'controller.room.p',
     );
 
-    pseudoMemberListNotifier.value.clear();
-    streamControllerPseudoMemberEnter ??=
-        StreamController<ZegoUIKitUser>.broadcast();
-    streamControllerPseudoMemberLeave ??=
-        StreamController<ZegoUIKitUser>.broadcast();
-
-    subscriptions
-      ..add(
-          streamControllerPseudoMemberEnter?.stream.listen(onPseudoMemberEnter))
-      ..add(streamControllerPseudoMemberLeave?.stream
-          .listen(onPseudoMemberLeaved));
-
     this.config = config;
     this.events = events;
 
     isLeaveRequestingNotifier.value = false;
   }
 
-  /// Please do not call this interface. It is the internal logic of ZegoUIKitPrebuiltLiveStreaming.
+  /// Please do not call this interface. It is the internal logic of Prebuilt.
   /// DO NOT CALL!!!
   /// Call Inside By Prebuilt
   void uninitByPrebuilt() {
@@ -128,16 +86,6 @@ class ZegoLiveStreamingControllerRoomPrivateImpl {
       tag: 'live streaming',
       subTag: 'controller.room.p',
     );
-
-    for (final subscription in subscriptions) {
-      subscription?.cancel();
-    }
-
-    pseudoMemberListNotifier.value.clear();
-    streamControllerPseudoMemberEnter?.close();
-    streamControllerPseudoMemberEnter = null;
-    streamControllerPseudoMemberLeave?.close();
-    streamControllerPseudoMemberLeave = null;
 
     config = null;
     events = null;

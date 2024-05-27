@@ -339,14 +339,4 @@ class ZegoLiveStreamingControllerRoomImpl
         .getSignalingPlugin()
         .getInRoomCommandMessageReceivedEventStream();
   }
-
-  ///  add fake user
-  void addFakeUser(ZegoUIKitUser user) {
-    private.streamControllerPseudoMemberEnter?.add(user);
-  }
-
-  ///  remove fake user
-  void removeFakeUser(ZegoUIKitUser user) {
-    private.streamControllerPseudoMemberLeave?.add(user);
-  }
 }

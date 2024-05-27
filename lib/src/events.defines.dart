@@ -1,6 +1,8 @@
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
 
+import 'package:zego_uikit/zego_uikit.dart';
+
 /// The default behavior is to return to the previous page.
 ///
 /// If you override this callback, you must perform the page navigation
@@ -54,6 +56,171 @@ class ZegoLiveStreamingEndEvent {
         'kickerUserID:$kickerUserID, '
         'isFromMinimizing:$isFromMinimizing, '
         'reason:$reason, '
+        '}';
+  }
+}
+
+class ZegoLiveStreamingCoHostHostEventRequestReceivedData {
+  ZegoLiveStreamingCoHostHostEventRequestReceivedData({
+    required this.audience,
+    required this.customData,
+  });
+
+  ZegoUIKitUser audience;
+  String customData;
+
+  @override
+  String toString() {
+    return 'ZegoLiveStreamingCoHostHostEventRequestReceivedData{'
+        'audience:$audience, '
+        'customData:$customData, '
+        '}';
+  }
+}
+
+class ZegoLiveStreamingCoHostHostEventRequestCanceledData {
+  ZegoLiveStreamingCoHostHostEventRequestCanceledData({
+    required this.audience,
+    required this.customData,
+  });
+
+  ZegoUIKitUser audience;
+  String customData;
+
+  @override
+  String toString() {
+    return 'ZegoLiveStreamingCoHostHostEventRequestCanceledData{'
+        'audience:$audience, '
+        'customData:$customData, '
+        '}';
+  }
+}
+
+class ZegoLiveStreamingCoHostHostEventRequestTimeoutData {
+  ZegoLiveStreamingCoHostHostEventRequestTimeoutData({
+    required this.audience,
+  });
+
+  ZegoUIKitUser audience;
+
+  @override
+  String toString() {
+    return 'ZegoLiveStreamingCoHostHostEventRequestTimeoutData{'
+        'audience:$audience, '
+        '}';
+  }
+}
+
+class ZegoLiveStreamingCoHostHostEventInvitationSentData {
+  ZegoLiveStreamingCoHostHostEventInvitationSentData({
+    required this.audience,
+  });
+
+  ZegoUIKitUser audience;
+
+  @override
+  String toString() {
+    return 'ZegoLiveStreamingCoHostHostEventInvitationSentData{'
+        'audience:$audience, '
+        '}';
+  }
+}
+
+class ZegoLiveStreamingCoHostHostEventInvitationTimeoutData {
+  ZegoLiveStreamingCoHostHostEventInvitationTimeoutData({
+    required this.audience,
+  });
+
+  ZegoUIKitUser audience;
+
+  @override
+  String toString() {
+    return 'ZegoLiveStreamingCoHostHostEventInvitationTimeoutData{'
+        'audience:$audience, '
+        '}';
+  }
+}
+
+class ZegoLiveStreamingCoHostHostEventInvitationAcceptedData {
+  ZegoLiveStreamingCoHostHostEventInvitationAcceptedData({
+    required this.audience,
+    required this.customData,
+  });
+
+  ZegoUIKitUser audience;
+  String customData;
+
+  @override
+  String toString() {
+    return 'ZegoLiveStreamingCoHostHostEventInvitationAcceptedData{'
+        'audience:$audience, '
+        'customData:$customData, '
+        '}';
+  }
+}
+
+class ZegoLiveStreamingCoHostHostEventInvitationRefusedData {
+  ZegoLiveStreamingCoHostHostEventInvitationRefusedData({
+    required this.audience,
+    required this.customData,
+  });
+
+  ZegoUIKitUser audience;
+  String customData;
+
+  @override
+  String toString() {
+    return 'ZegoLiveStreamingCoHostHostEventInvitationRefusedData{'
+        'audience:$audience, '
+        'customData:$customData, '
+        '}';
+  }
+}
+
+class ZegoLiveStreamingCoHostAudienceEventRequestAcceptedData {
+  ZegoLiveStreamingCoHostAudienceEventRequestAcceptedData({
+    required this.customData,
+  });
+
+  String customData;
+
+  @override
+  String toString() {
+    return 'ZegoLiveStreamingCoHostAudienceEventRequestAcceptedData{'
+        'customData:$customData, '
+        '}';
+  }
+}
+
+class ZegoLiveStreamingCoHostAudienceEventRequestRefusedData {
+  ZegoLiveStreamingCoHostAudienceEventRequestRefusedData({
+    required this.customData,
+  });
+
+  String customData;
+
+  @override
+  String toString() {
+    return 'ZegoLiveStreamingCoHostAudienceEventRequestRefusedData{'
+        'customData:$customData, '
+        '}';
+  }
+}
+
+class ZegoLiveStreamingCoHostAudienceEventRequestReceivedData {
+  ZegoLiveStreamingCoHostAudienceEventRequestReceivedData({
+    required this.host,
+    required this.customData,
+  });
+
+  ZegoUIKitUser host;
+  String customData;
+
+  @override
+  String toString() {
+    return 'ZegoLiveStreamingCoHostAudienceEventRequestReceivedData{'
+        'host:$host, '
+        'customData:$customData, '
         '}';
   }
 }

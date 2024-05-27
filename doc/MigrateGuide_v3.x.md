@@ -20,6 +20,9 @@
 
 # Versions
 
+- [3.8.0](#380)
+- [3.5.3](#353)
+- [3.5.0](#350)
 - [3.4.0](#340)
 - [3.3.0](#330)
 - [3.1.7](#317)
@@ -28,6 +31,142 @@
 - [3.0.3](#303)
 - [3.0.2](#302)
 - [3.0](#30)  **(💥 breaking changes)**
+
+<br />
+<br />
+
+# 3.8.0
+---
+
+## Introduction
+
+>
+> In this migration guide, we will explain how to upgrade from version 3.7.+ to the latest 3.8.0 version.
+
+## Major Interface Changes
+
+- ZegoUIKitPrebuiltLiveStreamingEvents
+  - ZegoLiveStreamingCoHostEvents
+    - ZegoLiveStreamingCoHostHostEvents
+        - onRequestReceived
+        - onRequestCanceled
+        - onRequestTimeout
+        - onInvitationSent
+        - onInvitationTimeout
+        - onInvitationAccepted
+        - onInvitationRefused
+    - ZegoLiveStreamingCoHostAudienceEvents
+      - onRequestAccepted
+      - onRequestRefused
+      - onInvitationReceived
+
+>
+> Modify your code based on the following guidelines to make it compatible with version 3.8.0:
+>
+> 3.7.+ Version Code:
+>
+>```dart
+>/// Example code in version 3.7.+
+>
+> ZegoUIKitPrebuiltLiveStreamingEvents(
+>   coHost: ZegoLiveStreamingCoHostEvents(
+>     host: ZegoLiveStreamingCoHostHostEvents(
+>       onRequestReceived: (ZegoUIKitUser audience) {},
+>       onRequestCanceled: (ZegoUIKitUser audience) {},
+>       onRequestTimeout: (ZegoUIKitUser audience) {},
+>       onInvitationSent: (ZegoUIKitUser audience) {},
+>       onInvitationTimeout: (ZegoUIKitUser audience) {},
+>       onInvitationAccepted: (ZegoUIKitUser audience) {},
+>       onInvitationRefused: (ZegoUIKitUser audience) {},
+>     ),
+>     audience: ZegoLiveStreamingCoHostAudienceEvents(
+>       onRequestAccepted: () {},
+>       onRequestRefused: () {},
+>       onInvitationReceived: (ZegoUIKitUser host) {},
+>     ),
+>   ),
+> );
+>```
+>
+>3.8.0 Version Code:
+>
+>```dart
+>/// Example code in version 3.8.0
+>
+> ZegoUIKitPrebuiltLiveStreamingEvents(
+>   coHost: ZegoLiveStreamingCoHostEvents(
+>     host: ZegoLiveStreamingCoHostHostEvents(
+>       onRequestReceived: (
+>         ZegoLiveStreamingCoHostHostEventRequestReceivedData data,
+>       ) {},
+>       onRequestCanceled: (
+>         ZegoLiveStreamingCoHostHostEventRequestCanceledData data,
+>       ) {},
+>       onRequestTimeout: (
+>         ZegoLiveStreamingCoHostHostEventRequestTimeoutData data,
+>       ) {},
+>       onInvitationSent: (
+>         ZegoLiveStreamingCoHostHostEventInvitationSentData data,
+>       ) {},
+>       onInvitationTimeout: (
+>         ZegoLiveStreamingCoHostHostEventInvitationTimeoutData data,
+>       ) {},
+>       onInvitationAccepted: (
+>         ZegoLiveStreamingCoHostHostEventInvitationAcceptedData data,
+>       ) {},
+>       onInvitationRefused: (
+>         ZegoLiveStreamingCoHostHostEventInvitationRefusedData data,
+>       ) {},
+>     ),
+>     audience: ZegoLiveStreamingCoHostAudienceEvents(
+>       onRequestAccepted: (
+>         ZegoLiveStreamingCoHostAudienceEventRequestAcceptedData data,
+>       ) {},
+>       onRequestRefused: (
+>         ZegoLiveStreamingCoHostAudienceEventRequestRefusedData data,
+>       ) {},
+>       onInvitationReceived: (
+>         ZegoLiveStreamingCoHostAudienceEventRequestReceivedData data,
+>       ) {},
+>     ),
+>   ),
+> );
+>```
+
+<br />
+<br />
+
+# 3.5.3
+---
+
+## Introduction
+
+>
+> In this migration guide, we will explain how to upgrade from version 3.5.2 to the latest 3.5.3 version.
+
+## Major Interface Changes
+
+- ZegoUIKitPrebuiltLiveStreamingController
+    - rename **user.addFake** to `user.addFakeUser`
+    - rename **user.removeFake** to `user.removeFakeUser`
+
+<br />
+<br />
+
+
+# 3.5.0
+---
+
+## Introduction
+
+>
+> In this migration guide, we will explain how to upgrade from version 3.4.+ to the latest 3.5.0 version.
+
+## Major Interface Changes
+
+- ZegoUIKitPrebuiltLiveStreamingController
+    - move **room.addFakeUser** to `user.addFake`
+    - move **room.removeFakeUser** to `user.removeFake`
 
 <br />
 <br />

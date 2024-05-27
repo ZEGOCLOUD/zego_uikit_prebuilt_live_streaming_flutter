@@ -5,3 +5,5 @@ export 'deprecated_310.dart';
 export 'deprecated_317.dart';
 export 'deprecated_330.dart';
 export 'deprecated_340.dart';
+export 'deprecated_350.dart';
+export 'deprecated_352.dart';

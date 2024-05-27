@@ -136,10 +136,18 @@ Future<bool> showAppSettingsDialog({
     rootNavigator: rootNavigator,
     leftButtonText: dialogInfo.cancelButtonName,
     leftButtonCallback: () {
-      Navigator.of(
-        context,
-        rootNavigator: rootNavigator,
-      ).pop(false);
+      if (context.mounted) {
+        Navigator.of(
+          context,
+          rootNavigator: rootNavigator,
+        ).pop(false);
+      } else {
+        ZegoLoggerService.logInfo(
+          'show app settings dialog, context is not mounted',
+          tag: 'live streaming',
+          subTag: 'permissions',
+        );
+      }
     },
     rightButtonText: dialogInfo.confirmButtonName,
     rightButtonCallback: () async {

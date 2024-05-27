@@ -1,9 +1,13 @@
 // Project imports:
-import 'package:zego_uikit_prebuilt_live_streaming/zego_uikit_prebuilt_live_streaming.dart';
+
+// Project imports:
+import 'package:zego_uikit_prebuilt_live_streaming/src/defines.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/inner_text.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/pk/core/event/defines.dart';
 
 const deprecatedTipsV317 = ', '
     'deprecated since 3.1.7, '
-    'will be removed after 3.5.0'
+    'will be removed after 3.10.0'
     'Migrate Guide:https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/topics/Migration_v3.x-topic.html#317';
 
 @Deprecated('Use ZegoLiveStreamingMenuBarButtonName instead$deprecatedTipsV317')

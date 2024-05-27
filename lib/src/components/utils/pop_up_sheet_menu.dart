@@ -80,7 +80,7 @@ class _ZegoLiveStreamingPopUpSheetMenuState
         );
 
         final isPseudoMember = ZegoUIKitPrebuiltLiveStreamingController()
-            .room
+            .user
             .private
             .isPseudoMember(widget.targetUser);
         switch (popupItem.value) {
@@ -127,7 +127,7 @@ class _ZegoLiveStreamingPopUpSheetMenuState
                 subTag: 'pop-up sheet',
               );
               ZegoUIKitPrebuiltLiveStreamingController()
-                  .room
+                  .user
                   .removeFakeUser(widget.targetUser);
               break;
             }

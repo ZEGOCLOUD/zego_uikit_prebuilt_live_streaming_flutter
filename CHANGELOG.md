@@ -1,7 +1,51 @@
+
+## 3.8.0
+
+- Features
+  - Support `customData` parameter in **ZegoUIKitPrebuiltLiveStreamingController().co-host** APIs.
+  - In order to support the above parameters, the corresponding callback has added the `customData` in the **ZegoUIKitPrebuiltLiveStreamingEvents.coHost** event. 💥 [breaking changes](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/topics/Migration_v3.x-topic.html#380)
+
+## 3.7.0
+
+- Features
+  - Add **topBar** and **bottomBar** in `ZegoLiveStreamingPreviewConfig`.
+
+## 3.6.0
+
+- Features
+  - Support **useFrontFacingCamera** in config
+
+## 3.5.4
+
+- Bugs
+  - Fix the problem that some scenes of live status are not call in `ZegoUIKitPrebuiltLiveStreamingEvents onStateUpdated`
+
+## 3.5.3
+
+- Bugs
+  - Fix the issue where `ZegoUIKitPrebuiltLiveStreamingController().message.stream` not include fake message
+- Features
+  - Add a parameter `includeFakeUser` to `ZegoUIKitPrebuiltLiveStreamingController().user.stream`.
+  - Add a parameter `includeFakeMessage` to `ZegoUIKitPrebuiltLiveStreamingController().message.stream`.
+  - Add `showFakeUser` to `ZegoLiveStreamingMemberListConfig`.
+  - Add `showFakeMessage` to `ZegoLiveStreamingInRoomMessageConfig`.
+- Migrate
+  - rename `addFake`&&`removeFake` to `addFakeUser`&&`removeFakeUser` in `ZegoUIKitPrebuiltLiveStreamingController().user`.[migrate guide](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/topics/Migration_v3.x-topic.html#353)
+
+## 3.5.2
+
+- Fix the issue where `ZegoUIKitPrebuiltLiveStreamingController().user.stream` not working
+
+## 3.5.1
+
+- Update dependency.
+
+
 ## 3.5.0
 
 - Support set audio video resource mode for audience by `ZegoUIKitPrebuiltLiveStreamingConfig.audienceAudioVideoResourceMode`
-- Update dependency.
+- move `addFakeUser`, `removeFakeUser` from `ZegoUIKitPrebuiltLiveStreamingController().room` to `ZegoUIKitPrebuiltLiveStreamingController().user`. [migrate guide](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/topics/Migration_v3.x-topic.html#350)
+- Update dependency. 
 
 ## 3.4.1
 

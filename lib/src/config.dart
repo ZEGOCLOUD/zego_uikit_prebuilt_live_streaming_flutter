@@ -95,6 +95,10 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   /// Even if the user is an audience, they can set this value to true, but in general, if the role is an audience, this value should be set to false.
   bool turnOnCameraWhenJoining;
 
+  /// if you want to join the video conference with your front camera, set this value to true.
+  /// The default value is `true`.
+  bool useFrontFacingCamera;
+
   /// Whether to open the microphone when joining the live streaming.
   ///
   /// If you want to join the live streaming with your microphone closed, set this value to false;
@@ -221,6 +225,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
       : role = ZegoLiveStreamingRole.host,
         plugins = plugins ?? [],
         turnOnCameraWhenJoining = true,
+        useFrontFacingCamera = true,
         turnOnMicrophoneWhenJoining = true,
         useSpeakerWhenJoining = true,
         markAsLargeRoom = false,
@@ -278,6 +283,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   })  : role = ZegoLiveStreamingRole.audience,
         plugins = plugins ?? [],
         turnOnCameraWhenJoining = false,
+        useFrontFacingCamera = true,
         turnOnMicrophoneWhenJoining = false,
         useSpeakerWhenJoining = true,
         markAsLargeRoom = false,
@@ -315,6 +321,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
 
   ZegoUIKitPrebuiltLiveStreamingConfig({
     this.turnOnCameraWhenJoining = true,
+    this.useFrontFacingCamera = true,
     this.turnOnMicrophoneWhenJoining = true,
     this.useSpeakerWhenJoining = true,
     this.markAsLargeRoom = false,
@@ -488,6 +495,7 @@ class ZegoLiveStreamingAudioVideoViewConfig {
     this.playCoHostVideo,
     this.foregroundBuilder,
     this.backgroundBuilder,
+    this.containerBuilder,
     this.containerRect,
   });
 }
@@ -651,8 +659,15 @@ class ZegoLiveStreamingMemberListConfig {
   /// In this example, we pass the builder function of the custom view, `CustomMemberListItem`, to the [itemBuilder] property so that the member list item will be rendered using the custom component.
   ZegoMemberListItemBuilder? itemBuilder;
 
+  ///  show fake user or not
+  ///
+  ///  [ZegoUIKitPrebuiltLiveStreamingController().user.addFake()]
+  ///  [ZegoUIKitPrebuiltLiveStreamingController().user.removeFake()]
+  bool showFakeUser;
+
   ZegoLiveStreamingMemberListConfig({
     this.itemBuilder,
+    this.showFakeUser = true,
   });
 }
 
@@ -782,6 +797,11 @@ class ZegoLiveStreamingInRoomMessageConfig {
   /// resend button icon
   Widget? resendIcon;
 
+  /// show fake message or not
+  ///
+  ///  [ZegoUIKitPrebuiltLiveStreamingController().message.sendFakeMessage()]
+  bool showFakeMessage;
+
   ZegoLiveStreamingInRoomMessageConfig({
     this.visible = true,
     this.notifyUserJoin = false,
@@ -808,6 +828,7 @@ class ZegoLiveStreamingInRoomMessageConfig {
     this.background,
     this.showName = true,
     this.showAvatar = true,
+    this.showFakeMessage = true,
   });
 }
 
@@ -1073,12 +1094,36 @@ class ZegoLiveStreamingPreviewConfig {
   /// ```
   ZegoLiveStreamingStartLiveButtonBuilder? startLiveButtonBuilder;
 
+  ZegoLiveStreamingPreviewTopBarConfig topBar;
+  ZegoLiveStreamingPreviewBottomBarConfig bottomBar;
+
   ZegoLiveStreamingPreviewConfig({
     this.showPreviewForHost = true,
     this.pageBackIcon,
     this.beautyEffectIcon,
     this.switchCameraIcon,
     this.startLiveButtonBuilder,
+    ZegoLiveStreamingPreviewTopBarConfig? topBar,
+    ZegoLiveStreamingPreviewBottomBarConfig? bottomBar,
+  })  : topBar = topBar ?? ZegoLiveStreamingPreviewTopBarConfig(),
+        bottomBar = bottomBar ?? ZegoLiveStreamingPreviewBottomBarConfig() {}
+}
+
+class ZegoLiveStreamingPreviewTopBarConfig {
+  bool isVisible;
+
+  ZegoLiveStreamingPreviewTopBarConfig({
+    this.isVisible = true,
+  });
+}
+
+class ZegoLiveStreamingPreviewBottomBarConfig {
+  bool isVisible;
+  bool showBeautyEffectButton;
+
+  ZegoLiveStreamingPreviewBottomBarConfig({
+    this.isVisible = true,
+    this.showBeautyEffectButton = true,
   });
 }
 

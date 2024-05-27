@@ -1,7 +1,5 @@
 part of 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 
-typedef ZegoLiveStreamingConnectEvent = void Function(ZegoUIKitUser audience);
-
 mixin ZegoLiveStreamingControllerCoHost {
   final _coHostImpl = ZegoLiveStreamingControllerCoHostImpl();
 
@@ -25,6 +23,10 @@ class ZegoLiveStreamingControllerCoHostImpl
   ValueNotifier<List<ZegoUIKitUser>> get requestCoHostUsersNotifier =>
       private.requestCoHostUsersNotifier;
 
+  /// current co-host total count
+  ValueNotifier<int> get coHostCountNotifier =>
+      private.connectManager?.coHostCount ?? ValueNotifier<int>(0);
+
   /// host invite [audience] to be a co-host
   ///
   /// If [withToast] is set to true, a toast message will be displayed after the request succeeds or fails.
@@ -34,6 +36,7 @@ class ZegoLiveStreamingControllerCoHostImpl
     ZegoUIKitUser audience, {
     bool withToast = false,
     int timeoutSecond = 60,
+    String customData = '',
   }) async {
     ZegoLoggerService.logInfo(
       'make audience: ${audience.id} to be a co-host',
@@ -117,11 +120,13 @@ class ZegoLiveStreamingControllerCoHostImpl
     return private.connectManager!.inviteAudienceConnect(
       audience,
       timeoutSecond: timeoutSecond,
+      customData: customData,
     );
   }
 
   Future<bool> audienceAgreeCoHostInvitation({
     bool withToast = false,
+    String customData = '',
   }) async {
     ZegoLoggerService.logInfo(
       'audience agree co-host request',
@@ -179,7 +184,9 @@ class ZegoLiveStreamingControllerCoHostImpl
     return ZegoUIKit()
         .getSignalingPlugin()
         .acceptInvitation(
-            inviterID: private.hostManager!.notifier.value?.id ?? '', data: '')
+          inviterID: private.hostManager!.notifier.value?.id ?? '',
+          data: customData,
+        )
         .then((result) async {
       ZegoLoggerService.logInfo(
         'accept co-host invite, result:$result',
@@ -226,7 +233,9 @@ class ZegoLiveStreamingControllerCoHostImpl
     });
   }
 
-  Future<bool> audienceRejectCoHostInvitation() async {
+  Future<bool> audienceRejectCoHostInvitation({
+    String customData = '',
+  }) async {
     ZegoLoggerService.logInfo(
       'audience reject co-host request',
       tag: 'live streaming',
@@ -269,7 +278,9 @@ class ZegoLiveStreamingControllerCoHostImpl
     return ZegoUIKit()
         .getSignalingPlugin()
         .refuseInvitation(
-            inviterID: private.hostManager!.notifier.value?.id ?? '', data: '')
+          inviterID: private.hostManager!.notifier.value?.id ?? '',
+          data: customData,
+        )
         .then((result) {
       ZegoLoggerService.logInfo(
         'audience reject co-host request, result:$result',
@@ -295,6 +306,7 @@ class ZegoLiveStreamingControllerCoHostImpl
   /// @return A `Future` that representing whether the request was successful.
   Future<bool> audienceSendCoHostRequest({
     bool withToast = false,
+    String customData = '',
   }) async {
     ZegoLoggerService.logInfo(
       'audience request to be co-host',
@@ -349,7 +361,7 @@ class ZegoLiveStreamingControllerCoHostImpl
           invitees: [private.hostManager!.notifier.value?.id ?? ''],
           timeout: 60,
           type: ZegoInvitationType.requestCoHost.value,
-          data: '',
+          data: customData,
         )
         .then((result) {
       ZegoLoggerService.logInfo(
@@ -384,7 +396,9 @@ class ZegoLiveStreamingControllerCoHostImpl
   /// audience cancels the co-host request to the host.
   ///
   /// @return A `Future` that representing whether the request was successful.
-  Future<bool> audienceCancelCoHostRequest() async {
+  Future<bool> audienceCancelCoHostRequest({
+    String customData = '',
+  }) async {
     ZegoLoggerService.logInfo(
       'audience cancel be co-host request',
       tag: 'live streaming',
@@ -418,7 +432,7 @@ class ZegoLiveStreamingControllerCoHostImpl
 
     final result = await ZegoUIKit().getSignalingPlugin().cancelInvitation(
       invitees: [private.hostManager!.notifier.value?.id ?? ''],
-      data: '',
+      data: customData,
     );
     ZegoLoggerService.logInfo(
       'audience cancel be co-host request, result:$result',
@@ -570,7 +584,10 @@ class ZegoLiveStreamingControllerCoHostImpl
   /// host approve the co-host request made by [audience].
   ///
   /// @return A `Future` that representing whether the request was successful.
-  Future<bool> hostAgreeCoHostRequest(ZegoUIKitUser audience) async {
+  Future<bool> hostAgreeCoHostRequest(
+    ZegoUIKitUser audience, {
+    String customData = '',
+  }) async {
     ZegoLoggerService.logInfo(
       'agree the co-host request from ${audience.id}',
       tag: 'live streaming',
@@ -626,7 +643,10 @@ class ZegoLiveStreamingControllerCoHostImpl
 
     return ZegoUIKit()
         .getSignalingPlugin()
-        .acceptInvitation(inviterID: audience.id, data: '')
+        .acceptInvitation(
+          inviterID: audience.id,
+          data: customData,
+        )
         .then((result) {
       ZegoLoggerService.logInfo(
         'agree the co-host request from ${audience.id}, result:$result',
@@ -649,7 +669,10 @@ class ZegoLiveStreamingControllerCoHostImpl
   /// host reject the co-host request made by [audience].
   ///
   /// @return A `Future` that representing whether the request was successful.
-  Future<bool> hostRejectCoHostRequest(ZegoUIKitUser audience) async {
+  Future<bool> hostRejectCoHostRequest(
+    ZegoUIKitUser audience, {
+    String customData = '',
+  }) async {
     ZegoLoggerService.logInfo(
       'reject the co-host request from ${audience.id}',
       tag: 'live streaming',
@@ -683,7 +706,10 @@ class ZegoLiveStreamingControllerCoHostImpl
 
     return ZegoUIKit()
         .getSignalingPlugin()
-        .refuseInvitation(inviterID: audience.id, data: '')
+        .refuseInvitation(
+          inviterID: audience.id,
+          data: customData,
+        )
         .then((result) {
       ZegoLoggerService.logInfo(
         'refuse audience ${audience.name} co-host request, $result',
@@ -706,9 +732,14 @@ class ZegoLiveStreamingControllerCoHostImpl
   /// host remove the co-host, make [coHost] to be a audience
   ///
   /// @return A `Future` that representing whether the request was successful.
-  Future<bool> removeCoHost(ZegoUIKitUser coHost) async {
+  Future<bool> removeCoHost(
+    ZegoUIKitUser coHost, {
+    String customData = '',
+  }) async {
     ZegoLoggerService.logInfo(
-      'remove co-host:${coHost.id}',
+      'removeCoHost, '
+      'remove co-host:${coHost.id}, '
+      'customData:$customData, ',
       tag: 'live streaming',
       subTag: 'controller.connect',
     );
@@ -738,6 +769,9 @@ class ZegoLiveStreamingControllerCoHostImpl
       return false;
     }
 
-    return private.connectManager!.kickCoHost(coHost);
+    return private.connectManager!.kickCoHost(
+      coHost,
+      customData: customData,
+    );
   }
 }

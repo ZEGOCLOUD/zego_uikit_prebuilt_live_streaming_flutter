@@ -150,6 +150,10 @@ class _ZegoLiveStreamingPreviewPageState
   }
 
   Widget topBar() {
+    if (!widget.config.preview.topBar.isVisible) {
+      return Container();
+    }
+
     final buttonSize = Size(88.zR, 88.zR);
     final iconSize = Size(56.zR, 56.zR);
 
@@ -211,8 +215,15 @@ class _ZegoLiveStreamingPreviewPageState
   }
 
   Widget bottomBar() {
+    if (!widget.config.preview.bottomBar.isVisible) {
+      return Container();
+    }
+
     final buttonSize = Size(88.zR, 88.zR);
     final iconSize = Size(56.zR, 56.zR);
+
+    final beautyButtonPlaceHolder =
+        SizedBox(width: buttonSize.width, height: buttonSize.height);
 
     return Align(
       alignment: Alignment.bottomCenter,
@@ -226,22 +237,24 @@ class _ZegoLiveStreamingPreviewPageState
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ZegoLiveStreamingBeautyEffectButton(
-              translationText: widget.config.innerText,
-              rootNavigator: widget.config.rootNavigator,
-              effectConfig: widget.config.effect,
-              buttonSize: buttonSize,
-              iconSize: iconSize,
-              icon: widget.config.preview.beautyEffectIcon != null
-                  ? ButtonIcon(
-                      icon: widget.config.preview.beautyEffectIcon,
-                    )
-                  : null,
-            ),
+            widget.config.preview.bottomBar.showBeautyEffectButton
+                ? ZegoLiveStreamingBeautyEffectButton(
+                    translationText: widget.config.innerText,
+                    rootNavigator: widget.config.rootNavigator,
+                    effectConfig: widget.config.effect,
+                    buttonSize: buttonSize,
+                    iconSize: iconSize,
+                    icon: widget.config.preview.beautyEffectIcon != null
+                        ? ButtonIcon(
+                            icon: widget.config.preview.beautyEffectIcon,
+                          )
+                        : null,
+                  )
+                : beautyButtonPlaceHolder,
             SizedBox(width: 48.zR),
             startButton(),
             SizedBox(width: 48.zR),
-            SizedBox(width: 88.zR, height: 88.zR),
+            beautyButtonPlaceHolder,
           ],
         ),
       ),

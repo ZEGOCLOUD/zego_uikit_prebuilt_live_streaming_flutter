@@ -56,6 +56,7 @@ class ZegoLiveStreamingStatusManager {
       subTag: 'live status manager',
     );
 
+    onLiveStatusUpdated();
     notifier.addListener(onLiveStatusUpdated);
 
     if (!hostManager.isLocalHost && notifier.value != LiveStatus.living) {
@@ -166,10 +167,22 @@ class ZegoLiveStreamingStatusManager {
       );
       notifier.value = LiveStatus.notStart;
     } else if (roomProperties.containsKey(RoomPropertyKey.liveStatus.text)) {
+      final oldNotifierValue = notifier.value;
+
       /// live is start or end
       final liveStatusValue = roomProperties[RoomPropertyKey.liveStatus.text]!;
-      notifier.value = LiveStatus.values[
+      final targetNotifierValue = LiveStatus.values[
           int.tryParse(liveStatusValue.value) ?? LiveStatus.notStart.index];
+
+      if (!_initialized &&
+          oldNotifierValue == LiveStatus.notStart &&
+          targetNotifierValue == LiveStatus.living) {
+        /// The room attribute arrived early and has not been initialized yet, and the reissue event was thrown.
+        onLiveStatusUpdated();
+      }
+
+      notifier.value = targetNotifierValue;
+
       ZegoLoggerService.logInfo(
         'update live status, value is $liveStatusValue, status is ${notifier.value}',
         tag: 'live streaming',

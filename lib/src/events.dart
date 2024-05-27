@@ -220,8 +220,9 @@ class ZegoLiveStreamingAudioVideoEvents {
   ///   );
   /// },
   /// ```
-  Future<bool> Function(BuildContext context)?
-      onCameraTurnOnByOthersConfirmation;
+  Future<bool> Function(
+    BuildContext context,
+  )? onCameraTurnOnByOthersConfirmation;
 
   /// This callback method is called when someone requests to open your microphone, typically when the host wants to open your microphone.
   ///
@@ -276,8 +277,9 @@ class ZegoLiveStreamingAudioVideoEvents {
   ///   );
   /// },
   /// ```
-  Future<bool> Function(BuildContext context)?
-      onMicrophoneTurnOnByOthersConfirmation;
+  Future<bool> Function(
+    BuildContext context,
+  )? onMicrophoneTurnOnByOthersConfirmation;
 
   ZegoLiveStreamingAudioVideoEvents({
     this.onCameraStateChanged,
@@ -321,13 +323,19 @@ class ZegoLiveStreamingCoHostEvents {
 /// Host Related Events of CoHost
 class ZegoLiveStreamingCoHostHostEvents {
   /// receive a request that audience request to become a co-host
-  Function(ZegoUIKitUser audience)? onRequestReceived;
+  Function(
+    ZegoLiveStreamingCoHostHostEventRequestReceivedData data,
+  )? onRequestReceived;
 
   /// audience cancelled the co-host request.
-  Function(ZegoUIKitUser audience)? onRequestCanceled;
+  Function(
+    ZegoLiveStreamingCoHostHostEventRequestCanceledData data,
+  )? onRequestCanceled;
 
   /// the audience's co-host request has timed out.
-  Function(ZegoUIKitUser audience)? onRequestTimeout;
+  Function(
+    ZegoLiveStreamingCoHostHostEventRequestTimeoutData data,
+  )? onRequestTimeout;
 
   /// host accept the audience's co-host request.
   Function()? onActionAcceptRequest;
@@ -336,16 +344,24 @@ class ZegoLiveStreamingCoHostHostEvents {
   Function()? onActionRefuseRequest;
 
   /// host sent invitation to become a co-host to the audience.
-  Function(ZegoUIKitUser audience)? onInvitationSent;
+  Function(
+    ZegoLiveStreamingCoHostHostEventInvitationSentData data,
+  )? onInvitationSent;
 
   /// the host's co-host invitation has timed out.
-  Function(ZegoUIKitUser audience)? onInvitationTimeout;
+  Function(
+    ZegoLiveStreamingCoHostHostEventInvitationTimeoutData data,
+  )? onInvitationTimeout;
 
   /// audience accepted to a co-host request from host
-  void Function(ZegoUIKitUser audience)? onInvitationAccepted;
+  void Function(
+    ZegoLiveStreamingCoHostHostEventInvitationAcceptedData data,
+  )? onInvitationAccepted;
 
   /// audience refused to a co-host request from host
-  void Function(ZegoUIKitUser audience)? onInvitationRefused;
+  void Function(
+    ZegoLiveStreamingCoHostHostEventInvitationRefusedData data,
+  )? onInvitationRefused;
 
   ZegoLiveStreamingCoHostHostEvents({
     this.onRequestReceived,
@@ -372,13 +388,19 @@ class ZegoLiveStreamingCoHostAudienceEvents {
   Function()? onRequestTimeout;
 
   /// host accept the audience's co-host request.
-  Function()? onRequestAccepted;
+  Function(
+    ZegoLiveStreamingCoHostAudienceEventRequestAcceptedData data,
+  )? onRequestAccepted;
 
   /// host refuse the audience's co-host request.
-  Function()? onRequestRefused;
+  Function(
+    ZegoLiveStreamingCoHostAudienceEventRequestRefusedData data,
+  )? onRequestRefused;
 
   /// received a co-host invitation from the host.
-  void Function(ZegoUIKitUser host)? onInvitationReceived;
+  Function(
+    ZegoLiveStreamingCoHostAudienceEventRequestReceivedData data,
+  )? onInvitationReceived;
 
   /// the host's co-host invitation has timed out.
   Function()? onInvitationTimeout;

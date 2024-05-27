@@ -17,6 +17,8 @@ typedef ZegoLiveStreamingAudioVideoContainerBuilder = Widget? Function(
   BuildContext context,
   List<ZegoUIKitUser> allUsers,
   List<ZegoUIKitUser> audioVideoUsers,
+
+  /// The default audio-video view creator, you can also use [ZegoAudioVideoView] as a child control to continue encapsulating
   ZegoAudioVideoView Function(ZegoUIKitUser) audioVideoViewCreator,
 );
 

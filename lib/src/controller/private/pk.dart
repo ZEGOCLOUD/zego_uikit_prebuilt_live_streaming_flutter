@@ -15,7 +15,7 @@ class ZegoLiveStreamingControllerPKPrivateImpl {
   );
   final mutedUsersNotifier = ValueNotifier<List<String>>([]);
 
-  /// Please do not call this interface. It is the internal logic of ZegoUIKitPrebuiltLiveStreaming.
+  /// Please do not call this interface. It is the internal logic of Prebuilt.
   /// DO NOT CALL!!!
   /// Call Inside By Prebuilt
   void initByPrebuilt() {
@@ -33,7 +33,7 @@ class ZegoLiveStreamingControllerPKPrivateImpl {
     );
   }
 
-  /// Please do not call this interface. It is the internal logic of ZegoUIKitPrebuiltLiveStreaming.
+  /// Please do not call this interface. It is the internal logic of Prebuilt.
   /// DO NOT CALL!!!
   /// Call Inside By Prebuilt
   void uninitByPrebuilt() {
