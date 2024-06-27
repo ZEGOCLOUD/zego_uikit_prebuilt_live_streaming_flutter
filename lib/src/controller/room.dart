@@ -15,9 +15,9 @@ class ZegoLiveStreamingControllerRoomImpl
   }) async {
     if (null == private.hostManager) {
       ZegoLoggerService.logInfo(
-        'leave, param is invalid, hostManager:${private.hostManager}',
-        tag: 'live streaming',
-        subTag: 'controller.room',
+        'param is invalid, hostManager:${private.hostManager}',
+        tag: 'live-streaming',
+        subTag: 'controller.room, leave',
       );
 
       return false;
@@ -25,18 +25,18 @@ class ZegoLiveStreamingControllerRoomImpl
 
     if (private.isLeaveRequestingNotifier.value) {
       ZegoLoggerService.logInfo(
-        'leave, is leave requesting...',
-        tag: 'live streaming',
-        subTag: 'controller.room',
+        'is leave requesting...',
+        tag: 'live-streaming',
+        subTag: 'controller.room, leave',
       );
 
       return false;
     }
 
     ZegoLoggerService.logInfo(
-      'leave, show confirmation:$showConfirmation',
-      tag: 'live streaming',
-      subTag: 'controller.room',
+      'show confirmation:$showConfirmation',
+      tag: 'live-streaming',
+      subTag: 'controller.room, leave',
     );
     private.isLeaveRequestingNotifier.value = true;
 
@@ -51,9 +51,9 @@ class ZegoLiveStreamingControllerRoomImpl
       );
       if (!canLeave) {
         ZegoLoggerService.logInfo(
-          'leave, refuse',
-          tag: 'live streaming',
-          subTag: 'controller.room',
+          'refuse by confirmation',
+          tag: 'live-streaming',
+          subTag: 'controller.room, leave',
         );
 
         private.isLeaveRequestingNotifier.value = false;
@@ -86,9 +86,9 @@ class ZegoLiveStreamingControllerRoomImpl
 
     final result = await ZegoUIKit().leaveRoom().then((result) {
       ZegoLoggerService.logInfo(
-        'leave, leave room result, ${result.errorCode} ${result.extendedData}',
-        tag: 'live streaming',
-        subTag: 'controller.room',
+        'leave room result, ${result.errorCode} ${result.extendedData}',
+        tag: 'live-streaming',
+        subTag: 'controller.room, leave',
       );
 
       return 0 == result.errorCode;
@@ -109,9 +109,9 @@ class ZegoLiveStreamingControllerRoomImpl
     }
 
     ZegoLoggerService.logInfo(
-      'leave, finished',
-      tag: 'live streaming',
-      subTag: 'controller.room',
+      'finished',
+      tag: 'live-streaming',
+      subTag: 'controller.room, leave',
     );
 
     return result;
@@ -153,9 +153,9 @@ class ZegoLiveStreamingControllerRoomImpl
   }) async {
     if (null == ZegoUIKit().getPlugin(ZegoUIKitPluginType.signaling)) {
       ZegoLoggerService.logInfo(
-        'updateProperties, signaling is null',
-        tag: 'live streaming',
-        subTag: 'controller.room',
+        'signaling is null',
+        tag: 'live-streaming',
+        subTag: 'controller.room, updateProperties',
       );
 
       return false;
@@ -173,9 +173,9 @@ class ZegoLiveStreamingControllerRoomImpl
         .then((result) {
       if (null != result.error) {
         ZegoLoggerService.logInfo(
-          'updateProperties, error:$result',
-          tag: 'live streaming',
-          subTag: 'controller.room',
+          'error:$result',
+          tag: 'live-streaming',
+          subTag: 'controller.room, updateProperties',
         );
 
         return false;
@@ -193,9 +193,9 @@ class ZegoLiveStreamingControllerRoomImpl
   }) async {
     if (null == ZegoUIKit().getPlugin(ZegoUIKitPluginType.signaling)) {
       ZegoLoggerService.logInfo(
-        'deleteRoomProperties, signaling is null',
-        tag: 'live streaming',
-        subTag: 'controller.room',
+        'signaling is null',
+        tag: 'live-streaming',
+        subTag: 'controller.room, deleteRoomProperties',
       );
 
       return false;
@@ -211,9 +211,9 @@ class ZegoLiveStreamingControllerRoomImpl
         .then((result) {
       if (null != result.error) {
         ZegoLoggerService.logInfo(
-          'deleteRoomProperties, error:$result',
-          tag: 'live streaming',
-          subTag: 'controller.room',
+          'error:$result',
+          tag: 'live-streaming',
+          subTag: 'controller.room, deleteRoomProperties',
         );
 
         return false;
@@ -229,9 +229,9 @@ class ZegoLiveStreamingControllerRoomImpl
   }) async {
     if (null == ZegoUIKit().getPlugin(ZegoUIKitPluginType.signaling)) {
       ZegoLoggerService.logInfo(
-        'queryRoomProperties, signaling is null',
-        tag: 'live streaming',
-        subTag: 'controller.room',
+        'signaling is null',
+        tag: 'live-streaming',
+        subTag: 'controller.room, queryRoomProperties',
       );
 
       return <String, String>{};
@@ -245,9 +245,9 @@ class ZegoLiveStreamingControllerRoomImpl
         .then((result) {
       if (null != result.error) {
         ZegoLoggerService.logInfo(
-          'queryRoomProperties, error:${result.error}',
-          tag: 'live streaming',
-          subTag: 'controller.room',
+          'error:${result.error}',
+          tag: 'live-streaming',
+          subTag: 'controller.room, queryRoomProperties',
         );
 
         return <String, String>{};
@@ -262,7 +262,7 @@ class ZegoLiveStreamingControllerRoomImpl
     if (null == ZegoUIKit().getPlugin(ZegoUIKitPluginType.signaling)) {
       ZegoLoggerService.logInfo(
         'getRoomPropertiesStream, signaling is null',
-        tag: 'live streaming',
+        tag: 'live-streaming',
         subTag: 'controller.room',
       );
 
@@ -286,9 +286,9 @@ class ZegoLiveStreamingControllerRoomImpl
   }) async {
     if (null == ZegoUIKit().getPlugin(ZegoUIKitPluginType.signaling)) {
       ZegoLoggerService.logInfo(
-        'sendCommand, signaling is null',
-        tag: 'live streaming',
-        subTag: 'controller.room',
+        'signaling is null',
+        tag: 'live-streaming',
+        subTag: 'controller.room, sendCommand',
       );
 
       return false;
@@ -303,9 +303,9 @@ class ZegoLiveStreamingControllerRoomImpl
         .then((result) {
       if (null != result.error) {
         ZegoLoggerService.logInfo(
-          'sendCommand, error:${result.error}',
-          tag: 'live streaming',
-          subTag: 'controller.room',
+          'error:${result.error}',
+          tag: 'live-streaming',
+          subTag: 'controller.room, sendCommand',
         );
 
         return false;
@@ -328,7 +328,7 @@ class ZegoLiveStreamingControllerRoomImpl
     if (null == ZegoUIKit().getPlugin(ZegoUIKitPluginType.signaling)) {
       ZegoLoggerService.logInfo(
         'commandReceivedStream, signaling is null',
-        tag: 'live streaming',
+        tag: 'live-streaming',
         subTag: 'controller.room',
       );
 

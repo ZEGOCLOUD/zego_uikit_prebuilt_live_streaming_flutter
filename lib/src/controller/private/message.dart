@@ -13,15 +13,22 @@ class ZegoLiveStreamingControllerMessagePrivateImpl {
   List<StreamSubscription<dynamic>?> subscriptions = [];
 
   /// pseudo list + kit list
-  StreamController<List<ZegoInRoomMessage>>? _streamControllerList;
+  StreamController<List<ZegoInRoomMessage>>? _streamControllerBroadcastList;
+  StreamController<List<ZegoInRoomMessage>>? _streamControllerBarrageList;
 
   List<ZegoInRoomMessage> pseudoMessageList = [];
   StreamController<ZegoInRoomMessage>? streamControllerPseudoMessage;
 
-  StreamController<List<ZegoInRoomMessage>>? get streamControllerList {
-    _streamControllerList ??=
+  StreamController<List<ZegoInRoomMessage>>? get streamControllerBroadcastList {
+    _streamControllerBroadcastList ??=
         StreamController<List<ZegoInRoomMessage>>.broadcast();
-    return _streamControllerList;
+    return _streamControllerBroadcastList;
+  }
+
+  StreamController<List<ZegoInRoomMessage>>? get streamControllerBarrageList {
+    _streamControllerBarrageList ??=
+        StreamController<List<ZegoInRoomMessage>>.broadcast();
+    return _streamControllerBarrageList;
   }
 
   /// Please do not call this interface. It is the internal logic of Prebuilt.
@@ -30,19 +37,26 @@ class ZegoLiveStreamingControllerMessagePrivateImpl {
   void initByPrebuilt() {
     pseudoMessageList.clear();
 
-    _streamControllerList ??=
+    _streamControllerBroadcastList ??=
+        StreamController<List<ZegoInRoomMessage>>.broadcast();
+    _streamControllerBarrageList ??=
         StreamController<List<ZegoInRoomMessage>>.broadcast();
 
     streamControllerPseudoMessage ??=
         StreamController<ZegoInRoomMessage>.broadcast();
 
-    onKitMessageListUpdated(ZegoUIKit().getInRoomMessages());
+    onKitBroadcastMessageListUpdated(ZegoUIKit().getInRoomMessages());
     subscriptions
       ..add(
           streamControllerPseudoMessage!.stream.listen(onPseudoMessageUpdated))
       ..add(ZegoUIKit()
-          .getInRoomMessageListStream()
-          .listen(onKitMessageListUpdated));
+          .getInRoomMessageListStream(
+              type: ZegoInRoomMessageType.broadcastMessage)
+          .listen(onKitBroadcastMessageListUpdated))
+      ..add(ZegoUIKit()
+          .getInRoomMessageListStream(
+              type: ZegoInRoomMessageType.barrageMessage)
+          .listen(onKitBarrageMessageListUpdated));
   }
 
   /// Please do not call this interface. It is the internal logic of Prebuilt.
@@ -55,8 +69,11 @@ class ZegoLiveStreamingControllerMessagePrivateImpl {
 
     pseudoMessageList.clear();
 
-    _streamControllerList?.close();
-    _streamControllerList = null;
+    _streamControllerBroadcastList?.close();
+    _streamControllerBroadcastList = null;
+
+    _streamControllerBarrageList?.close();
+    _streamControllerBarrageList = null;
 
     streamControllerPseudoMessage?.close();
     streamControllerPseudoMessage = null;
@@ -65,10 +82,10 @@ class ZegoLiveStreamingControllerMessagePrivateImpl {
   void onPseudoMessageUpdated(ZegoInRoomMessage message) {
     pseudoMessageList.add(message);
 
-    onKitMessageListUpdated(ZegoUIKit().getInRoomMessages());
+    onKitBroadcastMessageListUpdated(ZegoUIKit().getInRoomMessages());
   }
 
-  void onKitMessageListUpdated(List<ZegoInRoomMessage> messages) {
+  void onKitBroadcastMessageListUpdated(List<ZegoInRoomMessage> messages) {
     var allMessages = List<ZegoInRoomMessage>.from(messages);
     allMessages.addAll(pseudoMessageList);
 
@@ -76,6 +93,17 @@ class ZegoLiveStreamingControllerMessagePrivateImpl {
       return left.timestamp.compareTo(right.timestamp);
     });
 
-    _streamControllerList?.add(allMessages);
+    _streamControllerBroadcastList?.add(allMessages);
+  }
+
+  void onKitBarrageMessageListUpdated(List<ZegoInRoomMessage> messages) {
+    var allMessages = List<ZegoInRoomMessage>.from(messages);
+    allMessages.addAll(pseudoMessageList);
+
+    allMessages.sort((left, right) {
+      return left.timestamp.compareTo(right.timestamp);
+    });
+
+    _streamControllerBarrageList?.add(allMessages);
   }
 }

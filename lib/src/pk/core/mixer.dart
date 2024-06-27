@@ -46,8 +46,8 @@ class ZegoUIKitPrebuiltLiveStreamingPKServiceMixer {
 
     ZegoLoggerService.logInfo(
       'init',
-      tag: 'live streaming',
-      subTag: 'pk mixer',
+      tag: 'live-streaming-pk',
+      subTag: 'mixer',
     );
 
     _init = true;
@@ -65,8 +65,8 @@ class ZegoUIKitPrebuiltLiveStreamingPKServiceMixer {
   Future<void> uninit() async {
     ZegoLoggerService.logInfo(
       'uninit',
-      tag: 'live streaming',
-      subTag: 'pk mixer',
+      tag: 'live-streaming-pk',
+      subTag: 'mixer',
     );
 
     await stopTask();
@@ -81,8 +81,8 @@ class ZegoUIKitPrebuiltLiveStreamingPKServiceMixer {
 
     ZegoLoggerService.logInfo(
       'uninit done',
-      tag: 'live streaming',
-      subTag: 'pk mixer',
+      tag: 'live-streaming-pk',
+      subTag: 'mixer',
     );
   }
 
@@ -92,8 +92,8 @@ class ZegoUIKitPrebuiltLiveStreamingPKServiceMixer {
     if (!_init) {
       ZegoLoggerService.logInfo(
         'update mixer, but not init',
-        tag: 'live streaming',
-        subTag: 'pk mixer',
+        tag: 'live-streaming-pk',
+        subTag: 'mixer',
       );
 
       return false;
@@ -101,8 +101,8 @@ class ZegoUIKitPrebuiltLiveStreamingPKServiceMixer {
     if (_mixerID.isEmpty) {
       ZegoLoggerService.logInfo(
         'update mixer, but mixer stream id is empty',
-        tag: 'live streaming',
-        subTag: 'pk mixer',
+        tag: 'live-streaming-pk',
+        subTag: 'mixer',
       );
 
       return false;
@@ -115,21 +115,21 @@ class ZegoUIKitPrebuiltLiveStreamingPKServiceMixer {
       'users:${pkHosts.toSimpleString}, '
       'mutedHosts:${mutedUsersNotifier.value}, '
       'task:${_task?.toStringX()}',
-      tag: 'live streaming',
-      subTag: 'pk mixer',
+      tag: 'live-streaming-pk',
+      subTag: 'mixer',
     );
 
     final mixResult = await ZegoUIKit().startMixerTask(_task!);
     ZegoLoggerService.logInfo(
       'update mixer result:${mixResult.toStringX()}',
-      tag: 'live streaming',
-      subTag: 'pk mixer',
+      tag: 'live-streaming-pk',
+      subTag: 'mixer',
     );
     if (ZegoLiveStreamingErrorCode.success != mixResult.errorCode) {
-      ZegoLoggerService.logInfo(
+      ZegoLoggerService.logError(
         'update mixer error: ${mixResult.errorCode}, ${mixResult.extendedData}',
-        tag: 'live streaming',
-        subTag: 'pk mixer',
+        tag: 'live-streaming-pk',
+        subTag: 'mixer',
       );
 
       return false;

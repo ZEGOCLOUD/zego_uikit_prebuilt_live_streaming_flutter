@@ -15,8 +15,8 @@ extension PKServiceHostRequest on ZegoUIKitPrebuiltLiveStreamingPKServices {
         'state:${pkStateNotifier.value}, '
         'is living:$isLiving, '
         'is host:$isHost',
-        tag: 'live streaming',
-        subTag: 'pk service',
+        tag: 'live-streaming-pk',
+        subTag: 'service, host, sendPKBattleRequest',
       );
 
       return ZegoLiveStreamingPKServiceSendRequestResult(
@@ -37,8 +37,8 @@ extension PKServiceHostRequest on ZegoUIKitPrebuiltLiveStreamingPKServices {
         'could not send pk request, '
         'param is invalid, '
         'target host user ids:$targetHostIDs',
-        tag: 'live streaming',
-        subTag: 'pk service',
+        tag: 'live-streaming-pk',
+        subTag: 'service, host, sendPKBattleRequest',
       );
 
       return ZegoLiveStreamingPKServiceSendRequestResult(
@@ -70,8 +70,8 @@ extension PKServiceHostRequest on ZegoUIKitPrebuiltLiveStreamingPKServices {
         'param target host id:$targetHostIDs, '
         'now target host user ids:$tempTargetHostUserIDs, '
         'advance data:${ZegoUIKit().getSignalingPlugin().advanceInvitationToString()}, ',
-        tag: 'live streaming',
-        subTag: 'pk service',
+        tag: 'live-streaming-pk',
+        subTag: 'service, host, sendPKBattleRequest',
       );
 
       return ZegoLiveStreamingPKServiceSendRequestResult(
@@ -88,12 +88,11 @@ extension PKServiceHostRequest on ZegoUIKitPrebuiltLiveStreamingPKServices {
     final isWaitingLocalResponse =
         _coreData.isRemoteRequestWaitingLocalResponse();
     ZegoLoggerService.logInfo(
-      'send pk request, '
       'isInPK:$isInPK, '
       'isWaitingRemoteResponse:$isWaitingRemoteResponse, '
       'isWaitingLocalResponse:$isWaitingLocalResponse, ',
-      tag: 'live streaming',
-      subTag: 'pk service',
+      tag: 'live-streaming-pk',
+      subTag: 'service, host, sendPKBattleRequest',
     );
     return (isInPK || isWaitingRemoteResponse || isWaitingLocalResponse)
         ? _addPKBattleRequest(
@@ -118,13 +117,12 @@ extension PKServiceHostRequest on ZegoUIKitPrebuiltLiveStreamingPKServices {
     bool isAutoAccept = false,
   }) async {
     ZegoLoggerService.logInfo(
-      'sendPKBattleRequest, '
       'targetHostUserIDs:$targetHostUserIDs, '
       'timeout:$timeout, '
       'isAutoAccept:$isAutoAccept, '
       'customData:$customData, ',
-      tag: 'live streaming',
-      subTag: 'pk service',
+      tag: 'live-streaming-pk',
+      subTag: 'service, host, sendPKBattleRequest',
     );
 
     final sendResult =
@@ -133,7 +131,8 @@ extension PKServiceHostRequest on ZegoUIKitPrebuiltLiveStreamingPKServices {
               inviterName: ZegoUIKit().getLocalUser().name,
               invitees: targetHostUserIDs,
               timeout: timeout,
-              type: ZegoInvitationType.crossRoomPKBattleRequestV2.value,
+              type: ZegoLiveStreamingInvitationType
+                  .crossRoomPKBattleRequestV2.value,
               data: jsonEncode(
                 PKServiceRequestData(
                   inviter: ZegoUIKit().getLocalUser(),
@@ -147,14 +146,13 @@ extension PKServiceHostRequest on ZegoUIKitPrebuiltLiveStreamingPKServices {
     (sendResult.error == null && sendResult.errorInvitees.isEmpty
         ? ZegoLoggerService.logInfo
         : ZegoLoggerService.logError)(
-      'sendPKBattleRequest, '
       'send start request signaling result:$sendResult, '
       'error invitees:${sendResult.errorInvitees.entries.map(
             (entry) => 'user'
                 ' ${entry.key}\'s reason is ${entry.value}',
           ).join(',')}',
-      tag: 'live streaming',
-      subTag: 'pk service',
+      tag: 'live-streaming-pk',
+      subTag: 'service, host, sendPKBattleRequest',
     );
     if (null != sendResult.error) {
       return ZegoLiveStreamingPKServiceSendRequestResult(
@@ -194,14 +192,13 @@ extension PKServiceHostRequest on ZegoUIKitPrebuiltLiveStreamingPKServices {
     bool isAutoAccept = false,
   }) async {
     ZegoLoggerService.logInfo(
-      'addPKBattleRequest, '
       'requestID:$requestID, '
       'targetHostUserIDs:$targetHostUserIDs, '
       'timeout:$timeout, '
       'isAutoAccept:$isAutoAccept, '
       'customData:$customData, ',
-      tag: 'live streaming',
-      subTag: 'pk service',
+      tag: 'live-streaming-pk',
+      subTag: 'service, host, addPKBattleRequest',
     );
 
     final addResult =
@@ -210,7 +207,8 @@ extension PKServiceHostRequest on ZegoUIKitPrebuiltLiveStreamingPKServices {
               inviterID: ZegoUIKit().getLocalUser().id,
               inviterName: ZegoUIKit().getLocalUser().name,
               invitees: targetHostUserIDs,
-              type: ZegoInvitationType.crossRoomPKBattleRequestV2.value,
+              type: ZegoLiveStreamingInvitationType
+                  .crossRoomPKBattleRequestV2.value,
               data: jsonEncode(
                 PKServiceRequestData(
                   inviter: ZegoUIKit().getLocalUser(),
@@ -224,13 +222,13 @@ extension PKServiceHostRequest on ZegoUIKitPrebuiltLiveStreamingPKServices {
     (addResult.error == null && addResult.errorInvitees.isEmpty
         ? ZegoLoggerService.logInfo
         : ZegoLoggerService.logError)(
-      'addPKBattleRequest, result:$addResult, '
+      'result:$addResult, '
       'error invitees:${addResult.errorInvitees.entries.map(
             (entry) => 'user'
                 ' ${entry.key}\'s reason is ${entry.value}',
           ).join(',')}',
-      tag: 'live streaming',
-      subTag: 'pk service',
+      tag: 'live-streaming-pk',
+      subTag: 'service, host, addPKBattleRequest',
     );
     if (null != addResult.error) {
       return ZegoLiveStreamingPKServiceSendRequestResult(
@@ -281,8 +279,8 @@ extension PKServiceHostRequest on ZegoUIKitPrebuiltLiveStreamingPKServices {
         'is living:$isLiving, '
         'is host:$isHost, '
         'isWaitingRemoteResponse:$isWaitingRemoteResponse, ',
-        tag: 'live streaming',
-        subTag: 'pk service',
+        tag: 'live-streaming-pk',
+        subTag: 'service, host, cancelPKBattleRequest',
       );
 
       return ZegoLiveStreamingPKServiceResult(
@@ -302,8 +300,8 @@ extension PKServiceHostRequest on ZegoUIKitPrebuiltLiveStreamingPKServices {
         'could not cancel pk request, '
         'param is invalid, '
         'target host user ids:$targetHostIDs',
-        tag: 'live streaming',
-        subTag: 'pk service',
+        tag: 'live-streaming-pk',
+        subTag: 'service, host, cancelPKBattleRequest',
       );
 
       return ZegoLiveStreamingPKServiceResult(
@@ -316,11 +314,10 @@ extension PKServiceHostRequest on ZegoUIKitPrebuiltLiveStreamingPKServices {
     }
 
     ZegoLoggerService.logInfo(
-      'cancelPKBattleRequest, '
       'targetHostUserIDs:$targetHostIDs, '
       'customData:$customData, ',
-      tag: 'live streaming',
-      subTag: 'pk service',
+      tag: 'live-streaming-pk',
+      subTag: 'service, host, cancelPKBattleRequest',
     );
 
     final cancelResult =
@@ -334,11 +331,10 @@ extension PKServiceHostRequest on ZegoUIKitPrebuiltLiveStreamingPKServices {
     ((cancelResult.error == null)
         ? ZegoLoggerService.logInfo
         : ZegoLoggerService.logError)(
-      'cancelPKBattleRequest,'
-      ' result:$cancelResult, '
+      'result:$cancelResult, '
       'error invitees:${cancelResult.errorInvitees}',
       tag: 'ZegoLiveStreamingPKBattleService',
-      subTag: 'api',
+      subTag: 'service, host, cancelPKBattleRequest',
     );
     if (null != cancelResult.error) {
       return ZegoLiveStreamingPKServiceResult(error: cancelResult.error);
@@ -380,8 +376,8 @@ extension PKServiceHostRequest on ZegoUIKitPrebuiltLiveStreamingPKServices {
         'is living:$isLiving, '
         'is host:$isHost, '
         'isWaitingLocalResponse:$isWaitingLocalResponse, ',
-        tag: 'live streaming',
-        subTag: 'pk service',
+        tag: 'live-streaming-pk',
+        subTag: 'service, host, acceptPKBattleRequest',
       );
 
       return ZegoLiveStreamingPKServiceResult(
@@ -422,15 +418,14 @@ extension PKServiceHostRequest on ZegoUIKitPrebuiltLiveStreamingPKServices {
     }
 
     ZegoLoggerService.logInfo(
-      'acceptPKBattleRequest, '
       'requestID:$requestID, '
       'targetHost:${targetHost.userInfo.id}, '
       'targetHostLiveID:${targetHost.liveID}, '
       'session hosts:$sessionHosts, '
       'timeout:$timeout, '
       'customData:$customData',
-      tag: 'live streaming',
-      subTag: 'pk service',
+      tag: 'live-streaming-pk',
+      subTag: 'service, host, acceptPKBattleRequest',
     );
 
     final acceptResult =
@@ -448,8 +443,8 @@ extension PKServiceHostRequest on ZegoUIKitPrebuiltLiveStreamingPKServices {
             : ZegoLoggerService.logInfo)
         .call(
       'acceptPKBattleRequest, result:$acceptResult',
-      tag: 'live streaming',
-      subTag: 'pk service',
+      tag: 'live-streaming-pk',
+      subTag: 'service, host, acceptPKBattleRequest',
     );
 
     if (null != acceptResult.error) {
@@ -491,8 +486,8 @@ extension PKServiceHostRequest on ZegoUIKitPrebuiltLiveStreamingPKServices {
         'is living:$isLiving, '
         'is host:$isHost, '
         'isWaitingLocalResponse:$isWaitingLocalResponse, ',
-        tag: 'live streaming',
-        subTag: 'pk service',
+        tag: 'live-streaming-pk',
+        subTag: 'service, host, rejectPKBattleRequest',
       );
 
       return ZegoLiveStreamingPKServiceResult(
@@ -508,13 +503,12 @@ extension PKServiceHostRequest on ZegoUIKitPrebuiltLiveStreamingPKServices {
     }
 
     ZegoLoggerService.logInfo(
-      'rejectPKBattleRequest, '
       'requestID:$requestID, '
       'targetHostID:$targetHostID, '
       'timeout:$timeout, '
       'customData:$customData',
-      tag: 'live streaming',
-      subTag: 'pk service',
+      tag: 'live-streaming-pk',
+      subTag: 'service, host, rejectPKBattleRequest',
     );
 
     _coreData.clearRequestReceivedEventInMinimizing();
@@ -532,9 +526,9 @@ extension PKServiceHostRequest on ZegoUIKitPrebuiltLiveStreamingPKServices {
             ? ZegoLoggerService.logError
             : ZegoLoggerService.logInfo)
         .call(
-      'rejectPKBattleRequest, result:$rejectResult',
-      tag: 'live streaming',
-      subTag: 'pk service',
+      'result:$rejectResult',
+      tag: 'live-streaming-pk',
+      subTag: 'service, host, rejectPKBattleRequest',
     );
 
     updatePKState(ZegoLiveStreamingPKBattleState.idle);

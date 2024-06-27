@@ -46,7 +46,7 @@ class _ZegoLiveStreamingDurationTimeBoardState
     if (widget.config.isVisible) {
       ZegoLoggerService.logInfo(
         'init duration',
-        tag: 'live',
+        tag: 'live-streaming',
         subTag: 'prebuilt',
       );
 
@@ -55,7 +55,7 @@ class _ZegoLiveStreamingDurationTimeBoardState
       } else {
         ZegoLoggerService.logInfo(
           'manager notifier value is null, wait...',
-          tag: 'live streaming',
+          tag: 'live-streaming',
           subTag: 'duration time board',
         );
 
@@ -117,7 +117,7 @@ class _ZegoLiveStreamingDurationTimeBoardState
       if (null == networkTimeNow.value) {
         ZegoLoggerService.logInfo(
           'network time is null, wait...',
-          tag: 'live streaming',
+          tag: 'live-streaming',
           subTag: 'duration time board',
         );
 
@@ -138,7 +138,7 @@ class _ZegoLiveStreamingDurationTimeBoardState
     final networkTimeNow = ZegoUIKit().getNetworkTime();
     ZegoLoggerService.logInfo(
       'network time update:$networkTimeNow',
-      tag: 'live streaming',
+      tag: 'live-streaming',
       subTag: 'duration time board',
     );
 
@@ -148,7 +148,7 @@ class _ZegoLiveStreamingDurationTimeBoardState
   void startDurationTimer(DateTime networkTimeNow) {
     ZegoLoggerService.logInfo(
       'start duration timer, network time is $networkTimeNow, live begin time is ${widget.manager.notifier.value}',
-      tag: 'live streaming',
+      tag: 'live-streaming',
       subTag: 'duration time board',
     );
 

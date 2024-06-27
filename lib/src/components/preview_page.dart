@@ -284,7 +284,7 @@ class _ZegoLiveStreamingPreviewPageState
           if (!widget.liveStreamingPageReady.value) {
             ZegoLoggerService.logInfo(
               'live streaming page is waiting room login',
-              tag: 'live streaming',
+              tag: 'live-streaming',
               subTag: 'preview page',
             );
             return;

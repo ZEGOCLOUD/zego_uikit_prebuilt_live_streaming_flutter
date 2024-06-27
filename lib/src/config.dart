@@ -1106,7 +1106,7 @@ class ZegoLiveStreamingPreviewConfig {
     ZegoLiveStreamingPreviewTopBarConfig? topBar,
     ZegoLiveStreamingPreviewBottomBarConfig? bottomBar,
   })  : topBar = topBar ?? ZegoLiveStreamingPreviewTopBarConfig(),
-        bottomBar = bottomBar ?? ZegoLiveStreamingPreviewBottomBarConfig() {}
+        bottomBar = bottomBar ?? ZegoLiveStreamingPreviewBottomBarConfig();
 }
 
 class ZegoLiveStreamingPreviewTopBarConfig {

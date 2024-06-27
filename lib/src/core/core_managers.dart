@@ -34,7 +34,7 @@ class ZegoLiveStreamingManagers {
   set swipingCurrentLiveID(String value) {
     ZegoLoggerService.logInfo(
       'set switching current live id:$value',
-      tag: 'live streaming',
+      tag: 'live-streaming',
       subTag: 'core manager.swiping',
     );
     _swipingCurrentLiveID = value;
@@ -57,7 +57,7 @@ class ZegoLiveStreamingManagers {
     if (_initialized) {
       ZegoLoggerService.logInfo(
         'had init',
-        tag: 'live streaming',
+        tag: 'live-streaming',
         subTag: 'core manager',
       );
 
@@ -66,7 +66,7 @@ class ZegoLiveStreamingManagers {
 
     ZegoLoggerService.logInfo(
       'init plugin and managers',
-      tag: 'live streaming',
+      tag: 'live-streaming',
       subTag: 'core manager',
     );
 
@@ -135,7 +135,7 @@ class ZegoLiveStreamingManagers {
   void updateContextQuery(BuildContext Function()? contextQuery) {
     ZegoLoggerService.logInfo(
       'update context query',
-      tag: 'live streaming',
+      tag: 'live-streaming',
       subTag: 'core manager',
     );
     connectManager?.contextQuery = contextQuery;
@@ -146,14 +146,14 @@ class ZegoLiveStreamingManagers {
   Future<void> uninitPluginAndManagers() async {
     ZegoLoggerService.logInfo(
       'uninit plugin and managers',
-      tag: 'live streaming',
+      tag: 'live-streaming',
       subTag: 'core manager',
     );
 
     if (!_initialized) {
       ZegoLoggerService.logInfo(
         'had not init',
-        tag: 'live streaming',
+        tag: 'live-streaming',
         subTag: 'core manager',
       );
 

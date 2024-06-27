@@ -100,7 +100,7 @@ Future<void> requestPermissions({
         } else {
           ZegoLoggerService.logInfo(
             'show app settings dialog, context is not mounted',
-            tag: 'live streaming',
+            tag: 'live-streaming',
             subTag: 'permissions',
           );
         }
@@ -120,7 +120,7 @@ Future<bool> showAppSettingsDialog({
   if (kickOutNotifier.value) {
     ZegoLoggerService.logInfo(
       'local user is kick-out, ignore show app settings dialog',
-      tag: 'live streaming',
+      tag: 'live-streaming',
       subTag: 'permissions',
     );
     return false;
@@ -144,7 +144,7 @@ Future<bool> showAppSettingsDialog({
       } else {
         ZegoLoggerService.logInfo(
           'show app settings dialog, context is not mounted',
-          tag: 'live streaming',
+          tag: 'live-streaming',
           subTag: 'permissions',
         );
       }
@@ -161,7 +161,7 @@ Future<bool> showAppSettingsDialog({
       } else {
         ZegoLoggerService.logInfo(
           'show app settings dialog, context is not mounted',
-          tag: 'live streaming',
+          tag: 'live-streaming',
           subTag: 'permissions',
         );
       }

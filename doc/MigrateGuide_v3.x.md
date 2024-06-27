@@ -20,6 +20,8 @@
 
 # Versions
 
+- [3.8.4](#384)  **(💥 breaking changes)**
+- [3.8.3](#383)
 - [3.8.0](#380)
 - [3.5.3](#353)
 - [3.5.0](#350)
@@ -31,6 +33,37 @@
 - [3.0.3](#303)
 - [3.0.2](#302)
 - [3.0](#30)  **(💥 breaking changes)**
+
+
+<br />
+<br />
+
+# 3.8.4
+---
+
+## Introduction
+
+>
+> In this migration guide, we will explain how to upgrade from version 3.8.3 to the latest 3.8.4 version.
+
+# Major Interface Changes
+
+- ZegoInRoomMessage: The type of `messageID` is changed from **int** to **String**.
+
+<br />
+<br />
+
+# 3.8.3
+---
+
+## Introduction
+
+>
+> In this migration guide, we will explain how to upgrade from version 3.8.2 to the latest 3.8.3 version.
+
+## Major Interface Changes
+    - rename **ZegoInvitationType** to `ZegoLiveStreamingInvitationType`
+
 
 <br />
 <br />

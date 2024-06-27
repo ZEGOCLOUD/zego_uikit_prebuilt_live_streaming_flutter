@@ -154,7 +154,7 @@ class _ZegoLiveStreamingSwipingPageState
         onPageChanged: (pageIndex) {
           ZegoLoggerService.logInfo(
             'PageView.onPageChanged $pageIndex',
-            tag: 'live streaming',
+            tag: 'live-streaming',
             subTag: 'swiping',
           );
         },
@@ -162,7 +162,7 @@ class _ZegoLiveStreamingSwipingPageState
         itemBuilder: (context, pageIndex) {
           ZegoLoggerService.logInfo(
             'PageView.itemBuilder $pageIndex, room id:$_targetRoomID',
-            tag: 'live streaming',
+            tag: 'live-streaming',
             subTag: 'swiping',
           );
 
@@ -172,7 +172,7 @@ class _ZegoLiveStreamingSwipingPageState
             roomBuilder: () {
               ZegoLoggerService.logInfo(
                 'PageView.itemBuilder.builder, page index:$pageIndex live id:$_targetRoomID',
-                tag: 'live streaming',
+                tag: 'live-streaming',
                 subTag: 'swiping',
               );
 
@@ -205,7 +205,7 @@ class _ZegoLiveStreamingSwipingPageState
       'target room id:$_targetRoomID, '
       'express room id:${ZegoUIKit().getRoom().id}, '
       'express room state:${ZegoUIKit().getRoomStateStream().value.reason}, ',
-      tag: 'live streaming',
+      tag: 'live-streaming',
       subTag: 'swiping',
     );
 
@@ -220,14 +220,14 @@ class _ZegoLiveStreamingSwipingPageState
         'on room state changed, '
         'signaling room id:${ZegoUIKit().getSignalingPlugin().getRoomID()}, '
         'signaling room state:${ZegoUIKit().getSignalingPlugin().getRoomState()},',
-        tag: 'live streaming',
+        tag: 'live-streaming',
         subTag: 'swiping',
       );
     }
 
     ZegoLoggerService.logInfo(
       'on room state changed, express done:$expressDone, signaling done:$signalingDone',
-      tag: 'live streaming',
+      tag: 'live-streaming',
       subTag: 'swiping',
     );
     if (expressDone && signalingDone) {
@@ -240,7 +240,7 @@ class _ZegoLiveStreamingSwipingPageState
       ZegoLoggerService.logInfo(
         'swipingTo, '
         'target room id($targetRoomID) is same as before ($_targetRoomID)',
-        tag: 'live streaming',
+        tag: 'live-streaming',
         subTag: 'swiping',
       );
       return;
@@ -249,7 +249,7 @@ class _ZegoLiveStreamingSwipingPageState
     if (targetRoomID.isEmpty) {
       ZegoLoggerService.logInfo(
         'swipingTo, target room id is empty',
-        tag: 'live streaming',
+        tag: 'live-streaming',
         subTag: 'swiping',
       );
 
@@ -258,7 +258,7 @@ class _ZegoLiveStreamingSwipingPageState
 
     ZegoLoggerService.logInfo(
       'swipingTo, $targetRoomID',
-      tag: 'live streaming',
+      tag: 'live-streaming',
       subTag: 'swiping',
     );
 
@@ -272,7 +272,7 @@ class _ZegoLiveStreamingSwipingPageState
   void onSwipingRequest(String targetRoomID) {
     ZegoLoggerService.logInfo(
       'onSwipingRequest $targetRoomID',
-      tag: 'live streaming',
+      tag: 'live-streaming',
       subTag: 'swiping',
     );
 

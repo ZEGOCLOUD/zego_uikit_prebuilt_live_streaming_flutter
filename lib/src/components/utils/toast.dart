@@ -34,7 +34,7 @@ class ZegoLiveStreamingToast {
   void init({required ContextQuery contextQuery}) {
     ZegoLoggerService.logInfo(
       'init',
-      tag: 'live streaming',
+      tag: 'live-streaming',
       subTag: 'toast',
     );
 

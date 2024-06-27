@@ -74,7 +74,7 @@ Future<bool> showLiveDialog({
   } catch (e) {
     ZegoLoggerService.logInfo(
       'show live dialog exception:$e',
-      tag: 'live streaming',
+      tag: 'live-streaming',
       subTag: 'dialogs',
     );
   }

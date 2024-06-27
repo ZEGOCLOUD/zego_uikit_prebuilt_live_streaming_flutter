@@ -5,14 +5,14 @@ extension PKServiceCompleter on ZegoUIKitPrebuiltLiveStreamingPKServices {
     if (_completer != null) {
       ZegoLoggerService.logInfo(
         '$apiName, waitCompleter start',
-        tag: 'live streaming',
-        subTag: 'pk service',
+        tag: 'live-streaming-pk',
+        subTag: 'service',
       );
       await _completer!.future;
       ZegoLoggerService.logInfo(
         '$apiName, waitCompleter done',
-        tag: 'live streaming',
-        subTag: 'pk service',
+        tag: 'live-streaming-pk',
+        subTag: 'service',
       );
     }
     _completer = Completer();
@@ -21,8 +21,8 @@ extension PKServiceCompleter on ZegoUIKitPrebuiltLiveStreamingPKServices {
   void completeCompleter(String apiName) {
     ZegoLoggerService.logInfo(
       '$apiName, _completeCompleter',
-      tag: 'live streaming',
-      subTag: 'pk service',
+      tag: 'live-streaming-pk',
+      subTag: 'service',
     );
     _completer?.complete();
     _completer = null;

@@ -25,8 +25,8 @@ class ZegoLiveStreamingControllerMinimizingImpl
     if (ZegoLiveStreamingMiniOverlayPageState.minimizing != state) {
       ZegoLoggerService.logInfo(
         'is not minimizing, ignore',
-        tag: 'live streaming',
-        subTag: 'controller.minimize',
+        tag: 'live-streaming',
+        subTag: 'controller.minimize, restore',
       );
 
       return false;
@@ -36,8 +36,8 @@ class ZegoLiveStreamingControllerMinimizingImpl
     if (null == minimizeData) {
       ZegoLoggerService.logError(
         'prebuiltData is null',
-        tag: 'live streaming',
-        subTag: 'controller.minimize',
+        tag: 'live-streaming',
+        subTag: 'controller.minimize, restore',
       );
 
       return false;
@@ -76,8 +76,8 @@ class ZegoLiveStreamingControllerMinimizingImpl
     } catch (e) {
       ZegoLoggerService.logInfo(
         'restore from mini exception:$e',
-        tag: 'live streaming',
-        subTag: 'controller.minimize',
+        tag: 'live-streaming',
+        subTag: 'controller.minimize, restore',
       );
     }
 
@@ -92,8 +92,8 @@ class ZegoLiveStreamingControllerMinimizingImpl
     if (ZegoLiveStreamingMiniOverlayMachine().isMinimizing) {
       ZegoLoggerService.logInfo(
         'is minimizing, ignore',
-        tag: 'live streaming',
-        subTag: 'controller.minimize',
+        tag: 'live-streaming',
+        subTag: 'controller.minimize, minimize',
       );
 
       return false;
@@ -102,8 +102,8 @@ class ZegoLiveStreamingControllerMinimizingImpl
     if (!private.isLiving) {
       ZegoLoggerService.logInfo(
         'is not living, ignore',
-        tag: 'live streaming',
-        subTag: 'controller.minimize',
+        tag: 'live-streaming',
+        subTag: 'controller.minimize, minimize',
       );
 
       return false;
@@ -122,8 +122,8 @@ class ZegoLiveStreamingControllerMinimizingImpl
     } catch (e) {
       ZegoLoggerService.logError(
         'navigator pop exception:$e',
-        tag: 'live streaming',
-        subTag: 'controller.minimize',
+        tag: 'live-streaming',
+        subTag: 'controller.minimize, minimize',
       );
 
       return false;

@@ -17,7 +17,7 @@ class LiveStreamingControllerSwipingImpl
         'previous, live id is empty, '
         'please check ZegoLiveStreamingSwipingConfig.requirePreviousLiveID, '
         'you can refer to https://docs.zegocloud.com/article/16478',
-        tag: 'live streaming',
+        tag: 'live-streaming',
         subTag: 'controller.swiping',
       );
 
@@ -26,7 +26,7 @@ class LiveStreamingControllerSwipingImpl
 
     ZegoLoggerService.logInfo(
       'previous',
-      tag: 'live streaming',
+      tag: 'live-streaming',
       subTag: 'controller.swiping',
     );
 
@@ -43,7 +43,7 @@ class LiveStreamingControllerSwipingImpl
         'next, live id is empty, '
         'please check ZegoLiveStreamingSwipingConfig.requirePreviousLiveID, '
         'you can refer to https://docs.zegocloud.com/article/16478',
-        tag: 'live streaming',
+        tag: 'live-streaming',
         subTag: 'controller.swiping',
       );
 
@@ -52,7 +52,7 @@ class LiveStreamingControllerSwipingImpl
 
     ZegoLoggerService.logInfo(
       'next',
-      tag: 'live streaming',
+      tag: 'live-streaming',
       subTag: 'controller.swiping',
     );
 
@@ -66,7 +66,7 @@ class LiveStreamingControllerSwipingImpl
     if (targetLiveID.isEmpty) {
       ZegoLoggerService.logInfo(
         'jump to, live id is empty',
-        tag: 'live streaming',
+        tag: 'live-streaming',
         subTag: 'controller.swiping',
       );
 
@@ -75,7 +75,7 @@ class LiveStreamingControllerSwipingImpl
 
     ZegoLoggerService.logInfo(
       'jump to $targetLiveID',
-      tag: 'live streaming',
+      tag: 'live-streaming',
       subTag: 'controller.swiping',
     );
 

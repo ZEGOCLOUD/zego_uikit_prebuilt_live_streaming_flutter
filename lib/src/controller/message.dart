@@ -16,25 +16,30 @@ class ZegoLiveStreamingControllerMessageImpl
   /// @return Error code, please refer to the error codes document https://docs.zegocloud.com/en/5548.html for details.
   ///
   /// @return A `Future` that representing whether the request was successful.
-  Future<bool> send(String message) async {
+  Future<bool> send(
+    String message, {
+    ZegoInRoomMessageType type = ZegoInRoomMessageType.broadcastMessage,
+  }) async {
     if (!_enableProperty.value) {
       ZegoLoggerService.logInfo(
         'chat enabled property is false, not allow to send message',
-        tag: 'live streaming',
-        subTag: 'controller-message',
+        tag: 'live-streaming',
+        subTag: 'controller.message',
       );
 
       return false;
     }
 
-    return ZegoUIKit().sendInRoomMessage(message);
+    return ZegoUIKit().sendInRoomMessage(message, type: type);
   }
 
   /// Retrieves a list of chat messages that already exist in the room.
   ///
   /// @return A `List` of `ZegoInRoomMessage` objects representing the chat messages that already exist in the room.
-  List<ZegoInRoomMessage> list() {
-    return ZegoUIKit().getInRoomMessages();
+  List<ZegoInRoomMessage> list({
+    ZegoInRoomMessageType type = ZegoInRoomMessageType.broadcastMessage,
+  }) {
+    return ZegoUIKit().getInRoomMessages(type: type);
   }
 
   /// Retrieves a list stream of chat messages that already exist in the room.
@@ -74,11 +79,15 @@ class ZegoLiveStreamingControllerMessageImpl
   /// ```
   Stream<List<ZegoInRoomMessage>> stream({
     bool includeFakeMessage = true,
+    ZegoInRoomMessageType type = ZegoInRoomMessageType.broadcastMessage,
   }) {
-    return includeFakeMessage
-        ? (private.streamControllerList?.stream ??
-            ZegoUIKit().getInRoomMessageListStream())
-        : ZegoUIKit().getInRoomMessageListStream();
+    if (includeFakeMessage) {
+      return (type == ZegoInRoomMessageType.broadcastMessage
+              ? private.streamControllerBroadcastList?.stream
+              : private._streamControllerBarrageList?.stream) ??
+          ZegoUIKit().getInRoomMessageListStream(type: type);
+    }
+    return ZegoUIKit().getInRoomMessageListStream(type: type);
   }
 
   /// send fake message in message list,
@@ -99,7 +108,7 @@ class ZegoLiveStreamingControllerMessageImpl
               ),
         timestamp: ZegoUIKit().getNetworkTime().value?.millisecondsSinceEpoch ??
             DateTime.now().millisecondsSinceEpoch,
-        messageID: -1,
+        messageID: '-1',
       ),
     );
   }

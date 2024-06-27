@@ -15,8 +15,8 @@ extension PKServiceHost on ZegoUIKitPrebuiltLiveStreamingPKServices {
         'state:${pkStateNotifier.value}, '
         'is living:$isLiving, '
         'is host:$isHost, ',
-        tag: 'live streaming',
-        subTag: 'pk service',
+        tag: 'live-streaming-pk',
+        subTag: 'service, host, quitPKBattle',
       );
 
       return ZegoLiveStreamingPKServiceResult(
@@ -33,8 +33,8 @@ extension PKServiceHost on ZegoUIKitPrebuiltLiveStreamingPKServices {
 
     ZegoLoggerService.logInfo(
       'quit pk battle, force:$force',
-      tag: 'live streaming',
-      subTag: 'pk service',
+      tag: 'live-streaming-pk',
+      subTag: 'service, host, quitPKBattle',
     );
 
     updatePKUsers([]);
@@ -50,9 +50,9 @@ extension PKServiceHost on ZegoUIKitPrebuiltLiveStreamingPKServices {
               'invitee_name': ZegoUIKit().getLocalUser().name,
             }));
     ZegoLoggerService.logInfo(
-      'quitPKBattle, requestID:$requestID, result:$quitResult',
-      tag: 'live streaming',
-      subTag: 'pk service',
+      'requestID:$requestID, result:$quitResult',
+      tag: 'live-streaming-pk',
+      subTag: 'service, host, quitPKBattle',
     );
 
     return const ZegoLiveStreamingPKServiceResult();
@@ -77,8 +77,8 @@ extension PKServiceHost on ZegoUIKitPrebuiltLiveStreamingPKServices {
         'is living:$isLiving, '
         'is host:$isHost, '
         'isRequestFromLocal:$isRequestFromLocal, ',
-        tag: 'live streaming',
-        subTag: 'pk service',
+        tag: 'live-streaming-pk',
+        subTag: 'service, host, stopPKBattle',
       );
 
       return ZegoLiveStreamingPKServiceResult(
@@ -107,9 +107,9 @@ extension PKServiceHost on ZegoUIKitPrebuiltLiveStreamingPKServices {
               'invitee_name': ZegoUIKit().getLocalUser().name,
             }));
     ZegoLoggerService.logInfo(
-      'stopPKBattle, requestID:$requestID, result:$quitResult',
-      tag: 'live streaming',
-      subTag: 'pk service',
+      'requestID:$requestID, result:$quitResult',
+      tag: 'live-streaming-pk',
+      subTag: 'service, host, stopPKBattle',
     );
 
     return const ZegoLiveStreamingPKServiceResult();

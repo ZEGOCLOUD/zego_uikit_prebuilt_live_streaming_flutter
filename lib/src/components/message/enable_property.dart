@@ -38,7 +38,7 @@ class ZegoLiveStreamingInRoomMessageEnableProperty {
     ZegoLoggerService.logInfo(
       'chat enabled property changed to '
       '${updatedProperties[disableChatRoomPropertyKey]!.value}',
-      tag: 'live streaming',
+      tag: 'live-streaming',
       subTag: 'message button',
     );
     _valueNotifier.value =

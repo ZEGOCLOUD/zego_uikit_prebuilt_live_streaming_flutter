@@ -109,7 +109,7 @@ class ZegoLiveStreamingControllerCoHostPrivateImpl {
   }) {
     ZegoLoggerService.logInfo(
       'init by prebuilt',
-      tag: 'live streaming',
+      tag: 'live-streaming',
       subTag: 'controller.connect.invite.p',
     );
 
@@ -138,7 +138,7 @@ class ZegoLiveStreamingControllerCoHostPrivateImpl {
   void uninitByPrebuilt() {
     ZegoLoggerService.logInfo(
       'uninit by prebuilt',
-      tag: 'live streaming',
+      tag: 'live-streaming',
       subTag: 'controller.connect.invite.p',
     );
 

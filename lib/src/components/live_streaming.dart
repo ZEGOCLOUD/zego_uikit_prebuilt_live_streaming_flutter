@@ -1,7 +1,6 @@
 // Dart imports:
 import 'dart:async';
 import 'dart:core';
-import 'dart:developer';
 import 'dart:io' show Platform;
 
 // Flutter imports:
@@ -106,13 +105,18 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
 
     ZegoLoggerService.logInfo(
       'initState',
-      tag: 'live streaming',
+      tag: 'live-streaming',
       subTag: 'prebuilt',
     );
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
-      log('version: zego_uikit_prebuilt_live_streaming: 3.8.3; $version, '
-          'config:${widget.config}, ');
+      ZegoLoggerService.logInfo(
+        'version: zego_uikit_prebuilt_live_streaming: 3.8.9; $version, \n'
+        'config:${widget.config}, \n'
+        'events: ${widget.events}, ',
+        tag: 'live-streaming',
+        subTag: 'prebuilt',
+      );
     });
 
     _eventListener = ZegoLiveStreamingEventListener(widget.events);
@@ -169,13 +173,13 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
 
     ZegoLoggerService.logInfo(
       'mini machine state is ${ZegoLiveStreamingMiniOverlayMachine().state}',
-      tag: 'live streaming',
+      tag: 'live-streaming',
       subTag: 'prebuilt',
     );
     if (isFromMinimizing) {
       ZegoLoggerService.logInfo(
         'mini machine state is not idle, context will not be init',
-        tag: 'live streaming',
+        tag: 'live-streaming',
         subTag: 'prebuilt',
       );
 
@@ -205,7 +209,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
     } else {
       ZegoLoggerService.logInfo(
         'mini machine state is minimizing, room will not be leave',
-        tag: 'live streaming',
+        tag: 'live-streaming',
         subTag: 'prebuilt',
       );
     }
@@ -218,7 +222,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
 
     ZegoLoggerService.logInfo(
       'dispose',
-      tag: 'live streaming',
+      tag: 'live-streaming',
       subTag: 'prebuilt',
     );
   }
@@ -265,7 +269,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
 
     ZegoLoggerService.logInfo(
       'didChangeAppLifecycleState $state',
-      tag: 'live streaming',
+      tag: 'live-streaming',
       subTag: 'prebuilt',
     );
 
@@ -316,7 +320,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
     }
 
     if (!isCameraGranted) {
-      if (context.mounted) {
+      if (mounted) {
         await showAppSettingsDialog(
           context: context,
           rootNavigator: widget.config.rootNavigator,
@@ -326,7 +330,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
         );
       }
       if (!isMicrophoneGranted) {
-        if (context.mounted) {
+        if (mounted) {
           await showAppSettingsDialog(
             context: context,
             rootNavigator: widget.config.rootNavigator,
@@ -403,7 +407,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
   Future<void> _setVideoConfig() async {
     ZegoLoggerService.logInfo(
       'video config:${widget.config.video}',
-      tag: 'live streaming',
+      tag: 'live-streaming',
       subTag: 'prebuilt',
     );
 
@@ -445,7 +449,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
     if (result.errorCode != 0) {
       ZegoLoggerService.logError(
         'failed to login room:${result.errorCode},${result.extendedData}',
-        tag: 'live streaming',
+        tag: 'live-streaming',
         subTag: 'prebuilt',
       );
     }
@@ -497,7 +501,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
   void onMeRemovedFromRoom(String fromUserID) {
     ZegoLoggerService.logInfo(
       'local user removed by $fromUserID',
-      tag: 'live streaming',
+      tag: 'live-streaming',
       subTag: 'prebuilt',
     );
 
@@ -548,7 +552,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
             'leave confirmation left click, '
             'navigator exception:$e, '
             'event:$event',
-            tag: 'live streaming',
+            tag: 'live-streaming',
             subTag: 'prebuilt',
           );
         }
@@ -566,7 +570,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
             'leave confirmation right click, '
             'navigator exception:$e, '
             'event:$event',
-            tag: 'live streaming',
+            tag: 'live-streaming',
             subTag: 'prebuilt',
           );
         }
@@ -579,7 +583,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
   ) {
     ZegoLoggerService.logInfo(
       'default end event, event:$event',
-      tag: 'live streaming',
+      tag: 'live-streaming',
       subTag: 'prebuilt',
     );
 
@@ -600,7 +604,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
           } catch (e) {
             ZegoLoggerService.logError(
               'live end, navigator exception:$e, event:$event',
-              tag: 'live streaming',
+              tag: 'live-streaming',
               subTag: 'prebuilt',
             );
           }
@@ -612,7 +616,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
   void onUIKitError(ZegoUIKitError error) {
     ZegoLoggerService.logError(
       'on uikit error:$error',
-      tag: 'live streaming',
+      tag: 'live-streaming',
       subTag: 'prebuilt',
     );
 

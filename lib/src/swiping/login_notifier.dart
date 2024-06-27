@@ -14,7 +14,7 @@ class ZegoLiveStreamingSwipingRoomLoginNotifier {
   }) : _configPlugins = configPlugins {
     ZegoLoggerService.logInfo(
       'constructor, config plugins:$_configPlugins',
-      tag: 'live streaming',
+      tag: 'live-streaming',
       subTag: 'login-notifier',
     );
 
@@ -38,7 +38,7 @@ class ZegoLiveStreamingSwipingRoomLoginNotifier {
   void resetCheckingData(String roomID) {
     ZegoLoggerService.logInfo(
       'reset checking room to $roomID',
-      tag: 'live streaming',
+      tag: 'live-streaming',
       subTag: 'login-notifier',
     );
 
@@ -57,7 +57,7 @@ class ZegoLiveStreamingSwipingRoomLoginNotifier {
 
     ZegoLoggerService.logInfo(
       'sync result, result:$_result, value:${notifier.value}',
-      tag: 'live streaming',
+      tag: 'live-streaming',
       subTag: 'login-notifier',
     );
   }
@@ -67,7 +67,7 @@ class ZegoLiveStreamingSwipingRoomLoginNotifier {
       'check express room, target room id:$_targetRoomID, '
       'room id:${ZegoUIKit().getRoom().id}, '
       'room state:${ZegoUIKit().getRoomStateStream().value.reason}',
-      tag: 'live streaming',
+      tag: 'live-streaming',
       subTag: 'login-notifier',
     );
 
@@ -81,7 +81,7 @@ class ZegoLiveStreamingSwipingRoomLoginNotifier {
             ZegoUIKit().getRoomStateStream().value.reason) {
       ZegoLoggerService.logInfo(
         'check express room, express room is not ready, listen...',
-        tag: 'live streaming',
+        tag: 'live-streaming',
         subTag: 'login-notifier',
       );
 
@@ -97,7 +97,7 @@ class ZegoLiveStreamingSwipingRoomLoginNotifier {
       'express room state changed, target room id:$_targetRoomID, '
       'room id:${ZegoUIKit().getRoom().id}, '
       'room state:${ZegoUIKit().getRoomStateStream().value.reason}',
-      tag: 'live streaming',
+      tag: 'live-streaming',
       subTag: 'login-notifier',
     );
 
@@ -108,7 +108,7 @@ class ZegoLiveStreamingSwipingRoomLoginNotifier {
     if (_result[_expressResultIndex]) {
       ZegoLoggerService.logInfo(
         'express room state changed, room already login, remove listener',
-        tag: 'live streaming',
+        tag: 'live-streaming',
         subTag: 'login-notifier',
       );
 
@@ -127,7 +127,7 @@ class ZegoLiveStreamingSwipingRoomLoginNotifier {
         .isEmpty) {
       ZegoLoggerService.logInfo(
         'check signaling room, signaling is not in config, not need to check',
-        tag: 'live streaming',
+        tag: 'live-streaming',
         subTag: 'login-notifier',
       );
 
@@ -140,7 +140,7 @@ class ZegoLiveStreamingSwipingRoomLoginNotifier {
     if (null == ZegoUIKit().getPlugin(ZegoUIKitPluginType.signaling)) {
       ZegoLoggerService.logInfo(
         'check signaling room, signaling is null, wait install...',
-        tag: 'live streaming',
+        tag: 'live-streaming',
         subTag: 'login-notifier',
       );
 
@@ -155,7 +155,7 @@ class ZegoLiveStreamingSwipingRoomLoginNotifier {
       'check signaling room, target room id:$_targetRoomID, '
       'room id:${ZegoUIKit().getSignalingPlugin().getRoomID()}, '
       'room state:${ZegoUIKit().getSignalingPlugin().getRoomState()}',
-      tag: 'live streaming',
+      tag: 'live-streaming',
       subTag: 'login-notifier',
     );
 
@@ -170,7 +170,7 @@ class ZegoLiveStreamingSwipingRoomLoginNotifier {
             ZegoUIKit().getSignalingPlugin().getRoomState()) {
       ZegoLoggerService.logInfo(
         'check signaling room, room is not connected, listen...',
-        tag: 'live streaming',
+        tag: 'live-streaming',
         subTag: 'login-notifier',
       );
 
@@ -188,7 +188,7 @@ class ZegoLiveStreamingSwipingRoomLoginNotifier {
     if (!pluginsInstalled.contains(ZegoUIKitPluginType.signaling)) {
       ZegoLoggerService.logInfo(
         'on plugins install, but signaling still null, wait install...',
-        tag: 'live streaming',
+        tag: 'live-streaming',
         subTag: 'login-notifier',
       );
 
@@ -197,7 +197,7 @@ class ZegoLiveStreamingSwipingRoomLoginNotifier {
 
     ZegoLoggerService.logInfo(
       'on plugins install, signaling installed, remove listen and recheck signaling room',
-      tag: 'live streaming',
+      tag: 'live-streaming',
       subTag: 'login-notifier',
     );
     ZegoUIKit()
@@ -213,7 +213,7 @@ class ZegoLiveStreamingSwipingRoomLoginNotifier {
       'signaling room state changed, target room id:$_targetRoomID, '
       'room id:${ZegoUIKit().getSignalingPlugin().getRoomID()}, '
       'room state:${ZegoUIKit().getSignalingPlugin().getRoomState()}',
-      tag: 'live streaming',
+      tag: 'live-streaming',
       subTag: 'login-notifier',
     );
 
@@ -225,7 +225,7 @@ class ZegoLiveStreamingSwipingRoomLoginNotifier {
     if (_result[_signalingResultIndex]) {
       ZegoLoggerService.logInfo(
         'signaling room state changed, room already connected, remove listener',
-        tag: 'live streaming',
+        tag: 'live-streaming',
         subTag: 'login-notifier',
       );
 

@@ -10,8 +10,8 @@ extension ZegoLiveStreamingAudioVideoManagers on ZegoLiveStreamingManagers {
   void initAudioVideoManagers() {
     ZegoLoggerService.logInfo(
       'init',
-      tag: 'live streaming',
-      subTag: 'core manager-audio video',
+      tag: 'live-streaming-coHost',
+      subTag: 'audio video',
     );
 
     subscriptions.add(
@@ -53,8 +53,8 @@ extension ZegoLiveStreamingAudioVideoManagers on ZegoLiveStreamingManagers {
         ZegoLoggerService.logInfo(
           'mute co-host(${audioVideoUser.id}) audio, local role:$localRole, is play:$isPlayAudio, '
           'co-host microphone state:${audioVideoUser.microphone.value}',
-          tag: 'live streaming',
-          subTag: 'core manager-audio video',
+          tag: 'live-streaming-coHost',
+          subTag: 'audio video',
         );
         if (isPlayAudio && audioVideoUser.microphone.value) {
           ZegoUIKit().muteUserAudio(audioVideoUser.id, false);
@@ -83,8 +83,8 @@ extension ZegoLiveStreamingAudioVideoManagers on ZegoLiveStreamingManagers {
         ZegoLoggerService.logInfo(
           'mute co-host(${audioVideoUser.id}) video, local role:$localRole, is play:$isPlayVideo, '
           'co-host camera state:${audioVideoUser.camera.value}',
-          tag: 'live streaming',
-          subTag: 'core manager-audio video',
+          tag: 'live-streaming-coHost',
+          subTag: 'audio video',
         );
         if (isPlayVideo && audioVideoUser.camera.value) {
           ZegoUIKit().muteUserVideo(audioVideoUser.id, false);

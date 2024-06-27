@@ -62,7 +62,7 @@ class _ZegoLiveStreamingDisableChatButtonState
         if (isUpdatingRoomProperty) {
           ZegoLoggerService.logInfo(
             'room property update is not finish',
-            tag: 'live streaming',
+            tag: 'live-streaming',
             subTag: 'disable chat button',
           );
           return;
@@ -78,7 +78,7 @@ class _ZegoLiveStreamingDisableChatButtonState
             .then((value) {
           ZegoLoggerService.logInfo(
             'chat enable property update to $isChatEnabled',
-            tag: 'live streaming',
+            tag: 'live-streaming',
             subTag: 'disable chat button',
           );
 

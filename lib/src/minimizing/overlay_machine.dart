@@ -36,7 +36,7 @@ class ZegoLiveStreamingMiniOverlayMachine {
 
     ZegoLoggerService.logInfo(
       'add listener:$listener, size:${_onStateChangedListeners.length}',
-      tag: 'call',
+      tag: 'live-streaming',
       subTag: 'overlay machine',
     );
   }
@@ -48,7 +48,7 @@ class ZegoLiveStreamingMiniOverlayMachine {
 
     ZegoLoggerService.logInfo(
       'remove listener:$listener, size:${_onStateChangedListeners.length}',
-      tag: 'call',
+      tag: 'live-streaming',
       subTag: 'overlay machine',
     );
   }
@@ -58,7 +58,7 @@ class ZegoLiveStreamingMiniOverlayMachine {
   ) {
     ZegoLoggerService.logInfo(
       'change state outside to $state',
-      tag: 'call',
+      tag: 'live-streaming',
       subTag: 'overlay machine',
     );
 
@@ -86,14 +86,14 @@ class ZegoLiveStreamingMiniOverlayMachine {
   void _init() {
     ZegoLoggerService.logInfo(
       'init',
-      tag: 'call',
+      tag: 'live-streaming',
       subTag: 'overlay machine',
     );
 
     _machine.onAfterTransition.listen((event) {
       ZegoLoggerService.logInfo(
         'mini overlay, from ${event.source} to ${event.target}',
-        tag: 'call',
+        tag: 'live-streaming',
         subTag: 'overlay machine',
       );
 
@@ -113,7 +113,7 @@ class ZegoLiveStreamingMiniOverlayMachine {
   Future<void> _onMeRemovedFromRoom(String fromUserID) async {
     ZegoLoggerService.logInfo(
       'local user removed by $fromUserID',
-      tag: 'live audio room',
+      tag: 'live-streaming',
       subTag: 'mini overlay page',
     );
     changeState(ZegoLiveStreamingMiniOverlayPageState.idle);

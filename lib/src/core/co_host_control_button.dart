@@ -108,7 +108,7 @@ class _ZegoLiveStreamingCoHostControlButtonState
 
   Widget requestCoHostButton() {
     return ZegoStartInvitationButton(
-      invitationType: ZegoInvitationType.requestCoHost.value,
+      invitationType: ZegoLiveStreamingInvitationType.requestCoHost.value,
       invitees: [widget.hostManager.notifier.value?.id ?? ''],
       data: '',
       icon: null != widget.requestCoHostButtonIcon?.icon

@@ -95,3 +95,9 @@ And you can also customize various live streaming features by configuring parame
 <br />
 
 [Please visit our official website for more details.](https://docs.zegocloud.com/article/14874)
+
+## Previews
+
+- live streaming with cohosting
+
+<img src="https://storage.zego.im/sdk-doc/Pics/ZegoUIKit/Flutter/live_with_cohosting2.gif" alt="cohosting">

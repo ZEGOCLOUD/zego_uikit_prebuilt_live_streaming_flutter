@@ -53,7 +53,7 @@ class _ZegoLiveStreamingMinimizingButtonState
         if (ZegoUIKitPrebuiltLiveStreamingController().minimize.isMinimizing) {
           ZegoLoggerService.logInfo(
             'is minimizing, ignore',
-            tag: 'call',
+            tag: 'live-streaming',
             subTag: 'overlay button',
           );
 

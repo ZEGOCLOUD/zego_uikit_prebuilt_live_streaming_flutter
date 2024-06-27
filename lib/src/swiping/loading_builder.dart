@@ -44,7 +44,7 @@ class _ZegoUIKitPrebuiltLiveStreamingScrollerElementState
     if (isFromMinimizing || roomLogoutNotifier.value) {
       ZegoLoggerService.logInfo(
         'room ${roomLogoutNotifier.checkingRoomID} is logout or from minimizing($isFromMinimizing), can build',
-        tag: 'live streaming',
+        tag: 'live-streaming',
         subTag: 'swiping-loading',
       );
 
@@ -54,7 +54,7 @@ class _ZegoUIKitPrebuiltLiveStreamingScrollerElementState
     } else {
       ZegoLoggerService.logInfo(
         'room ${roomLogoutNotifier.checkingRoomID} is not logout, wait room logout',
-        tag: 'live streaming',
+        tag: 'live-streaming',
         subTag: 'swiping-loading',
       );
 
@@ -89,14 +89,14 @@ class _ZegoUIKitPrebuiltLiveStreamingScrollerElementState
   void onRoomStateChanged() {
     ZegoLoggerService.logInfo(
       'room ${roomLogoutNotifier.checkingRoomID} state changed, logout:${roomLogoutNotifier.value}',
-      tag: 'live streaming',
+      tag: 'live-streaming',
       subTag: 'swiping-loading',
     );
 
     if (roomLogoutNotifier.value) {
       ZegoLoggerService.logInfo(
         'room ${roomLogoutNotifier.checkingRoomID} had logout, build..',
-        tag: 'live streaming',
+        tag: 'live-streaming',
         subTag: 'swiping-loading',
       );
 

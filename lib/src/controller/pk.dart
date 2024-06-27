@@ -62,6 +62,15 @@ class ZegoLiveStreamingControllerPKImpl
     String customData = '',
     bool isAutoAccept = false,
   }) async {
+    ZegoLoggerService.logInfo(
+      'targetHostIDs:$targetHostIDs, '
+      'timeout:$timeout, '
+      'customData:$customData, '
+      'isAutoAccept:$isAutoAccept, ',
+      tag: 'live-streaming',
+      subTag: 'controller.pk, sendRequest',
+    );
+
     return ZegoUIKitPrebuiltLiveStreamingPK.instance.sendPKBattleRequest(
       targetHostIDs: targetHostIDs,
       timeout: timeout,
@@ -79,6 +88,13 @@ class ZegoLiveStreamingControllerPKImpl
     required List<String> targetHostIDs,
     String customData = '',
   }) async {
+    ZegoLoggerService.logInfo(
+      'targetHostIDs:$targetHostIDs, '
+      'customData:$customData, ',
+      tag: 'live-streaming',
+      subTag: 'controller.pk, cancelRequest',
+    );
+
     return ZegoUIKitPrebuiltLiveStreamingPK.instance.cancelPKBattleRequest(
       targetHostIDs: targetHostIDs,
       customData: customData,
@@ -96,6 +112,15 @@ class ZegoLiveStreamingControllerPKImpl
     int timeout = 60,
     String customData = '',
   }) async {
+    ZegoLoggerService.logInfo(
+      'requestID:$requestID, '
+      'targetHost:$targetHost, '
+      'timeout:$timeout, '
+      'customData:$customData, ',
+      tag: 'live-streaming',
+      subTag: 'controller.pk, acceptRequest',
+    );
+
     return ZegoUIKitPrebuiltLiveStreamingPK.instance.acceptPKBattleRequest(
       requestID: requestID,
       targetHost: targetHost,
@@ -114,6 +139,15 @@ class ZegoLiveStreamingControllerPKImpl
     int timeout = 60,
     String customData = '',
   }) async {
+    ZegoLoggerService.logInfo(
+      'requestID:$requestID, '
+      'targetHostID:$targetHostID, '
+      'timeout:$timeout, '
+      'customData:$customData, ',
+      tag: 'live-streaming',
+      subTag: 'controller.pk, rejectRequest',
+    );
+
     return ZegoUIKitPrebuiltLiveStreamingPK.instance.rejectPKBattleRequest(
       requestID: requestID,
       targetHostID: targetHostID,
@@ -126,6 +160,12 @@ class ZegoLiveStreamingControllerPKImpl
   /// only pop the PK View on your own end,
   /// other PK participants decide on their own.
   Future<ZegoLiveStreamingPKServiceResult> quit() async {
+    ZegoLoggerService.logInfo(
+      'quit',
+      tag: 'live-streaming',
+      subTag: 'controller.pk, quit',
+    );
+
     return ZegoUIKitPrebuiltLiveStreamingPK.instance.quitPKBattle(
       requestID: ZegoUIKitPrebuiltLiveStreamingPK.instance.currentRequestID,
     );
@@ -134,6 +174,12 @@ class ZegoLiveStreamingControllerPKImpl
   /// Stop PK to all pk-hosts, only the PK Initiator can stop it.
   /// The PK is over and all participants will exit the PK View.
   Future<ZegoLiveStreamingPKServiceResult> stop() async {
+    ZegoLoggerService.logInfo(
+      'stop',
+      tag: 'live-streaming',
+      subTag: 'controller.pk, stop',
+    );
+
     return ZegoUIKitPrebuiltLiveStreamingPK.instance.stopPKBattle(
       requestID: ZegoUIKitPrebuiltLiveStreamingPK.instance.currentRequestID,
     );
@@ -147,6 +193,12 @@ class ZegoLiveStreamingControllerPKImpl
     required List<String> targetHostIDs,
     required bool isMute,
   }) async {
+    ZegoLoggerService.logInfo(
+      'targetHostIDs:$targetHostIDs, isMute:$isMute, ',
+      tag: 'live-streaming',
+      subTag: 'controller.pk, muteAudios',
+    );
+
     return ZegoUIKitPrebuiltLiveStreamingPK.instance.muteUserAudio(
       targetHostIDs: targetHostIDs,
       isMute: isMute,

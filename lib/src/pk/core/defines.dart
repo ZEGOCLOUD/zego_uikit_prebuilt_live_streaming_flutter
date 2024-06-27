@@ -32,7 +32,7 @@ class ZegoLiveStreamingPKUser {
 
   @override
   String toString() {
-    return '{live id:$liveID, '
+    return 'ZegoLiveStreamingPKUser{live id:$liveID, '
         'user:$userInfo, '
         'streamID:$streamID, '
         'heartbeat:$heartbeat, '

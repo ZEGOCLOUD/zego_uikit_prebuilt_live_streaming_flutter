@@ -51,8 +51,8 @@ class ZegoUIKitPrebuiltLiveStreamingPK
 
     ZegoLoggerService.logInfo(
       'init',
-      tag: 'live streaming',
-      subTag: 'pk service',
+      tag: 'live-streaming-pk',
+      subTag: 'service',
     );
 
     _initialized = true;
@@ -77,8 +77,8 @@ class ZegoUIKitPrebuiltLiveStreamingPK
 
     ZegoLoggerService.logInfo(
       'uninit',
-      tag: 'live streaming',
-      subTag: 'pk service',
+      tag: 'live-streaming-pk',
+      subTag: 'service',
     );
 
     _initialized = false;
@@ -104,8 +104,8 @@ class ZegoUIKitPrebuiltLiveStreamingPK
   void updateContextQuery(BuildContext Function()? contextQuery) {
     ZegoLoggerService.logInfo(
       'update context query',
-      tag: 'live streaming',
-      subTag: 'pk service',
+      tag: 'live-streaming-pk',
+      subTag: 'service',
     );
 
     _data.contextQuery = contextQuery;

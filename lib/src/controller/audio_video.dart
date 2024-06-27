@@ -49,7 +49,7 @@ class ZegoLiveStreamingControllerAudioVideoMicrophoneImpl
     ZegoLoggerService.logInfo(
       "turn ${isOn ? "on" : "off"} $userID microphone,"
       "mute mode:$needUseMuteMode, ",
-      tag: 'live streaming',
+      tag: 'live-streaming',
       subTag: 'controller-audioVideo',
     );
 
@@ -91,7 +91,7 @@ class ZegoLiveStreamingControllerAudioVideoCameraImpl
   void turnOn(bool isOn, {String? userID}) {
     ZegoLoggerService.logInfo(
       "turn ${isOn ? "on" : "off"} $userID camera",
-      tag: 'live streaming',
+      tag: 'live-streaming',
       subTag: 'controller-audioVideo',
     );
 
@@ -136,6 +136,12 @@ class ZegoLiveStreamingControllerAudioVideoAudioOutputImpl
 
   /// set audio output to speaker or earpiece(telephone receiver)
   void switchToSpeaker(bool isSpeaker) {
+    ZegoLoggerService.logInfo(
+      "switchToSpeaker, isSpeaker:$isSpeaker, ",
+      tag: 'live-streaming',
+      subTag: 'controller-audioVideo',
+    );
+
     ZegoUIKit().setAudioOutputToSpeaker(isSpeaker);
   }
 }

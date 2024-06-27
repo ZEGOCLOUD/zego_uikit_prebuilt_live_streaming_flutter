@@ -121,7 +121,7 @@ class _ZegoLiveStreamingInRoomMessageInputBoardButtonState
     if (!_enableProperty.value && isMessageInputting) {
       ZegoLoggerService.logInfo(
         'message inputting, close it',
-        tag: 'live streaming',
+        tag: 'live-streaming',
         subTag: 'message button',
       );
       Navigator.of(

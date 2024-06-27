@@ -1,5 +1,5 @@
 /// @nodoc
-enum ZegoInvitationType {
+enum ZegoLiveStreamingInvitationType {
   ///  audience request host to be co-host
   requestCoHost,
 
@@ -15,34 +15,37 @@ enum ZegoInvitationType {
   /// cross room PK invitation
   crossRoomPKBattleRequestV2,
 }
+// ZegoCallInvitationType.voiceCall: 0,
+// ZegoCallInvitationType.videoCall: 1,
 
 /// @nodoc
-extension ZegoInvitationTypeExtension on ZegoInvitationType {
+extension ZegoInvitationTypeExtension on ZegoLiveStreamingInvitationType {
   static bool isCoHostType(int type) {
-    return type == ZegoInvitationType.requestCoHost.value ||
-        type == ZegoInvitationType.inviteToJoinCoHost.value ||
-        type == ZegoInvitationType.removeFromCoHost.value;
+    return type == ZegoLiveStreamingInvitationType.requestCoHost.value ||
+        type == ZegoLiveStreamingInvitationType.inviteToJoinCoHost.value ||
+        type == ZegoLiveStreamingInvitationType.removeFromCoHost.value;
   }
 
   static bool isPKType(int type) {
-    return type == ZegoInvitationType.crossRoomPKBattleRequestV2.value;
+    return type ==
+        ZegoLiveStreamingInvitationType.crossRoomPKBattleRequestV2.value;
   }
 
   static const valueMap = {
-    ZegoInvitationType.requestCoHost: 2,
-    ZegoInvitationType.inviteToJoinCoHost: 3,
-    ZegoInvitationType.removeFromCoHost: 4,
-    // ZegoInvitationType.crossRoomPKBattleRequest: 5,
-    ZegoInvitationType.crossRoomPKBattleRequestV2: 6,
+    ZegoLiveStreamingInvitationType.requestCoHost: 2,
+    ZegoLiveStreamingInvitationType.inviteToJoinCoHost: 3,
+    ZegoLiveStreamingInvitationType.removeFromCoHost: 4,
+    // ZegoLiveStreamingInvitationType.crossRoomPKBattleRequest: 5,
+    ZegoLiveStreamingInvitationType.crossRoomPKBattleRequestV2: 6,
   };
 
   int get value => valueMap[this] ?? -1;
 
-  static const Map<int, ZegoInvitationType> mapValue = {
-    2: ZegoInvitationType.requestCoHost,
-    3: ZegoInvitationType.inviteToJoinCoHost,
-    4: ZegoInvitationType.removeFromCoHost,
-    // 5: ZegoInvitationType.crossRoomPKBattleRequest,
-    6: ZegoInvitationType.crossRoomPKBattleRequestV2,
+  static const Map<int, ZegoLiveStreamingInvitationType> mapValue = {
+    2: ZegoLiveStreamingInvitationType.requestCoHost,
+    3: ZegoLiveStreamingInvitationType.inviteToJoinCoHost,
+    4: ZegoLiveStreamingInvitationType.removeFromCoHost,
+    // 5: ZegoLiveStreamingInvitationType.crossRoomPKBattleRequest,
+    6: ZegoLiveStreamingInvitationType.crossRoomPKBattleRequestV2,
   };
 }

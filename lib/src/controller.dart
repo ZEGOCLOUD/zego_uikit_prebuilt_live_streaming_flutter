@@ -123,8 +123,8 @@ class ZegoUIKitPrebuiltLiveStreamingController
   ZegoUIKitPrebuiltLiveStreamingController._internal() {
     ZegoLoggerService.logInfo(
       'ZegoUIKitPrebuiltLiveStreamingController create',
-      tag: 'call',
-      subTag: 'live streaming controller(${identityHashCode(this)})',
+      tag: 'live-streaming',
+      subTag: 'controller',
     );
   }
 
