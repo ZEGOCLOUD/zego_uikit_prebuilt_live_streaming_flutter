@@ -43,6 +43,7 @@ class ZegoLiveStreamingPage extends StatefulWidget {
     required this.userName,
     required this.liveID,
     required this.config,
+    this.token = '',
     this.events,
   }) : super(key: key);
 
@@ -51,6 +52,12 @@ class ZegoLiveStreamingPage extends StatefulWidget {
 
   /// You can create a project and obtain an appSign from the [ZEGOCLOUD Admin Console](https://console.zegocloud.com).
   final String appSign;
+
+  /// The token issued by the developer's business server is used to ensure security.
+  /// For the generation rules, please refer to [Using Token Authentication] (https://doc-zh.zego.im/article/10360), the default is an empty string, that is, no authentication.
+  ///
+  /// if appSign is not passed in or if appSign is empty, this parameter must be set for authentication when logging in to a room.
+  final String token;
 
   /// The ID of the currently logged-in user.
   /// It can be any valid string.
@@ -86,7 +93,6 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
 
   final popUpManager = ZegoLiveStreamingPopUpManager();
 
-  var readyNotifier = ValueNotifier<bool>(false);
   var startedByLocalNotifier = ValueNotifier<bool>(false);
 
   bool isFromMinimizing = false;
@@ -111,7 +117,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
       ZegoLoggerService.logInfo(
-        'version: zego_uikit_prebuilt_live_streaming: 3.8.9; $version, \n'
+        'version: zego_uikit_prebuilt_live_streaming: 3.11.0; $version, \n'
         'config:${widget.config}, \n'
         'events: ${widget.events}, ',
         tag: 'live-streaming',
@@ -129,6 +135,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
       ZegoLiveStreamingManagers().initPluginAndManagers(
         widget.appID,
         widget.appSign,
+        widget.token,
         widget.userID,
         widget.userName,
         widget.liveID,
@@ -149,8 +156,6 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
       return context;
     });
 
-    ZegoLiveStreamingManagers().plugins?.init();
-
     subscriptions
       ..add(
           ZegoUIKit().getMeRemovedFromRoomStream().listen(onMeRemovedFromRoom))
@@ -168,8 +173,6 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
         isPrebuiltFromMinimizing: isFromMinimizing,
       ),
     );
-
-    startedByLocalNotifier.addListener(onStartedByLocalValueChanged);
 
     ZegoLoggerService.logInfo(
       'mini machine state is ${ZegoLiveStreamingMiniOverlayMachine().state}',
@@ -197,11 +200,10 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
 
     _eventListener?.uninit();
 
-    startedByLocalNotifier.removeListener(onStartedByLocalValueChanged);
     WidgetsBinding.instance.removeObserver(this);
 
     if (!ZegoLiveStreamingMiniOverlayMachine().isMinimizing) {
-      ZegoLiveStreamingManagers().uninitPluginAndManagers().then((value) {
+      ZegoLiveStreamingManagers().uninitPluginAndManagers().then((value) async {
         uninitContext();
       });
 
@@ -225,6 +227,107 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
       tag: 'live-streaming',
       subTag: 'prebuilt',
     );
+  }
+
+  Future<void> uninitContext() async {
+    if (null != widget.config.audienceAudioVideoResourceMode) {
+      ZegoUIKit().setAudioVideoResourceMode(
+        ZegoAudioVideoResourceMode.defaultMode,
+      );
+    }
+
+    ZegoUIKit().turnCameraOn(false);
+    ZegoUIKit().turnMicrophoneOn(false);
+    await ZegoUIKit().resetSoundEffect();
+    await ZegoUIKit().resetBeautyEffect();
+  }
+
+  Future<void> initContext() async {
+    assert(widget.userID.isNotEmpty);
+    assert(widget.userName.isNotEmpty);
+    assert(widget.appID > 0);
+    assert(widget.appSign.isNotEmpty || widget.token.isNotEmpty);
+
+    ZegoUIKit().login(widget.userID, widget.userName);
+
+    /// first set before create express
+    await ZegoUIKit().setAdvanceConfigs(widget.config.advanceConfigs);
+
+    var enablePlatformView = false;
+    if (Platform.isIOS && widget.config.mediaPlayer.supportTransparent) {
+      enablePlatformView = true;
+    }
+    await ZegoUIKit()
+        .init(
+      appID: widget.appID,
+      appSign: widget.appSign,
+      scenario: ZegoScenario.Broadcast,
+      enablePlatformView: enablePlatformView,
+    )
+        .then((_) async {
+      /// second set after create express
+      await ZegoUIKit().setAdvanceConfigs(widget.config.advanceConfigs);
+
+      _setVideoConfig();
+      _setBeautyConfig();
+
+      ZegoUIKit()
+        ..useFrontFacingCamera(widget.config.useFrontFacingCamera)
+        ..updateVideoViewMode(
+          widget.config.audioVideoView.useVideoViewAspectFill,
+        )
+        ..enableVideoMirroring(
+          widget.config.audioVideoView.isVideoMirror,
+        )
+        ..turnCameraOn(widget.config.turnOnCameraWhenJoining)
+        ..turnMicrophoneOn(widget.config.turnOnMicrophoneWhenJoining)
+        ..setAudioOutputToSpeaker(widget.config.useSpeakerWhenJoining);
+      if (widget.config.role == ZegoLiveStreamingRole.audience &&
+          null != widget.config.audienceAudioVideoResourceMode) {
+        ZegoUIKit().setAudioVideoResourceMode(
+          widget.config.audienceAudioVideoResourceMode!,
+        );
+      }
+    });
+  }
+
+  Future<void> _setVideoConfig() async {
+    ZegoLoggerService.logInfo(
+      'video config:${widget.config.video}',
+      tag: 'live-streaming',
+      subTag: 'prebuilt',
+    );
+
+    await ZegoUIKit().enableTrafficControl(
+      true,
+      [
+        ZegoUIKitTrafficControlProperty.adaptiveResolution,
+        ZegoUIKitTrafficControlProperty.adaptiveFPS,
+      ],
+      minimizeVideoConfig: ZegoUIKitVideoConfig.preset360P(),
+      isFocusOnRemote: false,
+      streamType: ZegoStreamType.main,
+    );
+
+    await ZegoUIKit().setVideoConfig(
+      widget.config.video,
+    );
+  }
+
+  Future<void> _setBeautyConfig() async {
+    if (ZegoPluginAdapter().getPlugin(ZegoUIKitPluginType.beauty) != null) {
+      ZegoUIKit().enableCustomVideoProcessing(true);
+    }
+
+    final useBeautyEffect = widget.config.bottomMenuBar.hostButtons
+            .contains(ZegoLiveStreamingMenuBarButtonName.beautyEffectButton) ||
+        widget.config.bottomMenuBar.coHostButtons
+            .contains(ZegoLiveStreamingMenuBarButtonName.beautyEffectButton);
+    if (useBeautyEffect) {
+      await ZegoUIKit()
+          .startEffectsEnv()
+          .then((value) => ZegoUIKit().enableBeauty(true));
+    }
   }
 
   void _initControllerByPrebuilt({
@@ -344,165 +447,11 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
     }
   }
 
-  void initContext() {
-    assert(widget.userID.isNotEmpty);
-    assert(widget.userName.isNotEmpty);
-    assert(widget.appID > 0);
-    assert(widget.appSign.isNotEmpty);
-
-    initPermissions().then((value) async {
-      ZegoUIKit().login(widget.userID, widget.userName);
-
-      /// first set before create express
-      await ZegoUIKit().setAdvanceConfigs(widget.config.advanceConfigs);
-
-      var enablePlatformView = false;
-      if (Platform.isIOS && widget.config.mediaPlayer.supportTransparent) {
-        enablePlatformView = true;
-      }
-      ZegoUIKit()
-          .init(
-        appID: widget.appID,
-        appSign: widget.appSign,
-        scenario: ZegoScenario.Broadcast,
-        enablePlatformView: enablePlatformView,
-      )
-          .then((_) async {
-        /// second set after create express
-        await ZegoUIKit().setAdvanceConfigs(widget.config.advanceConfigs);
-
-        _setVideoConfig();
-        _setBeautyConfig();
-
-        ZegoUIKit()
-          ..useFrontFacingCamera(widget.config.useFrontFacingCamera)
-          ..updateVideoViewMode(
-            widget.config.audioVideoView.useVideoViewAspectFill,
-          )
-          ..enableVideoMirroring(
-            widget.config.audioVideoView.isVideoMirror,
-          )
-          ..turnCameraOn(widget.config.turnOnCameraWhenJoining)
-          ..turnMicrophoneOn(widget.config.turnOnMicrophoneWhenJoining)
-          ..setAudioOutputToSpeaker(widget.config.useSpeakerWhenJoining);
-        if (widget.config.role == ZegoLiveStreamingRole.audience &&
-            null != widget.config.audienceAudioVideoResourceMode) {
-          ZegoUIKit().setAudioVideoResourceMode(
-            widget.config.audienceAudioVideoResourceMode!,
-          );
-        }
-
-        ZegoUIKit()
-            .joinRoom(
-          widget.liveID,
-          markAsLargeRoom: widget.config.markAsLargeRoom,
-        )
-            .then((result) async {
-          await onRoomLogin(result);
-        });
-      });
-    });
-  }
-
-  Future<void> _setVideoConfig() async {
-    ZegoLoggerService.logInfo(
-      'video config:${widget.config.video}',
-      tag: 'live-streaming',
-      subTag: 'prebuilt',
-    );
-
-    await ZegoUIKit().enableTrafficControl(
-      true,
-      [
-        ZegoUIKitTrafficControlProperty.adaptiveResolution,
-        ZegoUIKitTrafficControlProperty.adaptiveFPS,
-      ],
-      minimizeVideoConfig: ZegoUIKitVideoConfig.preset360P(),
-      isFocusOnRemote: false,
-      streamType: ZegoStreamType.main,
-    );
-
-    await ZegoUIKit().setVideoConfig(
-      widget.config.video,
-    );
-  }
-
-  Future<void> _setBeautyConfig() async {
-    if (ZegoPluginAdapter().getPlugin(ZegoUIKitPluginType.beauty) != null) {
-      ZegoUIKit().enableCustomVideoProcessing(true);
-    }
-
-    final useBeautyEffect = widget.config.bottomMenuBar.hostButtons
-            .contains(ZegoLiveStreamingMenuBarButtonName.beautyEffectButton) ||
-        widget.config.bottomMenuBar.coHostButtons
-            .contains(ZegoLiveStreamingMenuBarButtonName.beautyEffectButton);
-    if (useBeautyEffect) {
-      await ZegoUIKit()
-          .startEffectsEnv()
-          .then((value) => ZegoUIKit().enableBeauty(true));
-    }
-  }
-
-  Future<void> onRoomLogin(ZegoRoomLoginResult result) async {
-    assert(result.errorCode == 0);
-
-    if (result.errorCode != 0) {
-      ZegoLoggerService.logError(
-        'failed to login room:${result.errorCode},${result.extendedData}',
-        tag: 'live-streaming',
-        subTag: 'prebuilt',
-      );
-    }
-
-    await ZegoLiveStreamingManagers().hostManager!.init();
-    await ZegoLiveStreamingManagers().liveStatusManager!.init();
-    await ZegoLiveStreamingManagers().liveDurationManager!.init();
-
-    readyNotifier.value = true;
-
-    if (!widget.config.preview.showPreviewForHost) {
-      startedByLocalNotifier.value = true;
-    }
-
-    notifyUserJoinByMessage();
-  }
-
-  Future<void> notifyUserJoinByMessage() async {
-    if (!widget.config.inRoomMessage.notifyUserJoin) {
-      return;
-    }
-
-    final messageAttributes = widget.config.inRoomMessage.attributes?.call();
-    if (messageAttributes?.isEmpty ?? true) {
-      await ZegoUIKit().sendInRoomMessage(widget.config.innerText.userEnter);
-    } else {
-      await ZegoUIKit().sendInRoomMessage(
-        ZegoInRoomMessage.jsonBody(
-          message: widget.config.innerText.userEnter,
-          attributes: messageAttributes!,
-        ),
-      );
-    }
-  }
-
-  Future<void> uninitContext() async {
-    if (null != widget.config.audienceAudioVideoResourceMode) {
-      ZegoUIKit().setAudioVideoResourceMode(
-        ZegoAudioVideoResourceMode.defaultMode,
-      );
-    }
-
-    await ZegoUIKit().resetSoundEffect();
-    await ZegoUIKit().resetBeautyEffect();
-
-    await ZegoUIKit().leaveRoom();
-  }
-
   void onMeRemovedFromRoom(String fromUserID) {
     ZegoLoggerService.logInfo(
       'local user removed by $fromUserID',
       tag: 'live-streaming',
-      subTag: 'prebuilt',
+      subTag: 'prebuilt, removed users',
     );
 
     ZegoLiveStreamingManagers().kickOutNotifier.value = true;
@@ -632,7 +581,6 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
       liveID: widget.liveID,
       startedNotifier: startedByLocalNotifier,
       hostManager: ZegoLiveStreamingManagers().hostManager!,
-      liveStreamingPageReady: readyNotifier,
       config: widget.config,
       popUpManager: popUpManager,
       kickOutNotifier: ZegoLiveStreamingManagers().kickOutNotifier,
@@ -643,6 +591,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
     return ZegoLiveStreamingLivePage(
       appID: widget.appID,
       appSign: widget.appSign,
+      token: widget.token,
       userID: widget.userID,
       userName: widget.userName,
       liveID: widget.liveID,
@@ -656,11 +605,5 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
       popUpManager: popUpManager,
       plugins: ZegoLiveStreamingManagers().plugins,
     );
-  }
-
-  void onStartedByLocalValueChanged() {
-    if (!isFromMinimizing) {
-      ZegoLiveStreamingManagers().liveDurationManager!.setRoomPropertyByHost();
-    }
   }
 }

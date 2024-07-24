@@ -66,7 +66,9 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/pk/core/core.dart';
 ///   Widget build(BuildContext context) {
 ///     return MaterialApp(
 ///       title: 'Flutter Demo',
-///       home: HomePage(),
+///       home: const ZegoUIKitPrebuiltLiveStreamingMiniPopScope(
+///        child: HomePage(),
+///      ),
 ///       navigatorKey: widget.navigatorKey,
 ///       builder: (BuildContext context, Widget? child) {
 ///         return Stack(
@@ -194,9 +196,12 @@ class _ZegoUIKitPrebuiltLiveStreamingMiniOverlayPageState
         builder: (context, isInPK, _) {
           overlaySize = calculateItemSize();
 
-          return WillPopScope(
-            onWillPop: () async {
-              return false;
+          return PopScope(
+            canPop: false,
+            onPopInvoked: (bool didPop) async {
+              if (didPop) {
+                return;
+              }
             },
             child: Visibility(
               visible: visibility,

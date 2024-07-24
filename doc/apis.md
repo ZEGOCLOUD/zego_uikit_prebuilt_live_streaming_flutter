@@ -39,6 +39,7 @@
     - [sendFakeMessage](#sendfakemessage)
   - [minimize](#minimize)
     - [state](#state)
+    - [isMinimizing](#isminimizingnotifiervaluenotifierbool)
     - [isMinimizing](#isminimizing)
     - [minimize](#minimize-2)
     - [restore](#restore)
@@ -760,6 +761,22 @@ messages that already exist in the room.
 >   living,
 >   minimizing,
 > }
+> ```
+
+### isMinimizingNotifier(ValueNotifier<bool>)
+
+> is it currently in the minimized state or not
+>
+> - example:
+>
+> ```dart
+> ValueListenableBuilder<bool>(
+>   valueListenable:
+>   ZegoUIKitPrebuiltLiveStreamingController().minimize.isMinimizingNotifier,
+>   builder: (context, isMinimized, _) {
+>     ...
+>   },
+> )
 > ```
 
 ### isMinimizing

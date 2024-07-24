@@ -45,6 +45,7 @@ class ZegoLiveStreamingManagers {
   void initPluginAndManagers(
     int appID,
     String appSign,
+    String token,
     String userID,
     String userName,
     String liveID,
@@ -86,6 +87,7 @@ class ZegoLiveStreamingManagers {
       plugins = ZegoLiveStreamingPlugins(
         appID: appID,
         appSign: appSign,
+        token: token,
         userID: userID,
         userName: userName,
         roomID: liveID,
@@ -173,7 +175,6 @@ class ZegoLiveStreamingManagers {
     await ZegoUIKitPrebuiltLiveStreamingPK().uninit();
     ZegoLiveStreamingPKBattleStateCombineNotifier().uninit();
 
-    await plugins?.uninit();
     await hostManager?.uninit();
     await liveStatusManager?.uninit();
     await liveDurationManager?.uninit();

@@ -31,7 +31,6 @@ class ZegoLiveStreamingPreviewPage extends StatefulWidget {
     required this.liveID,
     required this.hostManager,
     required this.startedNotifier,
-    required this.liveStreamingPageReady,
     required this.config,
     required this.popUpManager,
     required this.kickOutNotifier,
@@ -47,8 +46,6 @@ class ZegoLiveStreamingPreviewPage extends StatefulWidget {
 
   final ZegoLiveStreamingHostManager hostManager;
   final ValueNotifier<bool> startedNotifier;
-
-  final ValueNotifier<bool> liveStreamingPageReady;
 
   final ZegoUIKitPrebuiltLiveStreamingConfig config;
 
@@ -91,17 +88,8 @@ class _ZegoLiveStreamingPreviewPageState
               return Stack(
                 children: [
                   background(constraints.maxHeight),
-                  ZegoAudioVideoContainer(
-                    layout: ZegoLayout.pictureInPicture(
-                      smallViewPosition: ZegoViewPosition.bottomRight,
-                      smallViewSize: Size(139.5.zW, 248.0.zH),
-                      smallViewMargin: EdgeInsets.only(
-                        left: 24.zR,
-                        top: 144.zR,
-                        right: 24.zR,
-                        bottom: 144.zR,
-                      ),
-                    ),
+                  ZegoAudioVideoView(
+                    user: ZegoUIKit().getLocalUser(),
                     foregroundBuilder: audioVideoViewForeground,
                     backgroundBuilder: audioVideoViewBackground,
                     avatarConfig: ZegoAvatarConfig(
@@ -112,6 +100,27 @@ class _ZegoLiveStreamingPreviewPageState
                       builder: widget.config.avatarBuilder,
                     ),
                   ),
+                  // ZegoAudioVideoContainer(
+                  //   layout: ZegoLayout.pictureInPicture(
+                  //     smallViewPosition: ZegoViewPosition.bottomRight,
+                  //     smallViewSize: Size(139.5.zW, 248.0.zH),
+                  //     smallViewMargin: EdgeInsets.only(
+                  //       left: 24.zR,
+                  //       top: 144.zR,
+                  //       right: 24.zR,
+                  //       bottom: 144.zR,
+                  //     ),
+                  //   ),
+                  //   foregroundBuilder: audioVideoViewForeground,
+                  //   backgroundBuilder: audioVideoViewBackground,
+                  //   avatarConfig: ZegoAvatarConfig(
+                  //     showInAudioMode:
+                  //         widget.config.audioVideoView.showAvatarInAudioMode,
+                  //     showSoundWavesInAudioMode: widget
+                  //         .config.audioVideoView.showSoundWavesInAudioMode,
+                  //     builder: widget.config.avatarBuilder,
+                  //   ),
+                  // ),
                   topBar(),
                   bottomBar(),
                   foreground(
@@ -281,15 +290,6 @@ class _ZegoLiveStreamingPreviewPageState
         kickOutNotifier: widget.kickOutNotifier,
       ).then(
         (value) {
-          if (!widget.liveStreamingPageReady.value) {
-            ZegoLoggerService.logInfo(
-              'live streaming page is waiting room login',
-              tag: 'live-streaming',
-              subTag: 'preview page',
-            );
-            return;
-          }
-
           widget.startedNotifier.value = true;
         },
       );

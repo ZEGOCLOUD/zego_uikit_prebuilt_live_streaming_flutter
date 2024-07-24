@@ -23,6 +23,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/defines.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/overlay_machine.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/pk/core/core.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/pk/core/service/services.dart';
 
@@ -33,6 +34,7 @@ class ZegoLiveStreamingLivePage extends StatefulWidget {
     Key? key,
     required this.appID,
     required this.appSign,
+    required this.token,
     required this.userID,
     required this.userName,
     required this.liveID,
@@ -49,6 +51,7 @@ class ZegoLiveStreamingLivePage extends StatefulWidget {
 
   final int appID;
   final String appSign;
+  final String token;
 
   final String userID;
   final String userName;
@@ -76,6 +79,7 @@ class ZegoLiveStreamingLivePage extends StatefulWidget {
 class _ZegoLiveStreamingLivePageState extends State<ZegoLiveStreamingLivePage>
     with SingleTickerProviderStateMixin {
   List<StreamSubscription<dynamic>?> subscriptions = [];
+  bool isFromMinimizing = false;
 
   bool get isLiving =>
       LiveStatus.living == widget.liveStatusManager.notifier.value;
@@ -83,6 +87,9 @@ class _ZegoLiveStreamingLivePageState extends State<ZegoLiveStreamingLivePage>
   @override
   void initState() {
     super.initState();
+
+    isFromMinimizing = ZegoLiveStreamingMiniOverlayPageState.idle !=
+        ZegoLiveStreamingMiniOverlayMachine().state;
 
     widget.hostManager.notifier.addListener(onHostManagerUpdated);
     widget.liveStatusManager.notifier.addListener(onLiveStatusUpdated);
@@ -96,17 +103,42 @@ class _ZegoLiveStreamingLivePageState extends State<ZegoLiveStreamingLivePage>
           .listen(onTurnOnYourMicrophoneRequest))
       ..add(ZegoUIKit()
           .getInRoomLocalMessageStream()
-          .listen(onInRoomLocalMessageFinished));
+          .listen(onInRoomLocalMessageFinished))
+      ..add(ZegoUIKit().getRoomTokenExpiredStream().listen(onRoomTokenExpired));
 
     ZegoLiveStreamingManagers().updateContextQuery(() => context);
-    ZegoLiveStreamingManagers()
-        .muteCoHostAudioVideo(ZegoUIKit().getAudioVideoList());
 
-    if (widget.hostManager.isLocalHost) {
-      ZegoUIKit().setRoomProperty(
-          RoomPropertyKey.liveStatus.text, LiveStatus.living.index.toString());
+    if (isFromMinimizing) {
+      ZegoLoggerService.logInfo(
+        'mini machine state is not idle, context will not be init',
+        tag: 'live-streaming',
+        subTag: 'prebuilt',
+      );
+    } else {
+      if (ZegoUIKit().engineCreatedNotifier.value) {
+        ZegoUIKit()
+            .joinRoom(
+          widget.liveID,
+          token: widget.token,
+          markAsLargeRoom: widget.config.markAsLargeRoom,
+        )
+            .then((result) {
+          onRoomLogin(result);
+        });
+      } else {
+        ZegoLoggerService.logInfo(
+          'express engine is not created, waiting',
+          tag: 'live-streaming',
+          subTag: 'prebuilt',
+        );
+
+        ZegoUIKit()
+            .engineCreatedNotifier
+            .addListener(joinRoomWaitEngineCreated);
+      }
     }
-    correctConfigValue();
+
+    widget.plugins?.init();
 
     checkFromMinimizing();
   }
@@ -120,16 +152,104 @@ class _ZegoLiveStreamingLivePageState extends State<ZegoLiveStreamingLivePage>
     for (final subscription in subscriptions) {
       subscription?.cancel();
     }
+    ZegoUIKit().engineCreatedNotifier.removeListener(joinRoomWaitEngineCreated);
+
+    if (!ZegoLiveStreamingMiniOverlayMachine().isMinimizing) {
+      await widget.plugins?.uninit();
+      await ZegoUIKit().leaveRoom();
+    } else {
+      ZegoLoggerService.logInfo(
+        'mini machine state is minimizing, room will not be leave',
+        tag: 'live-streaming',
+        subTag: 'prebuilt',
+      );
+    }
 
     ZegoLiveStreamingManagers().updateContextQuery(null);
+  }
+
+  void joinRoomWaitEngineCreated() {
+    final isCreated = ZegoUIKit().engineCreatedNotifier.value;
+    ZegoLoggerService.logInfo(
+      'express engine created:$isCreated',
+      tag: 'live-streaming',
+      subTag: 'prebuilt',
+    );
+
+    if (isCreated) {
+      ZegoUIKit()
+          .engineCreatedNotifier
+          .removeListener(joinRoomWaitEngineCreated);
+      // Future.delayed(Duration(seconds: 0), () {
+      ZegoUIKit()
+          .joinRoom(
+        widget.liveID,
+        token: widget.token,
+        markAsLargeRoom: widget.config.markAsLargeRoom,
+      )
+          .then((result) {
+        onRoomLogin(result);
+      });
+      // });
+    }
+  }
+
+  Future<void> onRoomLogin(ZegoRoomLoginResult result) async {
+    if (result.errorCode != 0) {
+      ZegoLoggerService.logError(
+        'failed to login room:${result.errorCode},${result.extendedData}',
+        tag: 'live-streaming',
+        subTag: 'prebuilt',
+      );
+    }
+    assert(result.errorCode == 0);
+
+    await ZegoLiveStreamingManagers().hostManager!.init();
+    await ZegoLiveStreamingManagers().liveStatusManager!.init();
+    await ZegoLiveStreamingManagers().liveDurationManager!.init();
+
+    ZegoLiveStreamingManagers().liveDurationManager!.setRoomPropertyByHost();
+
+    notifyUserJoinByMessage();
+
+    ZegoLiveStreamingManagers()
+        .muteCoHostAudioVideo(ZegoUIKit().getAudioVideoList());
+
+    if (widget.hostManager.isLocalHost) {
+      ZegoUIKit().setRoomProperty(
+          RoomPropertyKey.liveStatus.text, LiveStatus.living.index.toString());
+    }
+  }
+
+  Future<void> notifyUserJoinByMessage() async {
+    if (!widget.config.inRoomMessage.notifyUserJoin) {
+      return;
+    }
+
+    final messageAttributes = widget.config.inRoomMessage.attributes?.call();
+    if (messageAttributes?.isEmpty ?? true) {
+      await ZegoUIKit().sendInRoomMessage(widget.config.innerText.userEnter);
+    } else {
+      await ZegoUIKit().sendInRoomMessage(
+        ZegoInRoomMessage.jsonBody(
+          message: widget.config.innerText.userEnter,
+          attributes: messageAttributes!,
+        ),
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: WillPopScope(
-        onWillPop: () async {
+      body: PopScope(
+        canPop: false,
+        onPopInvoked: (bool didPop) async {
+          if (didPop) {
+            return;
+          }
+
           final endConfirmationEvent = ZegoLiveStreamingLeaveConfirmationEvent(
             context: context,
           );
@@ -137,10 +257,17 @@ class _ZegoLiveStreamingLivePageState extends State<ZegoLiveStreamingLivePage>
             return widget.defaultLeaveConfirmationAction(endConfirmationEvent);
           }
 
-          final canLeave = await widget.events.onLeaveConfirmation!(
-            endConfirmationEvent,
-            defaultAction,
+          final canLeave = await widget.events.onLeaveConfirmation?.call(
+                endConfirmationEvent,
+                defaultAction,
+              ) ??
+              false;
+          ZegoLoggerService.logInfo(
+            'onPopInvoked, canLeave:$canLeave',
+            tag: 'live-streaming',
+            subTag: 'prebuilt',
           );
+
           if (canLeave) {
             if (widget.hostManager.isLocalHost) {
               /// live is ready to end, host will update if receive property notify
@@ -153,7 +280,21 @@ class _ZegoLiveStreamingLivePageState extends State<ZegoLiveStreamingLivePage>
               });
             }
           }
-          return canLeave;
+
+          if (canLeave) {
+            if (context.mounted) {
+              Navigator.of(
+                context,
+                rootNavigator: widget.config.rootNavigator,
+              ).pop(false);
+            } else {
+              ZegoLoggerService.logInfo(
+                'onPopInvoked, context not mounted',
+                tag: 'live-streaming',
+                subTag: 'prebuilt',
+              );
+            }
+          }
         },
         child: ZegoScreenUtilInit(
           designSize: const Size(750, 1334),
@@ -254,18 +395,6 @@ class _ZegoLiveStreamingLivePageState extends State<ZegoLiveStreamingLivePage>
             .restorePKBattleRequestReceivedEventFromMinimizing();
       });
     }
-  }
-
-  void correctConfigValue() {
-    /// will max than 5 if custom
-    // if (widget.config.bottomMenuBarConfig.maxCount > 5) {
-    //   widget.config.bottomMenuBarConfig.maxCount = 5;
-    //   ZegoLoggerService.logInfo(
-    //     "menu bar buttons limited count's value  is exceeding the maximum limit",
-    //     tag: 'live-streaming',
-    //     subTag: 'live page',
-    //   );
-    // }
   }
 
   Widget clickListener({required Widget child}) {
@@ -451,5 +580,9 @@ class _ZegoLiveStreamingLivePageState extends State<ZegoLiveStreamingLivePage>
 
   void onInRoomLocalMessageFinished(ZegoInRoomMessage message) {
     widget.events.inRoomMessage.onLocalSend?.call(message);
+  }
+
+  void onRoomTokenExpired(int remainSeconds) {
+    widget.events.room.onTokenExpired?.call(remainSeconds);
   }
 }

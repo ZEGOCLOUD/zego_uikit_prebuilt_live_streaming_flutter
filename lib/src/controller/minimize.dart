@@ -14,7 +14,8 @@ class ZegoLiveStreamingControllerMinimizingImpl
       ZegoLiveStreamingMiniOverlayMachine().state;
 
   /// Is it currently in the minimized state or not
-  bool get isMinimizing => ZegoLiveStreamingMiniOverlayMachine().isMinimizing;
+  bool get isMinimizing => isMinimizingNotifier.value;
+  ValueNotifier<bool> get isMinimizingNotifier => _private.isMinimizingNotifier;
 
   /// restore the [ZegoUIKitPrebuiltLiveStreaming] from minimize
   bool restore(

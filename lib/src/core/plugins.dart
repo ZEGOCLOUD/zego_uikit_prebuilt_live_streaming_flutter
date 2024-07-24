@@ -8,7 +8,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
-import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/toast.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/overlay_machine.dart';
 
 /// @nodoc
@@ -23,6 +22,7 @@ class ZegoLiveStreamingPlugins {
   ZegoLiveStreamingPlugins({
     required this.appID,
     required this.appSign,
+    required this.token,
     required this.userID,
     required this.userName,
     required this.roomID,
@@ -36,6 +36,7 @@ class ZegoLiveStreamingPlugins {
 
   final int appID;
   final String appSign;
+  final String token;
 
   final String userID;
   final String userName;
@@ -151,7 +152,11 @@ class ZegoLiveStreamingPlugins {
     );
     await ZegoUIKit()
         .getSignalingPlugin()
-        .login(id: userID, name: userName)
+        .login(
+          id: userID,
+          name: userName,
+          token: token,
+        )
         .then((result) async {
       ZegoLoggerService.logInfo(
         'plugins login done, login result:$result, try to join room...',
@@ -192,7 +197,6 @@ class ZegoLiveStreamingPlugins {
           tag: 'live-streaming',
           subTag: 'plugin',
         );
-        showDebugToast('login room failed, ${result.error}');
       } else {
         ZegoLoggerService.logInfo(
           '[plugin] plugins joinRoom success',
@@ -212,7 +216,11 @@ class ZegoLiveStreamingPlugins {
           .setConfig(beautyConfig ?? ZegoBeautyPluginConfig());
       await ZegoUIKit()
           .getBeautyPlugin()
-          .init(appID, appSign: appSign)
+          .init(
+            appID,
+            appSign: appSign,
+            licence: beautyConfig?.license?.call() ?? '',
+          )
           .then((value) {
         ZegoLoggerService.logInfo(
           'effects plugin init done',
@@ -321,7 +329,11 @@ class ZegoLiveStreamingPlugins {
     }
 
     await ZegoUIKit().getSignalingPlugin().logout();
-    await ZegoUIKit().getSignalingPlugin().login(id: userID, name: userName);
+    await ZegoUIKit().getSignalingPlugin().login(
+          id: userID,
+          name: userName,
+          token: token,
+        );
   }
 
   void onUserConnectionState(
@@ -456,7 +468,11 @@ class ZegoLiveStreamingPlugins {
     );
     tryReLogging = true;
     return ZegoUIKit().getSignalingPlugin().logout().then((value) async {
-      await ZegoUIKit().getSignalingPlugin().login(id: userID, name: userName);
+      await ZegoUIKit().getSignalingPlugin().login(
+            id: userID,
+            name: userName,
+            token: token,
+          );
     });
   }
 

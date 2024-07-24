@@ -25,8 +25,8 @@ class ZegoLiveStreamingToast {
   static final ZegoLiveStreamingToast instance =
       ZegoLiveStreamingToast._internal();
 
-  TextStyle get textStyle => TextStyle(
-        fontSize: 28.zR,
+  TextStyle get textStyle => const TextStyle(
+        fontSize: 14,
         color: Colors.white,
         fontWeight: FontWeight.w500,
       );
@@ -91,6 +91,8 @@ void showError(String message) {
     return;
   }
 
-  ZegoLiveStreamingToast.instance
-      .show(message, backgroundColor: const Color(0xffBD5454));
+  ZegoLiveStreamingToast.instance.show(
+    message,
+    backgroundColor: const Color(0xffBD5454),
+  );
 }

@@ -1,3 +1,31 @@
+## 3.11.0
+
+- Features:
+  - When the host does not start in the preview interface, it will not enter the LIVE and will not cause the server to start recording.
+
+## 3.10.1
+
+- Update dependency
+  
+
+## 3.10.0
+
+- Features
+  - Added `ZegoUIKitPrebuiltLiveStreamingMiniPopScope` to protect the interface from being destroyed when minimized
+  - Added `license` in `ZegoBeautyPluginConfig` to setting license to beauty
+
+## 3.9.1
+
+- Update dependency
+  
+## 3.9.0
+
+- Features
+  - Support login by token
+
+## 3.8.10
+
+- Optimization score warning
 
 ## 3.8.9
 

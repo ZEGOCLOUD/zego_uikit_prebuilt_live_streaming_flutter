@@ -9,6 +9,8 @@ dartdoc:
       markdown: doc/events.md
     "Configs":
       markdown: doc/configs.md
+    "Components":
+      markdown: doc/components.md
     "Migration_v3.x":
       markdown: doc/MigrateGuide_v3.x.md
   categoryOrder:
@@ -16,6 +18,7 @@ dartdoc:
     - "APIs"
     - "Events"
     - "Configs"
+    - "Components"
     - "Migration_v3.x"
   showUndocumentedCategories: true
   ignore:

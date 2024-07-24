@@ -114,7 +114,7 @@ class ZegoLiveStreamingMiniOverlayMachine {
     ZegoLoggerService.logInfo(
       'local user removed by $fromUserID',
       tag: 'live-streaming',
-      subTag: 'mini overlay page',
+      subTag: 'mini overlay page, removed users',
     );
     changeState(ZegoLiveStreamingMiniOverlayPageState.idle);
 

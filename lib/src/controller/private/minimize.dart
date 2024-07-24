@@ -20,6 +20,7 @@ class ZegoLiveStreamingControllerMinimizingPrivateImpl {
 
   bool get isLiving =>
       _connectManager?.liveStatusNotifier.value == LiveStatus.living;
+  final isMinimizingNotifier = ValueNotifier<bool>(false);
 
   /// Please do not call this interface. It is the internal logic of Prebuilt.
   void initByPrebuilt({
@@ -32,6 +33,11 @@ class ZegoLiveStreamingControllerMinimizingPrivateImpl {
     );
 
     _minimizeData = minimizeData;
+
+    isMinimizingNotifier.value =
+        ZegoLiveStreamingMiniOverlayMachine().isMinimizing;
+    ZegoLiveStreamingMiniOverlayMachine()
+        .registerStateChanged(onMiniOverlayMachineStateChanged);
   }
 
   /// Please do not call this interface. It is the internal logic of Prebuilt.
@@ -43,5 +49,15 @@ class ZegoLiveStreamingControllerMinimizingPrivateImpl {
     );
 
     _minimizeData = null;
+
+    ZegoLiveStreamingMiniOverlayMachine()
+        .unregisterStateChanged(onMiniOverlayMachineStateChanged);
+  }
+
+  void onMiniOverlayMachineStateChanged(
+    ZegoLiveStreamingMiniOverlayPageState state,
+  ) {
+    isMinimizingNotifier.value =
+        ZegoLiveStreamingMiniOverlayPageState.minimizing == state;
   }
 }

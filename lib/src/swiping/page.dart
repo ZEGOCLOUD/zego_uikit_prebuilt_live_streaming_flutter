@@ -29,6 +29,7 @@ class ZegoLiveStreamingSwipingPage extends StatefulWidget {
     required this.userName,
     required this.config,
     required this.swipingConfig,
+    this.token = '',
     this.events,
   }) : super(key: key);
   final String initialLiveID;
@@ -41,6 +42,9 @@ class ZegoLiveStreamingSwipingPage extends StatefulWidget {
 
   /// same as [ZegoLiveStreamingPage.appSign]
   final String appSign;
+
+  /// same as [ZegoLiveStreamingPage.token]
+  final String token;
 
   /// same as [ZegoLiveStreamingPage.userID]
   final String userID;
@@ -183,6 +187,7 @@ class _ZegoLiveStreamingSwipingPageState
                 liveID: _targetRoomID,
                 appID: widget.appID,
                 appSign: widget.appSign,
+                token: widget.token,
                 userID: widget.userID,
                 userName: widget.userName,
                 events: widget.events,

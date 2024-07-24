@@ -339,4 +339,13 @@ class ZegoLiveStreamingControllerRoomImpl
         .getSignalingPlugin()
         .getInRoomCommandMessageReceivedEventStream();
   }
+
+  /// when receives [ZegoLiveStreamingRoomEvents.onTokenExpired], you need use this API to update the token
+  Future<void> renewToken(String token) async {
+    await ZegoUIKit().renewRoomToken(token);
+
+    if (ZegoPluginAdapter().getPlugin(ZegoUIKitPluginType.signaling) != null) {
+      ZegoUIKit().getSignalingPlugin().renewToken(token);
+    }
+  }
 }
