@@ -15,4 +15,6 @@ export 'src/minimizing/export.dart';
 export 'src/pk/export.dart';
 export 'src/swiping/config.dart';
 
+export 'src/components/live_list/export.dart';
+
 export 'src/deprecated/deprecated.dart';

@@ -175,6 +175,7 @@ class ZegoLiveStreamingManagers {
     await ZegoUIKitPrebuiltLiveStreamingPK().uninit();
     ZegoLiveStreamingPKBattleStateCombineNotifier().uninit();
 
+    await plugins?.uninit();
     await hostManager?.uninit();
     await liveStatusManager?.uninit();
     await liveDurationManager?.uninit();

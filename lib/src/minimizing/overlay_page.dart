@@ -10,6 +10,7 @@ import 'package:zego_uikit/zego_uikit.dart';
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/duration_time_board.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/events.defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/core_managers.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/defines.dart';
@@ -501,25 +502,43 @@ class _ZegoUIKitPrebuiltLiveStreamingMiniOverlayPageState
       child: ValueListenableBuilder<bool>(
           valueListenable: ZegoLiveStreamingPKBattleStateCombineNotifier
               .instance.hasRequestEvent,
-          builder: (context, hasRequestEvent, _) {
-            return ValueListenableBuilder<List<ZegoUIKitUser>>(
-                valueListenable: ZegoLiveStreamingManagers()
-                    .connectManager!
-                    .requestCoHostUsersNotifier,
-                builder: (context, requestCoHostUsers, _) {
-                  if (requestCoHostUsers.isEmpty && !hasRequestEvent) {
-                    return Container();
-                  } else {
-                    return Container(
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.red,
-                      ),
-                      width: 15.zR,
-                      height: 15.zR,
-                    );
-                  }
-                });
+          builder: (context, hasPKRequestEvent, _) {
+            final redPointWidget = Container(
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.red,
+              ),
+              width: 15.zR,
+              height: 15.zR,
+            );
+            return ZegoLiveStreamingManagers().hostManager!.isLocalHost
+                ? ValueListenableBuilder<List<ZegoUIKitUser>>(
+                    valueListenable: ZegoLiveStreamingManagers()
+                        .connectManager!
+                        .requestCoHostUsersNotifier,
+                    builder: (context, requestCoHostUsers, _) {
+                      if (requestCoHostUsers.isEmpty && !hasPKRequestEvent) {
+                        return Container();
+                      } else {
+                        return redPointWidget;
+                      }
+                    },
+                  )
+                : ValueListenableBuilder<
+                    ZegoLiveStreamingCoHostAudienceEventRequestReceivedData?>(
+                    valueListenable: ZegoLiveStreamingManagers()
+                        .connectManager!
+                        .dataOfInvitedToJoinCoHostInMinimizingNotifier,
+                    builder:
+                        (context, dataOfInvitedToJoinCoHostInMinimizing, _) {
+                      if (null == dataOfInvitedToJoinCoHostInMinimizing &&
+                          !hasPKRequestEvent) {
+                        return Container();
+                      } else {
+                        return redPointWidget;
+                      }
+                    },
+                  );
           }),
     );
   }

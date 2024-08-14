@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/live_list/controller.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/deprecated/deprecated.dart';
@@ -50,6 +51,10 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   /// Used to configure the parameters related to the preview of the live streaming.
   ZegoLiveStreamingPreviewConfig preview;
 
+  /// the outside live list, which is displayed outside and does not belong to the [ZegoUIKitPrebuiltLiveStreaming]
+  /// Used to configure the parameters related to the preview list of the live streaming.
+  ZegoLiveStreamingOutsideLivesConfig outsideLives;
+
   /// Used to configure the parameters related to PK battles
   /// if you want to listen event, please refer [ZegoUIKitPrebuiltLiveStreamingEvents.pk]
   ZegoLiveStreamingPKBattleConfig pkBattle;
@@ -58,7 +63,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   ///
   /// To calculate the livestream duration, do the following:
   /// 1. Set the [ZegoLiveStreamingDurationConfig.isVisible] property of [ZegoLiveStreamingDurationConfig] to display the current timer. (It is displayed by default)
-  /// 2. Assuming that the livestream duration is 5 minutes, the livestream will automatically end when the time is up (refer to the following code). You will be notified of the end of the livestream duration through [ZegoLiveStreamingDurationConfig.onDurationUpdate]. To end the livestream, you can call the [ZegoUIKitPrebuiltLiveStreamingController.leave()] method.
+  /// 2. Assuming that the livestream duration is 5 minutes, the livestream will automatically end when the time is up (refer to the following code). You will be notified of the end of the livestream duration through [ZegoLiveStreamingDurationEvents.onUpdated]. To end the livestream, you can call the [ZegoUIKitPrebuiltLiveStreamingController.leave()] method.
   ///
   /// ```dart
   ///  ..duration.isVisible = true
@@ -257,6 +262,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
           confirmButtonName: 'Stop it',
         ),
         preview = ZegoLiveStreamingPreviewConfig(),
+        outsideLives = ZegoLiveStreamingOutsideLivesConfig(),
         pkBattle = ZegoLiveStreamingPKBattleConfig(),
         duration = ZegoLiveStreamingDurationConfig(),
         coHost = ZegoLiveStreamingCoHostConfig(
@@ -308,6 +314,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         effect = ZegoLiveStreamingEffectConfig(),
         innerText = ZegoUIKitPrebuiltLiveStreamingInnerText(),
         preview = ZegoLiveStreamingPreviewConfig(),
+        outsideLives = ZegoLiveStreamingOutsideLivesConfig(),
         pkBattle = ZegoLiveStreamingPKBattleConfig(),
         duration = ZegoLiveStreamingDurationConfig(),
         coHost = ZegoLiveStreamingCoHostConfig(
@@ -359,6 +366,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
     ZegoLiveStreamingTopMenuBarConfig? topMenuBar,
     ZegoLiveStreamingBottomMenuBarConfig? bottomMenuBar,
     ZegoLiveStreamingPreviewConfig? preview,
+    ZegoLiveStreamingOutsideLivesConfig? outsideLives,
     ZegoLiveStreamingPKBattleConfig? pkBattle,
     ZegoLiveStreamingMediaPlayerConfig? media,
     ZegoLiveStreamingCoHostConfig? coHost,
@@ -375,6 +383,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         innerText =
             translationText ?? ZegoUIKitPrebuiltLiveStreamingInnerText(),
         preview = preview ?? ZegoLiveStreamingPreviewConfig(),
+        outsideLives = outsideLives ?? ZegoLiveStreamingOutsideLivesConfig(),
         pkBattle = pkBattle ?? ZegoLiveStreamingPKBattleConfig(),
         duration = duration ?? ZegoLiveStreamingDurationConfig(),
         coHost = coHost ?? ZegoLiveStreamingCoHostConfig() {
@@ -1124,6 +1133,20 @@ class ZegoLiveStreamingPreviewBottomBarConfig {
   ZegoLiveStreamingPreviewBottomBarConfig({
     this.isVisible = true,
     this.showBeautyEffectButton = true,
+  });
+}
+
+class ZegoLiveStreamingOutsideLivesConfig {
+  ZegoLiveStreamingOutsideLiveListController? controller;
+
+  /// loading builder, return Container() if you want hide it
+  final Widget? Function(
+    BuildContext context,
+  )? loadingBuilder;
+
+  ZegoLiveStreamingOutsideLivesConfig({
+    this.controller,
+    this.loadingBuilder,
   });
 }
 

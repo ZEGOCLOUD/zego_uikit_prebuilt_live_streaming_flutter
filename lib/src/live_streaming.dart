@@ -4,6 +4,9 @@ import 'dart:core';
 // Flutter imports:
 import 'package:flutter/material.dart';
 
+// Package imports:
+import 'package:zego_uikit/zego_uikit.dart';
+
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/live_streaming.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
@@ -82,9 +85,47 @@ class ZegoUIKitPrebuiltLiveStreaming extends StatefulWidget {
 }
 
 class _ZegoUIKitPrebuiltLiveStreamingState
-    extends State<ZegoUIKitPrebuiltLiveStreaming> with WidgetsBindingObserver {
+    extends State<ZegoUIKitPrebuiltLiveStreaming> {
+  @override
+  void initState() {
+    ZegoLoggerService.logInfo(
+      '----------init----------',
+      tag: 'live-streaming',
+      subTag: 'ZegoUIKitPrebuiltLiveStreaming',
+    );
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    ZegoLoggerService.logInfo(
+      '----------dispose----------',
+      tag: 'live-streaming',
+      subTag: 'ZegoUIKitPrebuiltLiveStreaming',
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    return FutureBuilder<bool>(
+      /// Waiting for outside live list de-initialization to complete
+      future: widget.config.outsideLives.controller?.private.private.uninit(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.none ||
+            snapshot.connectionState == ConnectionState.done) {
+          return page();
+        }
+
+        return widget.config.outsideLives.loadingBuilder?.call(context) ??
+            const Center(child: CircularProgressIndicator());
+      },
+    );
+  }
+
+  Widget page() {
     return null == widget.config.swiping
         ? ZegoLiveStreamingPage(
             appID: widget.appID,

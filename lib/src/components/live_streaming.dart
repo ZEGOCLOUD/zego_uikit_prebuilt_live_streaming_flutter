@@ -117,7 +117,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
       ZegoLoggerService.logInfo(
-        'version: zego_uikit_prebuilt_live_streaming: 3.11.0; $version, \n'
+        'version: zego_uikit_prebuilt_live_streaming: 3.12.3; $version, \n'
         'config:${widget.config}, \n'
         'events: ${widget.events}, ',
         tag: 'live-streaming',
@@ -147,6 +147,8 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
           return context;
         },
       );
+
+      ZegoLiveStreamingManagers().plugins?.init();
     } else {
       ZegoLiveStreamingManagers().updateContextQuery(() {
         return context;
@@ -188,7 +190,15 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
 
       startedByLocalNotifier.value = true;
     } else {
-      initContext();
+      initContext().then((_) {
+        initPermissions().then((_) {
+          if (mounted) {
+            ZegoUIKit()
+              ..turnCameraOn(widget.config.turnOnCameraWhenJoining)
+              ..turnMicrophoneOn(widget.config.turnOnMicrophoneWhenJoining);
+          }
+        });
+      });
     }
 
     ZegoUIKitPrebuiltLiveStreamingController().minimize.hide();
@@ -279,8 +289,6 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
         ..enableVideoMirroring(
           widget.config.audioVideoView.isVideoMirror,
         )
-        ..turnCameraOn(widget.config.turnOnCameraWhenJoining)
-        ..turnMicrophoneOn(widget.config.turnOnMicrophoneWhenJoining)
         ..setAudioOutputToSpeaker(widget.config.useSpeakerWhenJoining);
       if (widget.config.role == ZegoLiveStreamingRole.audience &&
           null != widget.config.audienceAudioVideoResourceMode) {
@@ -415,10 +423,10 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
   Future<void> initPermissions() async {
     var isCameraGranted = true;
     var isMicrophoneGranted = true;
-    if (widget.config.turnOnCameraWhenJoining) {
+    if (mounted && widget.config.turnOnCameraWhenJoining) {
       isCameraGranted = await requestPermission(Permission.camera);
     }
-    if (widget.config.turnOnMicrophoneWhenJoining) {
+    if (mounted && widget.config.turnOnMicrophoneWhenJoining) {
       isMicrophoneGranted = await requestPermission(Permission.microphone);
     }
 

@@ -61,8 +61,9 @@ class ZegoLiveStreamingConnectManager {
   final requestCoHostUsersNotifier = ValueNotifier<List<ZegoUIKitUser>>([]);
 
   /// When the UI is minimized, and the audience receives a co-hosting invitation.
-  ZegoLiveStreamingCoHostAudienceEventRequestReceivedData?
-      dataOfInvitedToJoinCoHostInMinimizing;
+  final dataOfInvitedToJoinCoHostInMinimizingNotifier =
+      ValueNotifier<ZegoLiveStreamingCoHostAudienceEventRequestReceivedData?>(
+          null);
 
   ///
   bool isInvitedToJoinCoHostDlgVisible = false;
@@ -214,7 +215,7 @@ class ZegoLiveStreamingConnectManager {
         ZegoLiveStreamingAudienceConnectState.idle;
 
     requestCoHostUsersNotifier.value = [];
-    dataOfInvitedToJoinCoHostInMinimizing = null;
+    dataOfInvitedToJoinCoHostInMinimizingNotifier.value = null;
     isInvitedToJoinCoHostDlgVisible = false;
     isEndCoHostDialogVisible = false;
     audienceIDsOfInvitingConnect.clear();
@@ -440,7 +441,7 @@ class ZegoLiveStreamingConnectManager {
       ),
     );
 
-    dataOfInvitedToJoinCoHostInMinimizing = null;
+    dataOfInvitedToJoinCoHostInMinimizingNotifier.value = null;
     if (ZegoLiveStreamingMiniOverlayMachine().isMinimizing) {
       ZegoLoggerService.logInfo(
         'is minimizing now, cache the inviter:$host',
@@ -448,7 +449,7 @@ class ZegoLiveStreamingConnectManager {
         subTag: 'connect, onAudienceReceivedCoHostInvitation',
       );
 
-      dataOfInvitedToJoinCoHostInMinimizing =
+      dataOfInvitedToJoinCoHostInMinimizingNotifier.value =
           ZegoLiveStreamingCoHostAudienceEventRequestReceivedData(
         host: host,
         customData: customData,
@@ -730,7 +731,7 @@ class ZegoLiveStreamingConnectManager {
         events.coHost.audience.onInvitationTimeout?.call();
       }
 
-      dataOfInvitedToJoinCoHostInMinimizing = null;
+      dataOfInvitedToJoinCoHostInMinimizingNotifier.value = null;
 
       /// hide invite join co-host dialog
       if (isInvitedToJoinCoHostDlgVisible) {

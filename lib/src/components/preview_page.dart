@@ -72,6 +72,13 @@ class _ZegoLiveStreamingPreviewPageState
   @override
   void dispose() {
     super.dispose();
+
+    if (!widget.startedNotifier.value) {
+      /// not enter live page, render again if exist outside live list
+      widget.config.outsideLives.controller?.private.private.init().then((_) {
+        widget.config.outsideLives.controller?.private.private.forceUpdate();
+      });
+    }
   }
 
   @override
@@ -170,8 +177,8 @@ class _ZegoLiveStreamingPreviewPageState
       alignment: Alignment.topCenter,
       child: Padding(
         padding: EdgeInsets.only(
-          left: 0.zR,
-          top: 0,
+          left: 10.zR,
+          top: 10,
           right: 10.zR,
           bottom: 0.zR,
         ),
@@ -201,6 +208,7 @@ class _ZegoLiveStreamingPreviewPageState
               ),
               iconSize: iconSize,
               buttonSize: buttonSize,
+              clickableBackgroundColor: Colors.black.withOpacity(0.5),
             ),
             const Expanded(child: SizedBox()),
             ZegoSwitchCameraButton(
@@ -210,7 +218,7 @@ class _ZegoLiveStreamingPreviewPageState
                 icon: widget.config.preview.switchCameraIcon ??
                     ZegoLiveStreamingImage.asset(
                         ZegoLiveStreamingIconUrls.previewFlipCamera),
-                backgroundColor: Colors.transparent,
+                backgroundColor: Colors.black.withOpacity(0.5),
               ),
               defaultUseFrontFacingCamera: ZegoUIKit()
                   .getUseFrontFacingCameraStateNotifier(

@@ -19,6 +19,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/live_duration_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/live_status_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/plugins.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
@@ -138,8 +139,6 @@ class _ZegoLiveStreamingLivePageState extends State<ZegoLiveStreamingLivePage>
       }
     }
 
-    widget.plugins?.init();
-
     checkFromMinimizing();
   }
 
@@ -155,8 +154,12 @@ class _ZegoLiveStreamingLivePageState extends State<ZegoLiveStreamingLivePage>
     ZegoUIKit().engineCreatedNotifier.removeListener(joinRoomWaitEngineCreated);
 
     if (!ZegoLiveStreamingMiniOverlayMachine().isMinimizing) {
-      await widget.plugins?.uninit();
       await ZegoUIKit().leaveRoom();
+
+      if (widget.config.role == ZegoLiveStreamingRole.audience) {
+        /// audience, should be start play when leave
+        ZegoUIKit().startPlayAllAudioVideo();
+      }
     } else {
       ZegoLoggerService.logInfo(
         'mini machine state is minimizing, room will not be leave',
@@ -166,6 +169,10 @@ class _ZegoLiveStreamingLivePageState extends State<ZegoLiveStreamingLivePage>
     }
 
     ZegoLiveStreamingManagers().updateContextQuery(null);
+
+    widget.config.outsideLives.controller?.private.private.init().then((_) {
+      widget.config.outsideLives.controller?.private.private.forceUpdate();
+    });
   }
 
   void joinRoomWaitEngineCreated() {
@@ -361,10 +368,12 @@ class _ZegoLiveStreamingLivePageState extends State<ZegoLiveStreamingLivePage>
     if (null !=
         ZegoLiveStreamingManagers()
             .connectManager!
-            .dataOfInvitedToJoinCoHostInMinimizing) {
+            .dataOfInvitedToJoinCoHostInMinimizingNotifier
+            .value) {
       final dataOfInvitedToJoinCoHostInMinimizing = ZegoLiveStreamingManagers()
           .connectManager!
-          .dataOfInvitedToJoinCoHostInMinimizing!;
+          .dataOfInvitedToJoinCoHostInMinimizingNotifier
+          .value!;
 
       ZegoLoggerService.logInfo(
         'exist a invite to join co-host when minimizing($dataOfInvitedToJoinCoHostInMinimizing), show now',

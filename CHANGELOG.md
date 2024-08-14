@@ -1,3 +1,29 @@
+## 3.12.3
+
+- Bugs
+  - Fixed the issue where the audience received a co-host invitation when minimized, and the red dot prompt was not displayed
+  - Fixed the preview page crashing when using beauty
+  - Fixed the black screen problem of host preview when running the app for the first time
+  
+## 3.12.2
+
+- Optimize live stream list
+  - Add resolution configuration, default is 180p
+  - Optimize the automatic play live stream strategy, only play the live in the visible area.
+
+## 3.12.1
+
+- Update document
+
+## 3.12.0
+
+- Features:
+  - Support [live stream list](https://www.zegocloud.com/docs/uikit/live-streaming-kit-flutter/enhance-the-livestream/live-list). 
+
+- Bugs:
+  - Fixed the issue where the preview page did not try to obtain camera/microphone permissions
+  - Fixed the potential issue of non play audio-video when used with other prebuilt of zego_uikit
+  
 ## 3.11.0
 
 - Features:
