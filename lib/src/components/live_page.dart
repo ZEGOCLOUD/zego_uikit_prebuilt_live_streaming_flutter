@@ -154,8 +154,6 @@ class _ZegoLiveStreamingLivePageState extends State<ZegoLiveStreamingLivePage>
     ZegoUIKit().engineCreatedNotifier.removeListener(joinRoomWaitEngineCreated);
 
     if (!ZegoLiveStreamingMiniOverlayMachine().isMinimizing) {
-      await ZegoUIKit().leaveRoom();
-
       if (widget.config.role == ZegoLiveStreamingRole.audience) {
         /// audience, should be start play when leave
         ZegoUIKit().startPlayAllAudioVideo();
@@ -209,6 +207,12 @@ class _ZegoLiveStreamingLivePageState extends State<ZegoLiveStreamingLivePage>
         subTag: 'prebuilt',
       );
     }
+    ZegoLoggerService.logError(
+      'login room done:${result.errorCode},${result.extendedData}, '
+      'room id:${ZegoUIKit().getRoom().id}',
+      tag: 'live-streaming',
+      subTag: 'prebuilt',
+    );
     assert(result.errorCode == 0);
 
     await ZegoLiveStreamingManagers().hostManager!.init();

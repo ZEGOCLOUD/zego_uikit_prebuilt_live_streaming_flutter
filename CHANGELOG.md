@@ -1,3 +1,18 @@
+## 3.12.6
+
+- Bugs
+  - Fix the issue where the stop button cannot be clicked in the screen sharing window
+  - Fix the issue that cannot exit the system sharing process of screen sharing in iOS when quit live-streaming
+
+## 3.12.5
+
+- Update dependency
+
+## 3.12.4
+
+- Bugs
+  - Fixed the issue when swiping
+
 ## 3.12.3
 
 - Bugs

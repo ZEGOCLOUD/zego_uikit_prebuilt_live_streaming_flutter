@@ -117,7 +117,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
       ZegoLoggerService.logInfo(
-        'version: zego_uikit_prebuilt_live_streaming: 3.12.3; $version, \n'
+        'version: zego_uikit_prebuilt_live_streaming: 3.12.6; $version, \n'
         'config:${widget.config}, \n'
         'events: ${widget.events}, ',
         tag: 'live-streaming',
@@ -213,6 +213,10 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
     WidgetsBinding.instance.removeObserver(this);
 
     if (!ZegoLiveStreamingMiniOverlayMachine().isMinimizing) {
+      if (ZegoUIKit().getScreenSharingStateNotifier().value) {
+        ZegoUIKit().stopSharingScreen();
+      }
+
       ZegoLiveStreamingManagers().uninitPluginAndManagers().then((value) async {
         uninitContext();
       });
@@ -250,6 +254,8 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
     ZegoUIKit().turnMicrophoneOn(false);
     await ZegoUIKit().resetSoundEffect();
     await ZegoUIKit().resetBeautyEffect();
+
+    await ZegoUIKit().leaveRoom();
   }
 
   Future<void> initContext() async {

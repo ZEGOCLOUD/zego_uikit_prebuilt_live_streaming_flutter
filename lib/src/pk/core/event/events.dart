@@ -91,6 +91,10 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
         );
 
         if (result.properties.containsKey(roomPropKeyRequestID)) {
+          /// After entering the room, if found that there was a PK going on,
+          /// which indicates that the app was killed earlier.
+          /// At this time, It cannot re-enter the PK.
+
           ZegoLoggerService.logInfo(
             'room property contain pk keys, quit pk',
             tag: 'live-streaming-pk',
@@ -103,13 +107,11 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
           );
         }
 
-        /// After entering the room, if found that there was a PK going on,
-        /// which indicates that the app was killed earlier.
-        /// At this time, It cannot re-enter the PK.
         await ZegoUIKit().getSignalingPlugin().deleteRoomProperties(
-          roomID: ZegoUIKit().getSignalingPlugin().getRoomID(),
-          keys: [roomPropKeyRequestID, roomPropKeyHost, roomPropKeyPKUsers],
-        );
+              roomID: ZegoUIKit().getSignalingPlugin().getRoomID(),
+              keys: [roomPropKeyRequestID, roomPropKeyHost, roomPropKeyPKUsers],
+              showErrorLog: false,
+            );
       });
     }
   }
@@ -729,7 +731,8 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
 
       if (!isHost) {
         final updatedPKUsers =
-            (jsonDecode(event.setProperties['pk_users'] ?? '') as List<dynamic>)
+            (jsonDecode(event.setProperties[roomPropKeyPKUsers] ?? '')
+                    as List<dynamic>)
                 .map(
                   (userJson) => ZegoLiveStreamingPKUser.fromJson(userJson),
                 )
