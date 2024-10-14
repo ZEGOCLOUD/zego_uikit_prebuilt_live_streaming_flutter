@@ -14,6 +14,30 @@ class ZegoLiveStreamingControllerSwipingPrivateImpl {
   ZegoLiveStreamingSwipingConfig? config;
 
   StreamController<String>? stream;
+  bool _currentRoomSwipingDone = false;
+  String _currentSwipingID = '';
+
+  bool get currentRoomSwipingDone => _currentRoomSwipingDone;
+  set currentRoomSwipingDone(bool value) {
+    _currentRoomSwipingDone = value;
+
+    ZegoLoggerService.logInfo(
+      'update current swiping state:$_currentRoomSwipingDone',
+      tag: 'live.swiping',
+      subTag: 'controller.swiping.p',
+    );
+  }
+
+  String get currentSwipingID => _currentSwipingID;
+  set currentSwipingID(String value) {
+    _currentSwipingID = value;
+
+    ZegoLoggerService.logInfo(
+      'update current swiping id:$_currentSwipingID',
+      tag: 'live.swiping',
+      subTag: 'controller.swiping.p',
+    );
+  }
 
   /// Please do not call this interface. It is the internal logic of Prebuilt.
   void initByPrebuilt({

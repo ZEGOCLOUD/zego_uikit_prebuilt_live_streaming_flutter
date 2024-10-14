@@ -62,7 +62,10 @@ class ZegoLiveStreamingControllerMinimizingImpl
             userID: minimizeData.userID,
             userName: minimizeData.userName,
             liveID: isSwiping
-                ? ZegoLiveStreamingManagers().swipingCurrentLiveID
+                ? ZegoUIKitPrebuiltLiveStreamingController()
+                    .swiping
+                    .private
+                    .currentSwipingID
                 : minimizeData.liveID,
             config: minimizeData.config,
             events: minimizeData.events,

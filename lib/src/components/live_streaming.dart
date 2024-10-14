@@ -2,11 +2,13 @@
 import 'dart:async';
 import 'dart:core';
 import 'dart:io' show Platform;
+import 'dart:ui';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:floating/floating.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
@@ -27,6 +29,8 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/internal/events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/data.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/overlay_machine.dart';
+import '../internal/defines.dart';
+import 'mini_live.dart';
 
 /// Live Streaming Widget.
 ///
@@ -117,7 +121,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
       ZegoLoggerService.logInfo(
-        'version: zego_uikit_prebuilt_live_streaming: 3.12.6; $version, \n'
+        'version: zego_uikit_prebuilt_live_streaming: 3.13.3; $version, \n'
         'config:${widget.config}, \n'
         'events: ${widget.events}, ',
         tag: 'live-streaming',
@@ -366,6 +370,12 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
     controller.minimize.private.initByPrebuilt(
       minimizeData: minimizeData,
     );
+    controller.pip.private.initByPrebuilt(
+      config: widget.config,
+    );
+    controller.screenSharing.private.initByPrebuilt(
+      config: widget.config,
+    );
   }
 
   void _uninitControllerByPrebuilt() {
@@ -377,6 +387,8 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
     controller.coHost.private.uninitByPrebuilt();
     controller.audioVideo.private.uninitByPrebuilt();
     controller.minimize.private.uninitByPrebuilt();
+    controller.pip.private.uninitByPrebuilt();
+    controller.screenSharing.private.uninitByPrebuilt();
     controller.swiping.private.uninitByPrebuilt();
   }
 
@@ -406,6 +418,26 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
 
   @override
   Widget build(BuildContext context) {
+    if (Platform.isAndroid) {
+      return PiPSwitcher(
+        floating:
+            ZegoUIKitPrebuiltLiveStreamingController().pip.private.floating,
+        childWhenDisabled: normalPage(),
+        childWhenEnabled: ZegoScreenUtilInit(
+          designSize: const Size(750, 1334),
+          minTextAdapt: true,
+          splitScreenMode: true,
+          builder: (context, child) {
+            return pipPage();
+          },
+        ),
+      );
+    }
+
+    return normalPage();
+  }
+
+  Widget normalPage() {
     return ZegoLiveStreamingManagers().hostManager!.isLocalHost
         ? ValueListenableBuilder<ZegoUIKitUser?>(
             valueListenable: ZegoLiveStreamingManagers().hostManager!.notifier,
@@ -424,6 +456,40 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
               }
             })
         : livePage();
+  }
+
+  Widget pipPage() {
+    final screenSize = MediaQuery.of(context).size;
+    final height = screenSize.height / 3.0;
+    final width = 16 / 9 * height;
+    return Scaffold(
+      body: ZegoMinimizingStreamingPage(
+        size: Size(width, height),
+        withCircleBorder: false,
+        config: widget.config,
+        backgroundBuilder: widget.config.audioVideoView.backgroundBuilder,
+        foregroundBuilder: widget.config.audioVideoView.foregroundBuilder,
+        avatarBuilder: widget.config.avatarBuilder,
+        showMicrophoneButton: false,
+        showLeaveButton: false,
+        durationConfig: widget.config.duration,
+        durationEvents: widget.events?.duration,
+        background: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 8.0, sigmaY: 5.0), // 设定模糊程度
+          child: widget.config.pip.android.background ??
+              Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: ZegoLiveStreamingImage.assetImage(
+                      ZegoLiveStreamingIconUrls.background,
+                    ),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+        ),
+      ),
+    );
   }
 
   Future<void> initPermissions() async {
@@ -482,6 +548,8 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
     defaultAction() {
       defaultEndAction(endEvent);
     }
+
+    ZegoUIKitPrebuiltLiveStreamingController().pip.cancelBackground();
 
     if (null != events.onEnded) {
       events.onEnded!.call(endEvent, defaultAction);

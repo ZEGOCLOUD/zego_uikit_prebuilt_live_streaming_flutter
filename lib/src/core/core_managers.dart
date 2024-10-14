@@ -31,17 +31,6 @@ class ZegoLiveStreamingManagers {
   static final ZegoLiveStreamingManagers _instance =
       ZegoLiveStreamingManagers._internal();
 
-  set swipingCurrentLiveID(String value) {
-    ZegoLoggerService.logInfo(
-      'set switching current live id:$value',
-      tag: 'live-streaming',
-      subTag: 'core manager.swiping',
-    );
-    _swipingCurrentLiveID = value;
-  }
-
-  String get swipingCurrentLiveID => _swipingCurrentLiveID;
-
   void initPluginAndManagers(
     int appID,
     String appSign,
@@ -200,8 +189,6 @@ class ZegoLiveStreamingManagers {
   ZegoLiveStreamingDurationManager? liveDurationManager;
   ZegoLiveStreamingConnectManager? connectManager;
   ZegoLiveStreamingPlugins? plugins;
-
-  String _swipingCurrentLiveID = '';
 
   final kickOutNotifier = ValueNotifier<bool>(false);
 }

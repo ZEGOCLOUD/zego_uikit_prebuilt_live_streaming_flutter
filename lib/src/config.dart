@@ -26,6 +26,12 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   /// Configuration options for media player.
   ZegoLiveStreamingMediaPlayerConfig mediaPlayer;
 
+  /// screen sharing
+  ZegoLiveStreamingScreenSharingConfig screenSharing;
+
+  /// pip
+  ZegoLiveStreamingPIPConfig pip;
+
   /// Configuration options for the top menu bar (toolbar).
   ///
   /// You can use these options to customize the appearance and behavior of the top menu bar.
@@ -53,10 +59,14 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
 
   /// the outside live list, which is displayed outside and does not belong to the [ZegoUIKitPrebuiltLiveStreaming]
   /// Used to configure the parameters related to the preview list of the live streaming.
+  ///
+  /// you can see [Document](https://www.zegocloud.com/docs/uikit/live-streaming-kit-flutter/enhance-the-livestream/live-list) here
   ZegoLiveStreamingOutsideLivesConfig outsideLives;
 
   /// Used to configure the parameters related to PK battles
   /// if you want to listen event, please refer [ZegoUIKitPrebuiltLiveStreamingEvents.pk]
+  ///
+  /// you can see [Document](https://www.zegocloud.com/docs/uikit/live-streaming-kit-flutter/enhance-the-livestream/pk-battles) here
   ZegoLiveStreamingPKBattleConfig pkBattle;
 
   /// Live Streaming timing configuration.
@@ -68,10 +78,15 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   /// ```dart
   ///  ..duration.isVisible = true
   /// ```
-  ///<img src = "https://doc.oa.zego.im/Pics/ZegoUIKit/Flutter/live/live_duration.jpeg" width=50% />
+  ///
+  /// you can see [Document](https://www.zegocloud.com/docs/uikit/live-streaming-kit-flutter/customize-the-livestream/calculate-live-duration) here
+  ///
+  ///<img src = "https://doc.oa.zego.im/Pics/ZegoUIKit/Flutter/live/live_duration.jpeg" width=200 />
   ZegoLiveStreamingDurationConfig duration;
 
   /// advance beauty config
+  ///
+  /// you can see [Document](https://www.zegocloud.com/docs/uikit/live-streaming-kit-flutter/enhance-the-livestream/advanced-beauty-effects) here
   ZegoBeautyPluginConfig? beauty;
 
   /// swiping config, if you wish to use swiping, please configure this config.
@@ -239,6 +254,8 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         showBackgroundTips = false,
         advanceConfigs = {},
         mediaPlayer = ZegoLiveStreamingMediaPlayerConfig(),
+        screenSharing = ZegoLiveStreamingScreenSharingConfig(),
+        pip = ZegoLiveStreamingPIPConfig(),
         video = ZegoUIKitVideoConfig.preset360P(),
         audioVideoView = ZegoLiveStreamingAudioVideoViewConfig(
           showSoundWavesInAudioMode: true,
@@ -298,6 +315,8 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         showBackgroundTips = false,
         advanceConfigs = {},
         mediaPlayer = ZegoLiveStreamingMediaPlayerConfig(),
+        screenSharing = ZegoLiveStreamingScreenSharingConfig(),
+        pip = ZegoLiveStreamingPIPConfig(),
         video = ZegoUIKitVideoConfig.preset360P(),
         audioVideoView = ZegoLiveStreamingAudioVideoViewConfig(
           showSoundWavesInAudioMode: true,
@@ -369,8 +388,12 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
     ZegoLiveStreamingOutsideLivesConfig? outsideLives,
     ZegoLiveStreamingPKBattleConfig? pkBattle,
     ZegoLiveStreamingMediaPlayerConfig? media,
+    ZegoLiveStreamingScreenSharingConfig? screenSharing,
+    ZegoLiveStreamingPIPConfig? pip,
     ZegoLiveStreamingCoHostConfig? coHost,
   })  : mediaPlayer = media ?? ZegoLiveStreamingMediaPlayerConfig(),
+        screenSharing = screenSharing ?? ZegoLiveStreamingScreenSharingConfig(),
+        pip = pip ?? ZegoLiveStreamingPIPConfig(),
         video = video ?? ZegoUIKitVideoConfig.preset360P(),
         audioVideoView =
             audioVideoView ?? ZegoLiveStreamingAudioVideoViewConfig(),
@@ -1160,6 +1183,33 @@ class ZegoLiveStreamingDurationConfig {
   });
 }
 
+/// screen sharing
+class ZegoLiveStreamingScreenSharingConfig {
+  /// when ending screen sharing from a non-app,
+  /// the automatic check end mechanism will be triggered.
+  ZegoLiveStreamingScreenSharingAutoStopConfig autoStop;
+
+  ZegoLiveStreamingScreenSharingConfig({
+    ZegoLiveStreamingScreenSharingAutoStopConfig? autoStop,
+  }) : autoStop = autoStop ?? ZegoLiveStreamingScreenSharingAutoStopConfig();
+}
+
+/// when ending screen sharing from a non-app,
+/// the automatic check end mechanism will be triggered.
+class ZegoLiveStreamingScreenSharingAutoStopConfig {
+  /// Count of the check fails before automatically end the screen sharing
+  int invalidCount;
+
+  /// Determines whether to end;
+  /// returns false if you don't want to end
+  bool Function()? canEnd;
+
+  ZegoLiveStreamingScreenSharingAutoStopConfig({
+    this.invalidCount = 3,
+    this.canEnd,
+  });
+}
+
 /// media player config
 class ZegoLiveStreamingMediaPlayerConfig {
   /// In iOS, to achieve transparency for a video using a platform view, you need to set [supportTransparent] to true.
@@ -1168,4 +1218,55 @@ class ZegoLiveStreamingMediaPlayerConfig {
   ZegoLiveStreamingMediaPlayerConfig({
     this.supportTransparent = false,
   });
+}
+
+/// pip config
+class ZegoLiveStreamingPIPConfig {
+  ZegoLiveStreamingPIPConfig({
+    this.aspectWidth = 9,
+    this.aspectHeight = 16,
+    this.enableWhenBackground = true,
+    ZegoLiveStreamingPIPAndroidConfig? android,
+  }) : android = android ?? ZegoLiveStreamingPIPAndroidConfig();
+
+  /// android config
+  ZegoLiveStreamingPIPAndroidConfig android;
+
+  /// aspect width
+  int aspectWidth;
+
+  /// aspect height
+  int aspectHeight;
+
+  /// android: only available on SDK higher than 31(>=31)
+  /// iOS: not limit
+  final bool enableWhenBackground;
+
+  @override
+  String toString() {
+    return 'ZegoLiveStreamingPIPConfig:{'
+        'android:$android, '
+        'aspectWidth:$aspectWidth, '
+        'aspectHeight:$aspectHeight, '
+        'enableWhenAppBackToDesktop:$enableWhenBackground, '
+        '}';
+  }
+}
+
+/// android pip
+/// only available on SDK higher than 26(>=26)
+class ZegoLiveStreamingPIPAndroidConfig {
+  ZegoLiveStreamingPIPAndroidConfig({
+    this.background,
+  });
+
+  /// default is a background image
+  Widget? background;
+
+  @override
+  String toString() {
+    return 'ZegoLiveStreamingPIPAndroidConfig:{'
+        'background:$background, '
+        '}';
+  }
 }

@@ -1,11 +1,10 @@
 
 - [ZegoUIKitPrebuiltLiveStreaming](#zegouikitprebuiltlivestreaming)
-- [ZegoUIKitPrebuiltLiveStreamingConfig](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoUIKitPrebuiltLiveStreamingConfig-class.html)
 - [ZegoUIKitPrebuiltLiveStreamingController](#zegouikitprebuiltlivestreamingcontroller)
   - [leave](#leave)
   - [pk](#pk)
-    - [isInPK](#isinpk)
     - [stateNotifier](#statenotifier)
+    - [isInPK](#isinpk)
     - [mutedUsersNotifier](#mutedusersnotifier)
     - [getHosts](#gethosts)
     - [sendRequest](#sendrequest)
@@ -20,15 +19,16 @@
     - [next](#next)
     - [jumpTo](#jumpto)
   - [coHost](#cohost)
-    - [hostNotifier](#hostnotifier)
-    - [requestCoHostUsersNotifier](#requestcohostusersnotifier)
     - [audienceLocalConnectStateNotifier](#audiencelocalconnectstatenotifier)
+    - [requestCoHostUsersNotifier](#requestcohostusersnotifier)
+    - [hostNotifier](#hostnotifier)
+    - [audienceSendCoHostRequest](#audiencesendcohostrequest)
+    - [audienceCancelCoHostRequest](#audiencecancelcohostrequest)
     - [startCoHost](#startcohost)
     - [stopCoHost](#stopcohost)
-    - [removeCoHost](#removecohost)
-    - [audienceSendCoHostRequest](#audiencesendcohostrequest)
     - [hostAgreeCoHostRequest](#hostagreecohostrequest)
     - [hostRejectCoHostRequest](#hostrejectcohostrequest)
+    - [removeCoHost](#removecohost)
     - [hostSendCoHostInvitationToAudience](#hostsendcohostinvitationtoaudience)
     - [audienceAgreeCoHostInvitation](#audienceagreecohostinvitation)
     - [audienceRejectCoHostInvitation](#audiencerejectcohostinvitation)
@@ -39,11 +39,15 @@
     - [sendFakeMessage](#sendfakemessage)
   - [minimize](#minimize)
     - [state](#state)
-    - [isMinimizing](#isminimizingnotifiervaluenotifierbool)
+    - [isMinimizingNotifier(ValueNotifier)](#isminimizingnotifiervaluenotifier)
     - [isMinimizing](#isminimizing)
-    - [minimize](#minimize-2)
     - [restore](#restore)
+    - [minimize](#minimize-1)
     - [hide](#hide)
+  - [pip](#pip)
+    - [enable](#enable)
+    - [enableWhenBackground](#enablewhenbackground)
+    - [cancelBackground](#cancelbackground)
   - [screenSharing](#screensharing)
     - [viewController](#viewcontroller)
     - [showViewInFullscreenMode](#showviewinfullscreenmode)
@@ -51,17 +55,17 @@
     - [microphone](#microphone)
       - [localState](#localstate)
       - [localStateNotifier](#localstatenotifier)
-      - [state](#state)
-      - [stateNotifier](#statenotifier)
+      - [state](#state-1)
+      - [stateNotifier](#statenotifier-1)
       - [turnOn](#turnon)
       - [switchState](#switchstate)
     - [camera](#camera)
-      - [localState](#localstate-2)
-      - [localStateNotifier](#localstatenotifier-2)
+      - [localState](#localstate-1)
+      - [localStateNotifier](#localstatenotifier-1)
       - [state](#state-2)
       - [stateNotifier](#statenotifier-2)
-      - [turnOn](#turnon-2)
-      - [switchState](#switchstate-2)
+      - [turnOn](#turnon-1)
+      - [switchState](#switchstate-1)
   - [room](#room)
     - [property](#property)
       - [updateProperty/updateProperties](#updatepropertyupdateproperties)
@@ -71,12 +75,12 @@
     - [command](#command)
       - [sendCommand](#sendcommand)
       - [commandReceivedStream](#commandreceivedstream)
-  - [user](#user)
-    - [countNotifier](#countnotifier)
-    - [stream](#stream-1)
-    - [remove](#remove)
-    - [addFakeUser](#addfakeuser)
-    - [removeFakeUser](#removefakeuser)
+    - [user](#user)
+      - [countNotifier](#countnotifier)
+      - [stream](#stream-1)
+      - [remove](#remove)
+      - [addFakeUser](#addfakeuser)
+      - [removeFakeUser](#removefakeuser)
 
 ---
 # ZegoUIKitPrebuiltLiveStreaming
@@ -829,6 +833,41 @@ messages that already exist in the room.
 > void hide()
 > ```
 
+## pip
+
+### enable
+
+>
+> - function prototype:
+>
+> ```dart
+> Future<PiPStatus> enable({
+>   int aspectWidth = 9,
+>   int aspectHeight = 16,
+> }) async
+> ```
+
+### enableWhenBackground
+
+>
+> - function prototype:
+>
+> ```dart
+> Future<PiPStatus> enableWhenBackground({
+>   int aspectWidth = 9,
+>   int aspectHeight = 16,
+> }) async
+> ```
+
+### cancelBackground
+
+>
+> - function prototype:
+>
+> ```dart
+> Future<PiPStatus> cancelBackground() async
+> ```
+
 ## screenSharing
 
 ### viewController
@@ -848,15 +887,15 @@ messages that already exist in the room.
 > void showViewInFullscreenMode(String userID, bool isFullscreen)
 > ```
 
-# audioVideo
+## audioVideo
 
 > APIs related to audio video
 
-## microphone
+### microphone
 
 > microphone series APIs
 
-### localState
+#### localState
 
 >
 > microphone state of local user
@@ -867,7 +906,7 @@ messages that already exist in the room.
 > bool get localState
 > ```
 
-### localStateNotifier
+#### localStateNotifier
 
 >
 > microphone state notifier of local user
@@ -878,7 +917,7 @@ messages that already exist in the room.
 > ValueNotifier<bool> get localStateNotifier
 > ```
 
-### state
+#### state
 
 >
 > microphone state of `userID`
@@ -889,7 +928,7 @@ messages that already exist in the room.
 > bool state(String userID)
 > ```
 
-### stateNotifier
+#### stateNotifier
 
 >
 > microphone state notifier of `userID`
@@ -900,7 +939,7 @@ messages that already exist in the room.
 > ValueNotifier<bool> stateNotifier(String userID)
 > ```
 
-### turnOn
+#### turnOn
 
 >
 > turn on/off `userID` microphone, if `userID` is empty, then it refers to local user
@@ -911,7 +950,7 @@ messages that already exist in the room.
 > void turnOn(bool isOn, {String? userID})
 > ```
 
-### switchState
+#### switchState
 
 >
 > switch `userID` microphone state, if `userID` is empty, then it refers to local user
@@ -922,11 +961,11 @@ messages that already exist in the room.
 > void switchState({String? userID})
 > ```
 
-## camera
+### camera
 
 > camera series APIs
 
-### localState
+#### localState
 
 >
 > camera state of local user
@@ -937,7 +976,7 @@ messages that already exist in the room.
 > bool get localState
 > ```
 
-### localStateNotifier
+#### localStateNotifier
 
 >
 > camera state notifier of local user
@@ -948,7 +987,7 @@ messages that already exist in the room.
 > ValueNotifier<bool> get localStateNotifier
 > ```
 
-### state
+#### state
 
 >
 > camera state of `userID`
@@ -959,7 +998,7 @@ messages that already exist in the room.
 > bool state(String userID)
 > ```
 
-### stateNotifier
+#### stateNotifier
 
 >
 > camera state notifier of `userID`
@@ -970,7 +1009,7 @@ messages that already exist in the room.
 > ValueNotifier<bool> stateNotifier(String userID)
 > ```
 
-### turnOn
+#### turnOn
 
 >
 > turn on/off `userID` camera, if `userID` is empty, then it refers to local user
@@ -981,7 +1020,7 @@ messages that already exist in the room.
 > void turnOn(bool isOn, {String? userID})
 > ```
 
-### switchState
+#### switchState
 
 >
 > void switchState({String? userID})

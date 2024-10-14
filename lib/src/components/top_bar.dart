@@ -7,6 +7,7 @@ import 'package:zego_uikit/zego_uikit.dart';
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/components.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/leave_button.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/pip_button.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect_manager.dart';
@@ -86,8 +87,8 @@ class _ZegoLiveStreamingTopBarState extends State<ZegoLiveStreamingTopBar> {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              minimizingButton(),
-              SizedBox(width: 20.zR),
+              ...pipButton(),
+              ...minimizingButton(),
               ZegoLiveStreamingMemberButton(
                 config: widget.config.memberList,
                 events: widget.events.memberList,
@@ -103,8 +104,7 @@ class _ZegoLiveStreamingTopBarState extends State<ZegoLiveStreamingTopBar> {
                 itemBuilder: widget.config.memberList.itemBuilder,
               ),
               SizedBox(width: 20.zR),
-              closeButton(),
-              SizedBox(width: 33.zR),
+              ...closeButton(),
             ],
           ),
         ],
@@ -112,35 +112,62 @@ class _ZegoLiveStreamingTopBarState extends State<ZegoLiveStreamingTopBar> {
     );
   }
 
-  Widget minimizingButton() {
+  List<Widget> minimizingButton() {
     return widget.config.topMenuBar.buttons
             .contains(ZegoLiveStreamingMenuBarButtonName.minimizingButton)
-        ? ZegoLiveStreamingMinimizingButton(
-            buttonSize: Size(52.zR, 52.zR),
-            iconSize: Size(24.zR, 24.zR),
-          )
-        : Container();
+        ? [
+            ZegoLiveStreamingMinimizingButton(
+              buttonSize: Size(52.zR, 52.zR),
+              iconSize: Size(24.zR, 24.zR),
+            ),
+            SizedBox(width: 20.zR),
+          ]
+        : [
+            Container(),
+          ];
   }
 
-  Widget closeButton() {
-    return widget.config.topMenuBar.showCloseButton
-        ? ZegoLiveStreamingLeaveButton(
-            buttonSize: Size(52.zR, 52.zR),
-            iconSize: Size(24.zR, 24.zR),
-            icon: ButtonIcon(
-              icon: const Icon(Icons.close, color: Colors.white),
-              backgroundColor: ZegoUIKitDefaultTheme.buttonBackgroundColor,
+  List<Widget> pipButton() {
+    return widget.config.topMenuBar.buttons
+            .contains(ZegoLiveStreamingMenuBarButtonName.pipButton)
+        ? [
+            ZegoLiveStreamingPIPButton(
+              buttonSize: Size(52.zR, 52.zR),
+              iconSize: Size(24.zR, 24.zR),
+              aspectWidth: widget.config.pip.aspectWidth,
+              aspectHeight: widget.config.pip.aspectHeight,
             ),
-            config: widget.config,
-            events: widget.events,
-            defaultEndAction: widget.defaultEndAction,
-            defaultLeaveConfirmationAction:
-                widget.defaultLeaveConfirmationAction,
-            hostManager: widget.hostManager,
-            hostUpdateEnabledNotifier: widget.hostUpdateEnabledNotifier,
-            isLeaveRequestingNotifier: widget.isLeaveRequestingNotifier,
-          )
-        : Container();
+            SizedBox(width: 20.zR),
+          ]
+        : [
+            Container(),
+          ];
+  }
+
+  List<Widget> closeButton() {
+    return widget.config.topMenuBar.showCloseButton
+        ? [
+            ZegoLiveStreamingLeaveButton(
+              buttonSize: Size(52.zR, 52.zR),
+              iconSize: Size(24.zR, 24.zR),
+              icon: ButtonIcon(
+                icon: const Icon(Icons.close, color: Colors.white),
+                backgroundColor: ZegoUIKitDefaultTheme.buttonBackgroundColor,
+              ),
+              config: widget.config,
+              events: widget.events,
+              defaultEndAction: widget.defaultEndAction,
+              defaultLeaveConfirmationAction:
+                  widget.defaultLeaveConfirmationAction,
+              hostManager: widget.hostManager,
+              hostUpdateEnabledNotifier: widget.hostUpdateEnabledNotifier,
+              isLeaveRequestingNotifier: widget.isLeaveRequestingNotifier,
+            ),
+            SizedBox(width: 33.zR),
+          ]
+        : [
+            Container(),
+          ];
   }
 
   Widget hostAvatar() {

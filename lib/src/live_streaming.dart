@@ -10,6 +10,7 @@ import 'package:zego_uikit/zego_uikit.dart';
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/live_streaming.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/swiping/page.dart';
 
@@ -100,6 +101,8 @@ class _ZegoUIKitPrebuiltLiveStreamingState
   @override
   void dispose() {
     super.dispose();
+
+    ZegoUIKitPrebuiltLiveStreamingController().pip.cancelBackground();
 
     ZegoLoggerService.logInfo(
       '----------dispose----------',

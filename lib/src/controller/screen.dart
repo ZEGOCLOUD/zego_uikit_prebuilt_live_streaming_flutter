@@ -7,8 +7,9 @@ mixin ZegoLiveStreamingControllerScreen {
 }
 
 /// Here are the APIs related to screen sharing.
-class ZegoLiveStreamingScreenController {
-  final viewController = ZegoScreenSharingViewController();
+class ZegoLiveStreamingScreenController
+    with ZegoLiveStreamingControllerScreenImplPrivate {
+  ZegoScreenSharingViewController get viewController => private.viewController;
 
   /// This function is used to specify whether a certain user enters or exits full-screen mode during screen sharing.
   ///

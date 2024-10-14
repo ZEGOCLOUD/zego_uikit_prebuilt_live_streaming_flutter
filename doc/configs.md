@@ -1,15 +1,54 @@
 
+- [ZegoUIKitPrebuiltLiveStreamingConfig](#zegouikitprebuiltlivestreamingconfig)
+  - [construtors](#construtors)
+  - [parameters](#parameters)
+  - [video](#video)
+  - [audioVideoView](#audiovideoview)
+  - [mediaPlayer](#mediaplayer)
+  - [pip](#pip)
+  - [topMenuBar](#topmenubar)
+  - [bottomMenuBar](#bottommenubar)
+  - [memberButton](#memberbutton)
+  - [memberList](#memberlist)
+  - [inRoomMessage](#inroommessage)
+  - [effect](#effect)
+  - [preview](#preview)
+  - [pkBattle](#pkbattle)
+  - [duration](#duration)
+  - [beauty](#beauty)
+  - [swiping](#swiping)
+  - [coHost](#cohost)
+  - [role](#role)
+  - [confirmDialogInfo](#confirmdialoginfo)
+  - [layout](#layout)
+  - [innerText](#innertext)
+  - [avatarBuilder](#avatarbuilder)
+  - [List\<IZegoUIKitPlugin\> plugins](#listizegouikitplugin-plugins)
+  - [bool turnOnCameraWhenJoining](#bool-turnoncamerawhenjoining)
+  - [bool turnOnMicrophoneWhenJoining](#bool-turnonmicrophonewhenjoining)
+  - [bool useSpeakerWhenJoining](#bool-usespeakerwhenjoining)
+  - [bool rootNavigator](#bool-rootnavigator)
+  - [bool markAsLargeRoom](#bool-markaslargeroom)
+  - [bool slideSurfaceToHide](#bool-slidesurfacetohide)
+  - [Widget? foreground](#widget-foreground)
+  - [Widget? background](#widget-background)
+  - [bool showBackgroundTips](#bool-showbackgroundtips)
+  - [Map\<String, String\> advanceConfigs](#mapstring-string-advanceconfigs)
 
-# [ZegoUIKitPrebuiltLiveStreamingConfig](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoUIKitPrebuiltLiveStreamingConfig-class.html)
+# ZegoUIKitPrebuiltLiveStreamingConfig
 
-# construtors
+> [ZegoUIKitPrebuiltLiveStreamingConfig](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoUIKitPrebuiltLiveStreamingConfig-class.html)
+
+## construtors
 - [`host`](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoUIKitPrebuiltLiveStreamingConfig/ZegoUIKitPrebuiltLiveStreamingConfig.host.html): Default initialization parameters for the group video call.
 - [`audience`](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoUIKitPrebuiltLiveStreamingConfig/ZegoUIKitPrebuiltLiveStreamingConfig.audience.html): Default initialization parameters for the group voice call.
 
-# parameters
+## parameters
 
-## [ZegoUIKitVideoConfig](https://pub.dev/documentation/zego_uikit_prebuilt_call/latest/zego_uikit_prebuilt_call/ZegoUIKitVideoConfig-class.html) video
+## video
 
+> [ZegoUIKitVideoConfig](https://pub.dev/documentation/zego_uikit_prebuilt_call/latest/zego_uikit_prebuilt_call/ZegoUIKitVideoConfig-class.html) 
+>
 >
 >
 > configuration parameters for audio and video streaming, such as Resolution, Frame rate, Bit rate.
@@ -32,8 +71,10 @@
   - `preset4K`
 
 
-## [ZegoLiveStreamingAudioVideoViewConfig](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingAudioVideoViewConfig-class.html) audioVideoView
+## audioVideoView
 
+> [ZegoLiveStreamingAudioVideoViewConfig](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingAudioVideoViewConfig-class.html) 
+>
 >
 >  Configuration options for audio/video views.
 >
@@ -138,16 +179,35 @@
 >
 >  If you need to dynamically change the background content, you should implement the logic for dynamic modification within the widget you return.
 
-## [ZegoLiveStreamingMediaPlayerConfig](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingMediaPlayerConfig-class.html) mediaPlayer
+## mediaPlayer
 
-
+> [ZegoLiveStreamingMediaPlayerConfig](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingMediaPlayerConfig-class.html) 
+>
 >
 >  Configuration options for media player.
 
 - bool `supportTransparent`: in iOS, to achieve transparency for a video using a platform view, you need to set [supportTransparent] to true.
 
-## [ZegoLiveStreamingTopMenuBarConfig](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingTopMenuBarConfig-class.html) topMenuBar
 
+## pip
+
+> [ZegoLiveStreamingPIPConfig](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingPIPConfig-class.html) 
+
+- [ZegoLiveStreamingPIPAndroidConfig](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingPIPAndroidConfig-class.html) `android`: android config
+
+    - Widget? `background`: background widget, default is black
+
+- int `aspectWidth`: aspect width
+
+- int `aspectHeight`: aspect height
+
+- bool `enableWhenBackground`: android: only available on SDK higher than 31(>=31)
+
+
+
+## topMenuBar
+
+> [ZegoLiveStreamingTopMenuBarConfig](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingTopMenuBarConfig-class.html) 
 >
 >  Configuration options for the top menu bar (toolbar).
 >
@@ -167,8 +227,10 @@
 
 - bool `showCloseButton`: set false if you want to hide the close (exit the live streaming room) button.
 
-## [ZegoLiveStreamingBottomMenuBarConfig](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingBottomMenuBarConfig-class.html) bottomMenuBar
+## bottomMenuBar
 
+> [ZegoLiveStreamingBottomMenuBarConfig](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingBottomMenuBarConfig-class.html) 
+>
 >
 >  Configuration options for the bottom menu bar (toolbar).
 >
@@ -264,8 +326,10 @@
 
 - double? `height`: height for the bottom menu bar.
 
-## [ZegoLiveStreamingMemberButtonConfig](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingMemberButtonConfig-class.html) memberButton
+## memberButton
 
+> [ZegoLiveStreamingMemberButtonConfig](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingMemberButtonConfig-class.html) 
+>
 >
 >  Configuration related to the top member button
 
@@ -275,8 +339,10 @@
 
 - Color? `backgroundColor`: customize the background color through [backgroundColor]
 
-## [ZegoLiveStreamingMemberListConfig](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingMemberListConfig-class.html) memberList
+## memberList
 
+> [ZegoLiveStreamingMemberListConfig](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingMemberListConfig-class.html) 
+>
 >
 >  Configuration related to the bottom member list, including displaying the member list, member list styles, and more.
 
@@ -300,8 +366,10 @@
 
 - bool `showFakeUser`: show fake user or not
 
-## [ZegoLiveStreamingInRoomMessageConfig](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingInRoomMessageConfig-class.html) inRoomMessage
+## inRoomMessage
 
+> [ZegoLiveStreamingInRoomMessageConfig](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingInRoomMessageConfig-class.html) 
+>
 >
 >
 >  Control options for the bottom-left message list.
@@ -425,8 +493,10 @@
 
 - bool `showFakeMessage`: show fake message or not
 
-## [ZegoLiveStreamingEffectConfig](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingEffectConfig-class.html) effect
+## effect
 
+> [ZegoLiveStreamingEffectConfig](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingEffectConfig-class.html) 
+>
 >
 >  Configuration options for voice changer, beauty effects and reverberation effects.
 >
@@ -485,8 +555,10 @@
 - double? `sliderThumbRadius`: the radius of the Slider's thumb.
 
 
-## [ZegoLiveStreamingPreviewConfig](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingPreviewConfig-class.html) preview
+## preview
 
+> [ZegoLiveStreamingPreviewConfig](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingPreviewConfig-class.html) 
+>
 >
 >  Used to configure the parameters related to the preview of the live streaming.
 
@@ -559,8 +631,10 @@
 > - `showBeautyEffectButton`: show beauty effect button or not.
 
 
-## [ZegoLiveStreamingPKBattleConfig](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingPKBattleConfig-class.html) pkBattle
+## pkBattle
 
+> [ZegoLiveStreamingPKBattleConfig](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingPKBattleConfig-class.html) 
+>
 >
 >  Used to configure the parameters related to PK battles
 
@@ -600,8 +674,10 @@
 
 - [ZegoLiveStreamingPKBattleViewBuilder](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingPKBattleViewBuilder.html)? `pkBattleViewBottomBuilder`: to add custom components on the bottom edge of the PKBattleView.
 
-## [ZegoLiveStreamingDurationConfig](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingDurationConfig-class.html) duration
+## duration
 
+> [ZegoLiveStreamingDurationConfig](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingDurationConfig-class.html) 
+>
 >
 >  Live Streaming timing configuration.
 >
@@ -617,8 +693,10 @@
 
 - bool `isVisible`: whether to display Live Streaming timing.
 
-## [ZegoBeautyPluginConfig](https://pub.dev/documentation/zego_plugin_adapter/latest/zego_plugin_adapter/ZegoBeautyPluginConfig-class.html)? beauty
+## beauty
 
+> [ZegoBeautyPluginConfig](https://pub.dev/documentation/zego_plugin_adapter/latest/zego_plugin_adapter/ZegoBeautyPluginConfig-class.html)
+>
 >
 >  advance beauty config
 
@@ -648,8 +726,10 @@
 
 - [ZegoBeautyPluginSegmentationScaleMode](https://pub.dev/documentation/zego_plugin_adapter/latest/zego_plugin_adapter/ZegoBeautyPluginSegmentationScaleMode.html) `segmentationScaleMode`
 
-## [ZegoLiveStreamingSwipingConfig](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingSwipingConfig-class.html)? swiping
+## swiping
 
+> [ZegoLiveStreamingSwipingConfig](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingSwipingConfig-class.html)
+>
 >
 >  swiping config, if you wish to use swiping, please configure this config.
 >  if it is null, this swiping will not be enabled.
@@ -661,7 +741,9 @@
 
 - Widget Function(String liveID)? `loadingBuilder`: customize room loading effects
 
-## [ZegoLiveStreamingCoHostConfig](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingCoHostConfig-class.html)? coHost
+## coHost
+
+> [ZegoLiveStreamingCoHostConfig](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingCoHostConfig-class.html)
 
 - bool Function()? `turnOnCameraWhenCohosted`:
 >
@@ -694,8 +776,10 @@
 
 - int `inviteTimeoutSecond`: timeout second when invite other to co-host
 
-## [ZegoLiveStreamingRole](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingRole.html) role
+## role
 
+> [ZegoLiveStreamingRole](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingRole.html) 
+>
 >
 >  Specifies the initial role when joining the live streaming.
 >
@@ -714,6 +798,74 @@
 > audience,
 > }
 > ```
+
+## confirmDialogInfo
+
+> [ZegoLiveStreamingDialogInfo](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingDialogInfo-class.html)
+>
+>
+>  Confirmation dialog information when leaving the live streaming.
+>
+>  If not set, clicking the exit button will directly exit the live streaming.
+>
+>  If set, a confirmation dialog will be displayed when clicking the exit button, and you will need to confirm the exit before actually exiting.
+>
+>  Sample Code:
+>
+>  ```dart
+>   ..confirmDialogInfo = ZegoDialogInfo(
+>     title: 'Leave confirm',
+>     message: 'Do you want to end?',
+>     cancelButtonName: 'Cancel',
+>     confirmButtonName: 'Confirm',
+>   )
+>  ```
+> <img src="https://doc.oa.zego.im/Pics/ZegoUIKit/live/live_confirm.gif" width=50%/>
+
+## layout
+
+> [ZegoLayout](https://pub.dev/documentation/zego_uikit/latest/zego_uikit/ZegoLayout-class.html)
+>
+>
+>  Layout-related configuration. You can choose your layout here. such as [layout = ZegoLayout.gallery()]
+
+
+## innerText
+
+> [ZegoUIKitPrebuiltLiveStreamingInnerText](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoUIKitPrebuiltLiveStreamingInnerText-class.html) 
+>
+>
+> Configuration options for modifying all text content on the UI.
+>
+> All visible text content on the UI can be modified using this single property.
+
+## avatarBuilder
+
+> [ZegoAvatarBuilder](https://pub.dev/documentation/zego_uikit/latest/zego_uikit/ZegoAvatarBuilder.html)
+>
+>
+>  Use this to customize the avatar, and replace the default avatar with it.
+>
+>  Example：
+>
+>  ```dart
+>   // eg:
+>   avatarBuilder: (BuildContext context, Size size, ZegoUIKitUser? user, Map extraInfo) {
+>     return user != null
+>         ? Container(
+>             decoration: BoxDecoration(
+>               shape: BoxShape.circle,
+>               image: DecorationImage(
+>                 image: NetworkImage(
+>                   'https://robohash.org/01.png',
+>                 ),
+>               ),
+>             ),
+>           )
+>         : const SizedBox();
+>   },
+>  ```
+>  <img src="https://storage.zego.im/sdk-doc/Pics/zegocloud/api/flutter/live/avatar_builder.png" width=50%/>
 
 
 ## List\<IZegoUIKitPlugin\> plugins
@@ -756,40 +908,6 @@
 >  The default value is `true`.
 >  If this value is set to `false`, the system's default playback device, such as the earpiece or Bluetooth headset, will be used for audio playback.
 
-## [ZegoLiveStreamingDialogInfo](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoLiveStreamingDialogInfo-class.html)? confirmDialogInfo
-
->
->  Confirmation dialog information when leaving the live streaming.
->
->  If not set, clicking the exit button will directly exit the live streaming.
->
->  If set, a confirmation dialog will be displayed when clicking the exit button, and you will need to confirm the exit before actually exiting.
->
->  Sample Code:
->
->  ```dart
->   ..confirmDialogInfo = ZegoDialogInfo(
->     title: 'Leave confirm',
->     message: 'Do you want to end?',
->     cancelButtonName: 'Cancel',
->     confirmButtonName: 'Confirm',
->   )
->  ```
-> <img src="https://doc.oa.zego.im/Pics/ZegoUIKit/live/live_confirm.gif" width=50%/>
-
-## [ZegoLayout](https://pub.dev/documentation/zego_uikit/latest/zego_uikit/ZegoLayout-class.html)? layout
-
->
->  Layout-related configuration. You can choose your layout here. such as [layout = ZegoLayout.gallery()]
-
-
-## [ZegoUIKitPrebuiltLiveStreamingInnerText](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/zego_uikit_prebuilt_live_streaming/ZegoUIKitPrebuiltLiveStreamingInnerText-class.html) innerText
-
->
-> Configuration options for modifying all text content on the UI.
->
-> All visible text content on the UI can be modified using this single property.
-
 ## bool rootNavigator
 
 >
@@ -797,32 +915,6 @@
 >
 >  If `rootNavigator` is set to true, the state from the furthest instance of this class is given instead.
 >  Useful for pushing contents above all subsequent instances of [Navigator].
-
-## [ZegoAvatarBuilder](https://pub.dev/documentation/zego_uikit/latest/zego_uikit/ZegoAvatarBuilder.html)? avatarBuilder
-
->
->  Use this to customize the avatar, and replace the default avatar with it.
->
->  Example：
->
->  ```dart
->   // eg:
->   avatarBuilder: (BuildContext context, Size size, ZegoUIKitUser? user, Map extraInfo) {
->     return user != null
->         ? Container(
->             decoration: BoxDecoration(
->               shape: BoxShape.circle,
->               image: DecorationImage(
->                 image: NetworkImage(
->                   'https://robohash.org/01.png',
->                 ),
->               ),
->             ),
->           )
->         : const SizedBox();
->   },
->  ```
->  <img src="https://storage.zego.im/sdk-doc/Pics/zegocloud/api/flutter/live/avatar_builder.png" width=50%/>
 
 ## bool markAsLargeRoom
 

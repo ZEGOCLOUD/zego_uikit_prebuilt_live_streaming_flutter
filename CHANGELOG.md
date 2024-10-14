@@ -1,3 +1,39 @@
+## 3.13.4
+
+- Bugs
+  - Fix the issue of screen sharing window not auto closed after the system ends screen sharing on iOS
+
+## 3.13.3
+
+- Bugs
+  - Fix the occasional crash of pip on some android machines
+  - Fix screen sharing crash issue on android 14
+
+## 3.13.2
+
+- Update dependency
+
+## 3.13.1
+
+- Bugs
+  - hide pip logic in iOS, or an exception will occur
+
+## 3.13.0
+
+- Features
+  - Support PIP(android only)
+
+
+## 3.12.8
+
+- Update dependency
+
+## 3.12.7
+
+- Bugs
+  - Fix the issue that occasionally failing to enter the LIVE call by controler.swiping
+  - Fix the issue that the screen video window on this side occasionally appears not closed after remote screen-sharing is closed
+
 ## 3.12.6
 
 - Bugs

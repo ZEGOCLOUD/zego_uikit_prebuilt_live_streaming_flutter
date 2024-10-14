@@ -140,6 +140,8 @@ class ZegoLiveStreamingMiniOverlayMachine {
       ZegoUIKitPrebuiltLiveStreamingController().minimize.hide();
     });
 
+    await ZegoUIKitPrebuiltLiveStreamingController().pip.cancelBackground();
+
     _uninitControllerByPrebuilt();
   }
 
@@ -162,6 +164,11 @@ class ZegoLiveStreamingMiniOverlayMachine {
         .uninitByPrebuilt();
     ZegoUIKitPrebuiltLiveStreamingController()
         .minimize
+        .private
+        .uninitByPrebuilt();
+    ZegoUIKitPrebuiltLiveStreamingController().pip.private.uninitByPrebuilt();
+    ZegoUIKitPrebuiltLiveStreamingController()
+        .screenSharing
         .private
         .uninitByPrebuilt();
     ZegoUIKitPrebuiltLiveStreamingController()

@@ -11,7 +11,6 @@ import 'package:zego_uikit/zego_uikit.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/live_streaming.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/core/core_managers.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/swiping/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/swiping/loading_builder.dart';
@@ -71,7 +70,6 @@ class _ZegoLiveStreamingSwipingPageState
   late final PageController _pageController;
 
   String _targetRoomID = '';
-  bool _targetRoomDone = false;
 
   List<StreamSubscription<dynamic>?> subscriptions = [];
 
@@ -101,8 +99,14 @@ class _ZegoLiveStreamingSwipingPageState
     if (_targetRoomID.isEmpty) {
       _targetRoomID = widget.swipingConfig.requireNextLiveID();
     }
-    ZegoLiveStreamingManagers().swipingCurrentLiveID = _targetRoomID;
-    _targetRoomDone = false;
+    ZegoUIKitPrebuiltLiveStreamingController()
+        .swiping
+        .private
+        .currentSwipingID = _targetRoomID;
+    ZegoUIKitPrebuiltLiveStreamingController()
+        .swiping
+        .private
+        .currentRoomSwipingDone = false;
     roomLoginNotifier?.resetCheckingData(_targetRoomID);
 
     ZegoUIKitPrebuiltLiveStreamingController().swiping.private.initByPrebuilt(
@@ -139,7 +143,16 @@ class _ZegoLiveStreamingSwipingPageState
   Widget build(BuildContext context) {
     return GestureDetector(
       onVerticalDragEnd: (details) {
-        if (!_targetRoomDone) {
+        if (!ZegoUIKitPrebuiltLiveStreamingController()
+            .swiping
+            .private
+            .currentRoomSwipingDone) {
+          ZegoLoggerService.logInfo(
+            'onVerticalDragEnd, but current room not finish',
+            tag: 'live-streaming',
+            subTag: 'swiping',
+          );
+
           return;
         }
 
@@ -236,7 +249,10 @@ class _ZegoLiveStreamingSwipingPageState
       subTag: 'swiping',
     );
     if (expressDone && signalingDone) {
-      _targetRoomDone = true;
+      ZegoUIKitPrebuiltLiveStreamingController()
+          .swiping
+          .private
+          .currentRoomSwipingDone = true;
     }
   }
 
@@ -268,13 +284,32 @@ class _ZegoLiveStreamingSwipingPageState
     );
 
     _targetRoomID = targetRoomID;
-    ZegoLiveStreamingManagers().swipingCurrentLiveID = _targetRoomID;
-    _targetRoomDone = false;
+    ZegoUIKitPrebuiltLiveStreamingController()
+        .swiping
+        .private
+        .currentSwipingID = _targetRoomID;
+    ZegoUIKitPrebuiltLiveStreamingController()
+        .swiping
+        .private
+        .currentRoomSwipingDone = false;
 
     _pageController.jumpToPage(0 == currentPageIndex ? 1 : 0);
   }
 
   void onSwipingRequest(String targetRoomID) {
+    if (!ZegoUIKitPrebuiltLiveStreamingController()
+        .swiping
+        .private
+        .currentRoomSwipingDone) {
+      ZegoLoggerService.logInfo(
+        'onSwipingRequest $targetRoomID, but current room not finish',
+        tag: 'live-streaming',
+        subTag: 'swiping',
+      );
+
+      return;
+    }
+
     ZegoLoggerService.logInfo(
       'onSwipingRequest $targetRoomID',
       tag: 'live-streaming',

@@ -11,6 +11,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/components/effects/sound_
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/leave_button.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/message/disable_chat_button.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/message/input_board_button.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/pip_button.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.defines.dart';
@@ -265,15 +266,18 @@ class _ZegoLiveStreamingBottomBarState
   }
 
   List<Widget> getDisplayButtons(BuildContext context) {
+    final needRestoreDeviceState = (ZegoUIKitPrebuiltLiveStreamingController()
+                .minimize
+                .private
+                .minimizeData
+                ?.isPrebuiltFromMinimizing ??
+            false) ||
+        ZegoUIKitPrebuiltLiveStreamingController().pip.private.isRestoreFromPIP;
+
     final buttonList = sortDisplayButtons(
       getDefaultButtons(
         context,
-        cameraDefaultValueFunc: (ZegoUIKitPrebuiltLiveStreamingController()
-                    .minimize
-                    .private
-                    .minimizeData
-                    ?.isPrebuiltFromMinimizing ??
-                false)
+        cameraDefaultValueFunc: needRestoreDeviceState
             ? () {
                 /// if is minimizing, take the local device state
                 return ZegoUIKit()
@@ -281,12 +285,7 @@ class _ZegoLiveStreamingBottomBarState
                     .value;
               }
             : null,
-        microphoneDefaultValueFunc: (ZegoUIKitPrebuiltLiveStreamingController()
-                    .minimize
-                    .private
-                    .minimizeData
-                    ?.isPrebuiltFromMinimizing ??
-                false)
+        microphoneDefaultValueFunc: needRestoreDeviceState
             ? () {
                 /// if is minimizing, take the local device state
                 return ZegoUIKit()
@@ -685,6 +684,11 @@ class _ZegoLiveStreamingBottomBarState
         return Expanded(child: Container());
       case ZegoLiveStreamingMenuBarButtonName.minimizingButton:
         return const ZegoLiveStreamingMinimizingButton();
+      case ZegoLiveStreamingMenuBarButtonName.pipButton:
+        return ZegoLiveStreamingPIPButton(
+          aspectWidth: widget.config.pip.aspectWidth,
+          aspectHeight: widget.config.pip.aspectHeight,
+        );
     }
   }
 }

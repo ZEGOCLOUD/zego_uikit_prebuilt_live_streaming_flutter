@@ -41,6 +41,7 @@ class ZegoLiveStreamingIconUrls {
   static const String toolbarMicOff = 'assets/icons/toolbar_mic_off.png';
   static const String toolbarCoHost = 'assets/icons/toolbar_cohost.png';
   static const String minimizing = 'assets/icons/minimizing.png';
+  static const String pip = 'assets/icons/pip.png';
 
   static const String memberMore = 'assets/icons/member_more.png';
   static const String bottomBarMore = 'assets/icons/bottombar_more.png';

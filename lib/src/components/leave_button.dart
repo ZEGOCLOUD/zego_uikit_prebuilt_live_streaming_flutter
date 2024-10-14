@@ -116,6 +116,8 @@ class _ZegoLiveStreamingLeaveButtonState
         return canLeave;
       },
       onPress: () async {
+        await ZegoUIKitPrebuiltLiveStreamingController().pip.cancelBackground();
+
         final endEvent = ZegoLiveStreamingEndEvent(
           reason: ZegoLiveStreamingEndReason.localLeave,
           isFromMinimizing: ZegoLiveStreamingMiniOverlayPageState.minimizing ==

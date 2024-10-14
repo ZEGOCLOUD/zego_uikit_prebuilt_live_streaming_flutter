@@ -50,25 +50,13 @@ And you can also customize various live streaming features by configuring parame
 
   - [PK battles](https://docs.zegocloud.com/article/15580)
   - [Screen sharing](https://docs.zegocloud.com/article/15641)
-
-    <img src="https://storage.zego.im/sdk-doc/Pics/UIkit_ScreenShare/ios_start_screen_share_2.png" alt="Screen shared by mobile apps" width="300">
-    <img src="https://storage.zego.im/sdk-doc/Pics/UIkit_ScreenShare/watch_android_screen_share.png" alt="Screen shared by mobile apps" width="300">
-    <img src="https://storage.zego.im/sdk-doc/Pics/UIkit_ScreenShare/watch_web_screen_sharing.png" alt="Screen shared by web apps" width="300">
-    <img src="https://storage.zego.im/sdk-doc/Pics/UIkit_ScreenShare/fullScreenShare.png" alt="Screen shared by web apps" width="800">
   - [Advanced beauty effects](https://docs.zegocloud.com/article/15975)
-  - [Minimize livestream window](https://docs.zegocloud.com/article/16190)
-
-    <img src="https://storage.zego.im/sdk-doc/Pics/ZegoUIKit/Flutter/live/live_mini.gif" alt="Minimize livestream window" width="600">
+  - [Minimize/PIP livestream window](https://docs.zegocloud.com/article/16190)
   - [Send virtual gifts](https://docs.zegocloud.com/article/16201)
-
-    <img src="https://storage.zego.im/sdk-doc/Pics/ZegoUIKit/Flutter/live/send_virtual_gift.gif" alt="Send virtual gifts" width="600">
   - [Integrate Minigame](https://docs.zegocloud.com/article/16481)
-
-    <img src="https://media-resource.spreading.io/docuo/workspace564/27e54a759d23575969552654cb45bf89/ae1284a66a.gif" alt="Integrate Minigame" width="300">
   - [Use Tokens for authentication](https://www.zegocloud.com/docs/uikit/live-streaming-kit-flutter/enhance-the-livestream/use-tokens-for-authentication)
   - [Live list](https://www.zegocloud.com/docs/uikit/live-streaming-kit-flutter/enhance-the-livestream/live-list)
 
-    <img src="https://media-resource.spreading.io/docuo/workspace564/27e54a759d23575969552654cb45bf89/b7da56fa5d.gif" alt="Live list" width="300">
 - Customize the livestream
 
   - [Set avatar for users](https://docs.zegocloud.com/article/16307)
@@ -109,6 +97,38 @@ And you can also customize various live streaming features by configuring parame
 
 ## Previews
 
-- live streaming with cohosting
+- cohost
+  
+  <img src="https://storage.zego.im/sdk-doc/Pics/ZegoUIKit/Flutter/live_with_cohosting2.gif" alt="cohosting" height="480">
 
-<img src="https://storage.zego.im/sdk-doc/Pics/ZegoUIKit/Flutter/live_with_cohosting2.gif" alt="cohosting" width="900">
+- Live list
+
+    <img src="https://media-resource.spreading.io/docuo/workspace564/27e54a759d23575969552654cb45bf89/b7da56fa5d.gif" alt="Live list" height="480">
+
+- virtual gifts
+
+  <img src="https://storage.zego.im/sdk-doc/Pics/ZegoUIKit/Flutter/live/send_virtual_gift.gif" alt="Send virtual gifts" height="480">
+
+- Minigame
+
+  <img src="https://media-resource.spreading.io/docuo/workspace564/27e54a759d23575969552654cb45bf89/ae1284a66a.gif" alt="Integrate Minigame" height="480">
+  
+- Screen sharing
+
+  <img src="https://storage.zego.im/sdk-doc/Pics/UIkit_ScreenShare/ios_start_screen_share_2.png" alt="Screen shared by mobile apps" height="480">
+  <img src="https://storage.zego.im/sdk-doc/Pics/UIkit_ScreenShare/watch_android_screen_share.png" alt="Screen shared by mobile apps" height="480">
+  <img src="https://storage.zego.im/sdk-doc/Pics/UIkit_ScreenShare/watch_web_screen_sharing.png" alt="Screen shared by web apps" height="480">
+  <img src="https://storage.zego.im/sdk-doc/Pics/UIkit_ScreenShare/fullScreenShare.png" alt="Screen shared by web apps" height="480">
+
+- overlay(minimized)
+  
+  - live
+  
+    <img src="https://storage.zego.im/sdk-doc/Pics/ZegoUIKit/Flutter/live/live_mini.gif" alt="overlay" height="480">
+  - PK
+  
+    <img src="https://storage.zego.im/sdk-doc/Pics/ZegoUIKit/Flutter/live/live_pk_mini.gif" alt="overlay" height="480">
+
+- PIP
+  
+  <img src="https://media-resource.spreading.io/docuo/workspace564/27e54a759d23575969552654cb45bf89/ca91c7b844.gif" alt="pip" height="480">

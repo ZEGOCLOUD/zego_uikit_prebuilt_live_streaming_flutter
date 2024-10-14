@@ -11,6 +11,16 @@ class LiveStreamingControllerSwipingImpl
     with ZegoLiveStreamingControllerSwipingPrivate {
   /// swiping to previous live streaming which query from [ZegoLiveStreamingSwipingConfig.requirePreviousLiveID]
   bool previous() {
+    if (!private.currentRoomSwipingDone) {
+      ZegoLoggerService.logInfo(
+        'previous, but current room process is not finish',
+        tag: 'live-streaming',
+        subTag: 'controller.swiping',
+      );
+
+      return false;
+    }
+
     final targetLiveID = private.config?.requirePreviousLiveID.call();
     if (targetLiveID?.isEmpty ?? false) {
       ZegoLoggerService.logInfo(
@@ -37,6 +47,16 @@ class LiveStreamingControllerSwipingImpl
 
   /// swiping to next live streaming which query from [ZegoLiveStreamingSwipingConfig.requireNextLiveID]
   bool next() {
+    if (!private.currentRoomSwipingDone) {
+      ZegoLoggerService.logInfo(
+        'next, but current room process is not finish',
+        tag: 'live-streaming',
+        subTag: 'controller.swiping',
+      );
+
+      return false;
+    }
+
     final targetLiveID = private.config?.requireNextLiveID.call();
     if (targetLiveID?.isEmpty ?? false) {
       ZegoLoggerService.logInfo(
@@ -63,6 +83,16 @@ class LiveStreamingControllerSwipingImpl
 
   /// swiping to live streaming of [targetLiveID]
   bool jumpTo(String targetLiveID) {
+    if (!private.currentRoomSwipingDone) {
+      ZegoLoggerService.logInfo(
+        'jumpTo, but current room process is not finish',
+        tag: 'live-streaming',
+        subTag: 'controller.swiping',
+      );
+
+      return false;
+    }
+
     if (targetLiveID.isEmpty) {
       ZegoLoggerService.logInfo(
         'jump to, live id is empty',
