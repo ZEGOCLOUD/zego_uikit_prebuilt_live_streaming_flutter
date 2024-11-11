@@ -1,8 +1,8 @@
 // Dart imports:
 import 'dart:async';
+import 'dart:io' show Platform;
 import 'dart:math';
 import 'dart:typed_data';
-import 'dart:io' show Platform;
 
 // Flutter imports:
 import 'package:flutter/material.dart';

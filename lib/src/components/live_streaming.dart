@@ -121,7 +121,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
       ZegoLoggerService.logInfo(
-        'version: zego_uikit_prebuilt_live_streaming: 3.13.3; $version, \n'
+        'version: zego_uikit_prebuilt_live_streaming: 3.13.5; $version, \n'
         'config:${widget.config}, \n'
         'events: ${widget.events}, ',
         tag: 'live-streaming',
@@ -202,6 +202,12 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
               ..turnMicrophoneOn(widget.config.turnOnMicrophoneWhenJoining);
           }
         });
+      }).catchError((e) {
+        ZegoLoggerService.logError(
+          'initContext exception:$e',
+          tag: 'live-streaming',
+          subTag: 'prebuilt',
+        );
       });
     }
 

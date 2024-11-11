@@ -21,6 +21,13 @@ class ZegoLiveStreamingControllerScreenImplPrivateImpl {
       tag: 'live-streaming',
       subTag: 'controller.screenSharing.p',
     );
+
+    if (null != config?.screenSharing.autoStop) {
+      viewController.private.autoStopSettings.invalidCount =
+          config!.screenSharing.autoStop.invalidCount;
+      viewController.private.autoStopSettings.canEnd =
+          config.screenSharing.autoStop.canEnd;
+    }
   }
 
   /// Please do not call this interface. It is the internal logic of Prebuilt.

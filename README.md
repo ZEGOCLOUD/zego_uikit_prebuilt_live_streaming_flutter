@@ -132,3 +132,16 @@ And you can also customize various live streaming features by configuring parame
 - PIP
   
   <img src="https://media-resource.spreading.io/docuo/workspace564/27e54a759d23575969552654cb45bf89/ca91c7b844.gif" alt="pip" height="480">
+
+- Custom Layout
+  
+  <img src="https://storage.zego.im/sdk-doc/Pics/ZegoUIKit/Flutter/live/live_layout_pip.jpg" alt="pip" height="480">
+  
+  <img src="https://storage.zego.im/sdk-doc/Pics/ZegoUIKit/Flutter/live/live_layout_gallery.jpg" alt="pip" height="480">
+
+  <img src="https://storage.zego.im/sdk-doc/Pics/ZegoUIKit/Flutter/live/conner_layout.jpg" alt="pip" height="480">
+  
+  <img src="https://storage.zego.im/sdk-doc/Pics/ZegoUIKit/Flutter/live/left_layout.jpg" alt="pip" height="480">
+  
+  <img src="https://storage.zego.im/sdk-doc/Pics/ZegoUIKit/Flutter/live/top_layout.jpg" alt="pip" height="480">
+- 

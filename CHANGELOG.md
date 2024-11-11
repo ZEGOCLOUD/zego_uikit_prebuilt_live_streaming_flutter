@@ -1,3 +1,8 @@
+## 3.13.5
+
+- Bugs
+  - Catch and log crashes in certain scenes
+
 ## 3.13.4
 
 - Bugs
