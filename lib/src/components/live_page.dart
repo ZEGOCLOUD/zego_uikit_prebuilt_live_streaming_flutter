@@ -117,14 +117,19 @@ class _ZegoLiveStreamingLivePageState extends State<ZegoLiveStreamingLivePage>
       );
     } else {
       if (ZegoUIKit().engineCreatedNotifier.value) {
-        ZegoUIKit()
-            .joinRoom(
-          widget.liveID,
-          token: widget.token,
-          markAsLargeRoom: widget.config.markAsLargeRoom,
-        )
-            .then((result) {
-          onRoomLogin(result);
+        ZegoLiveStreamingManagers()
+            .liveStatusManager!
+            .checkShouldStopPlayAllAudioVideo()
+            .then((_) {
+          ZegoUIKit()
+              .joinRoom(
+            widget.liveID,
+            token: widget.token,
+            markAsLargeRoom: widget.config.markAsLargeRoom,
+          )
+              .then((result) {
+            onRoomLogin(result);
+          });
         });
       } else {
         ZegoLoggerService.logInfo(
@@ -185,17 +190,20 @@ class _ZegoLiveStreamingLivePageState extends State<ZegoLiveStreamingLivePage>
       ZegoUIKit()
           .engineCreatedNotifier
           .removeListener(joinRoomWaitEngineCreated);
-      // Future.delayed(Duration(seconds: 0), () {
-      ZegoUIKit()
-          .joinRoom(
-        widget.liveID,
-        token: widget.token,
-        markAsLargeRoom: widget.config.markAsLargeRoom,
-      )
-          .then((result) {
-        onRoomLogin(result);
+      ZegoLiveStreamingManagers()
+          .liveStatusManager!
+          .checkShouldStopPlayAllAudioVideo()
+          .then((_) {
+        ZegoUIKit()
+            .joinRoom(
+          widget.liveID,
+          token: widget.token,
+          markAsLargeRoom: widget.config.markAsLargeRoom,
+        )
+            .then((result) {
+          onRoomLogin(result);
+        });
       });
-      // });
     }
   }
 

@@ -185,8 +185,10 @@ class _ZegoLiveStreamingBeautyEffectSheetState
         break;
     }
 
-    return ZegoBeautyEffectSlider(
-      effectType: selectedEffectTypeNotifier.value,
+    return ZegoSlider(
+      onChanged: (int value) {
+        ZegoUIKit().setBeautifyValue(value, selectedEffectTypeNotifier.value);
+      },
       thumpHeight: height,
       defaultValue: selectedEffectValue,
       textStyle: widget.config.sliderTextStyle,

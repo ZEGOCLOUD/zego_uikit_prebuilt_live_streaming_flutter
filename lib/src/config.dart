@@ -1227,10 +1227,15 @@ class ZegoLiveStreamingPIPConfig {
     this.aspectHeight = 16,
     this.enableWhenBackground = true,
     ZegoLiveStreamingPIPAndroidConfig? android,
-  }) : android = android ?? ZegoLiveStreamingPIPAndroidConfig();
+    ZegoLiveStreamingPIPIOSConfig? iOS,
+  })  : android = android ?? ZegoLiveStreamingPIPAndroidConfig(),
+        iOS = iOS ?? ZegoLiveStreamingPIPIOSConfig();
 
   /// android config
   ZegoLiveStreamingPIPAndroidConfig android;
+
+  /// ios config
+  ZegoLiveStreamingPIPIOSConfig iOS;
 
   /// aspect width
   int aspectWidth;
@@ -1267,6 +1272,23 @@ class ZegoLiveStreamingPIPAndroidConfig {
   String toString() {
     return 'ZegoLiveStreamingPIPAndroidConfig:{'
         'background:$background, '
+        '}';
+  }
+}
+
+/// iOS pip
+/// only available on 15.0
+class ZegoLiveStreamingPIPIOSConfig {
+  ZegoLiveStreamingPIPIOSConfig({
+    this.support = true,
+  });
+
+  bool support;
+
+  @override
+  String toString() {
+    return 'ZegoLiveStreamingPIPIOSConfig:{'
+        'support:$support, '
         '}';
   }
 }

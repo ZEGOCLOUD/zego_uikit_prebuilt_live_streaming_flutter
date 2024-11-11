@@ -1,7 +1,6 @@
 // Dart imports:
 import 'dart:async';
 import 'dart:io' show Platform;
-import 'dart:math';
 import 'dart:typed_data';
 
 // Flutter imports:
@@ -17,6 +16,9 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/components/message/enable
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/dialogs.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/toast.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/controller/private/pip/pip_android.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/controller/private/pip/pip_interface.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/controller/private/pip/pip_ios.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/core_managers.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/defines.dart';

@@ -1,3 +1,8 @@
+## 3.14.0
+
+- Features
+  - Support PIP in iOS, default is open, you can set **ZegoLiveStreamingPIPIOSConfig.pip.iOS.support** to false to turn off
+
 ## 3.13.5
 
 - Bugs

@@ -29,6 +29,8 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/internal/events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/data.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/overlay_machine.dart';
+import '../controller/private/pip/pip_android.dart';
+import '../controller/private/pip/pip_ios.dart';
 import '../internal/defines.dart';
 import 'mini_live.dart';
 
@@ -92,6 +94,7 @@ class ZegoLiveStreamingPage extends StatefulWidget {
 /// @nodoc
 class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
     with WidgetsBindingObserver {
+  var contextInitNotifier = ValueNotifier<bool>(false);
   List<StreamSubscription<dynamic>?> subscriptions = [];
   ZegoLiveStreamingEventListener? _eventListener;
 
@@ -107,6 +110,19 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
   ZegoUIKitPrebuiltLiveStreamingController get controller =>
       ZegoUIKitPrebuiltLiveStreamingController();
 
+  bool get playingStreamInPIPUnderIOS {
+    bool isPlaying = false;
+    if (Platform.isIOS) {
+      isPlaying = (ZegoUIKitPrebuiltLiveStreamingController()
+              .pip
+              .private
+              .pipImpl() as ZegoLiveStreamingControllerIOSPIP)
+          .isSupportInConfig;
+    }
+
+    return isPlaying;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -121,7 +137,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
       ZegoLoggerService.logInfo(
-        'version: zego_uikit_prebuilt_live_streaming: 3.13.5; $version, \n'
+        'version: zego_uikit_prebuilt_live_streaming: 3.14.0; $version, \n'
         'config:${widget.config}, \n'
         'events: ${widget.events}, ',
         tag: 'live-streaming',
@@ -192,9 +208,17 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
         subTag: 'prebuilt',
       );
 
+      contextInitNotifier.value = true;
       startedByLocalNotifier.value = true;
     } else {
       initContext().then((_) {
+        ZegoLoggerService.logInfo(
+          'initContext done',
+          tag: 'live-streaming',
+          subTag: 'prebuilt',
+        );
+        contextInitNotifier.value = true;
+
         initPermissions().then((_) {
           if (mounted) {
             ZegoUIKit()
@@ -265,7 +289,12 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
     await ZegoUIKit().resetSoundEffect();
     await ZegoUIKit().resetBeautyEffect();
 
-    await ZegoUIKit().leaveRoom();
+    await ZegoUIKit().leaveRoom().then((_) {
+      if (playingStreamInPIPUnderIOS) {
+        ZegoUIKit().enableHardwareDecoder(false);
+        ZegoUIKit().enableCustomVideoRender(false);
+      }
+    });
   }
 
   Future<void> initContext() async {
@@ -280,8 +309,9 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
     await ZegoUIKit().setAdvanceConfigs(widget.config.advanceConfigs);
 
     var enablePlatformView = false;
-    if (Platform.isIOS && widget.config.mediaPlayer.supportTransparent) {
-      enablePlatformView = true;
+    if (Platform.isIOS) {
+      enablePlatformView = widget.config.mediaPlayer.supportTransparent ||
+          playingStreamInPIPUnderIOS;
     }
     await ZegoUIKit()
         .init(
@@ -289,10 +319,16 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
       appSign: widget.appSign,
       scenario: ZegoScenario.Broadcast,
       enablePlatformView: enablePlatformView,
+      playingStreamInPIPUnderIOS: playingStreamInPIPUnderIOS,
     )
         .then((_) async {
       /// second set after create express
       await ZegoUIKit().setAdvanceConfigs(widget.config.advanceConfigs);
+
+      if (playingStreamInPIPUnderIOS) {
+        await ZegoUIKit().enableHardwareDecoder(true);
+        await ZegoUIKit().enableCustomVideoRender(true);
+      }
 
       _setVideoConfig();
       _setBeautyConfig();
@@ -375,6 +411,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
     );
     controller.minimize.private.initByPrebuilt(
       minimizeData: minimizeData,
+      config: widget.config,
     );
     controller.pip.private.initByPrebuilt(
       config: widget.config,
@@ -424,23 +461,35 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
 
   @override
   Widget build(BuildContext context) {
-    if (Platform.isAndroid) {
-      return PiPSwitcher(
-        floating:
-            ZegoUIKitPrebuiltLiveStreamingController().pip.private.floating,
-        childWhenDisabled: normalPage(),
-        childWhenEnabled: ZegoScreenUtilInit(
-          designSize: const Size(750, 1334),
-          minTextAdapt: true,
-          splitScreenMode: true,
-          builder: (context, child) {
-            return pipPage();
-          },
-        ),
-      );
-    }
+    return ValueListenableBuilder<bool>(
+      valueListenable: contextInitNotifier,
+      builder: (context, isDone, _) {
+        if (isDone) {
+          if (Platform.isAndroid) {
+            return PiPSwitcher(
+              floating: (ZegoUIKitPrebuiltLiveStreamingController()
+                      .pip
+                      .private
+                      .pipImpl() as ZegoLiveStreamingControllerPIPAndroid)
+                  .floating,
+              childWhenDisabled: normalPage(),
+              childWhenEnabled: ZegoScreenUtilInit(
+                designSize: const Size(750, 1334),
+                minTextAdapt: true,
+                splitScreenMode: true,
+                builder: (context, child) {
+                  return pipPage();
+                },
+              ),
+            );
+          }
 
-    return normalPage();
+          return normalPage();
+        }
+
+        return const Center(child: CircularProgressIndicator());
+      },
+    );
   }
 
   Widget normalPage() {
