@@ -289,12 +289,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
     await ZegoUIKit().resetSoundEffect();
     await ZegoUIKit().resetBeautyEffect();
 
-    await ZegoUIKit().leaveRoom().then((_) {
-      if (playingStreamInPIPUnderIOS) {
-        ZegoUIKit().enableHardwareDecoder(false);
-        ZegoUIKit().enableCustomVideoRender(false);
-      }
-    });
+    await ZegoUIKit().leaveRoom();
   }
 
   Future<void> initContext() async {
@@ -325,10 +320,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
       /// second set after create express
       await ZegoUIKit().setAdvanceConfigs(widget.config.advanceConfigs);
 
-      if (playingStreamInPIPUnderIOS) {
-        await ZegoUIKit().enableHardwareDecoder(true);
-        await ZegoUIKit().enableCustomVideoRender(true);
-      }
+      await ZegoUIKit().enableCustomVideoRender(playingStreamInPIPUnderIOS);
 
       _setVideoConfig();
       _setBeautyConfig();
