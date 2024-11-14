@@ -1,7 +1,8 @@
-## 3.14.0
+## 3.14.0-beta.1
 
 - Features
   - Support PIP in iOS, default is open, you can set **ZegoLiveStreamingPIPIOSConfig.pip.iOS.support** to false to turn off
+  - Modify the in-app minimization interface
 
 ## 3.13.5
 
