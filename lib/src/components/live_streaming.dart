@@ -540,6 +540,13 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
   }
 
   Future<void> initPermissions() async {
+    ZegoLoggerService.logInfo(
+      'request camera:${widget.config.turnOnCameraWhenJoining}, '
+      'request microphone:${widget.config.turnOnMicrophoneWhenJoining}, ',
+      tag: 'live-streaming',
+      subTag: 'prebuilt, initPermissions',
+    );
+
     var isCameraGranted = true;
     var isMicrophoneGranted = true;
     if (mounted && widget.config.turnOnCameraWhenJoining) {
@@ -548,6 +555,13 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
     if (mounted && widget.config.turnOnMicrophoneWhenJoining) {
       isMicrophoneGranted = await requestPermission(Permission.microphone);
     }
+
+    ZegoLoggerService.logInfo(
+      'camera result:$isCameraGranted, '
+      'microphone result:$isMicrophoneGranted, ',
+      tag: 'live-streaming',
+      subTag: 'prebuilt, initPermissions',
+    );
 
     if (!isCameraGranted) {
       if (mounted) {

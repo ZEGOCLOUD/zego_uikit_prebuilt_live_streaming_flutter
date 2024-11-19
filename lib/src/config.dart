@@ -1,4 +1,6 @@
 // Flutter imports:
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 
 // Package imports:
@@ -115,7 +117,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   /// Even if the user is an audience, they can set this value to true, but in general, if the role is an audience, this value should be set to false.
   bool turnOnCameraWhenJoining;
 
-  /// if you want to join the video conference with your front camera, set this value to true.
+  /// if you want to join the live streaming with your front camera, set this value to true.
   /// The default value is `true`.
   bool useFrontFacingCamera;
 
@@ -787,6 +789,14 @@ class ZegoLiveStreamingInRoomMessageConfig {
   /// display chat message list view or not
   bool visible;
 
+  /// resend button icon
+  Widget? resendIcon;
+
+  /// show fake message or not
+  ///
+  ///  [ZegoUIKitPrebuiltLiveStreamingController().message.sendFakeMessage()]
+  bool showFakeMessage;
+
   /// display user name in message list view or not
   bool showName;
 
@@ -825,14 +835,6 @@ class ZegoLiveStreamingInRoomMessageConfig {
 
   /// The paddings of chat message list items
   EdgeInsetsGeometry? paddings;
-
-  /// resend button icon
-  Widget? resendIcon;
-
-  /// show fake message or not
-  ///
-  ///  [ZegoUIKitPrebuiltLiveStreamingController().message.sendFakeMessage()]
-  bool showFakeMessage;
 
   ZegoLiveStreamingInRoomMessageConfig({
     this.visible = true,
@@ -1160,6 +1162,7 @@ class ZegoLiveStreamingPreviewBottomBarConfig {
 }
 
 class ZegoLiveStreamingOutsideLivesConfig {
+  /// same object as [ZegoLiveStreamingOutsideLiveList.controller]
   ZegoLiveStreamingOutsideLiveListController? controller;
 
   /// loading builder, return Container() if you want hide it
@@ -1215,9 +1218,67 @@ class ZegoLiveStreamingMediaPlayerConfig {
   /// In iOS, to achieve transparency for a video using a platform view, you need to set [supportTransparent] to true.
   bool supportTransparent;
 
+  /// default player
+  ZegoLiveStreamingMediaPlayerDefaultPlayerConfig defaultPlayer;
+
   ZegoLiveStreamingMediaPlayerConfig({
     this.supportTransparent = false,
+    ZegoLiveStreamingMediaPlayerDefaultPlayerConfig? defaultPlayer,
+  }) : defaultPlayer =
+            defaultPlayer ?? ZegoLiveStreamingMediaPlayerDefaultPlayerConfig();
+}
+
+/// default media player query parameter
+class ZegoLiveStreamingMediaPlayerQueryParameter {
+  ZegoLiveStreamingRole localRole;
+
+  ZegoLiveStreamingMediaPlayerQueryParameter({
+    required this.localRole,
   });
+}
+
+/// default media player config
+class ZegoLiveStreamingMediaPlayerDefaultPlayerConfig {
+  /// support or not
+  bool support;
+
+  /// roles can control(pick/start/stop)
+  List<ZegoLiveStreamingRole> rolesCanControl;
+
+  /// top-left position
+  Point<double> Function(ZegoLiveStreamingMediaPlayerQueryParameter)?
+      topLeftQuery;
+
+  /// rect query
+  Rect Function(ZegoLiveStreamingMediaPlayerQueryParameter)? rectQuery;
+
+  /// config
+  ZegoUIKitMediaPlayerConfig? Function(
+    ZegoLiveStreamingMediaPlayerQueryParameter,
+  )? configQuery;
+
+  /// style
+  ZegoUIKitMediaPlayerStyle? Function(
+    ZegoLiveStreamingMediaPlayerQueryParameter,
+  )? styleQuery;
+
+  ZegoLiveStreamingMediaPlayerDefaultPlayerConfig({
+    this.support = false,
+    this.rolesCanControl = const [
+      ZegoLiveStreamingRole.host,
+    ],
+    this.topLeftQuery,
+    this.rectQuery,
+    this.configQuery,
+    this.styleQuery,
+  });
+
+  @override
+  String toString() {
+    return 'ZegoLiveStreamingMediaPlayerDefaultPlayerConfig:{'
+        'support:$support, '
+        '}';
+  }
 }
 
 /// pip config

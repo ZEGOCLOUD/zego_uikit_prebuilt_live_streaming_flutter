@@ -1,6 +1,7 @@
 // Dart imports:
 import 'dart:async';
 import 'dart:core';
+import 'dart:math';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
@@ -339,6 +340,7 @@ class _ZegoLiveStreamingLivePageState extends State<ZegoLiveStreamingLivePage>
                             plugins: widget.plugins,
                             constraints: constraints,
                           ),
+                          sharingMedia(constraints),
                           ZegoLiveStreamingLivePageSurface(
                             config: widget.config,
                             events: widget.events,
@@ -361,6 +363,110 @@ class _ZegoLiveStreamingLivePageState extends State<ZegoLiveStreamingLivePage>
           },
         ),
       ),
+    );
+  }
+
+  Widget sharingMedia(BoxConstraints constraints) {
+    if (!widget.config.mediaPlayer.defaultPlayer.support) {
+      return Container();
+    }
+
+    ZegoUIKitPrebuiltLiveStreamingController()
+        .media
+        .defaultPlayer
+        .visibleNotifier
+        .value = true;
+    return ValueListenableBuilder<bool>(
+      valueListenable: ZegoUIKitPrebuiltLiveStreamingController()
+          .media
+          .defaultPlayer
+          .visibleNotifier,
+      builder: (context, viewVisibility, _) {
+        return viewVisibility
+            ? ValueListenableBuilder<int>(
+                valueListenable:
+                    ZegoLiveStreamingManagers().connectManager!.coHostCount,
+                builder: (context, coHostCount, _) {
+                  final spacing = 20.zW;
+                  final localRole =
+                      ZegoLiveStreamingManagers().connectManager!.localRole;
+                  final queryParameter =
+                      ZegoLiveStreamingMediaPlayerQueryParameter(
+                    localRole: localRole,
+                  );
+
+                  final rect = widget.config.mediaPlayer.defaultPlayer.rectQuery
+                      ?.call(queryParameter);
+                  final playerSize = rect?.size ??
+                      Size(
+                        constraints.maxWidth - spacing * 2,
+                        constraints.maxWidth * 9 / 16,
+                      );
+                  final topLeft = widget
+                          .config.mediaPlayer.defaultPlayer.topLeftQuery
+                          ?.call(queryParameter) ??
+                      Point<double>(
+                        spacing,
+                        constraints.maxHeight - playerSize.height - spacing,
+                      );
+
+                  var config = widget
+                          .config.mediaPlayer.defaultPlayer.configQuery
+                          ?.call(queryParameter) ??
+                      ZegoUIKitMediaPlayerConfig(
+                        canControl: ZegoLiveStreamingRole.host == localRole,
+                      );
+
+                  final mediaPlayer = Positioned.fromRect(
+                    rect: rect ??
+                        Rect.fromLTWH(
+                          spacing,
+                          spacing,
+                          constraints.maxWidth - 2 * spacing,
+                          constraints.maxHeight - 2 * spacing,
+                        ),
+                    child: ValueListenableBuilder<String?>(
+                      valueListenable:
+                          ZegoUIKitPrebuiltLiveStreamingController()
+                              .media
+                              .defaultPlayer
+                              .private
+                              .sharingPathNotifier,
+                      builder: (context, sharingPath, _) {
+                        return ZegoUIKitMediaPlayer(
+                          size: playerSize,
+                          initPosition: Offset(topLeft.x, topLeft.y),
+                          config: config,
+                          filePathOrURL: sharingPath,
+                          event: widget.events.media,
+                          style: widget
+                              .config.mediaPlayer.defaultPlayer.styleQuery
+                              ?.call(queryParameter),
+                        );
+                      },
+                    ),
+                  );
+
+                  if (widget.config.mediaPlayer.defaultPlayer.rolesCanControl
+                      .contains(localRole)) {
+                    return mediaPlayer;
+                  } else {
+                    return StreamBuilder<List<ZegoUIKitUser>>(
+                      stream: ZegoUIKit().getMediaListStream(),
+                      builder: (context, snapshot) {
+                        final mediaUsers = ZegoUIKit().getMediaList();
+                        if (mediaUsers.isEmpty) {
+                          return Container();
+                        }
+
+                        return mediaPlayer;
+                      },
+                    );
+                  }
+                },
+              )
+            : Container();
+      },
     );
   }
 
