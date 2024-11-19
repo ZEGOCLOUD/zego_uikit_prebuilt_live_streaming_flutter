@@ -115,7 +115,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   /// Even if the user is an audience, they can set this value to true, but in general, if the role is an audience, this value should be set to false.
   bool turnOnCameraWhenJoining;
 
-  /// if you want to join the video conference with your front camera, set this value to true.
+  /// if you want to join the live streaming with your front camera, set this value to true.
   /// The default value is `true`.
   bool useFrontFacingCamera;
 
@@ -787,6 +787,14 @@ class ZegoLiveStreamingInRoomMessageConfig {
   /// display chat message list view or not
   bool visible;
 
+  /// resend button icon
+  Widget? resendIcon;
+
+  /// show fake message or not
+  ///
+  ///  [ZegoUIKitPrebuiltLiveStreamingController().message.sendFakeMessage()]
+  bool showFakeMessage;
+
   /// display user name in message list view or not
   bool showName;
 
@@ -825,14 +833,6 @@ class ZegoLiveStreamingInRoomMessageConfig {
 
   /// The paddings of chat message list items
   EdgeInsetsGeometry? paddings;
-
-  /// resend button icon
-  Widget? resendIcon;
-
-  /// show fake message or not
-  ///
-  ///  [ZegoUIKitPrebuiltLiveStreamingController().message.sendFakeMessage()]
-  bool showFakeMessage;
 
   ZegoLiveStreamingInRoomMessageConfig({
     this.visible = true,
@@ -1160,6 +1160,7 @@ class ZegoLiveStreamingPreviewBottomBarConfig {
 }
 
 class ZegoLiveStreamingOutsideLivesConfig {
+  /// same object as [ZegoLiveStreamingOutsideLiveList.controller]
   ZegoLiveStreamingOutsideLiveListController? controller;
 
   /// loading builder, return Container() if you want hide it
