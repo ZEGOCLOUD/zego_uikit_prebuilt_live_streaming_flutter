@@ -1,4 +1,6 @@
 // Flutter imports:
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 
 // Package imports:
@@ -1243,8 +1245,12 @@ class ZegoLiveStreamingMediaPlayerDefaultPlayerConfig {
   /// roles can control(pick/start/stop)
   List<ZegoLiveStreamingRole> rolesCanControl;
 
+  /// top-left position
+  Point<double> Function(ZegoLiveStreamingMediaPlayerQueryParameter)?
+      topLeftQuery;
+
   /// rect query
-  Rect? Function(ZegoLiveStreamingMediaPlayerQueryParameter)? rectQuery;
+  Rect Function(ZegoLiveStreamingMediaPlayerQueryParameter)? rectQuery;
 
   /// config
   ZegoUIKitMediaPlayerConfig? Function(
@@ -1261,6 +1267,7 @@ class ZegoLiveStreamingMediaPlayerDefaultPlayerConfig {
     this.rolesCanControl = const [
       ZegoLiveStreamingRole.host,
     ],
+    this.topLeftQuery,
     this.rectQuery,
     this.configQuery,
     this.styleQuery,

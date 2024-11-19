@@ -1,6 +1,7 @@
 // Dart imports:
 import 'dart:async';
 import 'dart:core';
+import 'dart:math';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
@@ -401,14 +402,18 @@ class _ZegoLiveStreamingLivePageState extends State<ZegoLiveStreamingLivePage>
                         constraints.maxWidth - spacing * 2,
                         constraints.maxWidth * 9 / 16,
                       );
+                  final topLeft = widget
+                          .config.mediaPlayer.defaultPlayer.topLeftQuery
+                          ?.call(queryParameter) ??
+                      Point<double>(
+                        spacing,
+                        constraints.maxHeight - playerSize.height - spacing,
+                      );
+
                   var config = widget
                           .config.mediaPlayer.defaultPlayer.configQuery
                           ?.call(queryParameter) ??
                       ZegoUIKitMediaPlayerConfig(
-                        initPosition: Offset(
-                          spacing,
-                          constraints.maxHeight - playerSize.height - spacing,
-                        ),
                         canControl: ZegoLiveStreamingRole.host == localRole,
                       );
 
@@ -430,6 +435,7 @@ class _ZegoLiveStreamingLivePageState extends State<ZegoLiveStreamingLivePage>
                       builder: (context, sharingPath, _) {
                         return ZegoUIKitMediaPlayer(
                           size: playerSize,
+                          initPosition: Offset(topLeft.x, topLeft.y),
                           config: config,
                           filePathOrURL: sharingPath,
                           event: widget.events.media,
