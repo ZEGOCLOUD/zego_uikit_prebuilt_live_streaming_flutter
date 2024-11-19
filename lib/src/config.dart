@@ -1216,9 +1216,62 @@ class ZegoLiveStreamingMediaPlayerConfig {
   /// In iOS, to achieve transparency for a video using a platform view, you need to set [supportTransparent] to true.
   bool supportTransparent;
 
+  /// default player
+  ZegoLiveStreamingMediaPlayerDefaultPlayerConfig defaultPlayer;
+
   ZegoLiveStreamingMediaPlayerConfig({
     this.supportTransparent = false,
+    ZegoLiveStreamingMediaPlayerDefaultPlayerConfig? defaultPlayer,
+  }) : defaultPlayer =
+            defaultPlayer ?? ZegoLiveStreamingMediaPlayerDefaultPlayerConfig();
+}
+
+/// default media player query parameter
+class ZegoLiveStreamingMediaPlayerQueryParameter {
+  ZegoLiveStreamingRole localRole;
+
+  ZegoLiveStreamingMediaPlayerQueryParameter({
+    required this.localRole,
   });
+}
+
+/// default media player config
+class ZegoLiveStreamingMediaPlayerDefaultPlayerConfig {
+  /// support or not
+  bool support;
+
+  /// roles can control(pick/start/stop)
+  List<ZegoLiveStreamingRole> rolesCanControl;
+
+  /// rect query
+  Rect? Function(ZegoLiveStreamingMediaPlayerQueryParameter)? rectQuery;
+
+  /// config
+  ZegoUIKitMediaPlayerConfig? Function(
+    ZegoLiveStreamingMediaPlayerQueryParameter,
+  )? configQuery;
+
+  /// style
+  ZegoUIKitMediaPlayerStyle? Function(
+    ZegoLiveStreamingMediaPlayerQueryParameter,
+  )? styleQuery;
+
+  ZegoLiveStreamingMediaPlayerDefaultPlayerConfig({
+    this.support = false,
+    this.rolesCanControl = const [
+      ZegoLiveStreamingRole.host,
+    ],
+    this.rectQuery,
+    this.configQuery,
+    this.styleQuery,
+  });
+
+  @override
+  String toString() {
+    return 'ZegoLiveStreamingMediaPlayerDefaultPlayerConfig:{'
+        'support:$support, '
+        '}';
+  }
 }
 
 /// pip config

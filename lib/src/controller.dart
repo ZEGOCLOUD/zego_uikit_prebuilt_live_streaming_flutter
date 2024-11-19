@@ -7,6 +7,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:file_picker/file_picker.dart';
 import 'package:floating/floating.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:zego_uikit/zego_uikit.dart';
@@ -16,6 +17,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/components/message/enable
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/dialogs.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/toast.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/controller/private/media_player.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/controller/private/pip/pip_android.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/controller/private/pip/pip_interface.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/controller/private/pip/pip_ios.dart';
@@ -54,6 +56,8 @@ part 'controller/user.dart';
 
 part 'controller/screen.dart';
 
+part 'controller/media.dart';
+
 part 'controller/pk.dart';
 
 part 'controller/swiping.dart';
@@ -80,6 +84,8 @@ part 'controller/private/swiping.dart';
 
 part 'controller/private/screen.dart';
 
+part 'controller/private/media.dart';
+
 /// Used to control the live streaming functionality.
 ///
 /// [ZegoUIKitPrebuiltLiveStreamingController] is a **singleton instance** class,
@@ -99,7 +105,8 @@ class ZegoUIKitPrebuiltLiveStreamingController
         ZegoLiveStreamingControllerCoHost,
         ZegoLiveStreamingControllerPK,
         ZegoLiveStreamingControllerSwiping,
-        ZegoLiveStreamingControllerAudioVideo {
+        ZegoLiveStreamingControllerAudioVideo,
+        ZegoLiveStreamingControllerMedia {
   factory ZegoUIKitPrebuiltLiveStreamingController() => instance;
 
   /// This function is used to end the Live Streaming.
