@@ -137,7 +137,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
       ZegoLoggerService.logInfo(
-        'version: zego_uikit_prebuilt_live_streaming: 3.14.0-beta.1; $version, \n'
+        'version: zego_uikit_prebuilt_live_streaming: 3.14.0-beta.2; $version, \n'
         'config:${widget.config}, \n'
         'events: ${widget.events}, ',
         tag: 'live-streaming',

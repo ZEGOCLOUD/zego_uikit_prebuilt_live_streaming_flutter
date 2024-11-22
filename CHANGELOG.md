@@ -1,3 +1,12 @@
+
+## 3.14.0-beta.2
+
+- Features
+  - Support playing multimedia (video/audio) directly.
+    - API: Add **defaultPlayer** in **ZegoUIKitPrebuiltLiveStreamingController().media**. play on default player through **sharing/show/hide** API
+    - Config: Add **ZegoLiveStreamingMediaPlayerDefaultPlayerConfig** in **ZegoLiveStreamingMediaPlayerConfig**
+
+
 ## 3.14.0-beta.1
 
 - Features
