@@ -136,9 +136,6 @@ class ZegoCallControllerPIPImplPrivateAndroid {
 
     this.config = config;
 
-    ZegoUIKit()
-        .adapterService()
-        .registerMessageHandler(_onAppLifecycleStateChanged);
     ZegoUIKitPrebuiltLiveStreamingController()
         .minimize
         .private
@@ -166,9 +163,6 @@ class ZegoCallControllerPIPImplPrivateAndroid {
 
     subscription?.cancel();
 
-    ZegoUIKit()
-        .adapterService()
-        .unregisterMessageHandler(_onAppLifecycleStateChanged);
     ZegoUIKitPrebuiltLiveStreamingController()
         .minimize
         .private
@@ -209,15 +203,6 @@ class ZegoCallControllerPIPImplPrivateAndroid {
 
       return ZegoPiPStatus.disabled;
     }
-  }
-
-  /// sync app background state
-  void _onAppLifecycleStateChanged(AppLifecycleState appLifecycleState) async {
-    ZegoLoggerService.logInfo(
-      '_onAppLifecycleStateChanged, $appLifecycleState',
-      tag: 'live-streaming',
-      subTag: 'controller.pip.p android',
-    );
   }
 
   void onMinimizeStateChanged() async {
