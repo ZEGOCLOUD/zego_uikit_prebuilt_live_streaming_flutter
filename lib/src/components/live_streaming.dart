@@ -363,7 +363,9 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
     controller.user.private.initByPrebuilt(
       config: widget.config,
     );
-    controller.message.private.initByPrebuilt();
+    controller.message.private.initByPrebuilt(
+      config: widget.config,
+    );
     controller.coHost.private.initByPrebuilt(
       events: widget.events,
     );
