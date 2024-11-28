@@ -1,3 +1,8 @@
+## 3.13.6
+
+- Bugs
+  - `ZegoUIKitPrebuiltLiveStreamingController().message.send` will take `ZegoUIKitPrebuiltLiveStreamingConfig.inRoomMessage.attributes` if set
+
 ## 3.13.5
 
 - Bugs
