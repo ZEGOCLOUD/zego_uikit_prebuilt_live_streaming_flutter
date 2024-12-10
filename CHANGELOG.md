@@ -1,3 +1,7 @@
+## 3.13.7
+
+- Update dependency
+
 ## 3.13.6
 
 - Bugs
