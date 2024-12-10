@@ -119,16 +119,6 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
       subTag: 'prebuilt',
     );
 
-    ZegoUIKit().getZegoUIKitVersion().then((version) {
-      ZegoLoggerService.logInfo(
-        'version: zego_uikit_prebuilt_live_streaming: 3.13.6; $version, \n'
-        'config:${widget.config}, \n'
-        'events: ${widget.events}, ',
-        tag: 'live-streaming',
-        subTag: 'prebuilt',
-      );
-    });
-
     _eventListener = ZegoLiveStreamingEventListener(widget.events);
     _eventListener?.init();
 
@@ -287,6 +277,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
         .init(
       appID: widget.appID,
       appSign: widget.appSign,
+      token: widget.token,
       scenario: ZegoScenario.Broadcast,
       enablePlatformView: enablePlatformView,
     )
