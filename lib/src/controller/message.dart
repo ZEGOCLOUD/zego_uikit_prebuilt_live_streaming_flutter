@@ -13,6 +13,7 @@ class ZegoLiveStreamingControllerMessageImpl
 
   /// sends the chat message
   ///
+  /// [payloadAttributes] same as
   /// @return Error code, please refer to the error codes document https://docs.zegocloud.com/en/5548.html for details.
   ///
   /// @return A `Future` that representing whether the request was successful.
@@ -30,7 +31,18 @@ class ZegoLiveStreamingControllerMessageImpl
       return false;
     }
 
-    return ZegoUIKit().sendInRoomMessage(message, type: type);
+    final attributes = private.config?.inRoomMessage.attributes?.call();
+    if (attributes?.isEmpty ?? true) {
+      return ZegoUIKit().sendInRoomMessage(message, type: type);
+    }
+
+    return ZegoUIKit().sendInRoomMessage(
+      ZegoInRoomMessage.jsonBody(
+        message: message,
+        attributes: attributes!,
+      ),
+      type: type,
+    );
   }
 
   /// Retrieves a list of chat messages that already exist in the room.

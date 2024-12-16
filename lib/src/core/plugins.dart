@@ -11,13 +11,6 @@ import 'package:zego_uikit/zego_uikit.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/overlay_machine.dart';
 
 /// @nodoc
-enum ZegoLiveStreamingPluginNetworkState {
-  unknown,
-  offline,
-  online,
-}
-
-/// @nodoc
 class ZegoLiveStreamingPlugins {
   ZegoLiveStreamingPlugins({
     required this.appID,
@@ -51,8 +44,6 @@ class ZegoLiveStreamingPlugins {
 
   Function(ZegoUIKitError)? onError;
 
-  ZegoLiveStreamingPluginNetworkState networkState =
-      ZegoLiveStreamingPluginNetworkState.unknown;
   List<StreamSubscription<dynamic>?> subscriptions = [];
   ValueNotifier<ZegoSignalingPluginConnectionState> pluginUserStateNotifier =
       ValueNotifier<ZegoSignalingPluginConnectionState>(
@@ -142,8 +133,7 @@ class ZegoLiveStreamingPlugins {
       ..add(ZegoUIKit()
           .getSignalingPlugin()
           .getRoomStateStream()
-          .listen(onRoomState))
-      ..add(ZegoUIKit().getNetworkModeStream().listen(onNetworkModeChanged));
+          .listen(onRoomState));
 
     ZegoLoggerService.logInfo(
       'plugins init, login...',
@@ -372,7 +362,8 @@ class ZegoLiveStreamingPlugins {
     roomStateNotifier.value = event.state;
 
     ZegoLoggerService.logInfo(
-      '[plugin] onRoomState, state: ${roomStateNotifier.value}, networkState:$networkState',
+      '[plugin] onRoomState, state: ${roomStateNotifier.value}, '
+      'networkState:${ZegoUIKit().getNetworkModeStream()}',
       tag: 'live-streaming',
       subTag: 'plugin',
     );
@@ -406,33 +397,6 @@ class ZegoLiveStreamingPlugins {
       message: error.message,
       method: error.method,
     ));
-  }
-
-  void onNetworkModeChanged(ZegoNetworkMode networkMode) {
-    ZegoLoggerService.logInfo(
-      'onNetworkModeChanged $networkMode, previous network state: $networkState',
-      tag: 'live-streaming',
-      subTag: 'plugin',
-    );
-
-    switch (networkMode) {
-      case ZegoNetworkMode.Offline:
-      case ZegoNetworkMode.Unknown:
-        networkState = ZegoLiveStreamingPluginNetworkState.offline;
-        break;
-      case ZegoNetworkMode.Ethernet:
-      case ZegoNetworkMode.WiFi:
-      case ZegoNetworkMode.Mode2G:
-      case ZegoNetworkMode.Mode3G:
-      case ZegoNetworkMode.Mode4G:
-      case ZegoNetworkMode.Mode5G:
-        if (ZegoLiveStreamingPluginNetworkState.offline == networkState) {
-          tryReLogin();
-        }
-
-        networkState = ZegoLiveStreamingPluginNetworkState.online;
-        break;
-    }
   }
 
   Future<void> tryReLogin() async {
@@ -478,7 +442,7 @@ class ZegoLiveStreamingPlugins {
 
   Future<bool> tryReEnterRoom() async {
     ZegoLoggerService.logInfo(
-        '[plugin] tryReEnterRoom, room state: ${roomStateNotifier.value}, networkState:$networkState');
+        '[plugin] tryReEnterRoom, room state: ${roomStateNotifier.value}, networkState:${ZegoUIKit().getNetworkState()}');
 
     if (!initialized) {
       ZegoLoggerService.logInfo(
@@ -506,7 +470,7 @@ class ZegoLiveStreamingPlugins {
       return false;
     }
 
-    if (networkState != ZegoLiveStreamingPluginNetworkState.online) {
+    if (ZegoUIKit().getNetworkState() != ZegoUIKitNetworkState.online) {
       ZegoLoggerService.logInfo(
         '[plugin] tryReEnterRoom, network is not connected',
         tag: 'live-streaming',

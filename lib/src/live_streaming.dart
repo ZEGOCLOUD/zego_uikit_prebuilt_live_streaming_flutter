@@ -12,6 +12,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/components/live_streaming
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/internal/reporter.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/swiping/page.dart';
 
 /// Live Streaming Widget.
@@ -87,6 +88,8 @@ class ZegoUIKitPrebuiltLiveStreaming extends StatefulWidget {
 
 class _ZegoUIKitPrebuiltLiveStreamingState
     extends State<ZegoUIKitPrebuiltLiveStreaming> {
+  String get version => "3.13.8";
+
   @override
   void initState() {
     ZegoLoggerService.logInfo(
@@ -96,6 +99,34 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     );
 
     super.initState();
+
+    ZegoUIKit().getZegoUIKitVersion().then((uikitVersion) {
+      ZegoLoggerService.logInfo(
+        'version: zego_uikit_prebuilt_live_streaming:$version; $uikitVersion, \n'
+        'config:${widget.config}, \n'
+        'events: ${widget.events}, ',
+        tag: 'live-streaming',
+        subTag: 'prebuilt',
+      );
+    });
+
+    ZegoUIKit().reporter().create(
+      appID: widget.appID,
+      signOrToken: widget.appSign.isNotEmpty ? widget.appSign : widget.token,
+      params: {
+        ZegoLiveStreamingReporter.eventKeyKitVersion: version,
+        ZegoUIKitReporter.eventKeyUserID: widget.userID,
+      },
+    ).then((_) {
+      ZegoUIKit().reporter().report(
+        event: ZegoLiveStreamingReporter.eventInit,
+        params: {
+          ZegoUIKitReporter.eventKeyErrorCode: 0,
+          ZegoUIKitReporter.eventKeyStartTime:
+              DateTime.now().millisecondsSinceEpoch,
+        },
+      );
+    });
   }
 
   @override
@@ -103,6 +134,8 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     super.dispose();
 
     ZegoUIKitPrebuiltLiveStreamingController().pip.cancelBackground();
+
+    ZegoUIKit().reporter().report(event: ZegoLiveStreamingReporter.eventUninit);
 
     ZegoLoggerService.logInfo(
       '----------dispose----------',

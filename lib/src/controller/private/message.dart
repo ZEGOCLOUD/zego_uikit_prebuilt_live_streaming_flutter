@@ -10,6 +10,8 @@ mixin ZegoLiveStreamingControllerMessagePrivate {
 
 /// @nodoc
 class ZegoLiveStreamingControllerMessagePrivateImpl {
+  ZegoUIKitPrebuiltLiveStreamingConfig? config;
+
   List<StreamSubscription<dynamic>?> subscriptions = [];
 
   /// pseudo list + kit list
@@ -34,7 +36,11 @@ class ZegoLiveStreamingControllerMessagePrivateImpl {
   /// Please do not call this interface. It is the internal logic of Prebuilt.
   /// DO NOT CALL!!!
   /// Call Inside By Prebuilt
-  void initByPrebuilt() {
+  void initByPrebuilt({
+    required ZegoUIKitPrebuiltLiveStreamingConfig config,
+  }) {
+    this.config = config;
+
     pseudoMessageList.clear();
 
     _streamControllerBroadcastList ??=
@@ -63,6 +69,8 @@ class ZegoLiveStreamingControllerMessagePrivateImpl {
   /// DO NOT CALL!!!
   /// Call Inside By Prebuilt
   void uninitByPrebuilt() {
+    config = null;
+
     for (final subscription in subscriptions) {
       subscription?.cancel();
     }

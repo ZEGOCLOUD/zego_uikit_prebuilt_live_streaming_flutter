@@ -13,6 +13,19 @@
   - Support PIP in iOS, default is open, you can set **ZegoLiveStreamingPIPIOSConfig.pip.iOS.support** to false to turn off
   - Modify the in-app minimization interface
 
+## 3.13.8
+
+- Update dependency
+
+## 3.13.7
+
+- Update dependency
+
+## 3.13.6
+
+- Bugs
+  - `ZegoUIKitPrebuiltLiveStreamingController().message.send` will take `ZegoUIKitPrebuiltLiveStreamingConfig.inRoomMessage.attributes` if set
+
 ## 3.13.5
 
 - Bugs
