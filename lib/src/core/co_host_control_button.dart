@@ -126,22 +126,17 @@ class _ZegoLiveStreamingCoHostControlButtonState
       onWillPressed: () async {
         return checkHostExist() && checkLiving();
       },
-      onPressed: (
-        String code,
-        String message,
-        String invitationID,
-        List<String> errorInvitees,
-      ) {
-        if (code.isNotEmpty) {
+      onPressed: (ZegoStartInvitationButtonResult result) {
+        if (result.code.isNotEmpty) {
           showError('${widget.translationText.requestCoHostFailedToast}, '
-              '$code $message');
+              '${result.code} ${result.message}');
         } else {
           showSuccess(widget.translationText.sendRequestCoHostToast);
 
           ZegoLiveStreamingReporter().report(
             event: ZegoLiveStreamingReporter.eventCoHostAudienceInvite,
             params: {
-              ZegoLiveStreamingReporter.eventKeyCallID: invitationID,
+              ZegoLiveStreamingReporter.eventKeyCallID: result.invitationID,
               ZegoLiveStreamingReporter.eventKeyRoomID:
                   ZegoUIKit().getRoom().id,
             },
@@ -172,16 +167,11 @@ class _ZegoLiveStreamingCoHostControlButtonState
           widget.translationText.cancelRequestCoHostButton,
       textStyle: buttonTextStyle,
       verticalLayout: false,
-      onPressed: (
-        String invitationID,
-        String code,
-        String message,
-        List<String> errorInvitees,
-      ) {
+      onPressed: (ZegoCancelInvitationButtonResult result) {
         ZegoLiveStreamingReporter().report(
           event: ZegoLiveStreamingReporter.eventCoHostAudienceRespond,
           params: {
-            ZegoLiveStreamingReporter.eventKeyCallID: invitationID,
+            ZegoLiveStreamingReporter.eventKeyCallID: result.invitationID,
             ZegoLiveStreamingReporter.eventKeyAction:
                 ZegoLiveStreamingReporter.eventKeyActionCancel,
           },
