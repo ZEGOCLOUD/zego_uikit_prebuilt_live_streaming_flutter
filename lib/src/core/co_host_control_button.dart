@@ -16,6 +16,8 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/inner_text.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/pk_combine_notifier.dart';
 
+import '../internal/reporter.dart';
+
 /// @nodoc
 class ZegoLiveStreamingCoHostControlButton extends StatefulWidget {
   const ZegoLiveStreamingCoHostControlButton({
@@ -136,10 +138,20 @@ class _ZegoLiveStreamingCoHostControlButtonState
         } else {
           showSuccess(widget.translationText.sendRequestCoHostToast);
 
+          ZegoLiveStreamingReporter().report(
+            event: ZegoLiveStreamingReporter.eventCoHostAudienceInvite,
+            params: {
+              ZegoLiveStreamingReporter.eventKeyCallID: invitationID,
+              ZegoLiveStreamingReporter.eventKeyRoomID:
+                  ZegoUIKit().getRoom().id,
+            },
+          );
+
           widget.connectManager.events.coHost.audience.onRequestSent?.call();
 
           widget.connectManager.updateAudienceConnectState(
-              ZegoLiveStreamingAudienceConnectState.connecting);
+            ZegoLiveStreamingAudienceConnectState.connecting,
+          );
         }
       },
       clickableTextColor: Colors.white,
@@ -160,12 +172,27 @@ class _ZegoLiveStreamingCoHostControlButtonState
           widget.translationText.cancelRequestCoHostButton,
       textStyle: buttonTextStyle,
       verticalLayout: false,
-      onPressed: (String code, String message, List<String> errorInvitees) {
+      onPressed: (
+        String invitationID,
+        String code,
+        String message,
+        List<String> errorInvitees,
+      ) {
+        ZegoLiveStreamingReporter().report(
+          event: ZegoLiveStreamingReporter.eventCoHostAudienceRespond,
+          params: {
+            ZegoLiveStreamingReporter.eventKeyCallID: invitationID,
+            ZegoLiveStreamingReporter.eventKeyAction:
+                ZegoLiveStreamingReporter.eventKeyActionCancel,
+          },
+        );
+
         widget.connectManager.events.coHost.audience.onActionCancelRequest
             ?.call();
 
         widget.connectManager.updateAudienceConnectState(
-            ZegoLiveStreamingAudienceConnectState.idle);
+          ZegoLiveStreamingAudienceConnectState.idle,
+        );
       },
       clickableTextColor: Colors.white,
       clickableBackgroundColor: const Color(0xff1E2740).withOpacity(0.4),

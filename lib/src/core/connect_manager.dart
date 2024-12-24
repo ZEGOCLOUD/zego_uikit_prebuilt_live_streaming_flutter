@@ -22,6 +22,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/inner_text.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/internal/reporter.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/overlay_machine.dart';
 
 /// @nodoc
@@ -288,6 +289,15 @@ class ZegoLiveStreamingConnectManager {
           data: customData,
         )
         .then((result) {
+      ZegoLiveStreamingReporter().report(
+        event: ZegoLiveStreamingReporter.eventCoHostHostStop,
+        params: {
+          ZegoLiveStreamingReporter.eventKeyCallID: result.invitationID,
+          ZegoLiveStreamingReporter.eventKeyRoomID: ZegoUIKit().getRoom().id,
+          ZegoLiveStreamingReporter.eventKeyCoHostID: coHost.id,
+        },
+      );
+
       ZegoLoggerService.logInfo(
         'kick co-host ${coHost.id} ${coHost.name}, result:$result',
         tag: 'live-streaming-coHost',
@@ -335,6 +345,14 @@ class ZegoLiveStreamingConnectManager {
 
         showError(innerText.inviteCoHostFailedToast);
       } else {
+        ZegoLiveStreamingReporter().report(
+          event: ZegoLiveStreamingReporter.eventCoHostHostInvite,
+          params: {
+            ZegoLiveStreamingReporter.eventKeyCallID: result.invitationID,
+            ZegoLiveStreamingReporter.eventKeyAudienceID: invitee.id,
+          },
+        );
+
         events.coHost.host.onInvitationSent
             ?.call(ZegoLiveStreamingCoHostHostEventInvitationSentData(
           audience: invitee,
@@ -352,6 +370,9 @@ class ZegoLiveStreamingConnectManager {
       subTag: 'connect manager',
     );
 
+    ZegoLiveStreamingReporter().report(
+      event: ZegoLiveStreamingReporter.eventCoHostAudienceStop,
+    );
     updateAudienceConnectState(ZegoLiveStreamingAudienceConnectState.idle);
 
     return true;
@@ -362,6 +383,7 @@ class ZegoLiveStreamingConnectManager {
     final int type = params['type']!; // call type
     final String customData = params['data']!; // extended field
 
+    final invitationID = params['invitation_id'] as String? ?? '';
     final invitationType = ZegoInvitationTypeExtension.mapValue[type]!;
 
     ZegoLoggerService.logInfo(
@@ -374,6 +396,15 @@ class ZegoLiveStreamingConnectManager {
 
     if (hostManager.isLocalHost) {
       if (ZegoLiveStreamingInvitationType.requestCoHost == invitationType) {
+        ZegoLiveStreamingReporter().report(
+          event: ZegoLiveStreamingReporter.eventCoHostHostReceived,
+          params: {
+            ZegoLiveStreamingReporter.eventKeyCallID: invitationID,
+            ZegoLiveStreamingReporter.eventKeyAudienceID: inviter.id,
+            ZegoLiveStreamingReporter.eventKeyExtendedData: customData,
+          },
+        );
+
         events.coHost.host.onRequestReceived
             ?.call(ZegoLiveStreamingCoHostHostEventRequestReceivedData(
           audience: inviter,
@@ -384,15 +415,37 @@ class ZegoLiveStreamingConnectManager {
               ..add(inviter);
 
         final translation = innerText.receivedCoHostRequestDialogInfo;
-        showSuccess(translation.message.replaceFirst(
-            ZegoUIKitPrebuiltLiveStreamingInnerText.param_1, inviter.name));
+        showSuccess(
+          translation.message.replaceFirst(
+            ZegoUIKitPrebuiltLiveStreamingInnerText.param_1,
+            inviter.name,
+          ),
+        );
       }
     } else {
       if (ZegoLiveStreamingInvitationType.inviteToJoinCoHost ==
           invitationType) {
+        ZegoLiveStreamingReporter().report(
+          event: ZegoLiveStreamingReporter.eventCoHostAudienceReceived,
+          params: {
+            ZegoLiveStreamingReporter.eventKeyCallID: invitationID,
+            ZegoLiveStreamingReporter.eventKeyHostID: inviter.id,
+            ZegoLiveStreamingReporter.eventKeyExtendedData: customData,
+          },
+        );
+
         onAudienceReceivedCoHostInvitation(inviter, customData);
       } else if (ZegoLiveStreamingInvitationType.removeFromCoHost ==
           invitationType) {
+        ZegoLiveStreamingReporter().report(
+          event: ZegoLiveStreamingReporter.eventCoHostCoHostReceived,
+          params: {
+            ZegoLiveStreamingReporter.eventKeyCallID: invitationID,
+            ZegoLiveStreamingReporter.eventKeyHostID: inviter.id,
+            ZegoLiveStreamingReporter.eventKeyExtendedData: customData,
+          },
+        );
+
         updateAudienceConnectState(ZegoLiveStreamingAudienceConnectState.idle);
       }
     }
@@ -497,6 +550,15 @@ class ZegoLiveStreamingConnectManager {
               .getSignalingPlugin()
               .refuseInvitation(inviterID: host.id, data: '')
               .then((result) {
+            ZegoLiveStreamingReporter().report(
+              event: ZegoLiveStreamingReporter.eventCoHostAudienceRespond,
+              params: {
+                ZegoLiveStreamingReporter.eventKeyCallID: result.invitationID,
+                ZegoLiveStreamingReporter.eventKeyAction:
+                    ZegoLiveStreamingReporter.eventKeyActionRefuse,
+              },
+            );
+
             events.coHost.audience.onActionRefuseInvitation?.call();
 
             ZegoLoggerService.logInfo(
@@ -555,6 +617,15 @@ class ZegoLiveStreamingConnectManager {
                 showError('${result.error}');
                 return;
               }
+
+              ZegoLiveStreamingReporter().report(
+                event: ZegoLiveStreamingReporter.eventCoHostAudienceRespond,
+                params: {
+                  ZegoLiveStreamingReporter.eventKeyCallID: result.invitationID,
+                  ZegoLiveStreamingReporter.eventKeyAction:
+                      ZegoLiveStreamingReporter.eventKeyActionAccept,
+                },
+              );
 
               events.coHost.audience.onActionAcceptInvitation?.call();
 
@@ -706,6 +777,7 @@ class ZegoLiveStreamingConnectManager {
     final ZegoUIKitUser inviter = params['inviter']!;
     final String data = params['data']!; // extended field
 
+    final invitationID = params['invitation_id'] as String? ?? '';
     final int type = params['type']!; // call type
     final invitationType = ZegoInvitationTypeExtension.mapValue[type]!;
 
@@ -716,6 +788,15 @@ class ZegoLiveStreamingConnectManager {
     );
 
     if (hostManager.isLocalHost) {
+      ZegoLiveStreamingReporter().report(
+        event: ZegoLiveStreamingReporter.eventCoHostHostRespond,
+        params: {
+          ZegoLiveStreamingReporter.eventKeyCallID: invitationID,
+          ZegoLiveStreamingReporter.eventKeyAction:
+              ZegoLiveStreamingReporter.eventKeyActionTimeout,
+        },
+      );
+
       events.coHost.host.onRequestTimeout?.call(
         ZegoLiveStreamingCoHostHostEventRequestTimeoutData(
           audience: inviter,
@@ -728,6 +809,15 @@ class ZegoLiveStreamingConnectManager {
     } else {
       if (ZegoLiveStreamingInvitationType.inviteToJoinCoHost ==
           invitationType) {
+        ZegoLiveStreamingReporter().report(
+          event: ZegoLiveStreamingReporter.eventCoHostAudienceRespond,
+          params: {
+            ZegoLiveStreamingReporter.eventKeyCallID: 'todo',
+            ZegoLiveStreamingReporter.eventKeyAction:
+                ZegoLiveStreamingReporter.eventKeyActionTimeout,
+          },
+        );
+
         events.coHost.audience.onInvitationTimeout?.call();
       }
 

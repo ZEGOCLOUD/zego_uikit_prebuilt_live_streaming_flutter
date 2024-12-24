@@ -1240,7 +1240,7 @@ class ZegoLiveStreamingPIPConfig {
 
   /// android: only available on SDK higher than 31(>=31)
   /// iOS: not limit
-  final bool enableWhenBackground;
+  bool enableWhenBackground;
 
   @override
   String toString() {
