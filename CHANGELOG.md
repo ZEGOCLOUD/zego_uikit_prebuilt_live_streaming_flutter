@@ -1,3 +1,9 @@
+## 3.13.9
+
+- Update dependency
+- Features
+  - **ZegoUIKitPrebuiltLiveStreamingConfig** adds **showToast**, default is **false**, if you want the default toast tips, please set it to true.
+
 ## 3.13.8
 
 - Update dependency
