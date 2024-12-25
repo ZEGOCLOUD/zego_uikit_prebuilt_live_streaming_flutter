@@ -177,8 +177,9 @@ class ZegoUIKitPrebuiltLiveStreamingPKServiceMixer {
   }
 
   Future<void> startPlayStream(
-    List<ZegoLiveStreamingPKUser> pkHosts,
-  ) async {
+    List<ZegoLiveStreamingPKUser> pkHosts, {
+    PlayerStateUpdateCallback? onPlayerStateUpdated,
+  }) async {
     Map<String, int> userSoundIDs = {};
     for (int hostIndex = 0; hostIndex < pkHosts.length; ++hostIndex) {
       userSoundIDs[pkHosts[hostIndex].userInfo.id] = hostIndex;
@@ -187,6 +188,7 @@ class ZegoUIKitPrebuiltLiveStreamingPKServiceMixer {
       mixerID,
       pkHosts.map((e) => e.userInfo).toList(),
       userSoundIDs,
+      onPlayerStateUpdated: onPlayerStateUpdated,
     );
   }
 

@@ -15,6 +15,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/inner_text.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/pk_combine_notifier.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/internal/reporter.dart';
 
 /// @nodoc
 class ZegoLiveStreamingCoHostControlButton extends StatefulWidget {
@@ -124,22 +125,27 @@ class _ZegoLiveStreamingCoHostControlButtonState
       onWillPressed: () async {
         return checkHostExist() && checkLiving();
       },
-      onPressed: (
-        String code,
-        String message,
-        String invitationID,
-        List<String> errorInvitees,
-      ) {
-        if (code.isNotEmpty) {
+      onPressed: (ZegoStartInvitationButtonResult result) {
+        if (result.code.isNotEmpty) {
           showError('${widget.translationText.requestCoHostFailedToast}, '
-              '$code $message');
+              '${result.code} ${result.message}');
         } else {
           showSuccess(widget.translationText.sendRequestCoHostToast);
+
+          ZegoLiveStreamingReporter().report(
+            event: ZegoLiveStreamingReporter.eventCoHostAudienceInvite,
+            params: {
+              ZegoLiveStreamingReporter.eventKeyCallID: result.invitationID,
+              ZegoLiveStreamingReporter.eventKeyRoomID:
+                  ZegoUIKit().getRoom().id,
+            },
+          );
 
           widget.connectManager.events.coHost.audience.onRequestSent?.call();
 
           widget.connectManager.updateAudienceConnectState(
-              ZegoLiveStreamingAudienceConnectState.connecting);
+            ZegoLiveStreamingAudienceConnectState.connecting,
+          );
         }
       },
       clickableTextColor: Colors.white,
@@ -160,12 +166,22 @@ class _ZegoLiveStreamingCoHostControlButtonState
           widget.translationText.cancelRequestCoHostButton,
       textStyle: buttonTextStyle,
       verticalLayout: false,
-      onPressed: (String code, String message, List<String> errorInvitees) {
+      onPressed: (ZegoCancelInvitationButtonResult result) {
+        ZegoLiveStreamingReporter().report(
+          event: ZegoLiveStreamingReporter.eventCoHostAudienceRespond,
+          params: {
+            ZegoLiveStreamingReporter.eventKeyCallID: result.invitationID,
+            ZegoLiveStreamingReporter.eventKeyAction:
+                ZegoLiveStreamingReporter.eventKeyActionCancel,
+          },
+        );
+
         widget.connectManager.events.coHost.audience.onActionCancelRequest
             ?.call();
 
         widget.connectManager.updateAudienceConnectState(
-            ZegoLiveStreamingAudienceConnectState.idle);
+          ZegoLiveStreamingAudienceConnectState.idle,
+        );
       },
       clickableTextColor: Colors.white,
       clickableBackgroundColor: const Color(0xff1E2740).withOpacity(0.4),
