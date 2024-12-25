@@ -613,11 +613,6 @@ class ZegoLiveStreamingConnectManager {
                 subTag: 'connect, onAudienceReceivedCoHostInvitation',
               );
 
-              if (result.error != null) {
-                showError('${result.error}');
-                return;
-              }
-
               ZegoLiveStreamingReporter().report(
                 event: ZegoLiveStreamingReporter.eventCoHostAudienceRespond,
                 params: {
@@ -626,6 +621,11 @@ class ZegoLiveStreamingConnectManager {
                       ZegoLiveStreamingReporter.eventKeyActionAccept,
                 },
               );
+
+              if (result.error != null) {
+                showError('${result.error}');
+                return;
+              }
 
               events.coHost.audience.onActionAcceptInvitation?.call();
 
@@ -812,7 +812,7 @@ class ZegoLiveStreamingConnectManager {
         ZegoLiveStreamingReporter().report(
           event: ZegoLiveStreamingReporter.eventCoHostAudienceRespond,
           params: {
-            ZegoLiveStreamingReporter.eventKeyCallID: 'todo',
+            ZegoLiveStreamingReporter.eventKeyCallID: invitationID,
             ZegoLiveStreamingReporter.eventKeyAction:
                 ZegoLiveStreamingReporter.eventKeyActionTimeout,
           },

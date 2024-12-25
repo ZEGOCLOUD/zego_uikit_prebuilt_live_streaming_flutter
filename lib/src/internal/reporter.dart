@@ -9,6 +9,7 @@ class ZegoLiveStreamingReporter {
   static String eventCoHostHostReceived = "livestreaming/cohost/host/received";
   static String eventCoHostHostRespond = "livestreaming/cohost/host/respond";
   static String eventCoHostHostStop = "livestreaming/cohost/host/stop";
+
   static String eventCoHostAudienceInvite =
       "livestreaming/cohost/audience/invite";
   static String eventCoHostAudienceReceived =
@@ -18,6 +19,7 @@ class ZegoLiveStreamingReporter {
   static String eventCoHostAudienceStart =
       "livestreaming/cohost/audience/start";
   static String eventCoHostAudienceStop = "livestreaming/cohost/audience/stop";
+
   static String eventCoHostCoHostReceived =
       "livestreaming/cohost/cohost/received";
 

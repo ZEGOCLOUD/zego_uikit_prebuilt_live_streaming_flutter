@@ -194,6 +194,15 @@ class ZegoLiveStreamingControllerCoHostImpl
         subTag: 'controller, audienceAgreeCoHostInvitation',
       );
 
+      ZegoLiveStreamingReporter().report(
+        event: ZegoLiveStreamingReporter.eventCoHostAudienceRespond,
+        params: {
+          ZegoLiveStreamingReporter.eventKeyCallID: result.invitationID,
+          ZegoLiveStreamingReporter.eventKeyAction:
+              ZegoLiveStreamingReporter.eventKeyActionAccept,
+        },
+      );
+
       if (result.error != null) {
         if (withToast) {
           showError('${result.error}');
@@ -287,6 +296,15 @@ class ZegoLiveStreamingControllerCoHostImpl
         'result:$result',
         tag: 'live-streaming-coHost',
         subTag: 'controller, audienceRejectCoHostInvitation',
+      );
+
+      ZegoLiveStreamingReporter().report(
+        event: ZegoLiveStreamingReporter.eventCoHostAudienceRespond,
+        params: {
+          ZegoLiveStreamingReporter.eventKeyCallID: result.invitationID,
+          ZegoLiveStreamingReporter.eventKeyAction:
+              ZegoLiveStreamingReporter.eventKeyActionRefuse,
+        },
       );
 
       private.events?.coHost.audience.onActionRefuseInvitation?.call();
