@@ -15,8 +15,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/inner_text.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/pk_combine_notifier.dart';
-
-import '../internal/reporter.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/internal/reporter.dart';
 
 /// @nodoc
 class ZegoLiveStreamingCoHostControlButton extends StatefulWidget {

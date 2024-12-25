@@ -1,3 +1,4 @@
+// Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
 
 class ZegoLiveStreamingReporter {
@@ -36,6 +37,8 @@ class ZegoLiveStreamingReporter {
   static String eventKeyCallID = "call_id";
   static String eventKeyRoomID = "roomID";
   static String eventKeyExtendedData = "extended_data";
+  static String eventKeyStreamID = "stream_id";
+  static String eventKeyError = "error";
 
   static String eventKeyAction = "action";
   static String eventKeyActionAccept = "accept";

@@ -55,6 +55,13 @@ extension PKServiceHost on ZegoUIKitPrebuiltLiveStreamingPKServices {
       subTag: 'service, host, quitPKBattle',
     );
 
+    ZegoLiveStreamingReporter().report(
+      event: ZegoLiveStreamingReporter.eventPKQuit,
+      params: {
+        ZegoLiveStreamingReporter.eventKeyCallID: quitResult.invitationID,
+      },
+    );
+
     return const ZegoLiveStreamingPKServiceResult();
   }
 
@@ -96,7 +103,7 @@ extension PKServiceHost on ZegoUIKitPrebuiltLiveStreamingPKServices {
 
     updatePKUsers([]);
 
-    final quitResult =
+    final endResult =
         await ZegoUIKit().getSignalingPlugin().endAdvanceInvitation(
             invitationID: requestID,
 
@@ -107,9 +114,16 @@ extension PKServiceHost on ZegoUIKitPrebuiltLiveStreamingPKServices {
               'invitee_name': ZegoUIKit().getLocalUser().name,
             }));
     ZegoLoggerService.logInfo(
-      'requestID:$requestID, result:$quitResult',
+      'requestID:$requestID, result:$endResult',
       tag: 'live-streaming-pk',
       subTag: 'service, host, stopPKBattle',
+    );
+
+    ZegoLiveStreamingReporter().report(
+      event: ZegoLiveStreamingReporter.eventPKEnd,
+      params: {
+        ZegoLiveStreamingReporter.eventKeyCallID: endResult.invitationID,
+      },
     );
 
     return const ZegoLiveStreamingPKServiceResult();

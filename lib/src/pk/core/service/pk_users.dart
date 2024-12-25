@@ -220,11 +220,38 @@ extension PKServiceConnectedUsers on ZegoUIKitPrebuiltLiveStreamingPKServices {
         subTag: 'service, connect-users, connectedHostOnPKUsersChanged',
       );
       _coreData.playingHostIDs.add(user.userInfo.id);
-      await ZegoUIKit().startPlayAnotherRoomAudioVideo(
-        user.liveID,
+
+      final targetStreamID = ZegoUIKit().getGeneratedStreamID(
         user.userInfo.id,
-        userName: user.userInfo.name,
+        user.liveID,
+        ZegoStreamType.main,
       );
+      ZegoLiveStreamingReporter().report(
+        event: ZegoLiveStreamingReporter.eventPKStartPlay,
+        params: {
+          ZegoLiveStreamingReporter.eventKeyCallID: _coreData.currentRequestID,
+          ZegoLiveStreamingReporter.eventKeyStreamID: targetStreamID,
+        },
+      );
+      await ZegoUIKit().startPlayAnotherRoomAudioVideo(
+          user.liveID, user.userInfo.id, userName: user.userInfo.name,
+          onPlayerStateUpdated: (
+        ZegoUIKitPlayerState state,
+        int errorCode,
+        Map<String, dynamic> extendedData,
+      ) {
+        if (ZegoUIKitPlayerState.playing == state) {
+          ZegoLiveStreamingReporter().report(
+            event: ZegoLiveStreamingReporter.eventPKStartPlayFinished,
+            params: {
+              ZegoLiveStreamingReporter.eventKeyCallID:
+                  _coreData.currentRequestID,
+              ZegoLiveStreamingReporter.eventKeyStreamID: targetStreamID,
+              ZegoLiveStreamingReporter.eventKeyError: errorCode,
+            },
+          );
+        }
+      });
     }
 
     /// stop play other room user stream
@@ -388,7 +415,33 @@ extension PKServiceConnectedUsers on ZegoUIKitPrebuiltLiveStreamingPKServices {
     }
 
     /// pk process
-    await _mixer.startPlayStream(List.from(_coreData.currentPKUsers.value));
+    ZegoLiveStreamingReporter().report(
+      event: ZegoLiveStreamingReporter.eventPKStartPlay,
+      params: {
+        ZegoLiveStreamingReporter.eventKeyCallID: _coreData.currentRequestID,
+        ZegoLiveStreamingReporter.eventKeyStreamID: _mixer.mixerID,
+      },
+    );
+    await _mixer.startPlayStream(
+      List.from(_coreData.currentPKUsers.value),
+      onPlayerStateUpdated: (
+        ZegoUIKitPlayerState state,
+        int errorCode,
+        Map<String, dynamic> extendedData,
+      ) {
+        if (ZegoUIKitPlayerState.playing == state) {
+          ZegoLiveStreamingReporter().report(
+            event: ZegoLiveStreamingReporter.eventPKStartPlayFinished,
+            params: {
+              ZegoLiveStreamingReporter.eventKeyCallID:
+                  _coreData.currentRequestID,
+              ZegoLiveStreamingReporter.eventKeyStreamID: _mixer.mixerID,
+              ZegoLiveStreamingReporter.eventKeyError: errorCode,
+            },
+          );
+        }
+      },
+    );
 
     final mixAudioVideoLoaded =
         ZegoUIKit().getMixAudioVideoLoadedNotifier(_mixer.mixerID);

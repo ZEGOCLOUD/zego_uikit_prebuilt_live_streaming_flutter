@@ -161,6 +161,7 @@ extension PKServiceHostRequest on ZegoUIKitPrebuiltLiveStreamingPKServices {
         error: sendResult.error,
       );
     }
+
     if (sendResult.errorInvitees.length == targetHostUserIDs.length) {
       /// all user failed
       return ZegoLiveStreamingPKServiceSendRequestResult(
@@ -176,6 +177,13 @@ extension PKServiceHostRequest on ZegoUIKitPrebuiltLiveStreamingPKServices {
         ),
       );
     }
+
+    ZegoLiveStreamingReporter().report(
+      event: ZegoLiveStreamingReporter.eventPKInvite,
+      params: {
+        ZegoLiveStreamingReporter.eventKeyCallID: sendResult.invitationID,
+      },
+    );
 
     _coreData.currentRequestID = sendResult.invitationID;
 
@@ -252,6 +260,13 @@ extension PKServiceHostRequest on ZegoUIKitPrebuiltLiveStreamingPKServices {
         ),
       );
     }
+
+    ZegoLiveStreamingReporter().report(
+      event: ZegoLiveStreamingReporter.eventPKInvite,
+      params: {
+        ZegoLiveStreamingReporter.eventKeyCallID: addResult.invitationID,
+      },
+    );
 
     return ZegoLiveStreamingPKServiceSendRequestResult(
       requestID: addResult.invitationID,
@@ -350,6 +365,15 @@ extension PKServiceHostRequest on ZegoUIKitPrebuiltLiveStreamingPKServices {
       );
     }
 
+    ZegoLiveStreamingReporter().report(
+      event: ZegoLiveStreamingReporter.eventPKRespond,
+      params: {
+        ZegoLiveStreamingReporter.eventKeyCallID: cancelResult.invitationID,
+        ZegoLiveStreamingReporter.eventKeyAction:
+            ZegoLiveStreamingReporter.eventKeyActionCancel,
+      },
+    );
+
     _coreData.currentRequestID = '';
     updatePKState(ZegoLiveStreamingPKBattleState.idle);
 
@@ -447,6 +471,15 @@ extension PKServiceHostRequest on ZegoUIKitPrebuiltLiveStreamingPKServices {
       subTag: 'service, host, acceptPKBattleRequest',
     );
 
+    ZegoLiveStreamingReporter().report(
+      event: ZegoLiveStreamingReporter.eventPKRespond,
+      params: {
+        ZegoLiveStreamingReporter.eventKeyCallID: acceptResult.invitationID,
+        ZegoLiveStreamingReporter.eventKeyAction:
+            ZegoLiveStreamingReporter.eventKeyActionAccept,
+      },
+    );
+
     if (null != acceptResult.error) {
       updatePKState(ZegoLiveStreamingPKBattleState.idle);
 
@@ -529,6 +562,15 @@ extension PKServiceHostRequest on ZegoUIKitPrebuiltLiveStreamingPKServices {
       'result:$rejectResult',
       tag: 'live-streaming-pk',
       subTag: 'service, host, rejectPKBattleRequest',
+    );
+
+    ZegoLiveStreamingReporter().report(
+      event: ZegoLiveStreamingReporter.eventPKRespond,
+      params: {
+        ZegoLiveStreamingReporter.eventKeyCallID: rejectResult.invitationID,
+        ZegoLiveStreamingReporter.eventKeyAction:
+            ZegoLiveStreamingReporter.eventKeyActionRefuse,
+      },
     );
 
     updatePKState(ZegoLiveStreamingPKBattleState.idle);

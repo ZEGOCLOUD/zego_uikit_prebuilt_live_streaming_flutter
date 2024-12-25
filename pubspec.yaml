@@ -17,7 +17,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  zego_uikit: ^2.27.20
+  zego_uikit: ^2.28.0
   zego_express_engine: ^3.18.0
 
   permission_handler: ^11.3.1
