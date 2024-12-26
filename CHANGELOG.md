@@ -1,3 +1,10 @@
+
+## 3.13.10
+
+- Bugs
+  - Fix screen-sharing outside the app, remote pull-based streaming has no sound
+  - Fix the occasional issue of not playing stream when enter LIVE
+
 ## 3.13.9
 
 - Update dependency
