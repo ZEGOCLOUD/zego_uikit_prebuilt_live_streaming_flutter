@@ -164,9 +164,12 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
         return context;
       });
     }
-    ZegoLiveStreamingToast.instance.init(contextQuery: () {
-      return context;
-    });
+    ZegoLiveStreamingToast.instance.init(
+      enabled: widget.config.showToast,
+      contextQuery: () {
+        return context;
+      },
+    );
 
     subscriptions
       ..add(

@@ -18,6 +18,7 @@ typedef ContextQuery = BuildContext Function();
 /// @nodoc
 class ZegoLiveStreamingToast {
   ContextQuery? contextQuery;
+  bool enabled = false;
 
   ZegoLiveStreamingToast._internal();
 
@@ -31,17 +32,27 @@ class ZegoLiveStreamingToast {
         fontWeight: FontWeight.w500,
       );
 
-  void init({required ContextQuery contextQuery}) {
+  void init({
+    required bool enabled,
+    required ContextQuery contextQuery,
+  }) {
     ZegoLoggerService.logInfo(
-      'init',
+      'init, '
+      'enabled:$enabled, ',
       tag: 'live-streaming',
       subTag: 'toast',
     );
+
+    this.enabled = enabled;
 
     this.contextQuery = contextQuery;
   }
 
   void show(String message, {Color? backgroundColor}) {
+    if (!enabled) {
+      return;
+    }
+
     styled_toast.showToast(
       message,
       duration: const Duration(seconds: 3),

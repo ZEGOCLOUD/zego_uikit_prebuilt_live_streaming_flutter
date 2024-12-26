@@ -194,6 +194,15 @@ class ZegoLiveStreamingControllerCoHostImpl
         subTag: 'controller, audienceAgreeCoHostInvitation',
       );
 
+      ZegoLiveStreamingReporter().report(
+        event: ZegoLiveStreamingReporter.eventCoHostAudienceRespond,
+        params: {
+          ZegoLiveStreamingReporter.eventKeyCallID: result.invitationID,
+          ZegoLiveStreamingReporter.eventKeyAction:
+              ZegoLiveStreamingReporter.eventKeyActionAccept,
+        },
+      );
+
       if (result.error != null) {
         if (withToast) {
           showError('${result.error}');
@@ -289,6 +298,15 @@ class ZegoLiveStreamingControllerCoHostImpl
         subTag: 'controller, audienceRejectCoHostInvitation',
       );
 
+      ZegoLiveStreamingReporter().report(
+        event: ZegoLiveStreamingReporter.eventCoHostAudienceRespond,
+        params: {
+          ZegoLiveStreamingReporter.eventKeyCallID: result.invitationID,
+          ZegoLiveStreamingReporter.eventKeyAction:
+              ZegoLiveStreamingReporter.eventKeyActionRefuse,
+        },
+      );
+
       private.events?.coHost.audience.onActionRefuseInvitation?.call();
 
       if (result.error != null) {
@@ -371,6 +389,14 @@ class ZegoLiveStreamingControllerCoHostImpl
         subTag: 'controller, audienceSendCoHostRequest',
       );
 
+      ZegoLiveStreamingReporter().report(
+        event: ZegoLiveStreamingReporter.eventCoHostAudienceInvite,
+        params: {
+          ZegoLiveStreamingReporter.eventKeyCallID: result.invitationID,
+          ZegoLiveStreamingReporter.eventKeyRoomID: ZegoUIKit().getRoom().id,
+        },
+      );
+
       if (withToast) {
         if (result.error?.code.isNotEmpty ?? false) {
           showError(
@@ -439,6 +465,15 @@ class ZegoLiveStreamingControllerCoHostImpl
       'result:$result',
       tag: 'live-streaming-coHost',
       subTag: 'controller, audienceCancelCoHostRequest',
+    );
+
+    ZegoLiveStreamingReporter().report(
+      event: ZegoLiveStreamingReporter.eventCoHostAudienceRespond,
+      params: {
+        ZegoLiveStreamingReporter.eventKeyCallID: result.invitationID,
+        ZegoLiveStreamingReporter.eventKeyAction:
+            ZegoLiveStreamingReporter.eventKeyActionCancel,
+      },
     );
 
     private.events?.coHost.audience.onActionCancelRequest?.call();
@@ -539,8 +574,12 @@ class ZegoLiveStreamingControllerCoHostImpl
         );
       }
 
+      ZegoLiveStreamingReporter().report(
+        event: ZegoLiveStreamingReporter.eventCoHostAudienceStart,
+      );
       private.connectManager!.updateAudienceConnectState(
-          ZegoLiveStreamingAudienceConnectState.connected);
+        ZegoLiveStreamingAudienceConnectState.connected,
+      );
     });
 
     return true;
@@ -655,6 +694,15 @@ class ZegoLiveStreamingControllerCoHostImpl
         subTag: 'controller, hostAgreeCoHostRequest',
       );
 
+      ZegoLiveStreamingReporter().report(
+        event: ZegoLiveStreamingReporter.eventCoHostHostRespond,
+        params: {
+          ZegoLiveStreamingReporter.eventKeyCallID: result.invitationID,
+          ZegoLiveStreamingReporter.eventKeyAction:
+              ZegoLiveStreamingReporter.eventKeyActionAccept,
+        },
+      );
+
       if (result.error == null) {
         private.events?.coHost.host.onActionAcceptRequest?.call();
 
@@ -716,6 +764,15 @@ class ZegoLiveStreamingControllerCoHostImpl
         'refuse audience ${audience.name} co-host request, $result',
         tag: 'live-streaming-coHost',
         subTag: 'controller, hostRejectCoHostRequest',
+      );
+
+      ZegoLiveStreamingReporter().report(
+        event: ZegoLiveStreamingReporter.eventCoHostHostRespond,
+        params: {
+          ZegoLiveStreamingReporter.eventKeyCallID: result.invitationID,
+          ZegoLiveStreamingReporter.eventKeyAction:
+              ZegoLiveStreamingReporter.eventKeyActionRefuse,
+        },
       );
 
       if (result.error == null) {

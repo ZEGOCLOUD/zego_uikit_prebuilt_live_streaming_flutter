@@ -1,4 +1,11 @@
 
+
+
+## 3.14.0-beta.4
+
+- Merge to version 3.13.10
+
+
 ## 3.14.0-beta.3
 
 - Merge to version 3.13.8
@@ -16,6 +23,18 @@
 - Features
   - Support PIP in iOS, default is open, you can set **ZegoLiveStreamingPIPIOSConfig.pip.iOS.support** to false to turn off
   - Modify the in-app minimization interface
+
+## 3.13.10
+
+- Bugs
+  - Fix screen-sharing outside the app, remote pull-based streaming has no sound
+  - Fix the occasional issue of not playing stream when enter LIVE
+
+## 3.13.9
+
+- Update dependency
+- Features
+  - **ZegoUIKitPrebuiltLiveStreamingConfig** adds **showToast**, default is **false**, if you want the default toast tips, please set it to true.
 
 ## 3.13.8
 

@@ -234,6 +234,8 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   /// audio video resource mode for audience
   ZegoAudioVideoResourceMode? audienceAudioVideoResourceMode;
 
+  bool showToast;
+
   /// Default initialization parameters for the host.
   /// If a configuration item does not meet your expectations, you can directly override its value.
   ///
@@ -255,6 +257,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         rootNavigator = false,
         showBackgroundTips = false,
         advanceConfigs = {},
+        showToast = false,
         mediaPlayer = ZegoLiveStreamingMediaPlayerConfig(),
         screenSharing = ZegoLiveStreamingScreenSharingConfig(),
         pip = ZegoLiveStreamingPIPConfig(),
@@ -316,6 +319,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         rootNavigator = false,
         showBackgroundTips = false,
         advanceConfigs = {},
+        showToast = false,
         mediaPlayer = ZegoLiveStreamingMediaPlayerConfig(),
         screenSharing = ZegoLiveStreamingScreenSharingConfig(),
         pip = ZegoLiveStreamingPIPConfig(),
@@ -365,6 +369,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
     this.swiping,
     this.avatarBuilder,
     this.audienceAudioVideoResourceMode,
+    this.showToast = false,
     @Deprecated('Use coHost.maxCoHostCount instead$deprecatedTipsV340')
     int? maxCoHostCount,
     @Deprecated(
@@ -1306,7 +1311,7 @@ class ZegoLiveStreamingPIPConfig {
 
   /// android: only available on SDK higher than 31(>=31)
   /// iOS: not limit
-  final bool enableWhenBackground;
+  bool enableWhenBackground;
 
   @override
   String toString() {
