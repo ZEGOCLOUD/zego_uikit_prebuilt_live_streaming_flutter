@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:floating/floating.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
@@ -72,7 +71,7 @@ class _ZegoLiveStreamingPIPButtonState
                   aspectWidth: widget.aspectWidth,
                   aspectHeight: widget.aspectHeight,
                 );
-        if (PiPStatus.enabled != pipStatus) {
+        if (ZegoPiPStatus.enabled != pipStatus) {
           return;
         }
 
