@@ -30,6 +30,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/pk_combine_notifier.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/internal/reporter.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/data.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/defines.dart';
@@ -39,7 +40,6 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/pk/core/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/pk/core/service/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/pk/core/service/services.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/swiping/config.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/internal/reporter.dart';
 
 part 'controller/audio_video.dart';
 

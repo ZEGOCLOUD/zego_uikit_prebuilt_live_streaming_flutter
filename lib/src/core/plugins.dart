@@ -8,8 +8,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
-import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/overlay_machine.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/overlay_machine.dart';
 
 /// @nodoc
 class ZegoLiveStreamingPlugins {
@@ -252,7 +252,7 @@ class ZegoLiveStreamingPlugins {
     } else {
       if (ZegoPluginAdapter().getPlugin(ZegoUIKitPluginType.signaling) !=
           null) {
-        if(signalingPluginConfig?.leaveRoomOnDispose ?? true) {
+        if (signalingPluginConfig?.leaveRoomOnDispose ?? true) {
           await ZegoUIKit().getSignalingPlugin().leaveRoom();
         }
 
@@ -260,7 +260,7 @@ class ZegoLiveStreamingPlugins {
         // await ZegoUIKit().getSignalingPlugin().logout();
         /// not need destroy signaling sdk
         ///
-        if(signalingPluginConfig?.uninitOnDispose ?? true) {
+        if (signalingPluginConfig?.uninitOnDispose ?? true) {
           await ZegoUIKit().getSignalingPlugin().uninit(forceDestroy: false);
         }
       }

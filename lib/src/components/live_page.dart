@@ -216,7 +216,8 @@ class _ZegoLiveStreamingLivePageState extends State<ZegoLiveStreamingLivePage>
         subTag: 'prebuilt',
       );
     }
-    ZegoLoggerService.logError(
+
+    ZegoLoggerService.logInfo(
       'login room done:${result.errorCode},${result.extendedData}, '
       'room id:${ZegoUIKit().getRoom().id}',
       tag: 'live-streaming',
