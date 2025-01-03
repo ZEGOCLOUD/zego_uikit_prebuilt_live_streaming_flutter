@@ -167,10 +167,6 @@ class _ZegoLiveStreamingLivePageState extends State<ZegoLiveStreamingLivePage>
     }
 
     ZegoLiveStreamingManagers().updateContextQuery(null);
-
-    widget.config.outsideLives.controller?.private.private.init().then((_) {
-      widget.config.outsideLives.controller?.private.private.forceUpdate();
-    });
   }
 
   void joinRoomWaitEngineCreated() {
