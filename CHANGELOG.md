@@ -1,3 +1,19 @@
+## 3.13.11
+
+- Bugs
+  - PK
+    - Fix the issue of receiving multiple PK invitations when mixing multiple Kits (multiple subscription events cause by multiple Kits mixed).
+    - Fix the issue that the host video is not rendered during PK (after cross-room pull-based streaming, the data drive is invalid, causing the interface to not refresh).
+  - live-list
+    - Add new configs in **style**; you can set **scrollAxisCount** to support multi-row and multi-column masonry layout, and set the AspectRatio of item through **itemAspectRatio**.
+    - Fix the issue of video not rendering on multiple scene
+      - If the AppID use cdn resource mode to play streaming when not publish streaming, there is no device state callback to trigger rendering.
+      - Switch the live-list to another widget and switch back
+      - Enter LIVE from live-list and then exit LIVE
+      - When scrolling through the list
+    - Fixed the issue where the host audio was played (should only play the video, not the audio).
+    - Fixed flicker issue
+  - Add **signalingPlugin** to **config** to fix the issue of not receiving invitations again when exiting LIVE(please set **uninitOnDispose** to false) if using LIVE and call-invitation at the same time.
 
 
 
