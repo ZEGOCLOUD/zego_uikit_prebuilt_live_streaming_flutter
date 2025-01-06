@@ -104,12 +104,15 @@ class ZegoUIKitPrebuiltLiveStreamingInnerText {
   String repeatInviteCoHostFailedToast;
 
   /// message's place holder
+  /// The **default value** is *"Say something..."*
   String messageEmptyToast;
 
   /// user enter tips in message
+  /// The **default value** is *"entered"*
   String userEnter;
 
   /// user leave tips in message
+  /// The **default value** is *"left"*
   String userLeave;
 
   /// Info for camera permission request dialog.
@@ -122,10 +125,10 @@ class ZegoUIKitPrebuiltLiveStreamingInnerText {
 
   /// Info for microphone permission request dialog.
   /// The **default values** are:
-  /// - Title: ""
-  /// - Message: ""
-  /// - Cancel button name: ""
-  /// - Confirm button name: ""
+  /// - Title: "Can not use Microphone!"
+  /// - Message: "Please enable microphone access in the system settings!"
+  /// - Cancel button name: "Cancel"
+  /// - Confirm button name: "Settings"
   ZegoLiveStreamingDialogInfo microphonePermissionSettingDialogInfo;
 
   /// The dialog info for the host when receiving a request from an audience to join co-hosting.

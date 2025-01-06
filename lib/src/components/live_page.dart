@@ -167,10 +167,6 @@ class _ZegoLiveStreamingLivePageState extends State<ZegoLiveStreamingLivePage>
     }
 
     ZegoLiveStreamingManagers().updateContextQuery(null);
-
-    widget.config.outsideLives.controller?.private.private.init().then((_) {
-      widget.config.outsideLives.controller?.private.private.forceUpdate();
-    });
   }
 
   void joinRoomWaitEngineCreated() {
@@ -207,7 +203,8 @@ class _ZegoLiveStreamingLivePageState extends State<ZegoLiveStreamingLivePage>
         subTag: 'prebuilt',
       );
     }
-    ZegoLoggerService.logError(
+
+    ZegoLoggerService.logInfo(
       'login room done:${result.errorCode},${result.extendedData}, '
       'room id:${ZegoUIKit().getRoom().id}',
       tag: 'live-streaming',

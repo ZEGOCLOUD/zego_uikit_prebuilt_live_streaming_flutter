@@ -8,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
+import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/overlay_machine.dart';
 
 /// @nodoc
@@ -21,6 +22,7 @@ class ZegoLiveStreamingPlugins {
     required this.roomID,
     required this.plugins,
     this.onPluginReLogin,
+    this.signalingPluginConfig,
     this.beautyConfig,
     this.onError,
   }) {
@@ -36,6 +38,7 @@ class ZegoLiveStreamingPlugins {
 
   final String roomID;
 
+  final ZegoLiveStreamingSignalingPluginConfig? signalingPluginConfig;
   final ZegoBeautyPluginConfig? beautyConfig;
 
   final List<IZegoUIKitPlugin> plugins;
@@ -249,12 +252,17 @@ class ZegoLiveStreamingPlugins {
     } else {
       if (ZegoPluginAdapter().getPlugin(ZegoUIKitPluginType.signaling) !=
           null) {
-        await ZegoUIKit().getSignalingPlugin().leaveRoom();
+        if (signalingPluginConfig?.leaveRoomOnDispose ?? true) {
+          await ZegoUIKit().getSignalingPlugin().leaveRoom();
+        }
 
         /// not need logout
         // await ZegoUIKit().getSignalingPlugin().logout();
         /// not need destroy signaling sdk
-        await ZegoUIKit().getSignalingPlugin().uninit(forceDestroy: false);
+        ///
+        if (signalingPluginConfig?.uninitOnDispose ?? true) {
+          await ZegoUIKit().getSignalingPlugin().uninit(forceDestroy: false);
+        }
       }
     }
 

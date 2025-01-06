@@ -133,16 +133,69 @@ class ZegoLiveStreamingOutsideLiveList extends StatefulWidget {
 
 class _ZegoLiveStreamingOutsideLiveListState
     extends State<ZegoLiveStreamingOutsideLiveList> {
+  final roomLogoutNotifier = ValueNotifier<bool>(true);
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (null != widget.config.audioVideoResourceMode) {
+      ZegoUIKit().setAudioVideoResourceMode(
+        widget.config.audioVideoResourceMode!,
+      );
+    }
+
+    roomLogoutNotifier.value = ZegoRoomStateChangedReason.Logout ==
+        ZegoUIKit().getRoomStateStream().value.reason;
+    if (!roomLogoutNotifier.value) {
+      ZegoUIKit().getRoomStateStream().addListener(onRoomStateUpdated);
+    }
+  }
+
+  @override
+  dispose() {
+    super.dispose();
+
+    ZegoUIKit().getRoomStateStream().removeListener(onRoomStateUpdated);
+
+    if (null != widget.config.audioVideoResourceMode) {
+      ZegoUIKit().setAudioVideoResourceMode(
+        ZegoAudioVideoResourceMode.defaultMode,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return ZegoOutsideRoomAudioVideoViewList(
-      appID: widget.appID,
-      controller: widget.controller.private,
-      appSign: widget.appSign,
-      token: widget.token,
-      scenario: ZegoScenario.Broadcast,
-      style: widget.style,
-      config: widget.config,
+    return ValueListenableBuilder<bool>(
+      valueListenable: roomLogoutNotifier,
+      builder: (context, isRoomLogout, _) {
+        if (!isRoomLogout) {
+          /// wait previous room logout
+          return widget.style.loadingBuilder?.call(context) ??
+              const CircularProgressIndicator();
+        }
+
+        return ZegoOutsideRoomAudioVideoViewList(
+          appID: widget.appID,
+          controller: widget.controller.private,
+          appSign: widget.appSign,
+          token: widget.token,
+          scenario: ZegoScenario.Broadcast,
+          style: widget.style,
+          config: widget.config,
+        );
+      },
     );
+  }
+
+  void onRoomStateUpdated() {
+    final roomState = ZegoUIKit().getRoomStateStream().value;
+    roomLogoutNotifier.value =
+        ZegoRoomStateChangedReason.Logout == roomState.reason;
+
+    if (roomLogoutNotifier.value) {
+      ZegoUIKit().getRoomStateStream().removeListener(onRoomStateUpdated);
+    }
   }
 }

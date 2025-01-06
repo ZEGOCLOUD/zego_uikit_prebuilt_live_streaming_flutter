@@ -81,6 +81,7 @@ class ZegoLiveStreamingManagers {
         userName: userName,
         roomID: liveID,
         plugins: config.plugins,
+        signalingPluginConfig: config.signalingPlugin,
         beautyConfig: config.beauty,
         onError: events.onError,
       );

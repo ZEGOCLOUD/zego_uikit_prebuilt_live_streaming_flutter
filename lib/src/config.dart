@@ -1,3 +1,6 @@
+// Dart imports:
+import 'dart:math';
+
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
 
@@ -83,6 +86,8 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   ///
   ///<img src = "https://doc.oa.zego.im/Pics/ZegoUIKit/Flutter/live/live_duration.jpeg" width=200 />
   ZegoLiveStreamingDurationConfig duration;
+
+  ZegoLiveStreamingSignalingPluginConfig signalingPlugin;
 
   /// advance beauty config
   ///
@@ -285,6 +290,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         outsideLives = ZegoLiveStreamingOutsideLivesConfig(),
         pkBattle = ZegoLiveStreamingPKBattleConfig(),
         duration = ZegoLiveStreamingDurationConfig(),
+        signalingPlugin = ZegoLiveStreamingSignalingPluginConfig(),
         coHost = ZegoLiveStreamingCoHostConfig(
           stopCoHostingWhenMicCameraOff: false,
           disableCoHostInvitationReceivedDialog: false,
@@ -340,6 +346,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         outsideLives = ZegoLiveStreamingOutsideLivesConfig(),
         pkBattle = ZegoLiveStreamingPKBattleConfig(),
         duration = ZegoLiveStreamingDurationConfig(),
+        signalingPlugin = ZegoLiveStreamingSignalingPluginConfig(),
         coHost = ZegoLiveStreamingCoHostConfig(
           stopCoHostingWhenMicCameraOff: false,
           disableCoHostInvitationReceivedDialog: false,
@@ -386,6 +393,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
     ZegoLiveStreamingMemberListConfig? memberList,
     ZegoLiveStreamingMemberButtonConfig? memberButton,
     ZegoLiveStreamingDurationConfig? duration,
+    ZegoLiveStreamingSignalingPluginConfig? signalingPlugin,
     ZegoLiveStreamingInRoomMessageConfig? message,
     ZegoLiveStreamingTopMenuBarConfig? topMenuBar,
     ZegoLiveStreamingBottomMenuBarConfig? bottomMenuBar,
@@ -414,6 +422,8 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         outsideLives = outsideLives ?? ZegoLiveStreamingOutsideLivesConfig(),
         pkBattle = pkBattle ?? ZegoLiveStreamingPKBattleConfig(),
         duration = duration ?? ZegoLiveStreamingDurationConfig(),
+        signalingPlugin =
+            signalingPlugin ?? ZegoLiveStreamingSignalingPluginConfig(),
         coHost = coHost ?? ZegoLiveStreamingCoHostConfig() {
     this.coHost.turnOnCameraWhenCohosted = turnOnCameraWhenCohosted ??
         () {
@@ -1185,6 +1195,16 @@ class ZegoLiveStreamingDurationConfig {
 
   ZegoLiveStreamingDurationConfig({
     this.isVisible = true,
+  });
+}
+
+class ZegoLiveStreamingSignalingPluginConfig {
+  bool leaveRoomOnDispose;
+  bool uninitOnDispose;
+
+  ZegoLiveStreamingSignalingPluginConfig({
+    this.leaveRoomOnDispose = true,
+    this.uninitOnDispose = true,
   });
 }
 

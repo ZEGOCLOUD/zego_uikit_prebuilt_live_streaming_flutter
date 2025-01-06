@@ -298,6 +298,12 @@ class _ZegoLiveStreamingPreviewPageState
         kickOutNotifier: widget.kickOutNotifier,
       ).then(
         (value) {
+          ZegoLoggerService.logInfo(
+            'started',
+            tag: 'live-streaming',
+            subTag: 'preview page',
+          );
+
           widget.startedNotifier.value = true;
         },
       );
