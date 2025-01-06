@@ -258,7 +258,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
     await ZegoUIKit().resetSoundEffect();
     await ZegoUIKit().resetBeautyEffect();
 
-    await ZegoUIKit().leaveRoom().then((_){
+    await ZegoUIKit().leaveRoom().then((_) {
       widget.config.outsideLives.controller?.private.private.init().then((_) {
         widget.config.outsideLives.controller?.private.private.forceUpdate();
       });
