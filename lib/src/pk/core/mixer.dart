@@ -10,7 +10,6 @@ import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/error.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/pk/core/data.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/pk/core/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/pk/layout/layout.dart';
 
@@ -112,7 +111,7 @@ class ZegoUIKitPrebuiltLiveStreamingPKServiceMixer {
 
     ZegoLoggerService.logInfo(
       'update mixer, '
-      'users:${pkHosts.toSimpleString}, '
+      'users:$pkHosts, '
       'mutedHosts:${mutedUsersNotifier.value}, '
       'task:${_task?.toStringX()}',
       tag: 'live-streaming-pk',

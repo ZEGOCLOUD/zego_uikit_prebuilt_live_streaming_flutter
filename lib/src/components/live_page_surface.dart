@@ -136,7 +136,7 @@ class _ZegoLiveStreamingLivePageSurfaceState
     return Positioned(
       left: 0,
       right: 0,
-      top: 64.zR,
+      top: 5.zR,
       child: ZegoLiveStreamingTopBar(
         config: widget.config,
         events: widget.events,

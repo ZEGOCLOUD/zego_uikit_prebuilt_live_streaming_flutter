@@ -2,6 +2,11 @@
 
 - Merge to version 3.13.11
 
+## 3.13.12
+
+- Bugs
+  - Fix the issue of video not rendering when Enter LIVE from live-list and then exit LIVE
+
 ## 3.13.11
 
 - Bugs
