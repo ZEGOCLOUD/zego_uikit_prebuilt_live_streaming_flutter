@@ -1,3 +1,8 @@
+## 3.14.0-beta.6
+
+- Features
+  - Support for hiding microphone icons for audio & video widgets by `audioVideoView.showMicrophoneStateOnView`
+
 ## 3.14.0-beta.5
 
 - Merge to version 3.13.11
