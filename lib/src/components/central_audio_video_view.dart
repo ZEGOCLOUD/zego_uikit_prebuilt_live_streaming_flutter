@@ -356,7 +356,9 @@ class ZegoLiveStreamingCentralAudioVideoViewState
                 translationText: widget.config.innerText,
                 isPluginEnabled: widget.plugins?.isEnabled ?? false,
                 //  only show if close
-                showMicrophoneStateOnView: !isMicrophoneEnabled,
+                showMicrophoneStateOnView:
+                    widget.config.audioVideoView.showMicrophoneStateOnView &&
+                        !isMicrophoneEnabled,
                 showCameraStateOnView: false,
                 showUserNameOnView:
                     widget.config.audioVideoView.showUserNameOnView,

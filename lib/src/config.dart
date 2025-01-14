@@ -488,6 +488,11 @@ class ZegoLiveStreamingAudioVideoViewConfig {
   /// Set it to true to enable mirroring, which flips the image horizontally.
   bool isVideoMirror;
 
+  /// Whether to display the microphone state on the audio/video view when closed.
+  ///
+  /// Set it to false if you don't want to show on the audio/video view.
+  bool showMicrophoneStateOnView;
+
   /// Whether to display the username on the audio/video view.
   ///
   /// Set it to false if you don't want to show the username on the audio/video view.
@@ -533,6 +538,7 @@ class ZegoLiveStreamingAudioVideoViewConfig {
 
   ZegoLiveStreamingAudioVideoViewConfig({
     this.isVideoMirror = true,
+    this.showMicrophoneStateOnView = true,
     this.showUserNameOnView = true,
     this.showAvatarInAudioMode = true,
     this.showSoundWavesInAudioMode = true,
