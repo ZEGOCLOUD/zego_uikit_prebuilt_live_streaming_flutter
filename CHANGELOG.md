@@ -1,3 +1,12 @@
+## 3.14.0-beta.7
+- Features
+  - support show screen sharing button on top bar
+  - add autoStart param in controller.media.play
+- Bugs
+  - After the kit ends, need to uninstall the plugins installed before.
+  - Fix enableCustomVideoProcessing Occasional Failure
+  - Fix the issue that some variables were not updated in a timely manner in pk
+
 ## 3.14.0-beta.6
 
 - Features
