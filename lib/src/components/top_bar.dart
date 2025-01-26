@@ -17,7 +17,6 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/inner_text.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/mini_button.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
 
 /// @nodoc
 class ZegoLiveStreamingTopBar extends StatefulWidget {
@@ -96,6 +95,7 @@ class _ZegoLiveStreamingTopBarState extends State<ZegoLiveStreamingTopBar> {
         children: [
           ...pipButton(),
           ...minimizingButton(),
+          ...toggleScreenSharingButton(),
         ],
       ),
     );
@@ -165,6 +165,30 @@ class _ZegoLiveStreamingTopBarState extends State<ZegoLiveStreamingTopBar> {
               iconSize: Size(24.zR, 24.zR),
               aspectWidth: widget.config.pip.aspectWidth,
               aspectHeight: widget.config.pip.aspectHeight,
+            ),
+            SizedBox(width: 20.zR),
+          ]
+        : [
+            Container(),
+          ];
+  }
+
+  List<Widget> toggleScreenSharingButton() {
+    return widget.config.topMenuBar.buttons.contains(
+            ZegoLiveStreamingMenuBarButtonName.toggleScreenSharingButton)
+        ? [
+            ZegoScreenSharingToggleButton(
+              buttonSize: Size(52.zR, 52.zR),
+              iconSize: Size(24.zR, 24.zR),
+              onPressed: (isScreenSharing) {},
+              iconStartSharing: ButtonIcon(
+                icon: widget.config.bottomMenuBar.buttonStyle
+                    ?.toggleScreenSharingOnButtonIcon,
+              ),
+              iconStopSharing: ButtonIcon(
+                icon: widget.config.bottomMenuBar.buttonStyle
+                    ?.toggleScreenSharingOffButtonIcon,
+              ),
             ),
             SizedBox(width: 20.zR),
           ]
