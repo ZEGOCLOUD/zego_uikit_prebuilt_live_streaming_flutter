@@ -365,9 +365,9 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
   }
 
   Future<void> _setBeautyConfig() async {
-    if (ZegoPluginAdapter().getPlugin(ZegoUIKitPluginType.beauty) != null) {
-      ZegoUIKit().enableCustomVideoProcessing(true);
-    }
+    ZegoUIKit().enableCustomVideoProcessing(
+      ZegoPluginAdapter().getPlugin(ZegoUIKitPluginType.beauty) != null,
+    );
 
     final useBeautyEffect = widget.config.bottomMenuBar.hostButtons
             .contains(ZegoLiveStreamingMenuBarButtonName.beautyEffectButton) ||

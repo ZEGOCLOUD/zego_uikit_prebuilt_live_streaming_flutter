@@ -262,12 +262,25 @@ class ZegoLiveStreamingPlugins {
         ///
         if (signalingPluginConfig?.uninitOnDispose ?? true) {
           await ZegoUIKit().getSignalingPlugin().uninit(forceDestroy: false);
+
+          ZegoUIKit().uninstallPlugins(
+            plugins
+                .where(
+                    (e) => e.getPluginType() == ZegoUIKitPluginType.signaling)
+                .toList(),
+          );
         }
       }
     }
 
     if (ZegoPluginAdapter().getPlugin(ZegoUIKitPluginType.beauty) != null) {
       await ZegoUIKit().getBeautyPlugin().uninit();
+
+      ZegoUIKit().uninstallPlugins(
+        plugins
+            .where((e) => e.getPluginType() == ZegoUIKitPluginType.beauty)
+            .toList(),
+      );
     }
 
     for (final streamSubscription in subscriptions) {
