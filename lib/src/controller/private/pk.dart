@@ -43,6 +43,8 @@ class ZegoLiveStreamingControllerPKPrivateImpl {
       subTag: 'controller.pk.p',
     );
 
+    pkStateNotifier.value = ZegoLiveStreamingPKBattleState.idle;
+
     ZegoUIKitPrebuiltLiveStreamingPK.instance.pkStateNotifier
         .removeListener(_onPKStateChanged);
   }

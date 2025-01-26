@@ -9,6 +9,8 @@ mixin ZegoLiveStreamingControllerPK {
 /// Here are the APIs related to PK.
 class ZegoLiveStreamingControllerPKImpl
     with ZegoLiveStreamingControllerPKPrivate {
+  ZegoLiveStreamingControllerPKImpl();
+
   /// pk state stream
   ValueNotifier<ZegoLiveStreamingPKBattleState> get stateNotifier =>
       private.pkStateNotifier;
@@ -19,6 +21,16 @@ class ZegoLiveStreamingControllerPKImpl
 
   /// is in pk or not
   bool get isInPK => ZegoUIKitPrebuiltLiveStreamingPK.instance.isInPK;
+
+  String get currentRequestID =>
+      ZegoUIKitPrebuiltLiveStreamingPK.instance.currentRequestID;
+
+  String get currentInitiatorID =>
+      ZegoUIKit()
+          .getSignalingPlugin()
+          .getAdvanceInitiator(currentRequestID)
+          ?.userID ??
+      '';
 
   ///  the host list in invitation or in PK.
   List<AdvanceInvitationUser> getHosts(String requestID) {

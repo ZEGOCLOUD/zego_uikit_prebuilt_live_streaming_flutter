@@ -72,7 +72,7 @@ class ZegoUIKitPrebuiltLiveStreamingPKServiceMixer {
     await stopPlayStream();
 
     _isMuting = false;
-    mutedUsersNotifier.value.clear();
+    mutedUsersNotifier.value = [];
     _mixerID = '';
     ZegoUIKit().getRoomStateStream().removeListener(_onRoomStateChanged);
 
@@ -159,10 +159,14 @@ class ZegoUIKitPrebuiltLiveStreamingPKServiceMixer {
     _isMuting = true;
 
     if (isMute) {
-      mutedUsersNotifier.value.addAll(targetHostIDs);
+      mutedUsersNotifier.value = [
+        ... mutedUsersNotifier.value,
+        ...targetHostIDs,
+      ];
     } else {
-      mutedUsersNotifier.value
-          .removeWhere((userID) => targetHostIDs.contains(userID));
+      final currentMutedUsers = List<String>.from(mutedUsersNotifier.value);
+      currentMutedUsers.removeWhere((userID) => targetHostIDs.contains(userID));
+      mutedUsersNotifier.value =currentMutedUsers;
     }
     for (var hostID in targetHostIDs) {
       await ZegoUIKit().muteUserAudio(hostID, isMute);
