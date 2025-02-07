@@ -160,13 +160,13 @@ class ZegoUIKitPrebuiltLiveStreamingPKServiceMixer {
 
     if (isMute) {
       mutedUsersNotifier.value = [
-        ... mutedUsersNotifier.value,
+        ...mutedUsersNotifier.value,
         ...targetHostIDs,
       ];
     } else {
       final currentMutedUsers = List<String>.from(mutedUsersNotifier.value);
       currentMutedUsers.removeWhere((userID) => targetHostIDs.contains(userID));
-      mutedUsersNotifier.value =currentMutedUsers;
+      mutedUsersNotifier.value = currentMutedUsers;
     }
     for (var hostID in targetHostIDs) {
       await ZegoUIKit().muteUserAudio(hostID, isMute);

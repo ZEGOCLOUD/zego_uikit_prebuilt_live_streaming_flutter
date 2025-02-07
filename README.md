@@ -14,6 +14,12 @@ And you can also customize various live streaming features by configuring parame
 
 [![ZEGOCLOUD Live Streaming Feature Intro](https://res.cloudinary.com/marcomontalbano/image/upload/v1682408345/video_to_markdown/images/youtube--yt3NkjIBoMA-c05b58ac6eb4c4700831b2b3070cd403.jpg)](https://www.youtube.com/embed/yt3NkjIBoMA "ZEGOCLOUD Live Streaming Feature Intro")
 
+## Demo
+
+[Demo](https://github.com/yoer/zego_uikits_flutter)
+[Sample Code](https://github.com/ZEGOCLOUD/zego_uikit_prebuilt_live_streaming_example_flutter)
+
+
 ## When do you need the Live Streaming Kit
 
 - Build apps faster and easier
@@ -88,10 +94,6 @@ And you can also customize various live streaming features by configuring parame
 - [Migrating from 2.x to 3.0](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/topics/Migration_v3.x-topic.html#30).
 
 ## More
-
-[Sample Code](https://github.com/ZEGOCLOUD/zego_uikit_prebuilt_live_streaming_example_flutter)
-
-<br />
 
 [Please visit our official website for more details.](https://docs.zegocloud.com/article/14874)
 
