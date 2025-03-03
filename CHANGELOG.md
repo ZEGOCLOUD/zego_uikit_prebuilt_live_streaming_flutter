@@ -1,3 +1,9 @@
+
+## 3.14.0-beta.8
+
+- Bugs
+  - Flutter version 3.29.0 Adaptation
+
 ## 3.14.0-beta.7
 - Features
   - support show screen sharing button on top bar
