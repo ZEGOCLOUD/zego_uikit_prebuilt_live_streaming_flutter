@@ -1,4 +1,9 @@
 
+## 3.14.0-beta.9
+
+- Bugs
+  - Fix the video black screen problem caused by kits mix use
+
 ## 3.14.0-beta.8
 
 - Bugs

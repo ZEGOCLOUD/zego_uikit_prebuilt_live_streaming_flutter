@@ -1,6 +1,6 @@
 name: zego_uikit_prebuilt_live_streaming
 description: PrebuiltLiveStreaming is a full-featured live streaming kit that provides realtime video/audio streaming, live text chat, face beautification, and supports unlimited viewers.
-version: 3.14.0-beta.8
+version: 3.14.0-beta.9
 homepage: https://www.zegocloud.com/
 repository: https://github.com/ZEGOCLOUD/zego_uikit_prebuilt_live_streaming_flutter
 screenshots:
