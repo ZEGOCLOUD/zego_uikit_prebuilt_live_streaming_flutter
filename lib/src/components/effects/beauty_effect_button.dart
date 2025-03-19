@@ -44,8 +44,10 @@ class _ZegoLiveStreamingBeautyEffectButtonState
     return GestureDetector(
       onTap: () async {
         if (ZegoUIKit.instance.getPlugin(ZegoUIKitPluginType.beauty) != null) {
+          /// advance beauty
           ZegoUIKit.instance.getBeautyPlugin().showBeautyUI(context);
         } else {
+          /// base beauty
           showBeautyEffectSheet(
             context,
             translationText: widget.translationText,
