@@ -167,7 +167,7 @@ class ZegoLiveStreamingPlugins {
       });
     });
 
-    await initEffectsPlugins();
+    await initAdvanceEffectsPlugins();
 
     ZegoLoggerService.logInfo(
       'plugins init all done',
@@ -202,26 +202,40 @@ class ZegoLiveStreamingPlugins {
     });
   }
 
-  Future<void> initEffectsPlugins() async {
-    if (ZegoPluginAdapter().getPlugin(ZegoUIKitPluginType.beauty) != null) {
-      ZegoUIKit()
-          .getBeautyPlugin()
-          .setConfig(beautyConfig ?? ZegoBeautyPluginConfig());
-      await ZegoUIKit()
-          .getBeautyPlugin()
-          .init(
-            appID,
-            appSign: appSign,
-            licence: beautyConfig?.license?.call() ?? '',
-          )
-          .then((value) {
-        ZegoLoggerService.logInfo(
-          'effects plugin init done',
-          tag: 'live-streaming',
-          subTag: 'plugin',
-        );
-      });
+  Future<void> initAdvanceEffectsPlugins() async {
+    if (ZegoPluginAdapter().getPlugin(ZegoUIKitPluginType.beauty) == null) {
+      return;
     }
+
+    ZegoUIKit()
+        .getBeautyPlugin()
+        .setConfig(beautyConfig ?? ZegoBeautyPluginConfig());
+    await ZegoUIKit()
+        .getBeautyPlugin()
+        .init(
+          appID,
+          appSign: appSign,
+          licence: beautyConfig?.license?.call() ?? '',
+        )
+        .then((value) {
+      ZegoLoggerService.logInfo(
+        'effects plugin init done',
+        tag: 'live-streaming',
+        subTag: 'plugin',
+      );
+    });
+  }
+
+  Future<void> uninitAdvanceEffectsPlugins() async {
+    if (ZegoPluginAdapter().getPlugin(ZegoUIKitPluginType.beauty) != null) {
+      await ZegoUIKit().getBeautyPlugin().uninit();
+    }
+
+    ZegoUIKit().uninstallPlugins(
+      plugins
+          .where((e) => e.getPluginType() == ZegoUIKitPluginType.beauty)
+          .toList(),
+    );
   }
 
   Future<void> uninit() async {
@@ -266,9 +280,7 @@ class ZegoLiveStreamingPlugins {
       }
     }
 
-    if (ZegoPluginAdapter().getPlugin(ZegoUIKitPluginType.beauty) != null) {
-      await ZegoUIKit().getBeautyPlugin().uninit();
-    }
+    uninitAdvanceEffectsPlugins();
 
     for (final streamSubscription in subscriptions) {
       streamSubscription?.cancel();

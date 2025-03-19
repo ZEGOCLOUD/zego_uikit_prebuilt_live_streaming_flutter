@@ -255,10 +255,13 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
 
     ZegoUIKit().turnCameraOn(false);
     ZegoUIKit().turnMicrophoneOn(false);
-    await ZegoUIKit().resetSoundEffect();
-    await ZegoUIKit().resetBeautyEffect();
+
+    await uninitBaseBeautyConfig();
 
     await ZegoUIKit().leaveRoom().then((_) {
+      /// only effect call after leave room
+      ZegoUIKit().enableCustomVideoProcessing(false);
+
       widget.config.outsideLives.controller?.private.private.init().then((_) {
         widget.config.outsideLives.controller?.private.private.forceUpdate();
       });
@@ -293,7 +296,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
       await ZegoUIKit().setAdvanceConfigs(widget.config.advanceConfigs);
 
       _setVideoConfig();
-      _setBeautyConfig();
+      initBaseBeautyConfig();
 
       ZegoUIKit()
         ..useFrontFacingCamera(widget.config.useFrontFacingCamera)
@@ -336,20 +339,31 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
     );
   }
 
-  Future<void> _setBeautyConfig() async {
-    if (ZegoPluginAdapter().getPlugin(ZegoUIKitPluginType.beauty) != null) {
-      ZegoUIKit().enableCustomVideoProcessing(true);
-    }
-
+  Future<void> initBaseBeautyConfig() async {
     final useBeautyEffect = widget.config.bottomMenuBar.hostButtons
             .contains(ZegoLiveStreamingMenuBarButtonName.beautyEffectButton) ||
         widget.config.bottomMenuBar.coHostButtons
             .contains(ZegoLiveStreamingMenuBarButtonName.beautyEffectButton);
-    if (useBeautyEffect) {
-      await ZegoUIKit()
-          .startEffectsEnv()
-          .then((value) => ZegoUIKit().enableBeauty(true));
+    final useAdvanceEffect =
+        ZegoPluginAdapter().getPlugin(ZegoUIKitPluginType.beauty) != null;
+
+    ZegoUIKit()
+        .enableCustomVideoProcessing(useBeautyEffect || useAdvanceEffect);
+
+    if (!useBeautyEffect || useAdvanceEffect) {
+      return;
     }
+
+    await ZegoUIKit()
+        .startEffectsEnv()
+        .then((value) => ZegoUIKit().enableBeauty(true));
+  }
+
+  Future<void> uninitBaseBeautyConfig() async {
+    await ZegoUIKit().resetSoundEffect();
+    await ZegoUIKit().resetBeautyEffect();
+    await ZegoUIKit().stopEffectsEnv();
+    await ZegoUIKit().enableBeauty(false);
   }
 
   void _initControllerByPrebuilt({
