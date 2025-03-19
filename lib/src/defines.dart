@@ -69,7 +69,7 @@ enum ZegoLiveStreamingMenuBarButtonName {
   ///
   coHostControlButton,
 
-  /// Button for controlling the display or hiding of the beauty effect adjustment panel.
+  /// Button for controlling the display or hiding of the ADVANCE/BASE beauty effect adjustment panel.
   ///
   /// Typically, only the host and co-hosts will be open the camera, so this button is usually displayed on their toolbars.
   beautyEffectButton,
