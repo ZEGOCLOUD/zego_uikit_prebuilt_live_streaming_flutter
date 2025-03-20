@@ -89,6 +89,8 @@ class ZegoLiveStreamingPlugins {
     if (ZegoPluginAdapter().getPlugin(ZegoUIKitPluginType.beauty) != null) {
       subscriptions.add(
           ZegoUIKit().getBeautyPlugin().getErrorStream().listen(onBeautyError));
+
+      ZegoUIKit().enableCustomVideoProcessing(true);
     }
   }
 
@@ -203,7 +205,10 @@ class ZegoLiveStreamingPlugins {
   }
 
   Future<void> initAdvanceEffectsPlugins() async {
-    if (ZegoPluginAdapter().getPlugin(ZegoUIKitPluginType.beauty) == null) {
+    final useAdvanceEffect =
+        ZegoPluginAdapter().getPlugin(ZegoUIKitPluginType.beauty) != null;
+
+    if (!useAdvanceEffect) {
       return;
     }
 

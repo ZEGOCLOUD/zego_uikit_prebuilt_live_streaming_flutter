@@ -88,7 +88,7 @@ class ZegoUIKitPrebuiltLiveStreaming extends StatefulWidget {
 
 class _ZegoUIKitPrebuiltLiveStreamingState
     extends State<ZegoUIKitPrebuiltLiveStreaming> {
-  String get version => "3.13.14";
+  String get version => "3.13.15";
 
   @override
   void initState() {

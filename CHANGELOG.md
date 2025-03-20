@@ -1,6 +1,11 @@
 ## 3.13.14
 
 - Bugs
+  - Fix the video black screen problem in preview
+
+## 3.13.14
+
+- Bugs
   - Fix the video black screen problem caused by kits mix use
 
 ## 3.13.13
