@@ -347,9 +347,6 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
     final useAdvanceEffect =
         ZegoPluginAdapter().getPlugin(ZegoUIKitPluginType.beauty) != null;
 
-    ZegoUIKit()
-        .enableCustomVideoProcessing(useBeautyEffect || useAdvanceEffect);
-
     if (!useBeautyEffect || useAdvanceEffect) {
       return;
     }
