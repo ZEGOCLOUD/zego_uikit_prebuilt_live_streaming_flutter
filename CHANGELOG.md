@@ -1,4 +1,9 @@
-## 3.13.14
+## 3.13.16
+
+- Bugs
+  - Update dependency
+
+## 3.13.15
 
 - Bugs
   - Fix the video black screen problem in preview
