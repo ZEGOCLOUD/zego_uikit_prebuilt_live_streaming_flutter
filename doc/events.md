@@ -1,3 +1,5 @@
+# ZegoUIKitPrebuiltLiveStreamingEvents
+
 - [onLeaveConfirmation](#onleaveconfirmation)
 - [onEnded](#onended)
 - [onStateUpdated](#onstateupdated)
@@ -7,6 +9,7 @@
   - [onLeave](#onleave)
 - [room](#zegouikitprebuiltlivestreamingroomevents)
   - [onStateChanged](#onstatechanged)
+  - [onTokenExpired](#ontokenexpired)
 - [audioVideo](#zegouikitprebuiltlivestreamingaudiovideoevents)
   - [onCameraStateChanged](#oncamerastatechanged)
   - [onFrontFacingCameraStateChanged](#onfrontfacingcamerastatechanged)
@@ -63,6 +66,7 @@
   - [onLongPress](#onlongpress)
 - [duration](#duration)
   - [onUpdate](#onupdate)
+- [media](#media)
 
 ---
 
@@ -347,6 +351,30 @@ the user left the chat room while it was in a normal state (i.e., not minimized)
 >       ),
 >   ),
 >);
+>```
+
+## onTokenExpired
+
+>
+> This callback is triggered when the room token expires.
+>
+>- function prototype:
+>```dart
+>void Function()? onTokenExpired
+>```
+>- example:
+>```dart
+> ZegoUIKitPrebuiltLiveStreaming(
+>   ...
+>   events: ZegoUIKitPrebuiltLiveStreamingEvents(
+>     room: ZegoLiveStreamingRoomEvents(
+>       onTokenExpired: () {
+>         // handle token expired
+>       },
+>     ),
+>   ),
+>   ...
+> );
 >```
 
 # ZegoLiveStreamingAudioVideoEvents
@@ -1762,4 +1790,245 @@ sending a PK battle request to others.
 >   ),
 >   ...
 > );
+>```
+
+# media
+
+> events about media player
+>
+>- function prototype:
+>```dart
+>ZegoUIKitMediaPlayerEvent media
+>```
+>- example:
+>```dart
+> ZegoUIKitPrebuiltLiveStreaming(
+>   ...
+>   events: ZegoUIKitPrebuiltLiveStreamingEvents(
+>     media: ZegoUIKitMediaPlayerEvent(
+>       // media player events
+>     ),
+>   ),
+>   ...
+> );
+>```
+
+# Event Data Structures
+
+## ZegoLiveStreamingEndReason
+
+> The reason why the live streaming ended
+>
+>- function prototype:
+>```dart
+>enum ZegoLiveStreamingEndReason {
+>  /// the live streaming ended due to host ended
+>  hostEnd,
+>
+>  /// local user leave
+>  localLeave,
+>
+>  /// being kicked out
+>  kickOut,
+>}
+>```
+
+## ZegoLiveStreamingLeaveConfirmationEvent
+
+> Event data for leave confirmation
+>
+>- function prototype:
+>```dart
+>class ZegoLiveStreamingLeaveConfirmationEvent {
+>  BuildContext context;
+>
+>  ZegoLiveStreamingLeaveConfirmationEvent({
+>    required this.context,
+>  });
+>}
+>```
+
+## ZegoLiveStreamingEndEvent
+
+> Event data for live streaming end
+>
+>- function prototype:
+>```dart
+>class ZegoLiveStreamingEndEvent {
+>  /// the user ID of who kick you out
+>  String? kickerUserID;
+>
+>  /// end reason
+>  ZegoLiveStreamingEndReason reason;
+>
+>  /// The [isFromMinimizing] it means that the user left the live streaming
+>  /// while it was in a minimized state.
+>  bool isFromMinimizing;
+>
+>  ZegoLiveStreamingEndEvent({
+>    required this.reason,
+>    required this.isFromMinimizing,
+>    this.kickerUserID,
+>  });
+>}
+>```
+
+## ZegoLiveStreamingCoHostHostEventRequestReceivedData
+
+> Event data for co-host request received
+>
+>- function prototype:
+>```dart
+>class ZegoLiveStreamingCoHostHostEventRequestReceivedData {
+>  ZegoUIKitUser audience;
+>  String customData;
+>
+>  ZegoLiveStreamingCoHostHostEventRequestReceivedData({
+>    required this.audience,
+>    required this.customData,
+>  });
+>}
+>```
+
+## ZegoLiveStreamingCoHostHostEventRequestCanceledData
+
+> Event data for co-host request canceled
+>
+>- function prototype:
+>```dart
+>class ZegoLiveStreamingCoHostHostEventRequestCanceledData {
+>  ZegoUIKitUser audience;
+>  String customData;
+>
+>  ZegoLiveStreamingCoHostHostEventRequestCanceledData({
+>    required this.audience,
+>    required this.customData,
+>  });
+>}
+>```
+
+## ZegoLiveStreamingCoHostHostEventRequestTimeoutData
+
+> Event data for co-host request timeout
+>
+>- function prototype:
+>```dart
+>class ZegoLiveStreamingCoHostHostEventRequestTimeoutData {
+>  ZegoUIKitUser audience;
+>
+>  ZegoLiveStreamingCoHostHostEventRequestTimeoutData({
+>    required this.audience,
+>  });
+>}
+>```
+
+## ZegoLiveStreamingCoHostHostEventInvitationSentData
+
+> Event data for co-host invitation sent
+>
+>- function prototype:
+>```dart
+>class ZegoLiveStreamingCoHostHostEventInvitationSentData {
+>  ZegoUIKitUser audience;
+>
+>  ZegoLiveStreamingCoHostHostEventInvitationSentData({
+>    required this.audience,
+>  });
+>}
+>```
+
+## ZegoLiveStreamingCoHostHostEventInvitationTimeoutData
+
+> Event data for co-host invitation timeout
+>
+>- function prototype:
+>```dart
+>class ZegoLiveStreamingCoHostHostEventInvitationTimeoutData {
+>  ZegoUIKitUser audience;
+>
+>  ZegoLiveStreamingCoHostHostEventInvitationTimeoutData({
+>    required this.audience,
+>  });
+>}
+>```
+
+## ZegoLiveStreamingCoHostHostEventInvitationAcceptedData
+
+> Event data for co-host invitation accepted
+>
+>- function prototype:
+>```dart
+>class ZegoLiveStreamingCoHostHostEventInvitationAcceptedData {
+>  ZegoUIKitUser audience;
+>  String customData;
+>
+>  ZegoLiveStreamingCoHostHostEventInvitationAcceptedData({
+>    required this.audience,
+>    required this.customData,
+>  });
+>}
+>```
+
+## ZegoLiveStreamingCoHostHostEventInvitationRefusedData
+
+> Event data for co-host invitation refused
+>
+>- function prototype:
+>```dart
+>class ZegoLiveStreamingCoHostHostEventInvitationRefusedData {
+>  ZegoUIKitUser audience;
+>  String customData;
+>
+>  ZegoLiveStreamingCoHostHostEventInvitationRefusedData({
+>    required this.audience,
+>    required this.customData,
+>  });
+>}
+>```
+
+## ZegoLiveStreamingCoHostAudienceEventRequestAcceptedData
+
+> Event data for audience co-host request accepted
+>
+>- function prototype:
+>```dart
+>class ZegoLiveStreamingCoHostAudienceEventRequestAcceptedData {
+>  String customData;
+>
+>  ZegoLiveStreamingCoHostAudienceEventRequestAcceptedData({
+>    required this.customData,
+>  });
+>}
+>```
+
+## ZegoLiveStreamingCoHostAudienceEventRequestRefusedData
+
+> Event data for audience co-host request refused
+>
+>- function prototype:
+>```dart
+>class ZegoLiveStreamingCoHostAudienceEventRequestRefusedData {
+>  String customData;
+>
+>  ZegoLiveStreamingCoHostAudienceEventRequestRefusedData({
+>    required this.customData,
+>  });
+>}
+>```
+
+## ZegoLiveStreamingCoHostAudienceEventRequestReceivedData
+
+> Event data for audience co-host request received
+>
+>- function prototype:
+>```dart
+>class ZegoLiveStreamingCoHostAudienceEventRequestReceivedData {
+>  ZegoUIKitUser host;
+>  String customData;
+>
+>  ZegoLiveStreamingCoHostAudienceEventRequestReceivedData({
+>    required this.host,
+>    required this.customData,
+>  });
+>}
 >```
