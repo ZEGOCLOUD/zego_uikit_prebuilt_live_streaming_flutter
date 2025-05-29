@@ -1,6 +1,7 @@
-
 - [ZegoUIKitPrebuiltLiveStreaming](#zegouikitprebuiltlivestreaming)
 - [ZegoUIKitPrebuiltLiveStreamingController](#zegouikitprebuiltlivestreamingcontroller)
+  - [version](#version)
+  - [isLeaveRequestingNotifier](#isleaverequestingnotifier)
   - [leave](#leave)
   - [pk](#pk)
     - [stateNotifier](#statenotifier)
@@ -81,11 +82,12 @@
       - [remove](#remove)
       - [addFakeUser](#addfakeuser)
       - [removeFakeUser](#removefakeuser)
+    - [renewToken](#renewtoken)
 
 ---
+
 # ZegoUIKitPrebuiltLiveStreaming
 
->
 > Live Streaming Widget.
 >
 > You can embed this widget into any page of your project to integrate the functionality of a live streaming.
@@ -97,32 +99,47 @@
 >  const ZegoUIKitPrebuiltLiveStreaming({
 >    Key? key,
 >    required this.appID,
->    required this.appSign,
 >    required this.userID,
 >    required this.userName,
 >    required this.liveID,
 >    required this.config,
+>    this.appSign = '',
+>    this.token = '',
 >    this.events,
 >  }) : super(key: key);
 >
->  /// You can create a project and obtain an appID from the [ZEGOCLOUD Admin >Console](https://console.zegocloud.com).
+>  /// You can create a project and obtain an appID from the [ZEGOCLOUD Admin Console](https://console.zegocloud.com).
 >  final int appID;
 >
->  /// You can create a project and obtain an appSign from the [ZEGOCLOUD >Admin Console](https://console.zegocloud.com).
+>  /// log in by using [appID] + [appSign].
+>  ///
+>  /// You can create a project and obtain an appSign from the [ZEGOCLOUD Admin Console](https://console.zegocloud.com).
+>  ///
+>  /// Of course, you can also log in by using [appID] + [token]. For details, see [token].
 >  final String appSign;
+>
+>  /// log in by using [appID] + [token].
+>  ///
+>  /// The token issued by the developer's business server is used to ensure security.
+>  /// Please note that if you want to use [appID] + [token] login, do not assign a value to [appSign]
+>  ///
+>  /// For the generation rules, please refer to [Using Token Authentication] (https://doc-zh.zego.im/article/10360), the default is an empty string, that is, no authentication.
+>  ///
+>  /// if appSign is not passed in or if appSign is empty, this parameter must be set for authentication when logging in to a room.
+>  final String token;
 >
 >  /// The ID of the currently logged-in user.
 >  /// It can be any valid string.
->  /// Typically, you would use the ID from your own user system, such as >Firebase.
+>  /// Typically, you would use the ID from your own user system, such as Firebase.
 >  final String userID;
 >
 >  /// The name of the currently logged-in user.
 >  /// It can be any valid string.
->  /// Typically, you would use the name from your own user system, such as >Firebase.
+>  /// Typically, you would use the name from your own user system, such as Firebase.
 >  final String userName;
 >
 >  /// You can customize the live ID arbitrarily,
->  /// just need to know: users who use the same live ID can talk with each >other.
+>  /// just need to know: users who use the same live ID can talk with each other.
 >  final String liveID;
 >
 >  /// Initialize the configuration for the live-streaming.
@@ -135,12 +152,31 @@
 
 # ZegoUIKitPrebuiltLiveStreamingController
 
->
 > These APIs are categorized as pk, swiping, connect, connect invite, message, minimize, and screen sharing.
 >
-> To make a function call, use like > `ZegoUIKitPrebuiltLiveStreamingController().${category_name}. ${specific_function_name}`, just like:
+> To make a function call, use like `ZegoUIKitPrebuiltLiveStreamingController().${category_name}.${specific_function_name}`, just like:
 > ```dart
 > ZegoUIKitPrebuiltLiveStreamingController().message.send(...);
+> ```
+
+## version
+
+> Get the current version of the SDK.
+>
+> - function prototype:
+>
+> ```dart
+> String get version
+> ```
+
+## isLeaveRequestingNotifier
+
+> A notifier that indicates whether a leave request is currently in progress.
+>
+> - function prototype:
+>
+> ```dart
+> ValueNotifier<bool> get isLeaveRequestingNotifier
 > ```
 
 ## leave
@@ -872,6 +908,14 @@ messages that already exist in the room.
 
 ### viewController
 
+> Get the view controller for screen sharing.
+>
+> - function prototype:
+>
+> ```dart
+> ZegoScreenSharingViewController get viewController
+> ```
+
 ### showViewInFullscreenMode
 
 >
@@ -1215,4 +1259,14 @@ messages that already exist in the room.
 >
 > ```dart
 > void removeFakeUser(ZegoUIKitUser user)
+> ```
+
+### renewToken
+
+> Renew the room token when it's about to expire.
+>
+> - function prototype:
+>
+> ```dart
+> Future<bool> renewToken(String token) async
 > ```
