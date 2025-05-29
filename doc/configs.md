@@ -125,6 +125,12 @@
 >  This mirroring effect only applies to the front-facing camera.
 >  Set it to true to enable mirroring, which flips the image horizontally.
 
+- bool `showMicrophoneStateOnView`:
+>
+>  Whether to display the microphone state on the audio/video view when closed.
+>
+>  Set it to false if you don't want to show on the audio/video view.
+
 - bool `showUserNameOnView`:
 >
 >  Whether to display the username on the audio/video view.

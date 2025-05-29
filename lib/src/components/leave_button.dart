@@ -76,8 +76,9 @@ class _ZegoLiveStreamingLeaveButtonState
       buttonSize: widget.buttonSize,
       iconSize: widget.iconSize,
       icon: ButtonIcon(
-        icon: const Icon(Icons.close, color: Colors.white),
-        backgroundColor: ZegoUIKitDefaultTheme.buttonBackgroundColor,
+        icon: widget.icon?.icon ?? const Icon(Icons.close, color: Colors.white),
+        backgroundColor: widget.icon?.backgroundColor ??
+            ZegoUIKitDefaultTheme.buttonBackgroundColor,
       ),
       clickableNotifier: hangupButtonClickableNotifier,
       onLeaveConfirmation: (context) async {

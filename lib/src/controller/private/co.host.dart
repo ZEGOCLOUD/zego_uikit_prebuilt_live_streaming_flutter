@@ -84,11 +84,14 @@ class ZegoLiveStreamingControllerCoHostPrivateImpl {
 
   void _onCoreManagerInitFinished() {
     if (ZegoLiveStreamingManagers().initializedNotifier.value) {
+      hostNotifier.value =
+          ZegoLiveStreamingManagers().hostManager?.notifier.value;
       ZegoLiveStreamingManagers()
           .hostManager
           ?.notifier
           .addListener(_onHostUpdated);
     } else {
+      hostNotifier.value = null;
       ZegoLiveStreamingManagers()
           .hostManager
           ?.notifier

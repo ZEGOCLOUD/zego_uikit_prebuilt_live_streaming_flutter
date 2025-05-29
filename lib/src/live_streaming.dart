@@ -88,8 +88,6 @@ class ZegoUIKitPrebuiltLiveStreaming extends StatefulWidget {
 
 class _ZegoUIKitPrebuiltLiveStreamingState
     extends State<ZegoUIKitPrebuiltLiveStreaming> {
-  String get version => "3.13.16";
-
   @override
   void initState() {
     ZegoLoggerService.logInfo(
@@ -102,8 +100,8 @@ class _ZegoUIKitPrebuiltLiveStreamingState
 
     ZegoUIKit().getZegoUIKitVersion().then((uikitVersion) {
       ZegoLoggerService.logInfo(
-        'version: zego_uikit_prebuilt_live_streaming:$version; $uikitVersion, \n'
-        'config:${widget.config}, \n'
+        'version: zego_uikit_prebuilt_live_streaming:${ZegoUIKitPrebuiltLiveStreamingController().version}; $uikitVersion, \n'
+        'config:${widget.config.toString()}, \n'
         'events: ${widget.events}, ',
         tag: 'live-streaming',
         subTag: 'prebuilt',
@@ -114,7 +112,8 @@ class _ZegoUIKitPrebuiltLiveStreamingState
       appID: widget.appID,
       signOrToken: widget.appSign.isNotEmpty ? widget.appSign : widget.token,
       params: {
-        ZegoLiveStreamingReporter.eventKeyKitVersion: version,
+        ZegoLiveStreamingReporter.eventKeyKitVersion:
+            ZegoUIKitPrebuiltLiveStreamingController().version,
         ZegoUIKitReporter.eventKeyUserID: widget.userID,
       },
     ).then((_) {

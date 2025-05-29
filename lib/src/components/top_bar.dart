@@ -72,8 +72,39 @@ class _ZegoLiveStreamingTopBarState extends State<ZegoLiveStreamingTopBar> {
 
   @override
   Widget build(BuildContext context) {
+    return Column(
+      children: [
+        buttonsBar(),
+        SizedBox(height: 5.zR),
+        normalBar(),
+      ],
+    );
+  }
+
+  Widget buttonsBar() {
     return Container(
-      margin: widget.config.topMenuBar.margin,
+      margin: widget.config.topMenuBar.margin ??
+          EdgeInsets.symmetric(horizontal: 32.zR),
+      padding: widget.config.topMenuBar.padding,
+      decoration: BoxDecoration(
+        color: widget.config.topMenuBar.backgroundColor ?? Colors.transparent,
+      ),
+      height: widget.config.topMenuBar.height ?? 80.zR,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          ...pipButton(),
+          ...minimizingButton(),
+          ...toggleScreenSharingButton(),
+        ],
+      ),
+    );
+  }
+
+  Widget normalBar() {
+    return Container(
+      margin: widget.config.topMenuBar.margin ??
+          EdgeInsets.symmetric(horizontal: 32.zR),
       padding: widget.config.topMenuBar.padding,
       decoration: BoxDecoration(
         color: widget.config.topMenuBar.backgroundColor ?? Colors.transparent,
@@ -87,8 +118,6 @@ class _ZegoLiveStreamingTopBarState extends State<ZegoLiveStreamingTopBar> {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              ...pipButton(),
-              ...minimizingButton(),
               ZegoLiveStreamingMemberButton(
                 config: widget.config.memberList,
                 events: widget.events.memberList,
@@ -144,6 +173,30 @@ class _ZegoLiveStreamingTopBarState extends State<ZegoLiveStreamingTopBar> {
           ];
   }
 
+  List<Widget> toggleScreenSharingButton() {
+    return widget.config.topMenuBar.buttons.contains(
+            ZegoLiveStreamingMenuBarButtonName.toggleScreenSharingButton)
+        ? [
+            ZegoScreenSharingToggleButton(
+              buttonSize: Size(52.zR, 52.zR),
+              iconSize: Size(24.zR, 24.zR),
+              onPressed: (isScreenSharing) {},
+              iconStartSharing: ButtonIcon(
+                icon: widget.config.bottomMenuBar.buttonStyle
+                    ?.toggleScreenSharingOnButtonIcon,
+              ),
+              iconStopSharing: ButtonIcon(
+                icon: widget.config.bottomMenuBar.buttonStyle
+                    ?.toggleScreenSharingOffButtonIcon,
+              ),
+            ),
+            SizedBox(width: 20.zR),
+          ]
+        : [
+            Container(),
+          ];
+  }
+
   List<Widget> closeButton() {
     return widget.config.topMenuBar.showCloseButton
         ? [
@@ -178,46 +231,41 @@ class _ZegoLiveStreamingTopBarState extends State<ZegoLiveStreamingTopBar> {
           return Container();
         }
 
-        return Row(
-          children: [
-            SizedBox(width: 32.zR),
-            GestureDetector(
-              onTap: () {
-                widget.events.topMenuBar.onHostAvatarClicked?.call(host);
-              },
-              child: widget.config.topMenuBar.hostAvatarBuilder?.call(host) ??
-                  SizedBox(
-                    height: 68.zR,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: ZegoUIKitDefaultTheme.buttonBackgroundColor,
-                        borderRadius: BorderRadius.circular(68.zR),
-                      ),
-                      child: Row(
-                        children: [
-                          SizedBox(width: 6.zR),
-                          ZegoAvatar(
-                            user: host,
-                            avatarSize: Size(56.zR, 56.zR),
-                            showSoundLevel: false,
-                            avatarBuilder: widget.config.avatarBuilder,
-                          ),
-                          SizedBox(width: 12.zR),
-                          Text(
-                            host.name,
-                            style: TextStyle(
-                              fontSize: 24.zR,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                          SizedBox(width: 24.zR),
-                        ],
-                      ),
-                    ),
+        return GestureDetector(
+          onTap: () {
+            widget.events.topMenuBar.onHostAvatarClicked?.call(host);
+          },
+          child: widget.config.topMenuBar.hostAvatarBuilder?.call(host) ??
+              SizedBox(
+                height: 68.zR,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: ZegoUIKitDefaultTheme.buttonBackgroundColor,
+                    borderRadius: BorderRadius.circular(68.zR),
                   ),
-            ),
-          ],
+                  child: Row(
+                    children: [
+                      SizedBox(width: 6.zR),
+                      ZegoAvatar(
+                        user: host,
+                        avatarSize: Size(56.zR, 56.zR),
+                        showSoundLevel: false,
+                        avatarBuilder: widget.config.avatarBuilder,
+                      ),
+                      SizedBox(width: 12.zR),
+                      Text(
+                        host.name,
+                        style: TextStyle(
+                          fontSize: 24.zR,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                      SizedBox(width: 24.zR),
+                    ],
+                  ),
+                ),
+              ),
         );
       },
     );
