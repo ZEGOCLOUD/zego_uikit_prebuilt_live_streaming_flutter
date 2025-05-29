@@ -272,7 +272,11 @@ class _ZegoLiveStreamingBottomBarState
                 .minimizeData
                 ?.isPrebuiltFromMinimizing ??
             false) ||
-        ZegoUIKitPrebuiltLiveStreamingController().pip.private.isRestoreFromPIP;
+        ZegoUIKitPrebuiltLiveStreamingController()
+            .pip
+            .private
+            .pipImpl()
+            .isRestoredFromPIP;
 
     final buttonList = sortDisplayButtons(
       getDefaultButtons(

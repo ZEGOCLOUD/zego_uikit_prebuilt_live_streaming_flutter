@@ -356,7 +356,9 @@ class ZegoLiveStreamingCentralAudioVideoViewState
                 translationText: widget.config.innerText,
                 isPluginEnabled: widget.plugins?.isEnabled ?? false,
                 //  only show if close
-                showMicrophoneStateOnView: !isMicrophoneEnabled,
+                showMicrophoneStateOnView:
+                    widget.config.audioVideoView.showMicrophoneStateOnView &&
+                        !isMicrophoneEnabled,
                 showCameraStateOnView: false,
                 showUserNameOnView:
                     widget.config.audioVideoView.showUserNameOnView,
@@ -419,7 +421,14 @@ class ZegoLiveStreamingCentralAudioVideoViewState
   }
 
   List<ZegoUIKitUser> audioVideoViewFilter(List<ZegoUIKitUser> users) {
+    final screenSharingUserIDList =
+        ZegoUIKit().getScreenSharingList().map((e) => e.id).toList();
     users.removeWhere((targetUser) {
+      if (screenSharingUserIDList.contains(targetUser.id)) {
+        /// not filter screen sharing
+        return false;
+      }
+
       if (null != widget.config.audioVideoView.visible) {
         var targetUserRole = ZegoLiveStreamingRole.coHost;
         if (ZegoLiveStreamingManagers().hostManager?.isHost(targetUser) ??

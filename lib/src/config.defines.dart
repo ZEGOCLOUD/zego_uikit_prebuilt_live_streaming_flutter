@@ -1,5 +1,6 @@
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
@@ -73,6 +74,14 @@ class ZegoLiveStreamingMenuBarExtendButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return child;
+  }
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+    return 'ZegoLiveStreamingMenuBarExtendButton:{'
+        'index:$index, '
+        'child:$child, '
+        '}';
   }
 }
 
@@ -185,6 +194,35 @@ class ZegoLiveStreamingBottomMenuBarButtonStyle {
     this.toggleScreenSharingOnButtonIcon,
     this.toggleScreenSharingOffButtonIcon,
   });
+
+  @override
+  String toString() {
+    return 'ZegoLiveStreamingBottomMenuBarButtonStyle:{'
+        'chatEnabledButtonIcon:${chatEnabledButtonIcon != null}, '
+        'chatDisabledButtonIcon:${chatDisabledButtonIcon != null}, '
+        'toggleMicrophoneOnButtonIcon:${toggleMicrophoneOnButtonIcon != null}, '
+        'toggleMicrophoneOffButtonIcon:${toggleMicrophoneOffButtonIcon != null}, '
+        'toggleCameraOnButtonIcon:${toggleCameraOnButtonIcon != null}, '
+        'toggleCameraOffButtonIcon:${toggleCameraOffButtonIcon != null}, '
+        'switchCameraButtonIcon:${switchCameraButtonIcon != null}, '
+        'switchAudioOutputToSpeakerButtonIcon:${switchAudioOutputToSpeakerButtonIcon != null}, '
+        'switchAudioOutputToHeadphoneButtonIcon:${switchAudioOutputToHeadphoneButtonIcon != null}, '
+        'switchAudioOutputToBluetoothButtonIcon:${switchAudioOutputToBluetoothButtonIcon != null}, '
+        'leaveButtonIcon:${leaveButtonIcon != null}, '
+        'requestCoHostButtonIcon:${requestCoHostButtonIcon != null}, '
+        'requestCoHostButtonText:$requestCoHostButtonText, '
+        'cancelRequestCoHostButtonIcon:${cancelRequestCoHostButtonIcon != null}, '
+        'cancelRequestCoHostButtonText:$cancelRequestCoHostButtonText, '
+        'endCoHostButtonIcon:${endCoHostButtonIcon != null}, '
+        'endCoHostButtonText:$endCoHostButtonText, '
+        'beautyEffectButtonIcon:${beautyEffectButtonIcon != null}, '
+        'soundEffectButtonIcon:${soundEffectButtonIcon != null}, '
+        'enableChatButtonIcon:${enableChatButtonIcon != null}, '
+        'disableChatButtonIcon:${disableChatButtonIcon != null}, '
+        'toggleScreenSharingOnButtonIcon:${toggleScreenSharingOnButtonIcon != null}, '
+        'toggleScreenSharingOffButtonIcon:${toggleScreenSharingOffButtonIcon != null}, '
+        '}';
+  }
 }
 
 class ZegoLiveStreamingCoHostConfig {
@@ -225,4 +263,15 @@ class ZegoLiveStreamingCoHostConfig {
     this.stopCoHostingWhenMicCameraOff = false,
     this.disableCoHostInvitationReceivedDialog = false,
   });
+
+  @override
+  String toString() {
+    return 'ZegoLiveStreamingCoHostConfig:{'
+        'turnOnCameraWhenCohosted:${turnOnCameraWhenCohosted != null}, '
+        'stopCoHostingWhenMicCameraOff:$stopCoHostingWhenMicCameraOff, '
+        'disableCoHostInvitationReceivedDialog:$disableCoHostInvitationReceivedDialog, '
+        'maxCoHostCount:$maxCoHostCount, '
+        'inviteTimeoutSecond:$inviteTimeoutSecond, '
+        '}';
+  }
 }

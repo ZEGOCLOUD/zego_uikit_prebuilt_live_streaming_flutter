@@ -38,6 +38,9 @@ class ZegoUIKitPrebuiltLiveStreamingEvents {
   /// events about duration
   ZegoLiveStreamingDurationEvents duration;
 
+  /// events about media
+  ZegoUIKitMediaPlayerEvent media;
+
   /// Confirmation callback method before leaving the live streaming.
   ///
   /// If you want to perform more complex business logic before exiting the live streaming, such as updating some records to the backend, you can use the [onLeaveConfirmation] parameter to set it.
@@ -119,6 +122,7 @@ class ZegoUIKitPrebuiltLiveStreamingEvents {
     ZegoLiveStreamingMemberListEvents? memberList,
     ZegoLiveStreamingInRoomMessageEvents? inRoomMessage,
     ZegoLiveStreamingDurationEvents? duration,
+    ZegoUIKitMediaPlayerEvent? media,
   })  : user = user ?? ZegoLiveStreamingUserEvents(),
         room = room ?? ZegoLiveStreamingRoomEvents(),
         audioVideo = audioVideo ?? ZegoLiveStreamingAudioVideoEvents(),
@@ -127,7 +131,8 @@ class ZegoUIKitPrebuiltLiveStreamingEvents {
         topMenuBar = topMenuBar ?? ZegoLiveStreamingTopMenuBarEvents(),
         memberList = memberList ?? ZegoLiveStreamingMemberListEvents(),
         inRoomMessage = inRoomMessage ?? ZegoLiveStreamingInRoomMessageEvents(),
-        duration = duration ?? ZegoLiveStreamingDurationEvents();
+        duration = duration ?? ZegoLiveStreamingDurationEvents(),
+        media = media ?? ZegoUIKitMediaPlayerEvent();
 }
 
 /// events about user

@@ -1,3 +1,21 @@
+
+## 3.14.0
+
+- Features
+  - Support playing multimedia (video/audio) directly.
+    - API: Add **defaultPlayer** in **ZegoUIKitPrebuiltLiveStreamingController().media**. play on default player through **sharing/show/hide** API
+    - Config: Add **ZegoLiveStreamingMediaPlayerDefaultPlayerConfig** in **ZegoLiveStreamingMediaPlayerConfig**
+  - Support PIP in iOS, default is open, you can set **ZegoLiveStreamingPIPIOSConfig.pip.iOS.support** to false to turn off
+  - support show screen sharing button on top bar
+  - add autoStart param in controller.media.play
+  - Support for hiding microphone icons for audio & video widgets by `audioVideoView.showMicrophoneStateOnView`
+  - Modify the in-app minimization interface
+- Bugs
+  - After the kit ends, need to uninstall the plugins installed before.
+  - Fix enableCustomVideoProcessing Occasional Failure
+  - Fix the issue that some variables were not updated in a timely manner in pk
+  - Fix the video black screen problem caused by kits mix use
+
 ## 3.13.16
 
 - Bugs
@@ -17,8 +35,7 @@
 
 - Bugs
   - Flutter version 3.29.0 Adaptation
-
-
+  
 ## 3.13.12
 
 - Bugs
@@ -40,6 +57,7 @@
     - Fixed the issue where the host audio was played (should only play the video, not the audio).
     - Fixed flicker issue
   - Add **signalingPlugin** to **config** to fix the issue of not receiving invitations again when exiting LIVE(please set **uninitOnDispose** to false) if using LIVE and call-invitation at the same time.
+
 
 ## 3.13.10
 

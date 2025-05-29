@@ -28,6 +28,14 @@ class ZegoLiveStreamingControllerScreenImplPrivateImpl {
       viewController.private.autoStopSettings.canEnd =
           config.screenSharing.autoStop.canEnd;
     }
+
+    viewController.private.defaultFullScreen =
+        config?.screenSharing.defaultFullScreen ?? false;
+
+    viewController.private.sharingTipText =
+        config?.innerText.screenSharingTipText;
+    viewController.private.stopSharingButtonText =
+        config?.innerText.stopScreenSharingButtonText;
   }
 
   /// Please do not call this interface. It is the internal logic of Prebuilt.

@@ -37,6 +37,21 @@ class ZegoLiveStreamingStatusManager {
   var notifier = ValueNotifier<LiveStatus>(LiveStatus.notStart);
   List<StreamSubscription<dynamic>?> subscriptions = [];
 
+  Future<void> checkShouldStopPlayAllAudioVideo() async {
+    final needStop =
+        !hostManager.isLocalHost && notifier.value != LiveStatus.living;
+    ZegoLoggerService.logInfo(
+      'checkShouldStopPlayAllAudioVideo, need stop:$needStop',
+      tag: 'live-streaming',
+      subTag: 'live status manager',
+    );
+
+    if (needStop) {
+      /// audience, stop play first if not living, wait living to start play
+      await ZegoUIKit().stopPlayAllAudioVideo();
+    }
+  }
+
   Future<void> init() async {
     if (_initialized) {
       ZegoLoggerService.logInfo(
@@ -58,11 +73,6 @@ class ZegoLiveStreamingStatusManager {
 
     onLiveStatusUpdated();
     notifier.addListener(onLiveStatusUpdated);
-
-    if (!hostManager.isLocalHost && notifier.value != LiveStatus.living) {
-      /// audience, stop play first if not living, wait living to start play
-      ZegoUIKit().stopPlayAllAudioVideo();
-    }
 
     if (hostManager.isLocalHost) {
       ZegoLoggerService.logInfo(

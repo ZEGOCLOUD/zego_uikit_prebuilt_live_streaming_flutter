@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 
 // Package imports:
+import 'package:zego_plugin_adapter/zego_plugin_adapter.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
@@ -120,7 +121,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   /// Even if the user is an audience, they can set this value to true, but in general, if the role is an audience, this value should be set to false.
   bool turnOnCameraWhenJoining;
 
-  /// if you want to join the video conference with your front camera, set this value to true.
+  /// if you want to join the live streaming with your front camera, set this value to true.
   /// The default value is `true`.
   bool useFrontFacingCamera;
 
@@ -442,6 +443,50 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
 
     layout ??= ZegoLayout.pictureInPicture();
   }
+
+  @override
+  String toString() {
+    return 'ZegoUIKitPrebuiltLiveStreamingConfig:{'
+        'video:$video, '
+        'audioVideoView:$audioVideoView, '
+        'mediaPlayer:$mediaPlayer, '
+        'screenSharing:$screenSharing, '
+        'pip:$pip, '
+        'topMenuBar:$topMenuBar, '
+        'bottomMenuBar:$bottomMenuBar, '
+        'memberButton:$memberButton, '
+        'memberList:$memberList, '
+        'inRoomMessage:$inRoomMessage, '
+        'effect:$effect, '
+        'preview:$preview, '
+        'outsideLives:$outsideLives, '
+        'pkBattle:$pkBattle, '
+        'duration:$duration, '
+        'signalingPlugin:$signalingPlugin, '
+        'beauty:${beauty != null}, '
+        'swiping:${swiping != null}, '
+        'coHost:$coHost, '
+        'role:$role, '
+        'plugins:$plugins, '
+        'turnOnCameraWhenJoining:$turnOnCameraWhenJoining, '
+        'useFrontFacingCamera:$useFrontFacingCamera, '
+        'turnOnMicrophoneWhenJoining:$turnOnMicrophoneWhenJoining, '
+        'useSpeakerWhenJoining:$useSpeakerWhenJoining, '
+        'confirmDialogInfo:${confirmDialogInfo != null}, '
+        'innerText:$innerText, '
+        'layout:${layout != null}, '
+        'rootNavigator:$rootNavigator, '
+        'avatarBuilder:${avatarBuilder != null}, '
+        'markAsLargeRoom:$markAsLargeRoom, '
+        'slideSurfaceToHide:$slideSurfaceToHide, '
+        'foreground:${foreground != null}, '
+        'background:${background != null}, '
+        'showBackgroundTips:$showBackgroundTips, '
+        'advanceConfigs:$advanceConfigs, '
+        'audienceAudioVideoResourceMode:${audienceAudioVideoResourceMode != null}, '
+        'showToast:$showToast, '
+        '}';
+  }
 }
 
 /// Configuration options for audio/video views.
@@ -488,6 +533,11 @@ class ZegoLiveStreamingAudioVideoViewConfig {
   /// Set it to true to enable mirroring, which flips the image horizontally.
   bool isVideoMirror;
 
+  /// Whether to display the microphone state on the audio/video view when closed.
+  ///
+  /// Set it to false if you don't want to show on the audio/video view.
+  bool showMicrophoneStateOnView;
+
   /// Whether to display the username on the audio/video view.
   ///
   /// Set it to false if you don't want to show the username on the audio/video view.
@@ -533,6 +583,7 @@ class ZegoLiveStreamingAudioVideoViewConfig {
 
   ZegoLiveStreamingAudioVideoViewConfig({
     this.isVideoMirror = true,
+    this.showMicrophoneStateOnView = true,
     this.showUserNameOnView = true,
     this.showAvatarInAudioMode = true,
     this.showSoundWavesInAudioMode = true,
@@ -545,6 +596,25 @@ class ZegoLiveStreamingAudioVideoViewConfig {
     this.containerBuilder,
     this.containerRect,
   });
+
+  @override
+  String toString() {
+    return 'ZegoLiveStreamingAudioVideoViewConfig:{'
+        'visible:${visible != null}, '
+        'playCoHostAudio:${playCoHostAudio != null}, '
+        'playCoHostVideo:${playCoHostVideo != null}, '
+        'isVideoMirror:$isVideoMirror, '
+        'showMicrophoneStateOnView:$showMicrophoneStateOnView, '
+        'showUserNameOnView:$showUserNameOnView, '
+        'useVideoViewAspectFill:$useVideoViewAspectFill, '
+        'showAvatarInAudioMode:$showAvatarInAudioMode, '
+        'showSoundWavesInAudioMode:$showSoundWavesInAudioMode, '
+        'containerBuilder:${containerBuilder != null}, '
+        'containerRect:${containerRect != null}, '
+        'foregroundBuilder:${foregroundBuilder != null}, '
+        'backgroundBuilder:${backgroundBuilder != null}, '
+        '}';
+  }
 }
 
 /// Configuration options for the top menu bar (toolbar).
@@ -581,6 +651,19 @@ class ZegoLiveStreamingTopMenuBarConfig {
     this.hostAvatarBuilder,
     this.showCloseButton = true,
   });
+
+  @override
+  String toString() {
+    return 'ZegoLiveStreamingTopMenuBarConfig:{'
+        'buttons:$buttons, '
+        'padding:$padding, '
+        'margin:$margin, '
+        'backgroundColor:$backgroundColor, '
+        'height:$height, '
+        'hostAvatarBuilder:${hostAvatarBuilder != null}, '
+        'showCloseButton:$showCloseButton, '
+        '}';
+  }
 }
 
 /// Configuration options for the bottom menu bar (toolbar).
@@ -663,6 +746,25 @@ class ZegoLiveStreamingBottomMenuBarConfig {
     this.backgroundColor,
     this.height,
   });
+
+  @override
+  String toString() {
+    return 'ZegoLiveStreamingBottomMenuBarConfig:{'
+        'showInRoomMessageButton:$showInRoomMessageButton, '
+        'hostButtons:$hostButtons, '
+        'coHostButtons:$coHostButtons, '
+        'audienceButtons:$audienceButtons, '
+        'hostExtendButtons:$hostExtendButtons, '
+        'coHostExtendButtons:$coHostExtendButtons, '
+        'audienceExtendButtons:$audienceExtendButtons, '
+        'maxCount:$maxCount, '
+        'buttonStyle:$buttonStyle, '
+        'padding:$padding, '
+        'margin:$margin, '
+        'backgroundColor:$backgroundColor, '
+        'height:$height, '
+        '}';
+  }
 }
 
 /// Configuration for the member button of top bar.
@@ -681,6 +783,15 @@ class ZegoLiveStreamingMemberButtonConfig {
     this.icon,
     this.backgroundColor,
   });
+
+  @override
+  String toString() {
+    return 'ZegoLiveStreamingMemberButtonConfig:{'
+        'builder:${builder != null}, '
+        'icon:${icon != null}, '
+        'backgroundColor:$backgroundColor, '
+        '}';
+  }
 }
 
 /// Configuration for the member list.
@@ -716,6 +827,14 @@ class ZegoLiveStreamingMemberListConfig {
     this.itemBuilder,
     this.showFakeUser = true,
   });
+
+  @override
+  String toString() {
+    return 'ZegoLiveStreamingMemberListConfig:{'
+        'itemBuilder:${itemBuilder != null}, '
+        'showFakeUser:$showFakeUser, '
+        '}';
+  }
 }
 
 /// Control options for the bottom-left message list.
@@ -802,6 +921,14 @@ class ZegoLiveStreamingInRoomMessageConfig {
   /// display chat message list view or not
   bool visible;
 
+  /// resend button icon
+  Widget? resendIcon;
+
+  /// show fake message or not
+  ///
+  ///  [ZegoUIKitPrebuiltLiveStreamingController().message.sendFakeMessage()]
+  bool showFakeMessage;
+
   /// display user name in message list view or not
   bool showName;
 
@@ -841,14 +968,6 @@ class ZegoLiveStreamingInRoomMessageConfig {
   /// The paddings of chat message list items
   EdgeInsetsGeometry? paddings;
 
-  /// resend button icon
-  Widget? resendIcon;
-
-  /// show fake message or not
-  ///
-  ///  [ZegoUIKitPrebuiltLiveStreamingController().message.sendFakeMessage()]
-  bool showFakeMessage;
-
   ZegoLiveStreamingInRoomMessageConfig({
     this.visible = true,
     this.notifyUserJoin = false,
@@ -877,6 +996,38 @@ class ZegoLiveStreamingInRoomMessageConfig {
     this.showAvatar = true,
     this.showFakeMessage = true,
   });
+
+  @override
+  String toString() {
+    return 'ZegoLiveStreamingInRoomMessageConfig:{'
+        'itemBuilder:${itemBuilder != null}, '
+        'avatarLeadingBuilder:${avatarLeadingBuilder != null}, '
+        'avatarTailingBuilder:${avatarTailingBuilder != null}, '
+        'nameLeadingBuilder:${nameLeadingBuilder != null}, '
+        'nameTailingBuilder:${nameTailingBuilder != null}, '
+        'textLeadingBuilder:${textLeadingBuilder != null}, '
+        'textTailingBuilder:${textTailingBuilder != null}, '
+        'notifyUserJoin:$notifyUserJoin, '
+        'notifyUserLeave:$notifyUserLeave, '
+        'attributes:${attributes != null}, '
+        'background:${background != null}, '
+        'visible:$visible, '
+        'resendIcon:${resendIcon != null}, '
+        'showFakeMessage:$showFakeMessage, '
+        'showName:$showName, '
+        'showAvatar:$showAvatar, '
+        'width:$width, '
+        'height:$height, '
+        'bottomLeft:$bottomLeft, '
+        'opacity:$opacity, '
+        'backgroundColor:$backgroundColor, '
+        'maxLines:$maxLines, '
+        'nameTextStyle:$nameTextStyle, '
+        'messageTextStyle:$messageTextStyle, '
+        'borderRadius:$borderRadius, '
+        'paddings:$paddings, '
+        '}';
+  }
 }
 
 /// Configuration options for voice changer, beauty effects and reverberation effects.
@@ -1016,6 +1167,31 @@ class ZegoLiveStreamingEffectConfig {
   bool get isSupportVoiceChange => voiceChangeEffect.isNotEmpty;
 
   bool get isSupportReverb => reverbEffect.isNotEmpty;
+
+  @override
+  String toString() {
+    return 'ZegoLiveStreamingEffectConfig:{'
+        'beautyEffects:$beautyEffects, '
+        'voiceChangeEffect:$voiceChangeEffect, '
+        'reverbEffect:$reverbEffect, '
+        'backgroundColor:$backgroundColor, '
+        'headerTitleTextStyle:$headerTitleTextStyle, '
+        'backIcon:${backIcon != null}, '
+        'resetIcon:${resetIcon != null}, '
+        'normalIconColor:$normalIconColor, '
+        'selectedIconColor:$selectedIconColor, '
+        'normalIconBorderColor:$normalIconBorderColor, '
+        'selectedIconBorderColor:$selectedIconBorderColor, '
+        'selectedTextStyle:$selectedTextStyle, '
+        'normalTextStyle:$normalTextStyle, '
+        'sliderTextStyle:$sliderTextStyle, '
+        'sliderTextBackgroundColor:$sliderTextBackgroundColor, '
+        'sliderActiveTrackColor:$sliderActiveTrackColor, '
+        'sliderInactiveTrackColor:$sliderInactiveTrackColor, '
+        'sliderThumbColor:$sliderThumbColor, '
+        'sliderThumbRadius:$sliderThumbRadius, '
+        '}';
+  }
 }
 
 /// Used to configure the parameters related to PK battles
@@ -1084,6 +1260,21 @@ class ZegoLiveStreamingPKBattleConfig {
     foregroundBuilder ??= pkBattleViewForegroundBuilder;
     topBuilder ??= pkBattleViewTopBuilder;
     bottomBuilder ??= pkBattleViewBottomBuilder;
+  }
+
+  @override
+  String toString() {
+    return 'ZegoLiveStreamingPKBattleConfig:{'
+        'userReconnectingSecond:$userReconnectingSecond, '
+        'userDisconnectedSecond:$userDisconnectedSecond, '
+        'mixerLayout:$mixerLayout, '
+        'containerRect:${containerRect != null}, '
+        'topPadding:$topPadding, '
+        'hostReconnectingBuilder:${hostReconnectingBuilder != null}, '
+        'foregroundBuilder:${foregroundBuilder != null}, '
+        'topBuilder:${topBuilder != null}, '
+        'bottomBuilder:${bottomBuilder != null}, '
+        '}';
   }
 }
 
@@ -1154,6 +1345,19 @@ class ZegoLiveStreamingPreviewConfig {
     ZegoLiveStreamingPreviewBottomBarConfig? bottomBar,
   })  : topBar = topBar ?? ZegoLiveStreamingPreviewTopBarConfig(),
         bottomBar = bottomBar ?? ZegoLiveStreamingPreviewBottomBarConfig();
+
+  @override
+  String toString() {
+    return 'ZegoLiveStreamingPreviewConfig:{'
+        'showPreviewForHost:$showPreviewForHost, '
+        'pageBackIcon:${pageBackIcon != null}, '
+        'beautyEffectIcon:${beautyEffectIcon != null}, '
+        'switchCameraIcon:${switchCameraIcon != null}, '
+        'startLiveButtonBuilder:${startLiveButtonBuilder != null}, '
+        'topBar:$topBar, '
+        'bottomBar:$bottomBar, '
+        '}';
+  }
 }
 
 class ZegoLiveStreamingPreviewTopBarConfig {
@@ -1162,6 +1366,13 @@ class ZegoLiveStreamingPreviewTopBarConfig {
   ZegoLiveStreamingPreviewTopBarConfig({
     this.isVisible = true,
   });
+
+  @override
+  String toString() {
+    return 'ZegoLiveStreamingPreviewTopBarConfig:{'
+        'isVisible:$isVisible, '
+        '}';
+  }
 }
 
 class ZegoLiveStreamingPreviewBottomBarConfig {
@@ -1172,9 +1383,18 @@ class ZegoLiveStreamingPreviewBottomBarConfig {
     this.isVisible = true,
     this.showBeautyEffectButton = true,
   });
+
+  @override
+  String toString() {
+    return 'ZegoLiveStreamingPreviewBottomBarConfig:{'
+        'isVisible:$isVisible, '
+        'showBeautyEffectButton:$showBeautyEffectButton, '
+        '}';
+  }
 }
 
 class ZegoLiveStreamingOutsideLivesConfig {
+  /// same object as [ZegoLiveStreamingOutsideLiveList.controller]
   ZegoLiveStreamingOutsideLiveListController? controller;
 
   /// loading builder, return Container() if you want hide it
@@ -1186,6 +1406,14 @@ class ZegoLiveStreamingOutsideLivesConfig {
     this.controller,
     this.loadingBuilder,
   });
+
+  @override
+  String toString() {
+    return 'ZegoLiveStreamingOutsideLivesConfig:{'
+        'controller:${controller != null}, '
+        'loadingBuilder:${loadingBuilder != null}, '
+        '}';
+  }
 }
 
 /// Live Streaming timing configuration.
@@ -1196,6 +1424,13 @@ class ZegoLiveStreamingDurationConfig {
   ZegoLiveStreamingDurationConfig({
     this.isVisible = true,
   });
+
+  @override
+  String toString() {
+    return 'ZegoLiveStreamingDurationConfig:{'
+        'isVisible:$isVisible, '
+        '}';
+  }
 }
 
 class ZegoLiveStreamingSignalingPluginConfig {
@@ -1206,6 +1441,14 @@ class ZegoLiveStreamingSignalingPluginConfig {
     this.leaveRoomOnDispose = true,
     this.uninitOnDispose = true,
   });
+
+  @override
+  String toString() {
+    return 'ZegoLiveStreamingSignalingPluginConfig:{'
+        'leaveRoomOnDispose:$leaveRoomOnDispose, '
+        'uninitOnDispose:$uninitOnDispose, '
+        '}';
+  }
 }
 
 /// screen sharing
@@ -1214,9 +1457,22 @@ class ZegoLiveStreamingScreenSharingConfig {
   /// the automatic check end mechanism will be triggered.
   ZegoLiveStreamingScreenSharingAutoStopConfig autoStop;
 
+  /// If true, then when there is screen sharing display, it will automatically be full screen
+  /// default is false
+  bool defaultFullScreen;
+
   ZegoLiveStreamingScreenSharingConfig({
     ZegoLiveStreamingScreenSharingAutoStopConfig? autoStop,
+    this.defaultFullScreen = false,
   }) : autoStop = autoStop ?? ZegoLiveStreamingScreenSharingAutoStopConfig();
+
+  @override
+  String toString() {
+    return 'ZegoLiveStreamingScreenSharingConfig:{'
+        'autoStop:$autoStop, '
+        'defaultFullScreen:$defaultFullScreen, '
+        '}';
+  }
 }
 
 /// when ending screen sharing from a non-app,
@@ -1233,6 +1489,14 @@ class ZegoLiveStreamingScreenSharingAutoStopConfig {
     this.invalidCount = 3,
     this.canEnd,
   });
+
+  @override
+  String toString() {
+    return 'ZegoLiveStreamingScreenSharingAutoStopConfig:{'
+        'invalidCount:$invalidCount, '
+        'canEnd:${canEnd != null}, '
+        '}';
+  }
 }
 
 /// media player config
@@ -1240,9 +1504,87 @@ class ZegoLiveStreamingMediaPlayerConfig {
   /// In iOS, to achieve transparency for a video using a platform view, you need to set [supportTransparent] to true.
   bool supportTransparent;
 
+  /// default player
+  ZegoLiveStreamingMediaPlayerDefaultPlayerConfig defaultPlayer;
+
   ZegoLiveStreamingMediaPlayerConfig({
     this.supportTransparent = false,
+    ZegoLiveStreamingMediaPlayerDefaultPlayerConfig? defaultPlayer,
+  }) : defaultPlayer =
+            defaultPlayer ?? ZegoLiveStreamingMediaPlayerDefaultPlayerConfig();
+
+  @override
+  String toString() {
+    return 'ZegoLiveStreamingMediaPlayerConfig:{'
+        'supportTransparent:$supportTransparent, '
+        'defaultPlayer:$defaultPlayer, '
+        '}';
+  }
+}
+
+/// default media player query parameter
+class ZegoLiveStreamingMediaPlayerQueryParameter {
+  ZegoLiveStreamingRole localRole;
+
+  ZegoLiveStreamingMediaPlayerQueryParameter({
+    required this.localRole,
   });
+
+  @override
+  String toString() {
+    return 'ZegoLiveStreamingMediaPlayerQueryParameter:{'
+        'localRole:$localRole, '
+        '}';
+  }
+}
+
+/// default media player config
+class ZegoLiveStreamingMediaPlayerDefaultPlayerConfig {
+  /// support or not
+  bool support;
+
+  /// roles can control(pick/start/stop)
+  List<ZegoLiveStreamingRole> rolesCanControl;
+
+  /// top-left position
+  Point<double> Function(ZegoLiveStreamingMediaPlayerQueryParameter)?
+      topLeftQuery;
+
+  /// rect query
+  Rect Function(ZegoLiveStreamingMediaPlayerQueryParameter)? rectQuery;
+
+  /// config
+  ZegoUIKitMediaPlayerConfig? Function(
+    ZegoLiveStreamingMediaPlayerQueryParameter,
+  )? configQuery;
+
+  /// style
+  ZegoUIKitMediaPlayerStyle? Function(
+    ZegoLiveStreamingMediaPlayerQueryParameter,
+  )? styleQuery;
+
+  ZegoLiveStreamingMediaPlayerDefaultPlayerConfig({
+    this.support = false,
+    this.rolesCanControl = const [
+      ZegoLiveStreamingRole.host,
+    ],
+    this.topLeftQuery,
+    this.rectQuery,
+    this.configQuery,
+    this.styleQuery,
+  });
+
+  @override
+  String toString() {
+    return 'ZegoLiveStreamingMediaPlayerDefaultPlayerConfig:{'
+        'support:$support, '
+        'rolesCanControl:$rolesCanControl, '
+        'topLeftQuery:${topLeftQuery != null}, '
+        'rectQuery:${rectQuery != null}, '
+        'configQuery:${configQuery != null}, '
+        'styleQuery:${styleQuery != null}, '
+        '}';
+  }
 }
 
 /// pip config
@@ -1252,10 +1594,15 @@ class ZegoLiveStreamingPIPConfig {
     this.aspectHeight = 16,
     this.enableWhenBackground = true,
     ZegoLiveStreamingPIPAndroidConfig? android,
-  }) : android = android ?? ZegoLiveStreamingPIPAndroidConfig();
+    ZegoLiveStreamingPIPIOSConfig? iOS,
+  })  : android = android ?? ZegoLiveStreamingPIPAndroidConfig(),
+        iOS = iOS ?? ZegoLiveStreamingPIPIOSConfig();
 
   /// android config
   ZegoLiveStreamingPIPAndroidConfig android;
+
+  /// ios config
+  ZegoLiveStreamingPIPIOSConfig iOS;
 
   /// aspect width
   int aspectWidth;
@@ -1263,17 +1610,28 @@ class ZegoLiveStreamingPIPConfig {
   /// aspect height
   int aspectHeight;
 
-  /// android: only available on SDK higher than 31(>=31)
-  /// iOS: not limit
+  /// android: only available on SDK higher than 31(>=31), Android 12
+  ///
+  /// Add android:supportsPictureInPicture="true" line to the <activity> tag in android/src/main/AndroidManifest.xml:
+  ///
+  /// <manifest>
+  ///    <application>
+  ///         <activity
+  ///             android:name=".MainActivity"
+  ///             android:supportsPictureInPicture="true"
+  ///             ...
+  ///
+  /// iOS: SDK higher than 15(>=15), only play remote user
   bool enableWhenBackground;
 
   @override
   String toString() {
     return 'ZegoLiveStreamingPIPConfig:{'
         'android:$android, '
+        'iOS:$iOS, '
         'aspectWidth:$aspectWidth, '
         'aspectHeight:$aspectHeight, '
-        'enableWhenAppBackToDesktop:$enableWhenBackground, '
+        'enableWhenBackground:$enableWhenBackground, '
         '}';
   }
 }
@@ -1291,7 +1649,24 @@ class ZegoLiveStreamingPIPAndroidConfig {
   @override
   String toString() {
     return 'ZegoLiveStreamingPIPAndroidConfig:{'
-        'background:$background, '
+        'background:${background != null}, '
+        '}';
+  }
+}
+
+/// iOS pip
+/// only available on 15.0
+class ZegoLiveStreamingPIPIOSConfig {
+  ZegoLiveStreamingPIPIOSConfig({
+    this.support = true,
+  });
+
+  bool support;
+
+  @override
+  String toString() {
+    return 'ZegoLiveStreamingPIPIOSConfig:{'
+        'support:$support, '
         '}';
   }
 }

@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:floating/floating.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:zego_plugin_adapter/zego_plugin_adapter.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
@@ -29,6 +30,8 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/internal/events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/data.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/overlay_machine.dart';
+import '../controller/private/pip/pip_android.dart';
+import '../controller/private/pip/pip_ios.dart';
 import '../internal/defines.dart';
 import 'mini_live.dart';
 
@@ -92,6 +95,7 @@ class ZegoLiveStreamingPage extends StatefulWidget {
 /// @nodoc
 class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
     with WidgetsBindingObserver {
+  var contextInitNotifier = ValueNotifier<bool>(false);
   List<StreamSubscription<dynamic>?> subscriptions = [];
   ZegoLiveStreamingEventListener? _eventListener;
 
@@ -106,6 +110,19 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
 
   ZegoUIKitPrebuiltLiveStreamingController get controller =>
       ZegoUIKitPrebuiltLiveStreamingController();
+
+  bool get playingStreamInPIPUnderIOS {
+    bool isPlaying = false;
+    if (Platform.isIOS) {
+      isPlaying = (ZegoUIKitPrebuiltLiveStreamingController()
+              .pip
+              .private
+              .pipImpl() as ZegoLiveStreamingControllerIOSPIP)
+          .isSupportInConfig;
+    }
+
+    return isPlaying;
+  }
 
   @override
   void initState() {
@@ -185,9 +202,17 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
         subTag: 'prebuilt',
       );
 
+      contextInitNotifier.value = true;
       startedByLocalNotifier.value = true;
     } else {
       initContext().then((_) {
+        ZegoLoggerService.logInfo(
+          'initContext done',
+          tag: 'live-streaming',
+          subTag: 'prebuilt',
+        );
+        contextInitNotifier.value = true;
+
         initPermissions().then((_) {
           if (mounted) {
             ZegoUIKit()
@@ -280,8 +305,9 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
     await ZegoUIKit().setAdvanceConfigs(widget.config.advanceConfigs);
 
     var enablePlatformView = false;
-    if (Platform.isIOS && widget.config.mediaPlayer.supportTransparent) {
-      enablePlatformView = true;
+    if (Platform.isIOS) {
+      enablePlatformView = widget.config.mediaPlayer.supportTransparent ||
+          playingStreamInPIPUnderIOS;
     }
     await ZegoUIKit()
         .init(
@@ -290,10 +316,13 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
       token: widget.token,
       scenario: ZegoScenario.Broadcast,
       enablePlatformView: enablePlatformView,
+      playingStreamInPIPUnderIOS: playingStreamInPIPUnderIOS,
     )
         .then((_) async {
       /// second set after create express
       await ZegoUIKit().setAdvanceConfigs(widget.config.advanceConfigs);
+
+      await ZegoUIKit().enableCustomVideoRender(playingStreamInPIPUnderIOS);
 
       _setVideoConfig();
       initBaseBeautyConfig();
@@ -386,6 +415,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
     );
     controller.minimize.private.initByPrebuilt(
       minimizeData: minimizeData,
+      config: widget.config,
     );
     controller.pip.private.initByPrebuilt(
       config: widget.config,
@@ -435,23 +465,35 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
 
   @override
   Widget build(BuildContext context) {
-    if (Platform.isAndroid) {
-      return PiPSwitcher(
-        floating:
-            ZegoUIKitPrebuiltLiveStreamingController().pip.private.floating,
-        childWhenDisabled: normalPage(),
-        childWhenEnabled: ZegoScreenUtilInit(
-          designSize: const Size(750, 1334),
-          minTextAdapt: true,
-          splitScreenMode: true,
-          builder: (context, child) {
-            return pipPage();
-          },
-        ),
-      );
-    }
+    return ValueListenableBuilder<bool>(
+      valueListenable: contextInitNotifier,
+      builder: (context, isDone, _) {
+        if (isDone) {
+          if (Platform.isAndroid) {
+            return PiPSwitcher(
+              floating: (ZegoUIKitPrebuiltLiveStreamingController()
+                      .pip
+                      .private
+                      .pipImpl() as ZegoLiveStreamingControllerPIPAndroid)
+                  .floating,
+              childWhenDisabled: normalPage(),
+              childWhenEnabled: ZegoScreenUtilInit(
+                designSize: const Size(750, 1334),
+                minTextAdapt: true,
+                splitScreenMode: true,
+                builder: (context, child) {
+                  return pipPage();
+                },
+              ),
+            );
+          }
 
-    return normalPage();
+          return normalPage();
+        }
+
+        return const Center(child: CircularProgressIndicator());
+      },
+    );
   }
 
   Widget normalPage() {
@@ -510,6 +552,13 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
   }
 
   Future<void> initPermissions() async {
+    ZegoLoggerService.logInfo(
+      'request camera:${widget.config.turnOnCameraWhenJoining}, '
+      'request microphone:${widget.config.turnOnMicrophoneWhenJoining}, ',
+      tag: 'live-streaming',
+      subTag: 'prebuilt, initPermissions',
+    );
+
     var isCameraGranted = true;
     var isMicrophoneGranted = true;
     if (mounted && widget.config.turnOnCameraWhenJoining) {
@@ -518,6 +567,13 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
     if (mounted && widget.config.turnOnMicrophoneWhenJoining) {
       isMicrophoneGranted = await requestPermission(Permission.microphone);
     }
+
+    ZegoLoggerService.logInfo(
+      'camera result:$isCameraGranted, '
+      'microphone result:$isMicrophoneGranted, ',
+      tag: 'live-streaming',
+      subTag: 'prebuilt, initPermissions',
+    );
 
     if (!isCameraGranted) {
       if (mounted) {

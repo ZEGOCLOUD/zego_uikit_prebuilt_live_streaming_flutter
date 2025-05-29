@@ -5,19 +5,17 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 
 // Package imports:
-import 'package:zego_express_engine/zego_express_engine.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/error.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/pk/core/data.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/pk/core/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/pk/layout/layout.dart';
 
 class ZegoUIKitPrebuiltLiveStreamingPKServiceMixer {
   ZegoUIKitPrebuiltLiveStreamingPKServiceMixer();
 
-  ZegoMixerTask? _task;
+  ZegoUIKitMixerTask? _task;
   String _mixerID = '';
   bool _init = false;
 
@@ -73,7 +71,7 @@ class ZegoUIKitPrebuiltLiveStreamingPKServiceMixer {
     await stopPlayStream();
 
     _isMuting = false;
-    mutedUsersNotifier.value.clear();
+    mutedUsersNotifier.value = [];
     _mixerID = '';
     ZegoUIKit().getRoomStateStream().removeListener(_onRoomStateChanged);
 
@@ -112,7 +110,7 @@ class ZegoUIKitPrebuiltLiveStreamingPKServiceMixer {
 
     ZegoLoggerService.logInfo(
       'update mixer, '
-      'users:${pkHosts.toSimpleString}, '
+      'users:$pkHosts, '
       'mutedHosts:${mutedUsersNotifier.value}, '
       'task:${_task?.toStringX()}',
       tag: 'live-streaming-pk',
@@ -160,10 +158,14 @@ class ZegoUIKitPrebuiltLiveStreamingPKServiceMixer {
     _isMuting = true;
 
     if (isMute) {
-      mutedUsersNotifier.value.addAll(targetHostIDs);
+      mutedUsersNotifier.value = [
+        ...mutedUsersNotifier.value,
+        ...targetHostIDs,
+      ];
     } else {
-      mutedUsersNotifier.value
-          .removeWhere((userID) => targetHostIDs.contains(userID));
+      final currentMutedUsers = List<String>.from(mutedUsersNotifier.value);
+      currentMutedUsers.removeWhere((userID) => targetHostIDs.contains(userID));
+      mutedUsersNotifier.value = currentMutedUsers;
     }
     for (var hostID in targetHostIDs) {
       await ZegoUIKit().muteUserAudio(hostID, isMute);
@@ -196,17 +198,17 @@ class ZegoUIKitPrebuiltLiveStreamingPKServiceMixer {
     await ZegoUIKit().stopPlayMixAudioVideo(mixerID);
   }
 
-  ZegoMixerTask _generateTask(
+  ZegoUIKitMixerTask _generateTask(
     List<ZegoLiveStreamingPKUser> hosts,
   ) {
-    var mixerTask = ZegoMixerTask(mixerID)
+    var mixerTask = ZegoUIKitMixerTask(mixerID)
       ..videoConfig.width = layout.getResolution().width.toInt()
       ..videoConfig.height = layout.getResolution().height.toInt()
       ..videoConfig.bitrate = 1500
       ..videoConfig.fps = 15
       ..enableSoundLevel = true
       ..outputList = [
-        ZegoMixerOutput(mixerID),
+        ZegoUIKitMixerOutput(mixerID),
       ];
 
     final rectList = layout.getRectList(
@@ -215,13 +217,13 @@ class ZegoUIKitPrebuiltLiveStreamingPKServiceMixer {
     for (int hostIndex = 0; hostIndex < hosts.length; ++hostIndex) {
       final host = hosts.elementAt(hostIndex);
       final contentType = mutedUsersNotifier.value.contains(host.userInfo.id)
-          ? ZegoMixerInputContentType.VideoOnly
-          : ZegoMixerInputContentType.Video;
-      var inputConfig = ZegoMixerInput.defaultConfig()
+          ? ZegoUIKitMixerInputContentType.VideoOnly
+          : ZegoUIKitMixerInputContentType.Video;
+      var inputConfig = ZegoUIKitMixerInput.defaultConfig()
         ..streamID = host.streamID
         ..contentType = contentType
         ..volume = 100
-        ..renderMode = ZegoMixRenderMode.Fill
+        ..renderMode = ZegoUIKitMixRenderMode.Fill
         ..layout = rectList[hostIndex]
         ..soundLevelID = hostIndex;
       mixerTask.inputList.add(inputConfig);

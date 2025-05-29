@@ -1,7 +1,6 @@
 // Dart imports:
 import 'dart:async';
 import 'dart:io' show Platform;
-import 'dart:math';
 import 'dart:typed_data';
 
 // Flutter imports:
@@ -10,6 +9,7 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:floating/floating.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:zego_plugin_adapter/zego_plugin_adapter.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
@@ -17,6 +17,10 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/components/message/enable
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/dialogs.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/toast.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/controller/private/media_player.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/controller/private/pip/pip_android.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/controller/private/pip/pip_interface.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/controller/private/pip/pip_ios.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/core_managers.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/defines.dart';
@@ -53,6 +57,8 @@ part 'controller/user.dart';
 
 part 'controller/screen.dart';
 
+part 'controller/media.dart';
+
 part 'controller/pk.dart';
 
 part 'controller/swiping.dart';
@@ -79,6 +85,8 @@ part 'controller/private/swiping.dart';
 
 part 'controller/private/screen.dart';
 
+part 'controller/private/media.dart';
+
 /// Used to control the live streaming functionality.
 ///
 /// [ZegoUIKitPrebuiltLiveStreamingController] is a **singleton instance** class,
@@ -98,8 +106,11 @@ class ZegoUIKitPrebuiltLiveStreamingController
         ZegoLiveStreamingControllerCoHost,
         ZegoLiveStreamingControllerPK,
         ZegoLiveStreamingControllerSwiping,
-        ZegoLiveStreamingControllerAudioVideo {
+        ZegoLiveStreamingControllerAudioVideo,
+        ZegoLiveStreamingControllerMedia {
   factory ZegoUIKitPrebuiltLiveStreamingController() => instance;
+
+  String get version => "3.14.0";
 
   /// This function is used to end the Live Streaming.
   ///

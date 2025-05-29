@@ -318,6 +318,12 @@ class ZegoUIKitPrebuiltLiveStreamingInnerText {
   /// - Confirm button name: "OK"
   ZegoLiveStreamingDialogInfo outgoingPKBattleRequestRejectedCauseByReject;
 
+  ///When sharing the screen, the text prompt on the sharing side.
+  String screenSharingTipText;
+
+  ///When screen sharing, stop sharing button on the sharing side
+  String stopScreenSharingButtonText;
+
   ZegoUIKitPrebuiltLiveStreamingInnerText({
     String? disagreeButton,
     String? agreeButton,
@@ -390,6 +396,8 @@ class ZegoUIKitPrebuiltLiveStreamingInnerText {
     ZegoLiveStreamingDialogInfo?
         outgoingPKBattleRequestRejectedCauseByLocalHostStateError,
     ZegoLiveStreamingDialogInfo? outgoingPKBattleRequestRejectedCauseByReject,
+    String? screenSharingTipText,
+    String? stopScreenSharingButtonText,
   })  : disagreeButton = disagreeButton ?? 'Disagree',
         agreeButton = agreeButton ?? 'Agree',
         startLiveStreamingButton = startLiveStreamingButton ?? 'Start',
@@ -554,5 +562,7 @@ class ZegoUIKitPrebuiltLiveStreamingInnerText {
                   message: 'The host $param_1 rejected your request.',
                   cancelButtonName: '',
                   confirmButtonName: 'OK',
-                );
+                ),
+        screenSharingTipText = 'You are sharing screen',
+        stopScreenSharingButtonText = 'Stop sharing';
 }
