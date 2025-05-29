@@ -1,4 +1,7 @@
+## 3.14.1
 
+- Update dependency
+  
 ## 3.14.0
 
 - Features
