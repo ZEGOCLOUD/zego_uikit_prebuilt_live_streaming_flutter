@@ -532,18 +532,20 @@ Future<void> showMemberListSheet({
         child: AnimatedPadding(
           padding: MediaQuery.of(context).viewInsets,
           duration: const Duration(milliseconds: 50),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: ZegoLiveStreamingMemberListSheet(
-              config: config,
-              events: events,
-              isCoHostEnabled: isCoHostEnabled,
-              hostManager: hostManager,
-              connectManager: connectManager,
-              popUpManager: popUpManager,
-              innerText: translationText,
-              avatarBuilder: avatarBuilder,
-              itemBuilder: itemBuilder,
+          child: SafeArea(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: ZegoLiveStreamingMemberListSheet(
+                config: config,
+                events: events,
+                isCoHostEnabled: isCoHostEnabled,
+                hostManager: hostManager,
+                connectManager: connectManager,
+                popUpManager: popUpManager,
+                innerText: translationText,
+                avatarBuilder: avatarBuilder,
+                itemBuilder: itemBuilder,
+              ),
             ),
           ),
         ),
