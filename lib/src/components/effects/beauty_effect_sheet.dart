@@ -298,13 +298,16 @@ void showBeautyEffectSheet(
       return AnimatedPadding(
         padding: MediaQuery.of(context).viewInsets,
         duration: const Duration(milliseconds: 50),
-        child: SizedBox(
-          height: _besSheetTotalHeight + (_besSliderHeight + _besSliderPadding),
-          child: ZegoLiveStreamingBeautyEffectSheet(
-            translationText: translationText,
-            rootNavigator: rootNavigator,
-            beautyEffects: beautyEffects,
-            config: config,
+        child: SafeArea(
+          child: SizedBox(
+            height:
+                _besSheetTotalHeight + (_besSliderHeight + _besSliderPadding),
+            child: ZegoLiveStreamingBeautyEffectSheet(
+              translationText: translationText,
+              rootNavigator: rootNavigator,
+              beautyEffects: beautyEffects,
+              config: config,
+            ),
           ),
         ),
       );

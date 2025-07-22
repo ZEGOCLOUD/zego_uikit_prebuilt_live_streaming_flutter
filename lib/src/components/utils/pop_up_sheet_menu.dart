@@ -210,15 +210,17 @@ Future<void> showPopUpSheet({
       return AnimatedPadding(
         padding: MediaQuery.of(context).viewInsets,
         duration: const Duration(milliseconds: 50),
-        child: Container(
-          height: (popupItems.length * 101).zR,
-          padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-          child: ZegoLiveStreamingPopUpSheetMenu(
-            targetUser: user,
-            popupItems: popupItems,
-            translationText: translationText,
-            hostManager: hostManager,
-            connectManager: connectManager,
+        child: SafeArea(
+          child: Container(
+            height: (popupItems.length * 101).zR,
+            padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+            child: ZegoLiveStreamingPopUpSheetMenu(
+              targetUser: user,
+              popupItems: popupItems,
+              translationText: translationText,
+              hostManager: hostManager,
+              connectManager: connectManager,
+            ),
           ),
         ),
       );
