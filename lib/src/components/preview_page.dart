@@ -208,7 +208,7 @@ class _ZegoLiveStreamingPreviewPageState
               ),
               iconSize: iconSize,
               buttonSize: buttonSize,
-              clickableBackgroundColor: Colors.black.withOpacity(0.5),
+              clickableBackgroundColor: Colors.black.withValues(alpha: 0.5),
             ),
             const Expanded(child: SizedBox()),
             ZegoSwitchCameraButton(
@@ -218,7 +218,7 @@ class _ZegoLiveStreamingPreviewPageState
                 icon: widget.config.preview.switchCameraIcon ??
                     ZegoLiveStreamingImage.asset(
                         ZegoLiveStreamingIconUrls.previewFlipCamera),
-                backgroundColor: Colors.black.withOpacity(0.5),
+                backgroundColor: Colors.black.withValues(alpha: 0.5),
               ),
               defaultUseFrontFacingCamera: ZegoUIKit()
                   .getUseFrontFacingCameraStateNotifier(

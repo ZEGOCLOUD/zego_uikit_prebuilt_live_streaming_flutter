@@ -69,7 +69,7 @@ Future<bool> showLiveDialog({
         color: Colors.white,
       ),
       actionsAlignment: MainAxisAlignment.spaceEvenly,
-      backgroundColor: const Color(0xff111014).withOpacity(0.8),
+      backgroundColor: const Color(0xff111014).withValues(alpha: 0.8),
     );
   } catch (e) {
     ZegoLoggerService.logInfo(

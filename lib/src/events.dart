@@ -215,7 +215,7 @@ class ZegoLiveStreamingAudioVideoEvents {
   ///     barrierDismissible: false,
   ///     builder: (BuildContext context) {
   ///       return AlertDialog(
-  ///         backgroundColor: Colors.blue[900]!.withOpacity(0.9),
+  ///         backgroundColor: Colors.blue[900]!.withValues(alpha: 0.9),
   ///         title: const Text(
   ///           'You have a request to turn on your camera',
   ///           style: textStyle,
@@ -272,7 +272,7 @@ class ZegoLiveStreamingAudioVideoEvents {
   ///     barrierDismissible: false,
   ///     builder: (BuildContext context) {
   ///       return AlertDialog(
-  ///         backgroundColor: Colors.blue[900]!.withOpacity(0.9),
+  ///         backgroundColor: Colors.blue[900]!.withValues(alpha: 0.9),
   ///         title: const Text(
   ///           'You have a request to turn on your microphone',
   ///           style: textStyle,

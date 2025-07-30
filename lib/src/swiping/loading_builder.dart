@@ -76,7 +76,7 @@ class _ZegoUIKitPrebuiltLiveStreamingScrollerElementState
         return canBuild
             ? widget.roomBuilder()
             : Container(
-                color: Colors.black.withOpacity(0.5),
+                color: Colors.black.withValues(alpha: 0.5),
                 child: Center(
                   child: widget.loadingBuilder?.call(widget.targetRoomID) ??
                       const CircularProgressIndicator(),

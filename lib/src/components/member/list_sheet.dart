@@ -60,7 +60,7 @@ class _ZegoLiveStreamingMemberListSheetState
       return Column(
         children: [
           header(98.zH),
-          Container(height: 1.zR, color: Colors.white.withOpacity(0.15)),
+          Container(height: 1.zR, color: Colors.white.withValues(alpha: 0.15)),
           SizedBox(
             height: constraints.maxHeight - 1.zR - 98.zH,
             child: StreamBuilder<List<ZegoUIKitUser>>(

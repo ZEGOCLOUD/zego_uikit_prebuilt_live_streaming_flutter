@@ -950,7 +950,7 @@ class ZegoLiveStreamingInRoomMessageConfig {
 
   /// The background of chat message list items
   /// If you set the [backgroundColor], the [opacity] setting will be overridden.
-  /// You can use `backgroundColor.withOpacity(0.5)` to set the opacity of the background color.
+  /// You can use `backgroundColor.withValues(alpha: 0.5)` to set the opacity of the background color.
   Color? backgroundColor;
 
   /// The max lines of chat message list items, default value is not limit.
@@ -1040,9 +1040,9 @@ class ZegoLiveStreamingInRoomMessageConfig {
 ///
 /// ```dart
 /// ZegoEffectConfig(
-///   backgroundColor: Colors.black.withOpacity(0.5),
+///   backgroundColor: Colors.black.withValues(alpha: 0.5),
 ///   backIcon: Icon(Icons.arrow_back),
-///   sliderTextBackgroundColor: Colors.black.withOpacity(0.5),
+///   sliderTextBackgroundColor: Colors.black.withValues(alpha: 0.5),
 /// );
 /// ```
 class ZegoLiveStreamingEffectConfig {

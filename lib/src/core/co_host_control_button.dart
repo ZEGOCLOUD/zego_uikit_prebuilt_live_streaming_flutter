@@ -149,7 +149,7 @@ class _ZegoLiveStreamingCoHostControlButtonState
         }
       },
       clickableTextColor: Colors.white,
-      clickableBackgroundColor: const Color(0xff1E2740).withOpacity(0.4),
+      clickableBackgroundColor: const Color(0xff1E2740).withValues(alpha: 0.4),
     );
   }
 
@@ -184,7 +184,7 @@ class _ZegoLiveStreamingCoHostControlButtonState
         );
       },
       clickableTextColor: Colors.white,
-      clickableBackgroundColor: const Color(0xff1E2740).withOpacity(0.4),
+      clickableBackgroundColor: const Color(0xff1E2740).withValues(alpha: 0.4),
     );
   }
 
@@ -203,7 +203,7 @@ class _ZegoLiveStreamingCoHostControlButtonState
       verticalLayout: false,
       onPressed: widget.connectManager.coHostRequestToEnd,
       clickableTextColor: Colors.white,
-      clickableBackgroundColor: const Color(0xffFF0D23).withOpacity(0.6),
+      clickableBackgroundColor: const Color(0xffFF0D23).withValues(alpha: 0.6),
     );
   }
 
