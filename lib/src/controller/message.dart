@@ -75,7 +75,7 @@ class ZegoLiveStreamingControllerMessageImpl
   ///           width: 200,
   ///           height: 200,
   ///           decoration: BoxDecoration(
-  ///             color: Colors.white.withOpacity(0.2),
+  ///             color: Colors.white.withValues(alpha: 0.2),
   ///           ),
   ///           child: ListView.builder(
   ///             itemCount: messages.length,

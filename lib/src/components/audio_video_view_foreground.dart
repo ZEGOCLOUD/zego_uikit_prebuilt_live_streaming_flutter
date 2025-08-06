@@ -59,7 +59,7 @@ class ZegoLiveStreamingAudioVideoForeground extends StatelessWidget {
               margin: EdgeInsets.all(3.zR),
               padding: EdgeInsets.all(3.zR),
               decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.2),
+                color: Colors.black.withValues(alpha: 0.2),
                 borderRadius: const BorderRadius.all(Radius.circular(4)),
               ),
               child: Row(
@@ -189,7 +189,7 @@ class ZegoLiveStreamingAudioVideoForeground extends StatelessWidget {
             buttonSize: Size(28.zR, 28.zR),
             iconSize: Size(28.zR, 28.zR),
             icon: ButtonIcon(
-              backgroundColor: Colors.black.withOpacity(0.6),
+              backgroundColor: Colors.black.withValues(alpha: 0.6),
               icon: ZegoLiveStreamingImage.asset(
                   ZegoLiveStreamingIconUrls.bottomBarMore),
             ),
