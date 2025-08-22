@@ -232,13 +232,7 @@ class ZegoMinimizingStreamingPageState
             ),
             durationTimeBoard(),
             widget.foreground ?? Container(),
-            widget.showLeaveButton
-                ? Positioned(
-                    top: 10.zR,
-                    right: 10.zR,
-                    child: leaveButton(),
-                  )
-                : Container(),
+            widget.showLeaveButton ? leaveButton() : Container(),
           ],
         );
       },
@@ -362,7 +356,7 @@ class ZegoMinimizingStreamingPageState
   Widget leaveButton() {
     return Positioned(
       top: 12.zR,
-      right: 2.zR,
+      right: 10.zR,
       child: ZegoTextIconButton(
         buttonSize: Size(widget.size.width * 0.4, widget.size.width * 0.4),
         iconSize: Size(widget.size.width * 0.2, widget.size.width * 0.2),
