@@ -28,13 +28,21 @@ Future<void> checkPermissions({
     await Permission.camera.status.then((status) async {
       if (status != PermissionStatus.granted) {
         if (isShowDialog) {
-          await showAppSettingsDialog(
-            context: context,
-            dialogInfo: translationText.cameraPermissionSettingDialogInfo,
-            rootNavigator: rootNavigator,
-            popUpManager: popUpManager,
-            kickOutNotifier: kickOutNotifier,
-          );
+          if (context.mounted) {
+            await showAppSettingsDialog(
+              context: context,
+              dialogInfo: translationText.cameraPermissionSettingDialogInfo,
+              rootNavigator: rootNavigator,
+              popUpManager: popUpManager,
+              kickOutNotifier: kickOutNotifier,
+            );
+          } else {
+            ZegoLoggerService.logInfo(
+              'show app settings dialog, context is not mounted',
+              tag: 'live-streaming',
+              subTag: 'permissions',
+            );
+          }
         }
       }
     });
@@ -44,13 +52,21 @@ Future<void> checkPermissions({
     await Permission.microphone.status.then((status) async {
       if (status != PermissionStatus.granted) {
         if (isShowDialog) {
-          await showAppSettingsDialog(
-            context: context,
-            dialogInfo: translationText.microphonePermissionSettingDialogInfo,
-            rootNavigator: rootNavigator,
-            popUpManager: popUpManager,
-            kickOutNotifier: kickOutNotifier,
-          );
+          if (context.mounted) {
+            await showAppSettingsDialog(
+              context: context,
+              dialogInfo: translationText.microphonePermissionSettingDialogInfo,
+              rootNavigator: rootNavigator,
+              popUpManager: popUpManager,
+              kickOutNotifier: kickOutNotifier,
+            );
+          } else {
+            ZegoLoggerService.logInfo(
+              'show app settings dialog, context is not mounted',
+              tag: 'live-streaming',
+              subTag: 'permissions',
+            );
+          }
         }
       }
     });
@@ -76,13 +92,21 @@ Future<void> requestPermissions({
     if (permissions.contains(Permission.camera) &&
         statuses[Permission.camera] != PermissionStatus.granted) {
       if (isShowDialog) {
-        await showAppSettingsDialog(
-          context: context,
-          dialogInfo: translationText.cameraPermissionSettingDialogInfo,
-          rootNavigator: rootNavigator,
-          popUpManager: popUpManager,
-          kickOutNotifier: kickOutNotifier,
-        );
+        if (context.mounted) {
+          await showAppSettingsDialog(
+            context: context,
+            dialogInfo: translationText.cameraPermissionSettingDialogInfo,
+            rootNavigator: rootNavigator,
+            popUpManager: popUpManager,
+            kickOutNotifier: kickOutNotifier,
+          );
+        } else {
+          ZegoLoggerService.logInfo(
+            'requestPermissions, context not mounted',
+            tag: 'live-streaming',
+            subTag: 'permissions',
+          );
+        }
       }
     }
 

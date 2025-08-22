@@ -182,10 +182,13 @@ class _ZegoUIKitPrebuiltLiveStreamingMiniOverlayPageState
 
           return PopScope(
             canPop: false,
-            onPopInvoked: (bool didPop) async {
+            onPopInvokedWithResult: (bool didPop, Object? result) async {
               if (didPop) {
                 return;
               }
+
+              // Prevent the default pop-up behavior in the minimized state
+              // Prevent popping by not calling Navigator.pop()
             },
             child: Visibility(
               visible: visibility,

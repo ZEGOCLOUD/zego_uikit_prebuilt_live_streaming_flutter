@@ -1611,11 +1611,11 @@ class ZegoLiveStreamingPIPConfig {
 
   /// android: only available on SDK higher than 31(>=31), Android 12
   ///
-  /// Add android:supportsPictureInPicture="true" line to the <activity> tag in android/src/main/AndroidManifest.xml:
+  /// Add android:supportsPictureInPicture="true" line to the activity tag in android/src/main/AndroidManifest.xml:
   ///
-  /// <manifest>
-  ///    <application>
-  ///         <activity
+  /// manifest
+  ///    application
+  ///         activity
   ///             android:name=".MainActivity"
   ///             android:supportsPictureInPicture="true"
   ///             ...
