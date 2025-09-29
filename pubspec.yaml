@@ -37,6 +37,13 @@ dev_dependencies:
 flutter:
   assets:
     - assets/icons/
+  plugin:
+    platforms:
+      android:
+        package: com.zegocloud.uikit.prebuilt_live_streaming
+        pluginClass: ZegoUIKitPrebuiltLiveStreamingPlugin
+      ios:
+        pluginClass: ZegoUIKitPrebuiltLiveStreamingPlugin
 
 topics:
   - live
