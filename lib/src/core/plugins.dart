@@ -215,14 +215,7 @@ class ZegoLiveStreamingPlugins {
     ZegoUIKit()
         .getBeautyPlugin()
         .setConfig(beautyConfig ?? ZegoBeautyPluginConfig());
-    await ZegoUIKit()
-        .getBeautyPlugin()
-        .init(
-          appID,
-          appSign: appSign,
-          licence: beautyConfig?.license?.call() ?? '',
-        )
-        .then((value) {
+    await ZegoUIKit().getBeautyPlugin().init(appID, appSign).then((value) {
       ZegoLoggerService.logInfo(
         'effects plugin init done',
         tag: 'live-streaming',
