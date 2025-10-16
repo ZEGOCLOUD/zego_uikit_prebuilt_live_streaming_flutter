@@ -1,3 +1,8 @@
+## 3.14.7
+
+- Features
+  - Support export log by `ZegoUIKitPrebuiltLiveStreamingController().log.export()`
+
 ## 3.14.6
 
 - Update environment
