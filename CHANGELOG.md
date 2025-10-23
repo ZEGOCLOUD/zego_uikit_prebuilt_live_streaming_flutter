@@ -1,3 +1,8 @@
+## 3.15.0
+
+- Features
+  - Update beauty to v2.x, please update new resources according to [official website document](https://www.zegocloud.com/docs/uikit/callkit-flutter/advanced-features/beauty-effects#download-resources)
+
 ## 3.14.7
 
 - Features
