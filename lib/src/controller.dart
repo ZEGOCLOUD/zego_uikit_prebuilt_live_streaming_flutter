@@ -50,6 +50,8 @@ part 'controller/minimize.dart';
 
 part 'controller/pip.dart';
 
+part 'controller/log.dart';
+
 part 'controller/room.dart';
 
 part 'controller/user.dart';
@@ -104,12 +106,13 @@ class ZegoUIKitPrebuiltLiveStreamingController
         ZegoLiveStreamingControllerScreen,
         ZegoLiveStreamingControllerCoHost,
         ZegoLiveStreamingControllerPK,
+        ZegoLiveStreamingControllerLog,
         ZegoLiveStreamingControllerSwiping,
         ZegoLiveStreamingControllerAudioVideo,
         ZegoLiveStreamingControllerMedia {
   factory ZegoUIKitPrebuiltLiveStreamingController() => instance;
 
-  String get version => "3.14.6";
+  String get version => "3.14.7";
 
   /// This function is used to end the Live Streaming.
   ///
