@@ -1,3 +1,24 @@
+## 3.15.2
+
+- Features
+  - Support beauty plugin face detection data on `ZegoUIKitPrebuiltLiveStreamingEvents.beauty.onFaceDetection`
+  - move `ZegoUIKitPrebuiltLiveStreamingEvents.onBeautyError` to `ZegoUIKitPrebuiltLiveStreamingEvents.beauty.onError`
+     ``` dart
+    ZegoUIKitPrebuiltLiveStreaming(
+      ...
+      events: ZegoUIKitPrebuiltLiveStreamingEvents(
+        beauty: ZegoLiveStreamingBeautyEvents(
+          onError: (ZegoBeautyError error) {
+            //
+          },
+          onFaceDetection: (ZegoBeautyPluginFaceDetectionData faceDetectionData) {
+            //
+          },
+        ),
+      ),
+    );
+     ```
+
 ## 3.15.1
 
 - Features

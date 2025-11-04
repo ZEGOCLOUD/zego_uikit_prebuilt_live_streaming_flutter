@@ -9,6 +9,7 @@ import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/overlay_machine.dart';
 
 /// @nodoc
@@ -21,10 +22,10 @@ class ZegoLiveStreamingPlugins {
     required this.userName,
     required this.roomID,
     required this.plugins,
+    required this.events,
     this.onPluginReLogin,
     this.signalingPluginConfig,
     this.beautyConfig,
-    this.onError,
   }) {
     _install();
   }
@@ -45,7 +46,7 @@ class ZegoLiveStreamingPlugins {
 
   final VoidCallback? onPluginReLogin;
 
-  Function(ZegoUIKitError)? onError;
+  final ZegoUIKitPrebuiltLiveStreamingEvents events;
 
   List<StreamSubscription<dynamic>?> subscriptions = [];
   ValueNotifier<ZegoSignalingPluginConnectionState> pluginUserStateNotifier =
@@ -87,8 +88,15 @@ class ZegoLiveStreamingPlugins {
     }
 
     if (ZegoPluginAdapter().getPlugin(ZegoUIKitPluginType.beauty) != null) {
-      subscriptions.add(
-          ZegoUIKit().getBeautyPlugin().getErrorStream().listen(onBeautyError));
+      subscriptions
+        ..add(ZegoUIKit()
+            .getBeautyPlugin()
+            .getErrorStream()
+            .listen(onBeautyError))
+        ..add(ZegoUIKit()
+            .getBeautyPlugin()
+            .getFaceDetectionEventStream()
+            .listen(onFaceDetectionEvent));
 
       ZegoUIKit().enableCustomVideoProcessing(true);
     }
@@ -403,11 +411,15 @@ class ZegoLiveStreamingPlugins {
       subTag: 'plugin',
     );
 
-    onError?.call(ZegoUIKitError(
+    events.onError?.call(ZegoUIKitError(
       code: error.code,
       message: error.message,
       method: error.method,
     ));
+  }
+
+  void onFaceDetectionEvent(ZegoBeautyPluginFaceDetectionData data) {
+    events.beauty.onFaceDetection?.call(data);
   }
 
   void onBeautyError(ZegoBeautyError error) {
@@ -417,11 +429,7 @@ class ZegoLiveStreamingPlugins {
       subTag: 'prebuilt',
     );
 
-    onError?.call(ZegoUIKitError(
-      code: error.code,
-      message: error.message,
-      method: error.method,
-    ));
+    events.beauty.onError?.call(error);
   }
 
   Future<void> tryReLogin() async {

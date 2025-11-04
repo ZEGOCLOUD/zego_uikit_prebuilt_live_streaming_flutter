@@ -83,7 +83,7 @@ class ZegoLiveStreamingManagers {
         plugins: config.plugins,
         signalingPluginConfig: config.signalingPlugin,
         beautyConfig: config.beauty,
-        onError: events.onError,
+        events: events,
       );
 
       ZegoUIKitPrebuiltLiveStreamingPK().init(

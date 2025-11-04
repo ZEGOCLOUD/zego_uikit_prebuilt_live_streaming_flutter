@@ -112,7 +112,7 @@ class ZegoUIKitPrebuiltLiveStreamingController
         ZegoLiveStreamingControllerMedia {
   factory ZegoUIKitPrebuiltLiveStreamingController() => instance;
 
-  String get version => "3.15.1";
+  String get version => "3.15.2"; // zego_uikit_prebuilt_live_streaming:
 
   /// This function is used to end the Live Streaming.
   ///
