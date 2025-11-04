@@ -377,7 +377,6 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
     if (!useBeautyEffect || useAdvanceEffect) {
       return;
     }
-    ZegoUIKit().getBeautyPlugin().getErrorStream().listen(onBeautyError);
 
     await ZegoUIKit()
         .startEffectsEnv()
@@ -724,16 +723,6 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
     );
 
     events.onError?.call(error);
-  }
-
-  void onBeautyError(ZegoBeautyError error) {
-    ZegoLoggerService.logError(
-      'on beauty error:$error',
-      tag: 'live-streaming',
-      subTag: 'prebuilt',
-    );
-
-    events.onBeautyError?.call(error);
   }
 
   Widget previewPage() {
