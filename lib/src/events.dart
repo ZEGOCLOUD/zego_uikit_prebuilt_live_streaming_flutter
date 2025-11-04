@@ -108,8 +108,12 @@ class ZegoUIKitPrebuiltLiveStreamingEvents {
   /// error stream
   Function(ZegoUIKitError)? onError;
 
+  /// error stream
+  Function(ZegoBeautyError)? onBeautyError;
+
   ZegoUIKitPrebuiltLiveStreamingEvents({
     this.onError,
+    this.onBeautyError,
     this.onLeaveConfirmation,
     this.onEnded,
     this.onStateUpdated,
