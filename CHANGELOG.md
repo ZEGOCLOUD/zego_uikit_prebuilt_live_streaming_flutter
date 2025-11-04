@@ -1,3 +1,8 @@
+## 3.15.1
+
+- Features
+  - Support beauty plugin error on `ZegoUIKitPrebuiltLiveStreamingEvents.onBeautyError`
+
 ## 3.15.0
 
 - Features
