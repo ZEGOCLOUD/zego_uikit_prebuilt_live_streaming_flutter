@@ -38,6 +38,9 @@ class ZegoUIKitPrebuiltLiveStreamingEvents {
   /// events about duration
   ZegoLiveStreamingDurationEvents duration;
 
+  /// events about beauty
+  ZegoLiveStreamingBeautyEvents beauty;
+
   /// events about media
   ZegoUIKitMediaPlayerEvent media;
 
@@ -108,12 +111,8 @@ class ZegoUIKitPrebuiltLiveStreamingEvents {
   /// error stream
   Function(ZegoUIKitError)? onError;
 
-  /// error stream
-  Function(ZegoBeautyError)? onBeautyError;
-
   ZegoUIKitPrebuiltLiveStreamingEvents({
     this.onError,
-    this.onBeautyError,
     this.onLeaveConfirmation,
     this.onEnded,
     this.onStateUpdated,
@@ -126,6 +125,7 @@ class ZegoUIKitPrebuiltLiveStreamingEvents {
     ZegoLiveStreamingMemberListEvents? memberList,
     ZegoLiveStreamingInRoomMessageEvents? inRoomMessage,
     ZegoLiveStreamingDurationEvents? duration,
+    ZegoLiveStreamingBeautyEvents? beauty,
     ZegoUIKitMediaPlayerEvent? media,
   })  : user = user ?? ZegoLiveStreamingUserEvents(),
         room = room ?? ZegoLiveStreamingRoomEvents(),
@@ -136,6 +136,7 @@ class ZegoUIKitPrebuiltLiveStreamingEvents {
         memberList = memberList ?? ZegoLiveStreamingMemberListEvents(),
         inRoomMessage = inRoomMessage ?? ZegoLiveStreamingInRoomMessageEvents(),
         duration = duration ?? ZegoLiveStreamingDurationEvents(),
+        beauty = beauty ?? ZegoLiveStreamingBeautyEvents(),
         media = media ?? ZegoUIKitMediaPlayerEvent();
 }
 
@@ -646,4 +647,31 @@ class ZegoLiveStreamingDurationEvents {
   /// }
   /// ```
   void Function(Duration)? onUpdated;
+}
+
+class ZegoLiveStreamingBeautyEvents {
+  ZegoLiveStreamingBeautyEvents({
+    this.onError,
+    this.onFaceDetection,
+  });
+
+  /// error stream
+  ///
+  /// Example:
+  ///```dart
+  /// ..beauty.onError = (error) {
+  ///
+  /// }
+  /// ```
+  Function(ZegoBeautyError)? onError;
+
+  /// Face detection result callback
+  ///
+  /// Example:
+  ///```dart
+  /// ..beauty.onFaceDetection = (data) {
+  ///
+  /// }
+  /// ```
+  Function(ZegoBeautyPluginFaceDetectionData)? onFaceDetection;
 }
