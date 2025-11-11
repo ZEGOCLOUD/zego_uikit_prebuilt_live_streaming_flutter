@@ -19,14 +19,14 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/inner_text.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/pk_combine_notifier.dart';
+import '../../lifecycle/instance.dart';
 
 /// @nodoc
 class ZegoLiveStreamingMemberListSheet extends StatefulWidget {
   const ZegoLiveStreamingMemberListSheet({
     Key? key,
+    required this.liveID,
     required this.isCoHostEnabled,
-    required this.hostManager,
-    required this.connectManager,
     required this.popUpManager,
     required this.innerText,
     required this.config,
@@ -35,13 +35,12 @@ class ZegoLiveStreamingMemberListSheet extends StatefulWidget {
     this.itemBuilder,
   }) : super(key: key);
 
+  final String liveID;
   final bool isCoHostEnabled;
-  final ZegoLiveStreamingHostManager hostManager;
-  final ZegoLiveStreamingConnectManager connectManager;
   final ZegoLiveStreamingPopUpManager popUpManager;
   final ZegoUIKitPrebuiltLiveStreamingInnerText innerText;
   final ZegoLiveStreamingMemberListConfig config;
-  final ZegoLiveStreamingMemberListEvents events;
+  final ZegoLiveStreamingMemberListEvents? events;
 
   final ZegoAvatarBuilder? avatarBuilder;
   final ZegoMemberListItemBuilder? itemBuilder;
@@ -64,11 +63,15 @@ class _ZegoLiveStreamingMemberListSheetState
           SizedBox(
             height: constraints.maxHeight - 1.zR - 98.zH,
             child: StreamBuilder<List<ZegoUIKitUser>>(
-              stream: ZegoUIKit().getAudioVideoListStream(),
+              stream: ZegoUIKit().getAudioVideoListStream(
+                targetRoomID: widget.liveID,
+              ),
               builder: (context, snapshot) {
                 return ValueListenableBuilder<List<ZegoUIKitUser>>(
-                    valueListenable:
-                        widget.connectManager.requestCoHostUsersNotifier,
+                    valueListenable: ZegoLiveStreamingPageLifeCycle()
+                        .currentManagers
+                        .connectManager
+                        .requestCoHostUsersNotifier,
                     builder: (context, requestCoHostUsers, _) {
                       return memberListView();
                     });
@@ -82,6 +85,7 @@ class _ZegoLiveStreamingMemberListSheetState
 
   Widget memberListView() {
     return ZegoMemberList(
+      roomID: widget.liveID,
       stream: ZegoUIKitPrebuiltLiveStreamingController().user.stream(
             includeFakeUser: widget.config.showFakeUser,
           ),
@@ -95,13 +99,22 @@ class _ZegoLiveStreamingMemberListSheetState
       sortUserList: (ZegoUIKitUser localUser, List<ZegoUIKitUser> remoteUsers) {
         /// host
         remoteUsers.removeWhere((remoteUser) =>
-            widget.hostManager.notifier.value?.id == remoteUser.id);
+            ZegoLiveStreamingPageLifeCycle()
+                .currentManagers
+                .hostManager
+                .notifier
+                .value
+                ?.id ==
+            remoteUser.id);
 
         /// co-host
         final coHostUsers = <ZegoUIKitUser>[];
         remoteUsers.removeWhere(
           (remoteUser) {
-            if (widget.connectManager.isCoHost(remoteUser)) {
+            if (ZegoLiveStreamingPageLifeCycle()
+                .currentManagers
+                .connectManager
+                .isCoHost(remoteUser)) {
               coHostUsers.add(remoteUser);
               return true;
             }
@@ -122,10 +135,22 @@ class _ZegoLiveStreamingMemberListSheetState
         );
 
         var sortUsers = <ZegoUIKitUser>[];
-        if (widget.hostManager.notifier.value != null) {
-          sortUsers.add(widget.hostManager.notifier.value!);
+        if (ZegoLiveStreamingPageLifeCycle()
+                .currentManagers
+                .hostManager
+                .notifier
+                .value !=
+            null) {
+          sortUsers.add(ZegoLiveStreamingPageLifeCycle()
+              .currentManagers
+              .hostManager
+              .notifier
+              .value!);
         }
-        if (!widget.hostManager.isLocalHost) {
+        if (!ZegoLiveStreamingPageLifeCycle()
+            .currentManagers
+            .hostManager
+            .isLocalHost) {
           sortUsers.add(ZegoUIKit().getLocalUser());
         }
         sortUsers += coHostUsers;
@@ -133,7 +158,9 @@ class _ZegoLiveStreamingMemberListSheetState
         sortUsers += remoteUsers;
 
         /// remove other room's users
-        final currentRoomUsers = ZegoUIKit().getAllUsers();
+        final currentRoomUsers = ZegoUIKit().getAllUsers(
+          targetRoomID: widget.liveID,
+        );
         sortUsers.removeWhere((targetUser) {
           if (ZegoUIKitPrebuiltLiveStreamingController()
               .user
@@ -158,11 +185,14 @@ class _ZegoLiveStreamingMemberListSheetState
             Map<String, dynamic> extraInfo,
           ) {
             return ValueListenableBuilder(
-              valueListenable: ZegoUIKitUserPropertiesNotifier(user),
+              valueListenable: ZegoUIKitUserPropertiesNotifier(
+                roomID: widget.liveID,
+                user,
+              ),
               builder: (context, _, __) {
                 return GestureDetector(
                   onTap: () {
-                    widget.events.onClicked?.call(user);
+                    widget.events?.onClicked?.call(user);
                   },
                   child: Container(
                     margin: EdgeInsets.only(bottom: 36.zR),
@@ -192,7 +222,12 @@ class _ZegoLiveStreamingMemberListSheetState
             onTap: () {
               Navigator.of(
                 context,
-                rootNavigator: widget.hostManager.config.rootNavigator,
+                rootNavigator: ZegoLiveStreamingPageLifeCycle()
+                        .currentManagers
+                        .hostManager
+                        .config
+                        ?.rootNavigator ??
+                    false,
               ).pop();
             },
             child: SizedBox(
@@ -204,11 +239,15 @@ class _ZegoLiveStreamingMemberListSheetState
           ),
           SizedBox(width: 10.zR),
           StreamBuilder<List<ZegoUIKitUser>>(
-              stream: ZegoUIKit().getUserListStream(),
+              stream: ZegoUIKit().getUserListStream(
+                targetRoomID: widget.liveID,
+              ),
               builder: (context, snapshot) {
                 return Text(
                   '${widget.innerText.memberListTitle} '
-                  '(${ZegoUIKit().getAllUsers().length})',
+                  '(${ZegoUIKit().getAllUsers(
+                        targetRoomID: widget.liveID,
+                      ).length})',
                   style: TextStyle(
                     fontSize: 36.0.zR,
                     color: const Color(0xffffffff),
@@ -223,7 +262,8 @@ class _ZegoLiveStreamingMemberListSheetState
 
   Widget userNameItem(ZegoUIKitUser user) {
     return ValueListenableBuilder<ZegoUIKitUser?>(
-      valueListenable: widget.hostManager.notifier,
+      valueListenable:
+          ZegoLiveStreamingPageLifeCycle().currentManagers.hostManager.notifier,
       builder: (context, host, _) {
         final extensions = <String>[];
         if (ZegoUIKit().getLocalUser().id == user.id) {
@@ -231,7 +271,10 @@ class _ZegoLiveStreamingMemberListSheetState
         }
         if (host?.id == user.id) {
           extensions.add(widget.innerText.memberListRoleHost);
-        } else if (widget.connectManager.isCoHost(user)) {
+        } else if (ZegoLiveStreamingPageLifeCycle()
+            .currentManagers
+            .connectManager
+            .isCoHost(user)) {
           extensions.add(widget.innerText.memberListRoleCoHost);
         }
 
@@ -282,20 +325,29 @@ class _ZegoLiveStreamingMemberListSheetState
       builder: (context, isInPK, _) {
         final needHideCoHostWidget = isInPK;
         if (needHideCoHostWidget) {
-          if (widget.hostManager.isLocalHost) {
+          if (ZegoLiveStreamingPageLifeCycle()
+              .currentManagers
+              .hostManager
+              .isLocalHost) {
             return hostControlItem(user);
           } else {
             return Container();
           }
         } else {
           return ValueListenableBuilder<List<ZegoUIKitUser>>(
-            valueListenable: widget.connectManager.requestCoHostUsersNotifier,
+            valueListenable: ZegoLiveStreamingPageLifeCycle()
+                .currentManagers
+                .connectManager
+                .requestCoHostUsersNotifier,
             builder: (context, requestCoHostUsers, _) {
               final index = requestCoHostUsers.indexWhere(
                   (requestCoHostUser) => user.id == requestCoHostUser.id);
               if (-1 != index) {
                 return requestCoHostUserControlItem(user);
-              } else if (widget.hostManager.isLocalHost) {
+              } else if (ZegoLiveStreamingPageLifeCycle()
+                  .currentManagers
+                  .hostManager
+                  .isLocalHost) {
                 return hostControlItem(user);
               }
 
@@ -345,8 +397,17 @@ class _ZegoLiveStreamingMemberListSheetState
         final needHideCoHostWidget = isInPK;
 
         final popupItems = <ZegoLiveStreamingPopupItem>[];
-        if (user.id != widget.hostManager.notifier.value?.id &&
-            widget.connectManager.isCoHost(user) &&
+        if (user.id !=
+                ZegoLiveStreamingPageLifeCycle()
+                    .currentManagers
+                    .hostManager
+                    .notifier
+                    .value
+                    ?.id &&
+            ZegoLiveStreamingPageLifeCycle()
+                .currentManagers
+                .connectManager
+                .isCoHost(user) &&
             (widget.isCoHostEnabled)) {
           popupItems.add(ZegoLiveStreamingPopupItem(
             ZegoLiveStreamingPopupItemValue.kickCoHost,
@@ -356,8 +417,17 @@ class _ZegoLiveStreamingMemberListSheetState
 
         if (widget.isCoHostEnabled &&
             //  not host
-            user.id != widget.hostManager.notifier.value?.id &&
-            !widget.connectManager.isCoHost(user) &&
+            user.id !=
+                ZegoLiveStreamingPageLifeCycle()
+                    .currentManagers
+                    .hostManager
+                    .notifier
+                    .value
+                    ?.id &&
+            !ZegoLiveStreamingPageLifeCycle()
+                .currentManagers
+                .connectManager
+                .isCoHost(user) &&
             !needHideCoHostWidget) {
           popupItems.add(ZegoLiveStreamingPopupItem(
               ZegoLiveStreamingPopupItemValue.inviteConnect,
@@ -365,7 +435,13 @@ class _ZegoLiveStreamingMemberListSheetState
                   ZegoUIKitPrebuiltLiveStreamingInnerText.param_1, user.name)));
         }
 
-        if (user.id != widget.hostManager.notifier.value?.id) {
+        if (user.id !=
+            ZegoLiveStreamingPageLifeCycle()
+                .currentManagers
+                .hostManager
+                .notifier
+                .value
+                ?.id) {
           popupItems.add(ZegoLiveStreamingPopupItem(
               ZegoLiveStreamingPopupItemValue.kickOutAttendance,
               widget.innerText.removeUserMenuDialogButton.replaceFirst(
@@ -392,15 +468,24 @@ class _ZegoLiveStreamingMemberListSheetState
             /// product manager say close sheet together
             Navigator.of(
               context,
-              rootNavigator: widget.hostManager.config.rootNavigator,
+              rootNavigator: ZegoLiveStreamingPageLifeCycle()
+                      .currentManagers
+                      .hostManager
+                      .config
+                      ?.rootNavigator ??
+                  false,
             ).pop();
 
             showPopUpSheet(
               context: context,
+              liveID: widget.liveID,
               user: user,
               popupItems: popupItems,
-              hostManager: widget.hostManager,
-              connectManager: widget.connectManager,
+              hostManager:
+                  ZegoLiveStreamingPageLifeCycle().currentManagers.hostManager,
+              connectManager: ZegoLiveStreamingPageLifeCycle()
+                  .currentManagers
+                  .connectManager,
               popUpManager: widget.popUpManager,
               translationText: widget.innerText,
             );
@@ -492,7 +577,11 @@ class _ZegoLiveStreamingMemberListSheetState
 
   bool isUserInRequestCoHost(String userID) {
     return -1 !=
-        widget.connectManager.requestCoHostUsersNotifier.value
+        ZegoLiveStreamingPageLifeCycle()
+            .currentManagers
+            .connectManager
+            .requestCoHostUsersNotifier
+            .value
             .indexWhere((requestCoHostUser) => userID == requestCoHostUser.id);
   }
 }
@@ -501,13 +590,13 @@ class _ZegoLiveStreamingMemberListSheetState
 Future<void> showMemberListSheet({
   ZegoAvatarBuilder? avatarBuilder,
   ZegoMemberListItemBuilder? itemBuilder,
+  required String liveID,
   required bool isCoHostEnabled,
   required BuildContext context,
-  required ZegoLiveStreamingHostManager hostManager,
-  required ZegoLiveStreamingConnectManager connectManager,
   required ZegoLiveStreamingPopUpManager popUpManager,
+  required ZegoUIKitPrebuiltLiveStreamingConfig? liveConfig,
   required ZegoLiveStreamingMemberListConfig config,
-  required ZegoLiveStreamingMemberListEvents events,
+  required ZegoLiveStreamingMemberListEvents? events,
   required ZegoUIKitPrebuiltLiveStreamingInnerText translationText,
 }) async {
   final key = DateTime.now().millisecondsSinceEpoch;
@@ -517,7 +606,7 @@ Future<void> showMemberListSheet({
     barrierColor: ZegoUIKitDefaultTheme.viewBarrierColor,
     backgroundColor: ZegoUIKitDefaultTheme.viewBackgroundColor,
     context: context,
-    useRootNavigator: hostManager.config.rootNavigator,
+    useRootNavigator: liveConfig?.rootNavigator ?? false,
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.only(
         topLeft: Radius.circular(32.0.zR),
@@ -536,11 +625,10 @@ Future<void> showMemberListSheet({
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: ZegoLiveStreamingMemberListSheet(
+                liveID: liveID,
                 config: config,
                 events: events,
                 isCoHostEnabled: isCoHostEnabled,
-                hostManager: hostManager,
-                connectManager: connectManager,
                 popUpManager: popUpManager,
                 innerText: translationText,
                 avatarBuilder: avatarBuilder,

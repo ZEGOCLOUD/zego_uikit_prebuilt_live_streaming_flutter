@@ -42,7 +42,12 @@ class ZegoLiveStreamingControllerUserImplPrivateImpl {
     this.config = config;
 
     _streamControllerList ??= StreamController<List<ZegoUIKitUser>>.broadcast();
-    countNotifier.value = ZegoUIKit().getAllUsers().length +
+    countNotifier.value = ZegoUIKit()
+            .getAllUsers(
+              targetRoomID:
+                  ZegoUIKitPrebuiltLiveStreamingController().private.liveID,
+            )
+            .length +
         pseudoMemberListNotifier.value.length;
 
     pseudoMemberListNotifier.value.clear();
@@ -56,7 +61,12 @@ class ZegoLiveStreamingControllerUserImplPrivateImpl {
           streamControllerPseudoMemberEnter?.stream.listen(onPseudoMemberEnter))
       ..add(streamControllerPseudoMemberLeave?.stream
           .listen(onPseudoMemberLeaved))
-      ..add(ZegoUIKit().getUserListStream().listen(onKitMemberListUpdated));
+      ..add(ZegoUIKit()
+          .getUserListStream(
+            targetRoomID:
+                ZegoUIKitPrebuiltLiveStreamingController().private.liveID,
+          )
+          .listen(onKitMemberListUpdated));
   }
 
   /// Please do not call this interface. It is the internal logic of Prebuilt.
@@ -100,7 +110,9 @@ class ZegoLiveStreamingControllerUserImplPrivateImpl {
     pseudoMemberListNotifier.value = List.from(pseudoMemberListNotifier.value)
       ..add(member);
 
-    onKitMemberListUpdated(ZegoUIKit().getAllUsers());
+    onKitMemberListUpdated(ZegoUIKit().getAllUsers(
+      targetRoomID: ZegoUIKitPrebuiltLiveStreamingController().private.liveID,
+    ));
   }
 
   void onPseudoMemberLeaved(ZegoUIKitUser member) {
@@ -113,7 +125,9 @@ class ZegoLiveStreamingControllerUserImplPrivateImpl {
     pseudoMemberListNotifier.value = List.from(pseudoMemberListNotifier.value)
       ..removeAt(targetIndex);
 
-    onKitMemberListUpdated(ZegoUIKit().getAllUsers());
+    onKitMemberListUpdated(ZegoUIKit().getAllUsers(
+      targetRoomID: ZegoUIKitPrebuiltLiveStreamingController().private.liveID,
+    ));
   }
 
   void onKitMemberListUpdated(List<ZegoUIKitUser> users) {

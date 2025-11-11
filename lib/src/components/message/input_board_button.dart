@@ -15,6 +15,8 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
 
 /// @nodoc
 class ZegoLiveStreamingInRoomMessageInputBoardButton extends StatefulWidget {
+  final String liveID;
+
   final ZegoLiveStreamingHostManager hostManager;
   final ButtonIcon? enabledIcon;
   final ButtonIcon? disabledIcon;
@@ -26,6 +28,7 @@ class ZegoLiveStreamingInRoomMessageInputBoardButton extends StatefulWidget {
 
   const ZegoLiveStreamingInRoomMessageInputBoardButton({
     Key? key,
+    required this.liveID,
     required this.hostManager,
     required this.translationText,
     this.enabledIcon,
@@ -51,6 +54,7 @@ class _ZegoLiveStreamingInRoomMessageInputBoardButtonState
   void initState() {
     super.initState();
 
+    _enableProperty.init(liveID: widget.liveID);
     _enableProperty.notifier.addListener(onEnablePropertyUpdated);
   }
 
@@ -90,15 +94,18 @@ class _ZegoLiveStreamingInRoomMessageInputBoardButtonState
                   isMessageInputting = true;
                   Navigator.of(
                     context,
-                    rootNavigator: widget.hostManager.config.rootNavigator,
+                    rootNavigator:
+                        widget.hostManager.config?.rootNavigator ?? false,
                   )
                       .push(
                     ZegoLiveStreamingInRoomMessageInputBoard(
+                      liveID: widget.liveID,
                       translationText: widget.translationText,
                       payloadAttributes: widget
-                          .hostManager.config.inRoomMessage.attributes
+                          .hostManager.config?.inRoomMessage.attributes
                           ?.call(),
-                      rootNavigator: widget.hostManager.config.rootNavigator,
+                      rootNavigator:
+                          widget.hostManager.config?.rootNavigator ?? false,
                     ),
                   )
                       .then(
@@ -126,7 +133,7 @@ class _ZegoLiveStreamingInRoomMessageInputBoardButtonState
       );
       Navigator.of(
         context,
-        rootNavigator: widget.hostManager.config.rootNavigator,
+        rootNavigator: widget.hostManager.config?.rootNavigator ?? false,
       ).pop();
     }
   }

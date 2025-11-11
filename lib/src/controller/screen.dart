@@ -16,6 +16,9 @@ class ZegoLiveStreamingScreenController
   /// You need to provide the user's ID [userID] to determine which user to perform the operation on.
   /// By using a boolean value [isFullscreen], you can specify whether the user enters or exits full-screen mode.
   void showViewInFullscreenMode(String userID, bool isFullscreen) {
-    viewController.showScreenSharingViewInFullscreenMode(userID, isFullscreen);
+    viewController.showScreenSharingViewInFullscreenMode(
+        targetRoomID: ZegoUIKitPrebuiltLiveStreamingController().private.liveID,
+        userID,
+        isFullscreen);
   }
 }

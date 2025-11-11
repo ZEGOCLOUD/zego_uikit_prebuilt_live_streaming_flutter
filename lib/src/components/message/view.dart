@@ -15,6 +15,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/inner_text.dart';
 
 /// @nodoc
 class ZegoLiveStreamingInRoomLiveMessageView extends StatefulWidget {
+  final String liveID;
   final ZegoLiveStreamingInRoomMessageConfig? config;
   final ZegoLiveStreamingInRoomMessageEvents? events;
   final ZegoAvatarBuilder? avatarBuilder;
@@ -23,6 +24,7 @@ class ZegoLiveStreamingInRoomLiveMessageView extends StatefulWidget {
 
   const ZegoLiveStreamingInRoomLiveMessageView({
     Key? key,
+    required this.liveID,
     required this.innerText,
     required this.config,
     required this.events,
@@ -52,13 +54,16 @@ class _ZegoLiveStreamingInRoomLiveMessageViewState
             child: widget.config?.background ?? Container(),
           ),
           ZegoInRoomMessageView(
-            historyMessages: ZegoUIKit().getInRoomMessages(),
+            historyMessages: ZegoUIKit().getInRoomMessages(
+              targetRoomID: widget.liveID,
+            ),
             stream: ZegoUIKitPrebuiltLiveStreamingController().message.stream(
                   includeFakeMessage: widget.config?.showFakeMessage ?? true,
                 ),
             itemBuilder: widget.config?.itemBuilder ??
                 (BuildContext context, ZegoInRoomMessage message, _) {
                   return ZegoInRoomMessageViewItem(
+                    roomID: widget.liveID,
                     message: message,
                     avatarLeadingBuilder: widget.config?.avatarLeadingBuilder,
                     avatarTailingBuilder: widget.config?.avatarTailingBuilder,

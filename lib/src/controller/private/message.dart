@@ -10,6 +10,8 @@ mixin ZegoLiveStreamingControllerMessagePrivate {
 
 /// @nodoc
 class ZegoLiveStreamingControllerMessagePrivateImpl {
+  final _enableProperty = ZegoLiveStreamingInRoomMessageEnableProperty();
+
   ZegoUIKitPrebuiltLiveStreamingConfig? config;
 
   List<StreamSubscription<dynamic>?> subscriptions = [];
@@ -37,8 +39,11 @@ class ZegoLiveStreamingControllerMessagePrivateImpl {
   /// DO NOT CALL!!!
   /// Call Inside By Prebuilt
   void initByPrebuilt({
-    required ZegoUIKitPrebuiltLiveStreamingConfig config,
+    required String liveID,
+    required ZegoUIKitPrebuiltLiveStreamingConfig? config,
   }) {
+    _enableProperty.init(liveID: liveID);
+
     this.config = config;
 
     pseudoMessageList.clear();
@@ -51,17 +56,25 @@ class ZegoLiveStreamingControllerMessagePrivateImpl {
     streamControllerPseudoMessage ??=
         StreamController<ZegoInRoomMessage>.broadcast();
 
-    onKitBroadcastMessageListUpdated(ZegoUIKit().getInRoomMessages());
+    onKitBroadcastMessageListUpdated(ZegoUIKit().getInRoomMessages(
+      targetRoomID: ZegoUIKitPrebuiltLiveStreamingController().private.liveID,
+    ));
     subscriptions
       ..add(
           streamControllerPseudoMessage!.stream.listen(onPseudoMessageUpdated))
       ..add(ZegoUIKit()
           .getInRoomMessageListStream(
-              type: ZegoInRoomMessageType.broadcastMessage)
+            targetRoomID:
+                ZegoUIKitPrebuiltLiveStreamingController().private.liveID,
+            type: ZegoInRoomMessageType.broadcastMessage,
+          )
           .listen(onKitBroadcastMessageListUpdated))
       ..add(ZegoUIKit()
           .getInRoomMessageListStream(
-              type: ZegoInRoomMessageType.barrageMessage)
+            targetRoomID:
+                ZegoUIKitPrebuiltLiveStreamingController().private.liveID,
+            type: ZegoInRoomMessageType.barrageMessage,
+          )
           .listen(onKitBarrageMessageListUpdated));
   }
 
@@ -90,7 +103,9 @@ class ZegoLiveStreamingControllerMessagePrivateImpl {
   void onPseudoMessageUpdated(ZegoInRoomMessage message) {
     pseudoMessageList.add(message);
 
-    onKitBroadcastMessageListUpdated(ZegoUIKit().getInRoomMessages());
+    onKitBroadcastMessageListUpdated(ZegoUIKit().getInRoomMessages(
+      targetRoomID: ZegoUIKitPrebuiltLiveStreamingController().private.liveID,
+    ));
   }
 
   void onKitBroadcastMessageListUpdated(List<ZegoInRoomMessage> messages) {

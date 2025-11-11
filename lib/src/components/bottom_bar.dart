@@ -17,19 +17,20 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/co_host_control_button.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect_manager.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/pk_combine_notifier.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/mini_button.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/instance.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/modules/minimizing/mini_button.dart';
 
 /// @nodoc
 class ZegoLiveStreamingBottomBar extends StatefulWidget {
+  final String liveID;
+
   final ZegoUIKitPrebuiltLiveStreamingConfig config;
-  final ZegoUIKitPrebuiltLiveStreamingEvents events;
+  final ZegoUIKitPrebuiltLiveStreamingEvents? events;
   final void Function(ZegoLiveStreamingEndEvent event) defaultEndAction;
   final Future<bool> Function(
     ZegoLiveStreamingLeaveConfirmationEvent event,
@@ -37,29 +38,21 @@ class ZegoLiveStreamingBottomBar extends StatefulWidget {
 
   final Size buttonSize;
 
-  final ZegoLiveStreamingHostManager hostManager;
   final ZegoLiveStreamingPopUpManager popUpManager;
-  final ValueNotifier<bool> hostUpdateEnabledNotifier;
-
-  final ValueNotifier<LiveStatus> liveStatusNotifier;
-  final ZegoLiveStreamingConnectManager connectManager;
 
   final ValueNotifier<bool>? isLeaveRequestingNotifier;
 
   const ZegoLiveStreamingBottomBar({
-    Key? key,
+    super.key,
+    required this.liveID,
     required this.config,
     required this.events,
     required this.defaultEndAction,
     required this.defaultLeaveConfirmationAction,
     required this.buttonSize,
-    required this.hostManager,
-    required this.hostUpdateEnabledNotifier,
-    required this.liveStatusNotifier,
-    required this.connectManager,
     required this.popUpManager,
     this.isLeaveRequestingNotifier,
-  }) : super(key: key);
+  });
 
   @override
   State<ZegoLiveStreamingBottomBar> createState() =>
@@ -96,12 +89,17 @@ class _ZegoLiveStreamingBottomBarState
       height: widget.config.bottomMenuBar.height ?? 124.zR,
       child: Stack(
         children: [
-          if (widget.hostManager.isLocalHost)
+          if (ZegoLiveStreamingPageLifeCycle()
+              .currentManagers
+              .hostManager
+              .isLocalHost)
             rightToolbar(context)
           else
             ValueListenableBuilder(
-              valueListenable:
-                  widget.connectManager.audienceLocalConnectStateNotifier,
+              valueListenable: ZegoLiveStreamingPageLifeCycle()
+                  .currentManagers
+                  .connectManager
+                  .audienceLocalConnectStateNotifier,
               builder: (context, connectState, _) {
                 if (widget.config.plugins.isEmpty) {
                   return rightToolbar(context);
@@ -124,12 +122,18 @@ class _ZegoLiveStreamingBottomBarState
   }
 
   void updateButtonsByRole() {
-    if (widget.hostManager.isLocalHost) {
+    if (ZegoLiveStreamingPageLifeCycle()
+        .currentManagers
+        .hostManager
+        .isLocalHost) {
       buttons = widget.config.bottomMenuBar.hostButtons;
       extendButtons = widget.config.bottomMenuBar.hostExtendButtons;
     } else {
-      final connectState =
-          widget.connectManager.audienceLocalConnectStateNotifier.value;
+      final connectState = ZegoLiveStreamingPageLifeCycle()
+          .currentManagers
+          .connectManager
+          .audienceLocalConnectStateNotifier
+          .value;
       final isCoHost =
           ZegoLiveStreamingAudienceConnectState.connected == connectState;
 
@@ -163,8 +167,10 @@ class _ZegoLiveStreamingBottomBarState
           children: [
             zegoLiveButtonPadding,
             ZegoLiveStreamingInRoomMessageInputBoardButton(
+              liveID: widget.liveID,
               translationText: widget.config.innerText,
-              hostManager: widget.hostManager,
+              hostManager:
+                  ZegoLiveStreamingPageLifeCycle().currentManagers.hostManager,
               onSheetPopUp: (int key) {
                 widget.popUpManager.addAPopUpSheet(key);
               },
@@ -285,7 +291,10 @@ class _ZegoLiveStreamingBottomBarState
             ? () {
                 /// if is minimizing, take the local device state
                 return ZegoUIKit()
-                    .getCameraStateNotifier(ZegoUIKit().getLocalUser().id)
+                    .getCameraStateNotifier(
+                      targetRoomID: widget.liveID,
+                      ZegoUIKit().getLocalUser().id,
+                    )
                     .value;
               }
             : null,
@@ -293,7 +302,10 @@ class _ZegoLiveStreamingBottomBarState
             ? () {
                 /// if is minimizing, take the local device state
                 return ZegoUIKit()
-                    .getMicrophoneStateNotifier(ZegoUIKit().getLocalUser().id)
+                    .getMicrophoneStateNotifier(
+                      targetRoomID: widget.liveID,
+                      ZegoUIKit().getLocalUser().id,
+                    )
                     .value;
               }
             : null,
@@ -317,13 +329,18 @@ class _ZegoLiveStreamingBottomBarState
                     context,
                     cameraDefaultValueFunc: () {
                       return ZegoUIKit()
-                          .getCameraStateNotifier(ZegoUIKit().getLocalUser().id)
+                          .getCameraStateNotifier(
+                            targetRoomID: widget.liveID,
+                            ZegoUIKit().getLocalUser().id,
+                          )
                           .value;
                     },
                     microphoneDefaultValueFunc: () {
                       return ZegoUIKit()
                           .getMicrophoneStateNotifier(
-                              ZegoUIKit().getLocalUser().id)
+                            targetRoomID: widget.liveID,
+                            ZegoUIKit().getLocalUser().id,
+                          )
                           .value;
                     },
                   ),
@@ -380,7 +397,11 @@ class _ZegoLiveStreamingBottomBarState
     final iconTextSpacing = 20.zR;
     switch (type) {
       case ZegoLiveStreamingMenuBarButtonName.coHostControlButton:
-        switch (widget.connectManager.audienceLocalConnectStateNotifier.value) {
+        switch (ZegoLiveStreamingPageLifeCycle()
+            .currentManagers
+            .connectManager
+            .audienceLocalConnectStateNotifier
+            .value) {
           case ZegoLiveStreamingAudienceConnectState.idle:
             final textSize = getTextSize(
               widget.config.bottomMenuBar.buttonStyle
@@ -467,7 +488,11 @@ class _ZegoLiveStreamingBottomBarState
     var microphoneDefaultOn = widget.config.turnOnMicrophoneWhenJoining;
     if (widget.config.plugins.isNotEmpty &&
         ZegoLiveStreamingAudienceConnectState.connected ==
-            widget.connectManager.audienceLocalConnectStateNotifier.value) {
+            ZegoLiveStreamingPageLifeCycle()
+                .currentManagers
+                .connectManager
+                .audienceLocalConnectStateNotifier
+                .value) {
       cameraDefaultOn =
           widget.config.coHost.turnOnCameraWhenCohosted?.call() ?? true;
       microphoneDefaultOn = true;
@@ -488,6 +513,7 @@ class _ZegoLiveStreamingBottomBarState
             final needUserMuteMode =
                 (!widget.config.coHost.stopCoHostingWhenMicCameraOff) || isInPK;
             return ZegoToggleMicrophoneButton(
+              roomID: widget.liveID,
               buttonSize: buttonSize,
               iconSize: iconSize,
               normalIcon: ButtonIcon(
@@ -514,6 +540,7 @@ class _ZegoLiveStreamingBottomBarState
 
       case ZegoLiveStreamingMenuBarButtonName.switchAudioOutputButton:
         return ZegoSwitchAudioOutputButton(
+          roomID: widget.liveID,
           buttonSize: buttonSize,
           iconSize: iconSize,
           defaultUseSpeaker: widget.config.useSpeakerWhenJoining,
@@ -532,6 +559,7 @@ class _ZegoLiveStreamingBottomBarState
         );
       case ZegoLiveStreamingMenuBarButtonName.toggleCameraButton:
         return ZegoToggleCameraButton(
+          roomID: widget.liveID,
           buttonSize: buttonSize,
           iconSize: iconSize,
           normalIcon: ButtonIcon(
@@ -554,6 +582,7 @@ class _ZegoLiveStreamingBottomBarState
         );
       case ZegoLiveStreamingMenuBarButtonName.switchCameraButton:
         return ZegoSwitchCameraButton(
+          roomID: widget.liveID,
           buttonSize: buttonSize,
           iconSize: iconSize,
           icon: ButtonIcon(
@@ -566,11 +595,14 @@ class _ZegoLiveStreamingBottomBarState
           ),
           defaultUseFrontFacingCamera: ZegoUIKit()
               .getUseFrontFacingCameraStateNotifier(
-                  ZegoUIKit().getLocalUser().id)
+                targetRoomID: widget.liveID,
+                ZegoUIKit().getLocalUser().id,
+              )
               .value,
         );
       case ZegoLiveStreamingMenuBarButtonName.leaveButton:
         return ZegoLiveStreamingLeaveButton(
+          liveID: widget.liveID,
           buttonSize: buttonSize,
           iconSize: iconSize,
           icon: ButtonIcon(
@@ -582,8 +614,6 @@ class _ZegoLiveStreamingBottomBarState
           events: widget.events,
           defaultEndAction: widget.defaultEndAction,
           defaultLeaveConfirmationAction: widget.defaultLeaveConfirmationAction,
-          hostManager: widget.hostManager,
-          hostUpdateEnabledNotifier: widget.hostUpdateEnabledNotifier,
           isLeaveRequestingNotifier: widget.isLeaveRequestingNotifier,
         );
       case ZegoLiveStreamingMenuBarButtonName.beautyEffectButton:
@@ -614,8 +644,7 @@ class _ZegoLiveStreamingBottomBarState
         );
       case ZegoLiveStreamingMenuBarButtonName.coHostControlButton:
         return ZegoLiveStreamingCoHostControlButton(
-          hostManager: widget.hostManager,
-          connectManager: widget.connectManager,
+          liveID: widget.liveID,
           translationText: widget.config.innerText,
           requestCoHostButtonIcon: ButtonIcon(
             icon: widget
@@ -637,6 +666,7 @@ class _ZegoLiveStreamingBottomBarState
         );
       case ZegoLiveStreamingMenuBarButtonName.enableChatButton:
         return ZegoLiveStreamingDisableChatButton(
+          liveID: widget.liveID,
           buttonSize: buttonSize,
           iconSize: iconSize,
           enableIcon: ButtonIcon(
@@ -649,6 +679,7 @@ class _ZegoLiveStreamingBottomBarState
         );
       case ZegoLiveStreamingMenuBarButtonName.toggleScreenSharingButton:
         return ZegoScreenSharingToggleButton(
+          roomID: widget.liveID,
           buttonSize: buttonSize,
           iconSize: iconSize,
           onPressed: (isScreenSharing) {},
@@ -664,8 +695,10 @@ class _ZegoLiveStreamingBottomBarState
       case ZegoLiveStreamingMenuBarButtonName.chatButton:
         if (widget.config.bottomMenuBar.showInRoomMessageButton) {
           return ZegoLiveStreamingInRoomMessageInputBoardButton(
+            liveID: widget.liveID,
             translationText: widget.config.innerText,
-            hostManager: widget.hostManager,
+            hostManager:
+                ZegoLiveStreamingPageLifeCycle().currentManagers.hostManager,
             onSheetPopUp: (int key) {
               widget.popUpManager.addAPopUpSheet(key);
             },
@@ -690,6 +723,7 @@ class _ZegoLiveStreamingBottomBarState
         return const ZegoLiveStreamingMinimizingButton();
       case ZegoLiveStreamingMenuBarButtonName.pipButton:
         return ZegoLiveStreamingPIPButton(
+          liveID: widget.liveID,
           aspectWidth: widget.config.pip.aspectWidth,
           aspectHeight: widget.config.pip.aspectHeight,
         );

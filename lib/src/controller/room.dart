@@ -13,16 +13,6 @@ class ZegoLiveStreamingControllerRoomImpl
     BuildContext context, {
     bool showConfirmation = false,
   }) async {
-    if (null == private.hostManager) {
-      ZegoLoggerService.logInfo(
-        'param is invalid, hostManager:${private.hostManager}',
-        tag: 'live-streaming',
-        subTag: 'controller.room, leave',
-      );
-
-      return false;
-    }
-
     if (private.isLeaveRequestingNotifier.value) {
       ZegoLoggerService.logInfo(
         'is leave requesting...',
@@ -66,25 +56,24 @@ class ZegoLiveStreamingControllerRoomImpl
         ZegoUIKitPrebuiltLiveStreamingController().minimize.state;
     ZegoUIKitPrebuiltLiveStreamingController().minimize.hide();
 
-    if (private.hostManager?.isLocalHost ?? false) {
+    if (private.hostManager.isLocalHost) {
       /// live is ready to end, host will update if receive property notify
       /// so need to keep current host value, DISABLE local host value UPDATE
-      private.hostManager?.hostUpdateEnabledNotifier.value = false;
-      await ZegoUIKit().updateRoomProperties({
-        RoomPropertyKey.host.text: '',
-        RoomPropertyKey.liveStatus.text: LiveStatus.ended.index.toString()
-      });
+      private.hostManager.hostUpdateEnabledNotifier.value = false;
+      await ZegoUIKit().updateRoomProperties(
+        targetRoomID: ZegoUIKitPrebuiltLiveStreamingController().private.liveID,
+        {
+          RoomPropertyKey.host.text: '',
+          RoomPropertyKey.liveStatus.text: LiveStatus.ended.index.toString()
+        },
+      );
     }
 
-    if (isFromMinimizing) {
-      /// leave in minimizing
-      await ZegoLiveStreamingManagers().uninitPluginAndManagers();
-
-      await ZegoUIKit().resetSoundEffect();
-      await ZegoUIKit().resetBeautyEffect();
-    }
-
-    final result = await ZegoUIKit().leaveRoom().then((result) {
+    final result = await ZegoUIKit()
+        .leaveRoom(
+            targetRoomID:
+                ZegoUIKitPrebuiltLiveStreamingController().private.liveID)
+        .then((result) {
       ZegoLoggerService.logInfo(
         'leave room result, ${result.errorCode} ${result.extendedData}',
         tag: 'live-streaming',
@@ -342,7 +331,10 @@ class ZegoLiveStreamingControllerRoomImpl
 
   /// when receives [ZegoLiveStreamingRoomEvents.onTokenExpired], you need use this API to update the token
   Future<void> renewToken(String token) async {
-    await ZegoUIKit().renewRoomToken(token);
+    await ZegoUIKit().renewRoomToken(
+      targetRoomID: ZegoUIKitPrebuiltLiveStreamingController().private.liveID,
+      token,
+    );
 
     if (ZegoPluginAdapter().getPlugin(ZegoUIKitPluginType.signaling) != null) {
       ZegoUIKit().getSignalingPlugin().renewToken(token);

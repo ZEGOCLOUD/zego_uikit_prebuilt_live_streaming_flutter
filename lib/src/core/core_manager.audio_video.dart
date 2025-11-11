@@ -2,10 +2,10 @@ part of 'core_managers.dart';
 
 extension ZegoLiveStreamingAudioVideoManagers on ZegoLiveStreamingManagers {
   ZegoPlayCoHostAudioVideoCallback? get playCoHostAudioConfig =>
-      hostManager?.config.audioVideoView.playCoHostAudio;
+      hostManager.config?.audioVideoView.playCoHostAudio;
 
   ZegoPlayCoHostAudioVideoCallback? get playCoHostVideoConfig =>
-      hostManager?.config.audioVideoView.playCoHostVideo;
+      hostManager.config?.audioVideoView.playCoHostVideo;
 
   void initAudioVideoManagers() {
     ZegoLoggerService.logInfo(
@@ -14,18 +14,19 @@ extension ZegoLiveStreamingAudioVideoManagers on ZegoLiveStreamingManagers {
       subTag: 'audio video',
     );
 
-    subscriptions.add(
-        ZegoUIKit().getAudioVideoListStream().listen(onAudioVideoListUpdated));
+    subscriptions.add(ZegoUIKit()
+        .getAudioVideoListStream(targetRoomID: liveID)
+        .listen(onAudioVideoListUpdated));
 
-    hostManager?.notifier.addListener(onHostUpdated);
+    hostManager.notifier.addListener(onHostUpdated);
   }
 
   void uninitAudioVideoManagers() {
-    hostManager?.notifier.removeListener(onHostUpdated);
+    hostManager.notifier.removeListener(onHostUpdated);
   }
 
   void onHostUpdated() {
-    muteCoHostAudioVideo(ZegoUIKit().getAudioVideoList());
+    muteCoHostAudioVideo(ZegoUIKit().getAudioVideoList(targetRoomID: liveID));
   }
 
   void onAudioVideoListUpdated(List<ZegoUIKitUser> audioVideoUsers) {
@@ -33,15 +34,14 @@ extension ZegoLiveStreamingAudioVideoManagers on ZegoLiveStreamingManagers {
   }
 
   void muteCoHostAudioVideo(List<ZegoUIKitUser> audioVideoUsers) {
-    final localRole =
-        connectManager?.localRole ?? ZegoLiveStreamingRole.audience;
+    final localRole = connectManager.localRole;
 
     if (null != playCoHostAudioConfig) {
       for (final audioVideoUser in audioVideoUsers) {
         if (audioVideoUser.id == ZegoUIKit().getLocalUser().id) {
           continue;
         }
-        if (hostManager?.notifier.value?.id == audioVideoUser.id) {
+        if (hostManager.notifier.value?.id == audioVideoUser.id) {
           continue;
         }
 
@@ -57,9 +57,17 @@ extension ZegoLiveStreamingAudioVideoManagers on ZegoLiveStreamingManagers {
           subTag: 'audio video',
         );
         if (isPlayAudio && audioVideoUser.microphone.value) {
-          ZegoUIKit().muteUserAudio(audioVideoUser.id, false);
+          ZegoUIKit().muteUserAudio(
+            targetRoomID: liveID,
+            audioVideoUser.id,
+            false,
+          );
         } else if (!isPlayAudio) {
-          ZegoUIKit().muteUserAudio(audioVideoUser.id, true);
+          ZegoUIKit().muteUserAudio(
+            targetRoomID: liveID,
+            audioVideoUser.id,
+            true,
+          );
         }
       }
     }
@@ -69,9 +77,13 @@ extension ZegoLiveStreamingAudioVideoManagers on ZegoLiveStreamingManagers {
         if (audioVideoUser.id == ZegoUIKit().getLocalUser().id) {
           continue;
         }
-        if (hostManager?.notifier.value?.id == audioVideoUser.id) {
+        if (hostManager.notifier.value?.id == audioVideoUser.id) {
           /// host can not mute
-          ZegoUIKit().muteUserVideo(audioVideoUser.id, false);
+          ZegoUIKit().muteUserVideo(
+            targetRoomID: liveID,
+            audioVideoUser.id,
+            false,
+          );
           continue;
         }
 
@@ -87,9 +99,14 @@ extension ZegoLiveStreamingAudioVideoManagers on ZegoLiveStreamingManagers {
           subTag: 'audio video',
         );
         if (isPlayVideo && audioVideoUser.camera.value) {
-          ZegoUIKit().muteUserVideo(audioVideoUser.id, false);
+          ZegoUIKit().muteUserVideo(
+            targetRoomID: liveID,
+            audioVideoUser.id,
+            false,
+          );
         } else if (!isPlayVideo) {
-          ZegoUIKit().muteUserVideo(audioVideoUser.id, true);
+          ZegoUIKit()
+              .muteUserVideo(targetRoomID: liveID, audioVideoUser.id, true);
         }
       }
     }

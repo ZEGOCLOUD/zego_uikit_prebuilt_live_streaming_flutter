@@ -13,6 +13,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
 class ZegoLiveStreamingPIPButton extends StatefulWidget {
   const ZegoLiveStreamingPIPButton({
     Key? key,
+    required this.liveID,
     this.afterClicked,
     this.icon,
     this.iconSize,
@@ -20,6 +21,8 @@ class ZegoLiveStreamingPIPButton extends StatefulWidget {
     this.aspectWidth = 9,
     this.aspectHeight = 16,
   }) : super(key: key);
+
+  final String liveID;
 
   final ButtonIcon? icon;
 
@@ -51,11 +54,11 @@ class _ZegoLiveStreamingPIPButtonState
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<ZegoUIKitRoomState>(
-      valueListenable: ZegoUIKit().getRoomStateStream(),
+      valueListenable: ZegoUIKit().getRoomStateStream(
+        targetRoomID: widget.liveID,
+      ),
       builder: (context, roomState, _) {
-        return ZegoRoomStateChangedReason.Logined == roomState.reason
-            ? button()
-            : Container();
+        return roomState.isLogin2 ? button() : Container();
       },
     );
   }

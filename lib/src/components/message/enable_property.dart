@@ -15,9 +15,14 @@ class ZegoLiveStreamingInRoomMessageEnableProperty {
   final _valueNotifier = ValueNotifier<bool>(true);
   final List<StreamSubscription<dynamic>?> _subscriptions = [];
 
-  ZegoLiveStreamingInRoomMessageEnableProperty() {
-    _subscriptions.add(
-        ZegoUIKit().getRoomPropertiesStream().listen(onRoomPropertiesUpdated));
+  ZegoLiveStreamingInRoomMessageEnableProperty();
+
+  void init({
+    required String liveID,
+  }) {
+    _subscriptions.add(ZegoUIKit()
+        .getRoomPropertiesStream(targetRoomID: liveID)
+        .listen(onRoomPropertiesUpdated));
   }
 
   ValueNotifier<bool> get notifier => _valueNotifier;

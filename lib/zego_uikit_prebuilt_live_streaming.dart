@@ -1,7 +1,3 @@
-library zego_uikit_prebuilt_live_streaming;
-
-export 'package:zego_uikit/zego_uikit.dart';
-
 export 'src/config.dart';
 export 'src/config.defines.dart';
 export 'src/controller.dart';
@@ -11,10 +7,9 @@ export 'src/events.defines.dart';
 export 'src/inner_text.dart';
 export 'src/live_streaming.dart';
 
-export 'src/minimizing/export.dart';
-export 'src/pk/export.dart';
-export 'src/swiping/config.dart';
-
-export 'src/components/live_list/export.dart';
+export 'src/modules/minimizing/minimizing.dart';
+export 'src/modules/pk/pk.dart';
+export 'src/modules/swiping/swiping.dart';
+export 'src/modules/hall/hall.dart';
 
 export 'src/deprecated/deprecated.dart';

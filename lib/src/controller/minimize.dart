@@ -55,17 +55,17 @@ class ZegoLiveStreamingControllerMinimizingImpl
         rootNavigator: true,
       ).push(
         MaterialPageRoute(builder: (context) {
-          final isSwiping = minimizeData.config.swiping != null;
           final prebuiltLiveStreaming = ZegoUIKitPrebuiltLiveStreaming(
             appID: minimizeData.appID,
             appSign: minimizeData.appSign,
             userID: minimizeData.userID,
             userName: minimizeData.userName,
-            liveID: isSwiping
-                ? ZegoUIKitPrebuiltLiveStreamingController()
+            liveID: ZegoLiveStreamingPageLifeCycle().swiping.usingRoomSwiping
+                ? ZegoLiveStreamingPageLifeCycle()
                     .swiping
-                    .private
-                    .currentSwipingID
+                    .streamContext
+                    .currentSwipingHost
+                    .roomID
                 : minimizeData.liveID,
             config: minimizeData.config,
             events: minimizeData.events,

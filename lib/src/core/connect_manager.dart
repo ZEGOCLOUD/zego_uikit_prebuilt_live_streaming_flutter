@@ -11,43 +11,24 @@ import 'package:zego_uikit/zego_uikit.dart';
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/dialogs.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/permissions.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/toast.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/defines.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/inner_text.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/reporter.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/overlay_machine.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/instance.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/modules/minimizing/overlay_machine.dart';
 
 /// @nodoc
 class ZegoLiveStreamingConnectManager {
-  ZegoLiveStreamingConnectManager({
-    required this.hostManager,
-    required this.popUpManager,
-    required this.liveStatusNotifier,
-    required this.config,
-    required this.events,
-    required this.kickOutNotifier,
-    this.contextQuery,
-  }) {
-    listenStream();
-  }
-
-  BuildContext Function()? contextQuery;
-  final ZegoUIKitPrebuiltLiveStreamingConfig config;
-
-  final ZegoUIKitPrebuiltLiveStreamingEvents events;
-
-  final ZegoLiveStreamingHostManager hostManager;
-  final ZegoLiveStreamingPopUpManager popUpManager;
-  final ValueNotifier<LiveStatus> liveStatusNotifier;
-  final ValueNotifier<bool> kickOutNotifier;
+  String liveID = '';
+  ZegoUIKitPrebuiltLiveStreamingConfig? config;
+  ZegoUIKitPrebuiltLiveStreamingEvents? events;
 
   bool _initialized = false;
 
@@ -73,19 +54,22 @@ class ZegoLiveStreamingConnectManager {
   /// co-host total count
   final coHostCount = ValueNotifier<int>(0);
 
-  ZegoUIKitPrebuiltLiveStreamingInnerText get innerText => config.innerText;
+  ZegoUIKitPrebuiltLiveStreamingInnerText get innerText =>
+      config?.innerText ?? ZegoUIKitPrebuiltLiveStreamingInnerText();
 
-  int get maxCoHostCount => config.coHost.maxCoHostCount;
+  int get maxCoHostCount => config?.coHost.maxCoHostCount ?? 12;
 
-  bool get isMaxCoHostReached =>
-      coHostCount.value >= config.coHost.maxCoHostCount;
+  bool get isMaxCoHostReached => coHostCount.value >= maxCoHostCount;
 
   List<String> audienceIDsOfInvitingConnect = [];
   List<StreamSubscription<dynamic>?> subscriptions = [];
 
   ZegoLiveStreamingRole get localRole {
     var role = ZegoLiveStreamingRole.audience;
-    if (hostManager.isLocalHost) {
+    if (ZegoLiveStreamingPageLifeCycle()
+        .currentManagers
+        .hostManager
+        .isLocalHost) {
       role = ZegoLiveStreamingRole.host;
     } else if (isLocalAudience) {
       role = ZegoLiveStreamingRole.audience;
@@ -95,10 +79,20 @@ class ZegoLiveStreamingConnectManager {
   }
 
   bool get isLocalAudience =>
-      !hostManager.isLocalHost && !isCoHost(ZegoUIKit().getLocalUser());
+      !ZegoLiveStreamingPageLifeCycle()
+          .currentManagers
+          .hostManager
+          .isLocalHost &&
+      !isCoHost(ZegoUIKit().getLocalUser());
 
   bool isCoHost(ZegoUIKitUser user) {
-    if (hostManager.notifier.value?.id == user.id) {
+    if (ZegoLiveStreamingPageLifeCycle()
+            .currentManagers
+            .hostManager
+            .notifier
+            .value
+            ?.id ==
+        user.id) {
       /// host also open camera/microphone
       return false;
     }
@@ -117,7 +111,11 @@ class ZegoLiveStreamingConnectManager {
       audienceLocalConnectStateNotifier.value ==
       ZegoLiveStreamingAudienceConnectState.connected;
 
-  void init() {
+  void init({
+    required String liveID,
+    ZegoUIKitPrebuiltLiveStreamingConfig? config,
+    ZegoUIKitPrebuiltLiveStreamingEvents? events,
+  }) {
     if (_initialized) {
       ZegoLoggerService.logInfo(
         'had already init',
@@ -130,50 +128,21 @@ class ZegoLiveStreamingConnectManager {
 
     _initialized = true;
 
+    this.liveID = liveID;
+    this.config = config;
+    this.events = events;
+
     ZegoLoggerService.logInfo(
       'init',
       tag: 'live-streaming-coHost',
       subTag: 'connect manager',
     );
 
-    if (ZegoLiveStreamingRole.host == config.role &&
-        hostManager.notifier.value != null &&
-        hostManager.notifier.value!.id != ZegoUIKit().getLocalUser().id) {
-      ZegoLoggerService.logInfo(
-        'switch local to be co-host',
-        tag: 'live-streaming-coHost',
-        subTag: 'connect manager',
-      );
+    listenStream();
 
-      updateAudienceConnectState(ZegoLiveStreamingAudienceConnectState.idle);
-    } else if (ZegoLiveStreamingRole.coHost == config.role) {
-      ZegoLoggerService.logInfo(
-        "config's role is co-host, connect state default to be connected",
-        tag: 'live-streaming-coHost',
-        subTag: 'connect manager',
-      );
-
-      final permissions = getCoHostPermissions();
-      requestPermissions(
-        context: contextQuery!(),
-        isShowDialog: true,
-        translationText: innerText,
-        rootNavigator: config.rootNavigator,
-        permissions: permissions,
-        popUpManager: popUpManager,
-        kickOutNotifier: kickOutNotifier,
-      ).then((value) {
-        ZegoUIKit().turnCameraOn(
-          config.coHost.turnOnCameraWhenCohosted?.call() ?? true,
-        );
-        ZegoUIKit().turnMicrophoneOn(true);
-
-        updateAudienceConnectState(
-            ZegoLiveStreamingAudienceConnectState.connected);
-      });
-    }
-
-    initCoHostMixin();
+    ZegoUIKit()
+        .getRoomStateStream(targetRoomID: liveID)
+        .addListener(onRoomStateUpdated);
   }
 
   Future<bool> audienceCancelCoHostIfRequesting() async {
@@ -212,6 +181,10 @@ class ZegoLiveStreamingConnectManager {
       subTag: 'connect manager',
     );
 
+    ZegoUIKit()
+        .getRoomStateStream(targetRoomID: liveID)
+        .removeListener(onRoomStateUpdated);
+
     audienceLocalConnectStateNotifier.value =
         ZegoLiveStreamingAudienceConnectState.idle;
 
@@ -226,8 +199,63 @@ class ZegoLiveStreamingConnectManager {
     }
   }
 
+  void onRoomStateUpdated() {
+    if (ZegoLiveStreamingRole.host == config?.role &&
+        ZegoLiveStreamingPageLifeCycle()
+                .currentManagers
+                .hostManager
+                .notifier
+                .value !=
+            null &&
+        ZegoLiveStreamingPageLifeCycle()
+                .currentManagers
+                .hostManager
+                .notifier
+                .value!
+                .id !=
+            ZegoUIKit().getLocalUser().id) {
+      ZegoLoggerService.logInfo(
+        'switch local to be co-host',
+        tag: 'live-streaming-coHost',
+        subTag: 'connect manager',
+      );
+
+      updateAudienceConnectState(ZegoLiveStreamingAudienceConnectState.idle);
+    } else if (ZegoLiveStreamingRole.coHost == config?.role) {
+      ZegoLoggerService.logInfo(
+        "config's role is co-host, connect state default to be connected",
+        tag: 'live-streaming-coHost',
+        subTag: 'connect manager',
+      );
+
+      final permissions = getCoHostPermissions();
+      requestPermissions(
+        context: ZegoLiveStreamingPageLifeCycle().contextQuery!(),
+        isShowDialog: true,
+        translationText: innerText,
+        rootNavigator: config?.rootNavigator ?? false,
+        permissions: permissions,
+        popUpManager:
+            ZegoLiveStreamingPageLifeCycle().currentContextData?.popUpManager,
+        kickOutNotifier:
+            ZegoLiveStreamingPageLifeCycle().currentManagers.kickOutNotifier,
+      ).then((value) {
+        ZegoUIKit().turnCameraOn(
+          targetRoomID: liveID,
+          config?.coHost.turnOnCameraWhenCohosted?.call() ?? true,
+        );
+        ZegoUIKit().turnMicrophoneOn(targetRoomID: liveID, true);
+
+        updateAudienceConnectState(
+            ZegoLiveStreamingAudienceConnectState.connected);
+      });
+    }
+
+    initCoHostMixin();
+  }
+
   void listenStream() {
-    if (config.plugins.isNotEmpty) {
+    if (config?.plugins.isNotEmpty ?? false) {
       subscriptions
         ..add(ZegoUIKit()
             .getSignalingPlugin()
@@ -293,7 +321,7 @@ class ZegoLiveStreamingConnectManager {
         event: ZegoLiveStreamingReporter.eventCoHostHostStop,
         params: {
           ZegoLiveStreamingReporter.eventKeyCallID: result.invitationID,
-          ZegoLiveStreamingReporter.eventKeyRoomID: ZegoUIKit().getRoom().id,
+          ZegoLiveStreamingReporter.eventKeyRoomID: liveID,
           ZegoLiveStreamingReporter.eventKeyCoHostID: coHost.id,
         },
       );
@@ -353,7 +381,7 @@ class ZegoLiveStreamingConnectManager {
           },
         );
 
-        events.coHost.host.onInvitationSent
+        events?.coHost.host.onInvitationSent
             ?.call(ZegoLiveStreamingCoHostHostEventInvitationSentData(
           audience: invitee,
         ));
@@ -394,7 +422,10 @@ class ZegoLiveStreamingConnectManager {
       subTag: 'connect, on invitation received',
     );
 
-    if (hostManager.isLocalHost) {
+    if (ZegoLiveStreamingPageLifeCycle()
+        .currentManagers
+        .hostManager
+        .isLocalHost) {
       if (ZegoLiveStreamingInvitationType.requestCoHost == invitationType) {
         ZegoLiveStreamingReporter().report(
           event: ZegoLiveStreamingReporter.eventCoHostHostReceived,
@@ -405,7 +436,7 @@ class ZegoLiveStreamingConnectManager {
           },
         );
 
-        events.coHost.host.onRequestReceived
+        events?.coHost.host.onRequestReceived
             ?.call(ZegoLiveStreamingCoHostHostEventRequestReceivedData(
           audience: inviter,
           customData: customData,
@@ -453,7 +484,7 @@ class ZegoLiveStreamingConnectManager {
 
   List<Permission> getCoHostPermissions() {
     final permissions = <Permission>[];
-    if (config.coHost.turnOnCameraWhenCohosted?.call() ?? true) {
+    if (config?.coHost.turnOnCameraWhenCohosted?.call() ?? true) {
       permissions.add(Permission.camera);
     }
 
@@ -476,7 +507,7 @@ class ZegoLiveStreamingConnectManager {
     }
 
     if (isMaxCoHostReached) {
-      events.coHost.onMaxCountReached?.call(config.coHost.maxCoHostCount);
+      events?.coHost.onMaxCountReached?.call(maxCoHostCount);
 
       ZegoLoggerService.logInfo(
         'co-host max count had reached, ignore current co-host invitation',
@@ -487,7 +518,7 @@ class ZegoLiveStreamingConnectManager {
       return;
     }
 
-    events.coHost.audience.onInvitationReceived?.call(
+    events?.coHost.audience.onInvitationReceived?.call(
       ZegoLiveStreamingCoHostAudienceEventRequestReceivedData(
         host: host,
         customData: customData,
@@ -511,7 +542,7 @@ class ZegoLiveStreamingConnectManager {
       return;
     }
 
-    if (config.coHost.disableCoHostInvitationReceivedDialog) {
+    if (config?.coHost.disableCoHostInvitationReceivedDialog ?? false) {
       ZegoLoggerService.logInfo(
         'config set not show co-host invitation dialog',
         tag: 'live-streaming-coHost',
@@ -533,19 +564,27 @@ class ZegoLiveStreamingConnectManager {
     isInvitedToJoinCoHostDlgVisible = true;
 
     final key = DateTime.now().millisecondsSinceEpoch;
-    popUpManager.addAPopUpSheet(key);
+    ZegoLiveStreamingPageLifeCycle()
+        .currentContextData
+        ?.popUpManager
+        .addAPopUpSheet(key);
 
     /// not in minimizing
     showLiveDialog(
-      context: contextQuery!(),
+      context: ZegoLiveStreamingPageLifeCycle().contextQuery!(),
       title: translation.title,
       content: translation.message,
       leftButtonText: translation.cancelButtonName,
-      rootNavigator: config.rootNavigator,
+      rootNavigator: config?.rootNavigator ?? false,
       leftButtonCallback: () {
         isInvitedToJoinCoHostDlgVisible = false;
 
-        if (LiveStatus.living == liveStatusNotifier.value) {
+        if (LiveStatus.living ==
+            ZegoLiveStreamingPageLifeCycle()
+                .currentManagers
+                .liveStatusManager
+                .notifier
+                .value) {
           ZegoUIKit()
               .getSignalingPlugin()
               .refuseInvitation(inviterID: host.id, data: '')
@@ -559,7 +598,7 @@ class ZegoLiveStreamingConnectManager {
               },
             );
 
-            events.coHost.audience.onActionRefuseInvitation?.call();
+            events?.coHost.audience.onActionRefuseInvitation?.call();
 
             ZegoLoggerService.logInfo(
               'refuse co-host invite, result:$result',
@@ -576,8 +615,8 @@ class ZegoLiveStreamingConnectManager {
         }
 
         Navigator.of(
-          contextQuery!(),
-          rootNavigator: config.rootNavigator,
+          ZegoLiveStreamingPageLifeCycle().contextQuery!(),
+          rootNavigator: config?.rootNavigator ?? false,
         ).pop();
       },
       rightButtonText: translation.confirmButtonName,
@@ -586,7 +625,7 @@ class ZegoLiveStreamingConnectManager {
 
         do {
           if (isMaxCoHostReached) {
-            events.coHost.onMaxCountReached?.call(config.coHost.maxCoHostCount);
+            events?.coHost.onMaxCountReached?.call(maxCoHostCount);
 
             ZegoLoggerService.logInfo(
               'co-host max count had reached, ignore current accept co-host invite',
@@ -602,7 +641,12 @@ class ZegoLiveStreamingConnectManager {
             tag: 'live-streaming-coHost',
             subTag: 'connect, onAudienceReceivedCoHostInvitation',
           );
-          if (LiveStatus.living == liveStatusNotifier.value) {
+          if (LiveStatus.living ==
+              ZegoLiveStreamingPageLifeCycle()
+                  .currentManagers
+                  .liveStatusManager
+                  .notifier
+                  .value) {
             ZegoUIKit()
                 .getSignalingPlugin()
                 .acceptInvitation(inviterID: host.id, data: '')
@@ -627,17 +671,21 @@ class ZegoLiveStreamingConnectManager {
                 return;
               }
 
-              events.coHost.audience.onActionAcceptInvitation?.call();
+              events?.coHost.audience.onActionAcceptInvitation?.call();
 
               final permissions = getCoHostPermissions();
               requestPermissions(
-                context: contextQuery!(),
+                context: ZegoLiveStreamingPageLifeCycle().contextQuery!(),
                 isShowDialog: true,
                 translationText: innerText,
-                rootNavigator: config.rootNavigator,
+                rootNavigator: config?.rootNavigator ?? false,
                 permissions: permissions,
-                popUpManager: popUpManager,
-                kickOutNotifier: kickOutNotifier,
+                popUpManager: ZegoLiveStreamingPageLifeCycle()
+                    .currentContextData
+                    ?.popUpManager,
+                kickOutNotifier: ZegoLiveStreamingPageLifeCycle()
+                    .currentManagers
+                    .kickOutNotifier,
               ).then((_) {
                 updateAudienceConnectState(
                   ZegoLiveStreamingAudienceConnectState.connected,
@@ -654,12 +702,15 @@ class ZegoLiveStreamingConnectManager {
         } while (false);
 
         Navigator.of(
-          contextQuery!(),
-          rootNavigator: config.rootNavigator,
+          ZegoLiveStreamingPageLifeCycle().contextQuery!(),
+          rootNavigator: config?.rootNavigator ?? false,
         ).pop();
       },
     ).whenComplete(() {
-      popUpManager.removeAPopUpSheet(key);
+      ZegoLiveStreamingPageLifeCycle()
+          .currentContextData
+          ?.popUpManager
+          .removeAPopUpSheet(key);
     });
   }
 
@@ -674,8 +725,11 @@ class ZegoLiveStreamingConnectManager {
       subTag: 'connect, on invitation accepted',
     );
 
-    if (hostManager.isLocalHost) {
-      events.coHost.host.onInvitationAccepted?.call(
+    if (ZegoLiveStreamingPageLifeCycle()
+        .currentManagers
+        .hostManager
+        .isLocalHost) {
+      events?.coHost.host.onInvitationAccepted?.call(
         ZegoLiveStreamingCoHostHostEventInvitationAcceptedData(
           audience: invitee,
           customData: customData,
@@ -684,7 +738,7 @@ class ZegoLiveStreamingConnectManager {
 
       audienceIDsOfInvitingConnect.remove(invitee.id);
     } else {
-      events.coHost.audience.onRequestAccepted?.call(
+      events?.coHost.audience.onRequestAccepted?.call(
         ZegoLiveStreamingCoHostAudienceEventRequestAcceptedData(
           customData: customData,
         ),
@@ -692,18 +746,21 @@ class ZegoLiveStreamingConnectManager {
 
       final permissions = getCoHostPermissions();
       requestPermissions(
-        context: contextQuery!(),
+        context: ZegoLiveStreamingPageLifeCycle().contextQuery!(),
         isShowDialog: true,
         translationText: innerText,
-        rootNavigator: config.rootNavigator,
+        rootNavigator: config?.rootNavigator ?? false,
         permissions: permissions,
-        popUpManager: popUpManager,
-        kickOutNotifier: kickOutNotifier,
+        popUpManager:
+            ZegoLiveStreamingPageLifeCycle().currentContextData?.popUpManager,
+        kickOutNotifier:
+            ZegoLiveStreamingPageLifeCycle().currentManagers.kickOutNotifier,
       ).then((value) {
         ZegoUIKit().turnCameraOn(
-          config.coHost.turnOnCameraWhenCohosted?.call() ?? true,
+          targetRoomID: liveID,
+          config?.coHost.turnOnCameraWhenCohosted?.call() ?? true,
         );
-        ZegoUIKit().turnMicrophoneOn(true);
+        ZegoUIKit().turnMicrophoneOn(targetRoomID: liveID, true);
 
         updateAudienceConnectState(
             ZegoLiveStreamingAudienceConnectState.connected);
@@ -722,8 +779,11 @@ class ZegoLiveStreamingConnectManager {
       subTag: 'connect, on invitation canceled',
     );
 
-    if (hostManager.isLocalHost) {
-      events.coHost.host.onRequestCanceled?.call(
+    if (ZegoLiveStreamingPageLifeCycle()
+        .currentManagers
+        .hostManager
+        .isLocalHost) {
+      events?.coHost.host.onRequestCanceled?.call(
         ZegoLiveStreamingCoHostHostEventRequestCanceledData(
           audience: inviter,
           customData: customData,
@@ -747,8 +807,11 @@ class ZegoLiveStreamingConnectManager {
       subTag: 'connect, on invitation refused',
     );
 
-    if (hostManager.isLocalHost) {
-      events.coHost.host.onInvitationRefused?.call(
+    if (ZegoLiveStreamingPageLifeCycle()
+        .currentManagers
+        .hostManager
+        .isLocalHost) {
+      events?.coHost.host.onInvitationRefused?.call(
         ZegoLiveStreamingCoHostHostEventInvitationRefusedData(
           audience: invitee,
           customData: customData,
@@ -759,10 +822,10 @@ class ZegoLiveStreamingConnectManager {
 
       showError(innerText.audienceRejectInvitationToast.replaceFirst(
         ZegoUIKitPrebuiltLiveStreamingInnerText.param_1,
-        ZegoUIKit().getUser(invitee.id).name,
+        ZegoUIKit().getUser(targetRoomID: liveID, invitee.id).name,
       ));
     } else {
-      events.coHost.audience.onRequestRefused?.call(
+      events?.coHost.audience.onRequestRefused?.call(
         ZegoLiveStreamingCoHostAudienceEventRequestRefusedData(
           customData: customData,
         ),
@@ -787,7 +850,10 @@ class ZegoLiveStreamingConnectManager {
       subTag: 'connect, on invitation timeout',
     );
 
-    if (hostManager.isLocalHost) {
+    if (ZegoLiveStreamingPageLifeCycle()
+        .currentManagers
+        .hostManager
+        .isLocalHost) {
       ZegoLiveStreamingReporter().report(
         event: ZegoLiveStreamingReporter.eventCoHostHostRespond,
         params: {
@@ -797,7 +863,7 @@ class ZegoLiveStreamingConnectManager {
         },
       );
 
-      events.coHost.host.onRequestTimeout?.call(
+      events?.coHost.host.onRequestTimeout?.call(
         ZegoLiveStreamingCoHostHostEventRequestTimeoutData(
           audience: inviter,
         ),
@@ -818,7 +884,7 @@ class ZegoLiveStreamingConnectManager {
           },
         );
 
-        events.coHost.audience.onInvitationTimeout?.call();
+        events?.coHost.audience.onInvitationTimeout?.call();
       }
 
       dataOfInvitedToJoinCoHostInMinimizingNotifier.value = null;
@@ -827,8 +893,8 @@ class ZegoLiveStreamingConnectManager {
       if (isInvitedToJoinCoHostDlgVisible) {
         isInvitedToJoinCoHostDlgVisible = false;
         Navigator.of(
-          contextQuery!(),
-          rootNavigator: config.rootNavigator,
+          ZegoLiveStreamingPageLifeCycle().contextQuery!(),
+          rootNavigator: config?.rootNavigator ?? false,
         ).pop();
       }
     }
@@ -847,13 +913,16 @@ class ZegoLiveStreamingConnectManager {
       subTag: 'connect, on invitation response timeout',
     );
 
-    if (hostManager.isLocalHost) {
+    if (ZegoLiveStreamingPageLifeCycle()
+        .currentManagers
+        .hostManager
+        .isLocalHost) {
       for (final invitee in invitees) {
         audienceIDsOfInvitingConnect.remove(invitee.id);
 
         if (ZegoLiveStreamingInvitationType.inviteToJoinCoHost ==
             invitationType) {
-          events.coHost.host.onInvitationTimeout?.call(
+          events?.coHost.host.onInvitationTimeout?.call(
             ZegoLiveStreamingCoHostHostEventInvitationTimeoutData(
               audience: invitee,
             ),
@@ -861,7 +930,7 @@ class ZegoLiveStreamingConnectManager {
         }
       }
     } else {
-      events.coHost.audience.onRequestTimeout?.call();
+      events?.coHost.audience.onRequestTimeout?.call();
 
       updateAudienceConnectState(ZegoLiveStreamingAudienceConnectState.idle);
     }
@@ -884,12 +953,15 @@ class ZegoLiveStreamingConnectManager {
     }
 
     final key = DateTime.now().millisecondsSinceEpoch;
-    popUpManager.addAPopUpSheet(key);
+    ZegoLiveStreamingPageLifeCycle()
+        .currentContextData
+        ?.popUpManager
+        .addAPopUpSheet(key);
 
     isEndCoHostDialogVisible = true;
     return showLiveDialog(
-      context: contextQuery!(),
-      rootNavigator: config.rootNavigator,
+      context: ZegoLiveStreamingPageLifeCycle().contextQuery!(),
+      rootNavigator: config?.rootNavigator ?? false,
       title: innerText.endConnectionDialogInfo.title,
       content: innerText.endConnectionDialogInfo.message,
       leftButtonText: innerText.endConnectionDialogInfo.cancelButtonName,
@@ -897,22 +969,25 @@ class ZegoLiveStreamingConnectManager {
         isEndCoHostDialogVisible = false;
         //  pop this dialog
         Navigator.of(
-          contextQuery!(),
-          rootNavigator: config.rootNavigator,
+          ZegoLiveStreamingPageLifeCycle().contextQuery!(),
+          rootNavigator: config?.rootNavigator ?? false,
         ).pop(false);
       },
       rightButtonText: innerText.endConnectionDialogInfo.confirmButtonName,
       rightButtonCallback: () {
         isEndCoHostDialogVisible = false;
         Navigator.of(
-          contextQuery!(),
-          rootNavigator: config.rootNavigator,
+          ZegoLiveStreamingPageLifeCycle().contextQuery!(),
+          rootNavigator: config?.rootNavigator ?? false,
         ).pop(true);
 
         coHostEndConnect();
       },
     ).whenComplete(() {
-      popUpManager.removeAPopUpSheet(key);
+      ZegoLiveStreamingPageLifeCycle()
+          .currentContextData
+          ?.popUpManager
+          .removeAPopUpSheet(key);
     });
   }
 
@@ -946,15 +1021,15 @@ class ZegoLiveStreamingConnectManager {
         ZegoUIKit().resetSoundEffect();
         ZegoUIKit().resetBeautyEffect();
 
-        ZegoUIKit().turnCameraOn(false);
-        ZegoUIKit().turnMicrophoneOn(false);
+        ZegoUIKit().turnCameraOn(targetRoomID: liveID, false);
+        ZegoUIKit().turnMicrophoneOn(targetRoomID: liveID, false);
 
         /// hide invite join co-host dialog
         if (isInvitedToJoinCoHostDlgVisible) {
           isInvitedToJoinCoHostDlgVisible = false;
           Navigator.of(
-            contextQuery!(),
-            rootNavigator: config.rootNavigator,
+            ZegoLiveStreamingPageLifeCycle().contextQuery!(),
+            rootNavigator: config?.rootNavigator ?? false,
           ).pop();
         }
 
@@ -962,8 +1037,8 @@ class ZegoLiveStreamingConnectManager {
         if (isEndCoHostDialogVisible) {
           isEndCoHostDialogVisible = false;
           Navigator.of(
-            contextQuery!(),
-            rootNavigator: config.rootNavigator,
+            ZegoLiveStreamingPageLifeCycle().contextQuery!(),
+            rootNavigator: config?.rootNavigator ?? false,
           ).pop();
         }
         break;
@@ -971,9 +1046,10 @@ class ZegoLiveStreamingConnectManager {
         break;
       case ZegoLiveStreamingAudienceConnectState.connected:
         ZegoUIKit().turnCameraOn(
-          config.coHost.turnOnCameraWhenCohosted?.call() ?? true,
+          targetRoomID: liveID,
+          config?.coHost.turnOnCameraWhenCohosted?.call() ?? true,
         );
-        ZegoUIKit().turnMicrophoneOn(true);
+        ZegoUIKit().turnMicrophoneOn(targetRoomID: liveID, true);
 
         ZegoUIKit()
             .getLocalUser()
@@ -987,7 +1063,7 @@ class ZegoLiveStreamingConnectManager {
         break;
     }
 
-    events.coHost.coHost.onLocalConnectStateUpdated?.call(state);
+    events?.coHost.coHost.onLocalConnectStateUpdated?.call(state);
 
     final localRequestConnected =
         ZegoLiveStreamingAudienceConnectState.connecting ==
@@ -998,12 +1074,12 @@ class ZegoLiveStreamingConnectManager {
         ZegoLiveStreamingAudienceConnectState.connected == state;
     if (localRequestConnected || hostInvitedConnected) {
       /// idle|connecting -> connected
-      events.coHost.coHost.onLocalConnected?.call();
+      events?.coHost.coHost.onLocalConnected?.call();
     } else if (ZegoLiveStreamingAudienceConnectState.connected ==
             audienceLocalConnectStateNotifier.value &&
         ZegoLiveStreamingAudienceConnectState.idle == state) {
       /// connected -> idle
-      events.coHost.coHost.onLocalDisconnected?.call();
+      events?.coHost.coHost.onLocalDisconnected?.call();
     }
 
     audienceLocalConnectStateNotifier.value = state;
@@ -1047,11 +1123,17 @@ class ZegoLiveStreamingConnectManager {
 extension ZegoLiveConnectManagerCoHostCount on ZegoLiveStreamingConnectManager {
   void initCoHostMixin() {
     subscriptions
-      ..add(ZegoUIKit().getUserListStream().listen(onUserListUpdated))
-      ..add(ZegoUIKit().getUserJoinStream().listen(onUserJoinUpdated))
-      ..add(ZegoUIKit().getUserLeaveStream().listen(onUserLeaveUpdated))
       ..add(ZegoUIKit()
-          .getAudioVideoListStream()
+          .getUserListStream(targetRoomID: liveID)
+          .listen(onUserListUpdated))
+      ..add(ZegoUIKit()
+          .getUserJoinStream(targetRoomID: liveID)
+          .listen(onUserJoinUpdated))
+      ..add(ZegoUIKit()
+          .getUserLeaveStream(targetRoomID: liveID)
+          .listen(onUserLeaveUpdated))
+      ..add(ZegoUIKit()
+          .getAudioVideoListStream(targetRoomID: liveID)
           .listen(onAudioVideoListUpdated));
   }
 
@@ -1059,7 +1141,7 @@ extension ZegoLiveConnectManagerCoHostCount on ZegoLiveStreamingConnectManager {
     final coHosts = users.where((user) => isCoHost(user)).toList();
     coHostCount.value = coHosts.length;
 
-    events.coHost.onUpdated?.call(coHosts);
+    events?.coHost.onUpdated?.call(coHosts);
 
     ZegoLoggerService.logInfo(
       'audio video list changed, co-host count changed to ${coHostCount.value}',
@@ -1067,14 +1149,25 @@ extension ZegoLiveConnectManagerCoHostCount on ZegoLiveStreamingConnectManager {
       subTag: 'connect, onAudioVideoListUpdated',
     );
 
-    if (isMaxCoHostReached && hostManager.isLocalHost) {
+    if (isMaxCoHostReached &&
+        ZegoLiveStreamingPageLifeCycle()
+            .currentManagers
+            .hostManager
+            .isLocalHost) {
       final coHosts = List<ZegoUIKitUser>.from(users)
-        ..removeWhere((user) => hostManager.notifier.value?.id == user.id)
+        ..removeWhere((user) =>
+            ZegoLiveStreamingPageLifeCycle()
+                .currentManagers
+                .hostManager
+                .notifier
+                .value
+                ?.id ==
+            user.id)
         ..sort((left, right) {
           return left.streamTimestamp.compareTo(right.streamTimestamp);
         });
 
-      final kickCount = coHosts.length - config.coHost.maxCoHostCount;
+      final kickCount = coHosts.length - maxCoHostCount;
       final kickUsers = coHosts.sublist(0, kickCount);
       ZegoLoggerService.logInfo(
         'audio video list changed, max co-host count reach, '
@@ -1111,7 +1204,7 @@ extension ZegoLiveConnectManagerCoHostCount on ZegoLiveStreamingConnectManager {
     }
 
     for (var requestCoHostUser in requestCoHostUsersNotifier.value) {
-      events.coHost.host.onRequestCanceled?.call(
+      events?.coHost.host.onRequestCanceled?.call(
         ZegoLiveStreamingCoHostHostEventRequestCanceledData(
           audience: requestCoHostUser,
           customData: '', //todo what data?
@@ -1128,8 +1221,10 @@ extension ZegoLiveConnectManagerCoHostCount on ZegoLiveStreamingConnectManager {
   }
 
   void onUserCameraStateChanged() {
-    coHostCount.value =
-        ZegoUIKit().getAllUsers().where((user) => isCoHost(user)).length;
+    coHostCount.value = ZegoUIKit()
+        .getAllUsers(targetRoomID: liveID)
+        .where((user) => isCoHost(user))
+        .length;
 
     ZegoLoggerService.logInfo(
       'user camera state changed, co-host count changed to ${coHostCount.value}',
@@ -1139,8 +1234,10 @@ extension ZegoLiveConnectManagerCoHostCount on ZegoLiveStreamingConnectManager {
   }
 
   void onUserMicrophoneStateChanged() {
-    coHostCount.value =
-        ZegoUIKit().getAllUsers().where((user) => isCoHost(user)).length;
+    coHostCount.value = ZegoUIKit()
+        .getAllUsers(targetRoomID: liveID)
+        .where((user) => isCoHost(user))
+        .length;
 
     ZegoLoggerService.logInfo(
       'user microphone state changed, co-host count changed to ${coHostCount.value}',

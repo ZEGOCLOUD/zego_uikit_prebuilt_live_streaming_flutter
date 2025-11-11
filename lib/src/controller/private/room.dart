@@ -16,8 +16,8 @@ class ZegoLiveStreamingControllerRoomPrivateImpl {
   final ValueNotifier<bool> isLeaveRequestingNotifier =
       ValueNotifier<bool>(false);
 
-  ZegoLiveStreamingHostManager? get hostManager =>
-      ZegoLiveStreamingManagers().hostManager;
+  ZegoLiveStreamingHostManager get hostManager =>
+      ZegoLiveStreamingPageLifeCycle().currentManagers.hostManager;
 
   Future<void> defaultEndAction(
     ZegoLiveStreamingEndEvent event,
@@ -62,11 +62,11 @@ class ZegoLiveStreamingControllerRoomPrivateImpl {
   /// DO NOT CALL!!!
   /// Call Inside By Prebuilt
   void initByPrebuilt({
-    ZegoUIKitPrebuiltLiveStreamingConfig? config,
-    ZegoUIKitPrebuiltLiveStreamingEvents? events,
+    required ZegoUIKitPrebuiltLiveStreamingConfig? config,
+    required ZegoUIKitPrebuiltLiveStreamingEvents? events,
   }) {
     ZegoLoggerService.logInfo(
-      'init by prebuilt',
+      'init by prebuilt, ',
       tag: 'live-streaming',
       subTag: 'controller.room.p',
     );

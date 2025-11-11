@@ -18,12 +18,14 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/pk_combine_notifier.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/pk/components/view.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/pk/core/core.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/components/view.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/core/core.dart';
+import '../lifecycle/instance.dart';
 
 class ZegoMinimizingStreamingPage extends StatefulWidget {
   const ZegoMinimizingStreamingPage({
     Key? key,
+    required this.liveID,
     required this.size,
     this.config,
     this.borderRadius = 6.0,
@@ -49,6 +51,7 @@ class ZegoMinimizingStreamingPage extends StatefulWidget {
     this.background,
   }) : super(key: key);
 
+  final String liveID;
   final Size size;
   final double padding;
   final double borderRadius;
@@ -156,7 +159,7 @@ class ZegoMinimizingStreamingPageState
   }
 
   Widget audioVideoContainer(String activeUserID) {
-    final avList = ZegoUIKit().getAudioVideoList();
+    final avList = ZegoUIKit().getAudioVideoList(targetRoomID: widget.liveID);
     if (!widget.showLocalUserView) {
       avList.removeWhere((user) => user.id == ZegoUIKit().getLocalUser().id);
     }
@@ -175,6 +178,7 @@ class ZegoMinimizingStreamingPageState
             IgnorePointer(
               ignoring: true,
               child: ZegoAudioVideoContainer(
+                roomID: widget.liveID,
                 layout: ZegoLayout.pictureInPicture(
                   smallViewPosition: ZegoViewPosition.bottomLeft,
                   smallViewMargin: EdgeInsets.only(
@@ -256,8 +260,10 @@ class ZegoMinimizingStreamingPageState
     /// new pk
     if (ZegoUIKitPrebuiltLiveStreamingPK.instance.isInPK) {
       pkView = ZegoLiveStreamingPKV2View(
+        liveID: widget.liveID,
         constraints: constraints,
-        hostManager: ZegoLiveStreamingManagers().hostManager!,
+        hostManager:
+            ZegoLiveStreamingPageLifeCycle().currentManagers.hostManager,
         config: widget.config ?? ZegoUIKitPrebuiltLiveStreamingConfig(),
         foregroundBuilder: widget.foregroundBuilder,
         backgroundBuilder: widget.backgroundBuilder,
@@ -286,6 +292,7 @@ class ZegoMinimizingStreamingPageState
           children: [
             widget.background ?? Container(),
             ZegoAudioVideoView(
+              roomID: widget.liveID,
               user: activeUser,
               foregroundBuilder: widget.foregroundBuilder,
               backgroundBuilder: widget.backgroundBuilder,
@@ -387,7 +394,6 @@ class ZegoMinimizingStreamingPageState
       child: ZegoLiveStreamingDurationTimeBoard(
         config: widget.durationConfig ?? ZegoLiveStreamingDurationConfig(),
         events: widget.durationEvents ?? ZegoLiveStreamingDurationEvents(),
-        manager: ZegoLiveStreamingManagers().liveDurationManager!,
         fontSize: 15.zR,
       ),
     );
@@ -403,10 +409,14 @@ class ZegoMinimizingStreamingPageState
     }
 
     var localRole = ZegoLiveStreamingRole.audience;
-    if (ZegoLiveStreamingManagers().hostManager!.isLocalHost) {
+    if (ZegoLiveStreamingPageLifeCycle()
+        .currentManagers
+        .hostManager
+        .isLocalHost) {
       localRole = ZegoLiveStreamingRole.host;
-    } else if (ZegoLiveStreamingManagers()
-        .connectManager!
+    } else if (ZegoLiveStreamingPageLifeCycle()
+        .currentManagers
+        .connectManager
         .isCoHost(ZegoUIKit().getLocalUser())) {
       localRole = ZegoLiveStreamingRole.coHost;
     }
@@ -462,10 +472,14 @@ class ZegoMinimizingStreamingPageState
               width: 15.zR,
               height: 15.zR,
             );
-            return ZegoLiveStreamingManagers().hostManager!.isLocalHost
+            return ZegoLiveStreamingPageLifeCycle()
+                    .currentManagers
+                    .hostManager
+                    .isLocalHost
                 ? ValueListenableBuilder<List<ZegoUIKitUser>>(
-                    valueListenable: ZegoLiveStreamingManagers()
-                        .connectManager!
+                    valueListenable: ZegoLiveStreamingPageLifeCycle()
+                        .currentManagers
+                        .connectManager
                         .requestCoHostUsersNotifier,
                     builder: (context, requestCoHostUsers, _) {
                       if (requestCoHostUsers.isEmpty && !hasPKRequestEvent) {
@@ -477,8 +491,9 @@ class ZegoMinimizingStreamingPageState
                   )
                 : ValueListenableBuilder<
                     ZegoLiveStreamingCoHostAudienceEventRequestReceivedData?>(
-                    valueListenable: ZegoLiveStreamingManagers()
-                        .connectManager!
+                    valueListenable: ZegoLiveStreamingPageLifeCycle()
+                        .currentManagers
+                        .connectManager
                         .dataOfInvitedToJoinCoHostInMinimizingNotifier,
                     builder:
                         (context, dataOfInvitedToJoinCoHostInMinimizing, _) {
@@ -499,13 +514,19 @@ class ZegoMinimizingStreamingPageState
     const toolbarCameraOff = 'assets/icons/s1_ctrl_bar_camera_off.png';
 
     return ValueListenableBuilder<bool>(
-      valueListenable: ZegoUIKit().getCameraStateNotifier(activeUser.id),
+      valueListenable: ZegoUIKit().getCameraStateNotifier(
+        targetRoomID: widget.liveID,
+        activeUser.id,
+      ),
       builder: (context, isCameraEnabled, _) {
         return GestureDetector(
           onTap: activeUser.id == ZegoUIKit().getLocalUser().id
               ? () {
-                  ZegoUIKit()
-                      .turnCameraOn(!isCameraEnabled, userID: activeUser.id);
+                  ZegoUIKit().turnCameraOn(
+                    targetRoomID: widget.liveID,
+                    !isCameraEnabled,
+                    userID: activeUser.id,
+                  );
                 }
               : null,
           child: Container(
@@ -538,12 +559,16 @@ class ZegoMinimizingStreamingPageState
     const toolbarMicOff = 'assets/icons/s1_ctrl_bar_mic_off.png';
 
     return ValueListenableBuilder<bool>(
-      valueListenable: ZegoUIKit().getMicrophoneStateNotifier(activeUser.id),
+      valueListenable: ZegoUIKit().getMicrophoneStateNotifier(
+        targetRoomID: widget.liveID,
+        activeUser.id,
+      ),
       builder: (context, isMicrophoneEnabled, _) {
         return GestureDetector(
           onTap: activeUser.id == ZegoUIKit().getLocalUser().id
               ? () {
                   ZegoUIKit().turnMicrophoneOn(
+                    targetRoomID: widget.liveID,
                     !isMicrophoneEnabled,
                     userID: activeUser.id,
                     muteMode:

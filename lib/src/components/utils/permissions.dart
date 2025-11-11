@@ -78,8 +78,8 @@ Future<void> requestPermissions({
   required BuildContext context,
   required ZegoUIKitPrebuiltLiveStreamingInnerText translationText,
   required bool rootNavigator,
-  required ZegoLiveStreamingPopUpManager popUpManager,
-  required ValueNotifier<bool> kickOutNotifier,
+  required ZegoLiveStreamingPopUpManager? popUpManager,
+  required ValueNotifier<bool>? kickOutNotifier,
   List<Permission> permissions = const [
     Permission.camera,
     Permission.microphone,
@@ -138,10 +138,10 @@ Future<bool> showAppSettingsDialog({
   required BuildContext context,
   required ZegoLiveStreamingDialogInfo dialogInfo,
   required bool rootNavigator,
-  required ZegoLiveStreamingPopUpManager popUpManager,
-  required ValueNotifier<bool> kickOutNotifier,
+  required ZegoLiveStreamingPopUpManager? popUpManager,
+  required ValueNotifier<bool>? kickOutNotifier,
 }) async {
-  if (kickOutNotifier.value) {
+  if (kickOutNotifier?.value ?? false) {
     ZegoLoggerService.logInfo(
       'local user is kick-out, ignore show app settings dialog',
       tag: 'live-streaming',
@@ -151,7 +151,7 @@ Future<bool> showAppSettingsDialog({
   }
 
   final key = DateTime.now().millisecondsSinceEpoch;
-  popUpManager.addAPopUpSheet(key);
+  popUpManager?.addAPopUpSheet(key);
 
   return showLiveDialog(
     context: context,
@@ -191,7 +191,7 @@ Future<bool> showAppSettingsDialog({
       }
     },
   ).then((result) {
-    popUpManager.removeAPopUpSheet(key);
+    popUpManager?.removeAPopUpSheet(key);
 
     return result;
   });

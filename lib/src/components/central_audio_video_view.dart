@@ -14,36 +14,33 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/pop_up_m
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/core_managers.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/core/live_status_manager.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/core/plugins.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/pk_combine_notifier.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/pk/components/view.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/pk/core/core.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/pk/core/service/defines.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/instance.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/components/view.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/core/core.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/core/service/defines.dart';
 
 /// @nodoc
 class ZegoLiveStreamingCentralAudioVideoView extends StatefulWidget {
   const ZegoLiveStreamingCentralAudioVideoView({
-    Key? key,
+    super.key,
+    required this.liveID,
     required this.config,
-    required this.hostManager,
-    required this.liveStatusManager,
     required this.popUpManager,
     required this.constraints,
-    this.plugins,
-  }) : super(key: key);
+    required this.isPrebuiltFromHall,
+  });
 
+  final String liveID;
   final ZegoUIKitPrebuiltLiveStreamingConfig config;
 
-  final ZegoLiveStreamingHostManager hostManager;
-  final ZegoLiveStreamingStatusManager liveStatusManager;
   final ZegoLiveStreamingPopUpManager popUpManager;
-  final ZegoLiveStreamingPlugins? plugins;
 
   final BoxConstraints constraints;
+
+  final bool isPrebuiltFromHall;
 
   @override
   State<ZegoLiveStreamingCentralAudioVideoView> createState() =>
@@ -58,21 +55,39 @@ class ZegoLiveStreamingCentralAudioVideoViewState
   List<StreamSubscription<dynamic>?> subscriptions = [];
 
   bool get isLivingWithHost =>
-      LiveStatus.living == widget.liveStatusManager.notifier.value &&
-      widget.hostManager.notifier.value != null;
+      LiveStatus.living ==
+          ZegoLiveStreamingPageLifeCycle()
+              .currentManagers
+              .liveStatusManager
+              .notifier
+              .value &&
+      ZegoLiveStreamingPageLifeCycle()
+              .currentManagers
+              .hostManager
+              .notifier
+              .value !=
+          null;
 
   @override
   void initState() {
     super.initState();
 
-    widget.liveStatusManager.notifier.addListener(onLiveStatusUpdated);
+    ZegoLiveStreamingPageLifeCycle()
+        .currentManagers
+        .liveStatusManager
+        .notifier
+        .addListener(onLiveStatusUpdated);
   }
 
   @override
   Future<void> dispose() async {
     super.dispose();
 
-    widget.liveStatusManager.notifier.removeListener(onLiveStatusUpdated);
+    ZegoLiveStreamingPageLifeCycle()
+        .currentManagers
+        .liveStatusManager
+        .notifier
+        .removeListener(onLiveStatusUpdated);
 
     for (final subscription in subscriptions) {
       subscription?.cancel();
@@ -97,11 +112,18 @@ class ZegoLiveStreamingCentralAudioVideoViewState
         }
 
         return StreamBuilder<List<ZegoUIKitUser>>(
-          stream: ZegoUIKit().getScreenSharingListStream(),
+          stream: ZegoUIKit().getScreenSharingListStream(
+            targetRoomID: widget.liveID,
+          ),
           builder: (context, snapshot) {
-            final screenSharingUsers = ZegoUIKit().getScreenSharingList();
+            final screenSharingUsers = ZegoUIKit().getScreenSharingList(
+              targetRoomID: widget.liveID,
+            );
             return ValueListenableBuilder<ZegoUIKitUser?>(
-              valueListenable: widget.hostManager.notifier,
+              valueListenable: ZegoLiveStreamingPageLifeCycle()
+                  .currentManagers
+                  .hostManager
+                  .notifier,
               builder: (context, host, _) {
                 return audioVideoView(
                   host,
@@ -128,8 +150,9 @@ class ZegoLiveStreamingCentralAudioVideoViewState
     );
 
     final view = ZegoLiveStreamingPKV2View(
+      liveID: widget.liveID,
       constraints: displayConstraints,
-      hostManager: widget.hostManager,
+      hostManager: ZegoLiveStreamingPageLifeCycle().currentManagers.hostManager,
       config: widget.config,
       foregroundBuilder: widget.config.audioVideoView.foregroundBuilder,
       backgroundBuilder: widget.config.audioVideoView.backgroundBuilder,
@@ -155,12 +178,16 @@ class ZegoLiveStreamingCentralAudioVideoViewState
   ) {
     return host != null
         ? ValueListenableBuilder<bool>(
-            valueListenable: ZegoUIKit()
-                .getCameraStateNotifier(widget.hostManager.notifier.value!.id),
+            valueListenable: ZegoUIKit().getCameraStateNotifier(
+              targetRoomID: widget.liveID,
+              host.id,
+            ),
             builder: (context, isCameraEnabled, _) {
               return ValueListenableBuilder<bool>(
                 valueListenable: ZegoUIKit().getMicrophoneStateNotifier(
-                    widget.hostManager.notifier.value!.id),
+                  targetRoomID: widget.liveID,
+                  host.id,
+                ),
                 builder: (context, isMicrophoneEnabled, _) {
                   if (!isCameraEnabled && !isMicrophoneEnabled) {
                     audioVideoContainerHostHadSorted = false;
@@ -188,75 +215,11 @@ class ZegoLiveStreamingCentralAudioVideoViewState
     bool withScreenSharing,
   ) {
     return ValueListenableBuilder(
-      valueListenable: widget.liveStatusManager.notifier,
+      valueListenable: ZegoLiveStreamingPageLifeCycle()
+          .currentManagers
+          .liveStatusManager
+          .notifier,
       builder: (context, LiveStatus liveStatusValue, Widget? child) {
-        Widget children = Container();
-
-        audioVideoViewCreator(ZegoUIKitUser user) {
-          return ZegoAudioVideoView(
-            user: user,
-            borderRadius: 18.0.zW,
-            borderColor: Colors.transparent,
-            backgroundBuilder: audioVideoViewBackground,
-            foregroundBuilder: audioVideoViewForeground,
-            avatarConfig: ZegoAvatarConfig(
-              showInAudioMode:
-                  widget.config.audioVideoView.showAvatarInAudioMode,
-              showSoundWavesInAudioMode:
-                  widget.config.audioVideoView.showSoundWavesInAudioMode,
-              builder: widget.config.avatarBuilder,
-            ),
-          );
-        }
-
-        final audioVideoContainer =
-            null != widget.config.audioVideoView.containerBuilder
-                ? StreamBuilder<List<ZegoUIKitUser>>(
-                    stream: ZegoUIKit().getUserListStream(),
-                    builder: (context, snapshot) {
-                      final allUsers = ZegoUIKit().getAllUsers();
-                      return StreamBuilder<List<ZegoUIKitUser>>(
-                        stream: ZegoUIKit().getAudioVideoListStream(),
-                        builder: (context, snapshot) {
-                          return widget.config.audioVideoView.containerBuilder
-                                  ?.call(
-                                context,
-                                allUsers,
-                                ZegoUIKit().getAudioVideoList(),
-                                audioVideoViewCreator,
-                              ) ??
-                              defaultAudioVideoContainer(withScreenSharing);
-                        },
-                      );
-                    },
-                  )
-                : defaultAudioVideoContainer(withScreenSharing);
-
-        if (LiveStatus.living == liveStatusValue) {
-          children = audioVideoContainer;
-        } else if (LiveStatus.living != liveStatusValue &&
-            null != widget.hostManager.notifier.value) {
-          /// support local co-host view in host preparing
-          return ValueListenableBuilder<bool>(
-            valueListenable: ZegoUIKit()
-                .getCameraStateNotifier(ZegoUIKit().getLocalUser().id),
-            builder: (context, isCameraEnabled, _) {
-              return ValueListenableBuilder<bool>(
-                valueListenable: ZegoUIKit()
-                    .getMicrophoneStateNotifier(ZegoUIKit().getLocalUser().id),
-                builder: (context, isMicrophoneEnabled, _) {
-                  if (!isCameraEnabled && !isMicrophoneEnabled) {
-                    return Container();
-                  }
-
-                  /// local open camera or microphone
-                  return audioVideoContainer;
-                },
-              );
-            },
-          );
-        }
-
         return Positioned.fromRect(
           rect: widget.config.audioVideoView.containerRect?.call() ??
               Rect.fromLTWH(
@@ -266,15 +229,65 @@ class ZegoLiveStreamingCentralAudioVideoViewState
                 preferHeight,
               ),
           child: null != widget.config.audioVideoView.containerRect
-              ? children
-              : ZegoInputBoardWrapper(child: children),
+              ? audioVideoContainer(withScreenSharing)
+              : ZegoInputBoardWrapper(
+                  child: audioVideoContainer(withScreenSharing)),
         );
       },
     );
   }
 
+  Widget audioVideoContainer(bool withScreenSharing) {
+    audioVideoViewCreator(ZegoUIKitUser user) {
+      return ZegoAudioVideoView(
+        roomID: widget.liveID,
+        user: user,
+        borderRadius: 18.0.zW,
+        borderColor: Colors.transparent,
+        backgroundBuilder: audioVideoViewBackground,
+        foregroundBuilder: audioVideoViewForeground,
+        avatarConfig: ZegoAvatarConfig(
+          showInAudioMode: widget.config.audioVideoView.showAvatarInAudioMode,
+          showSoundWavesInAudioMode:
+              widget.config.audioVideoView.showSoundWavesInAudioMode,
+          builder: widget.config.avatarBuilder,
+        ),
+      );
+    }
+
+    return null != widget.config.audioVideoView.containerBuilder
+        ? StreamBuilder<List<ZegoUIKitUser>>(
+            stream: ZegoUIKit().getUserListStream(
+              targetRoomID: widget.liveID,
+            ),
+            builder: (context, snapshot) {
+              final allUsers = ZegoUIKit().getAllUsers(
+                targetRoomID: widget.liveID,
+              );
+              return StreamBuilder<List<ZegoUIKitUser>>(
+                stream: ZegoUIKit().getAudioVideoListStream(
+                  targetRoomID: widget.liveID,
+                ),
+                builder: (context, snapshot) {
+                  return widget.config.audioVideoView.containerBuilder?.call(
+                        context,
+                        allUsers,
+                        ZegoUIKit().getAudioVideoList(
+                          targetRoomID: widget.liveID,
+                        ),
+                        audioVideoViewCreator,
+                      ) ??
+                      defaultAudioVideoContainer(withScreenSharing);
+                },
+              );
+            },
+          )
+        : defaultAudioVideoContainer(withScreenSharing);
+  }
+
   Widget defaultAudioVideoContainer(bool withScreenSharing) {
     return ZegoAudioVideoContainer(
+      roomID: widget.liveID,
       layout: getAudioVideoContainerLayout(withScreenSharing),
       foregroundBuilder: audioVideoViewForeground,
       backgroundBuilder: audioVideoViewBackground,
@@ -344,17 +357,17 @@ class ZegoLiveStreamingCentralAudioVideoViewState
                 ?.call(context, size, user, extraInfo) ??
             Container(color: Colors.transparent),
         ValueListenableBuilder<bool>(
-            valueListenable:
-                ZegoUIKit().getMicrophoneStateNotifier(user?.id ?? ''),
+            valueListenable: ZegoUIKit().getMicrophoneStateNotifier(
+              targetRoomID: widget.liveID,
+              user?.id ?? '',
+            ),
             builder: (context, isMicrophoneEnabled, _) {
               return ZegoLiveStreamingAudioVideoForeground(
+                liveID: widget.liveID,
                 size: size,
                 user: user,
-                hostManager: widget.hostManager,
-                connectManager: ZegoLiveStreamingManagers().connectManager!,
                 popUpManager: widget.popUpManager,
                 translationText: widget.config.innerText,
-                isPluginEnabled: widget.plugins?.isEnabled ?? false,
                 //  only show if close
                 showMicrophoneStateOnView:
                     widget.config.audioVideoView.showMicrophoneStateOnView &&
@@ -401,17 +414,45 @@ class ZegoLiveStreamingCentralAudioVideoViewState
     if (isLivingWithHost &&
         (ZegoUIKit()
                 .getCameraStateNotifier(
-                    widget.hostManager.notifier.value?.id ?? '')
+                  targetRoomID: widget.liveID,
+                  ZegoLiveStreamingPageLifeCycle()
+                          .currentManagers
+                          .hostManager
+                          .notifier
+                          .value
+                          ?.id ??
+                      '',
+                )
                 .value ||
             ZegoUIKit()
                 .getMicrophoneStateNotifier(
-                    widget.hostManager.notifier.value?.id ?? '')
+                  targetRoomID: widget.liveID,
+                  ZegoLiveStreamingPageLifeCycle()
+                          .currentManagers
+                          .hostManager
+                          .notifier
+                          .value
+                          ?.id ??
+                      '',
+                )
                 .value)) {
       /// put host on first position
       users
-        ..removeWhere(
-            (user) => user.id == widget.hostManager.notifier.value!.id)
-        ..insert(0, widget.hostManager.notifier.value!);
+        ..removeWhere((user) =>
+            user.id ==
+            ZegoLiveStreamingPageLifeCycle()
+                .currentManagers
+                .hostManager
+                .notifier
+                .value!
+                .id)
+        ..insert(
+            0,
+            ZegoLiveStreamingPageLifeCycle()
+                .currentManagers
+                .hostManager
+                .notifier
+                .value!);
 
       /// not sort before next host changed
       audioVideoContainerHostHadSorted = true;
@@ -421,8 +462,12 @@ class ZegoLiveStreamingCentralAudioVideoViewState
   }
 
   List<ZegoUIKitUser> audioVideoViewFilter(List<ZegoUIKitUser> users) {
-    final screenSharingUserIDList =
-        ZegoUIKit().getScreenSharingList().map((e) => e.id).toList();
+    final screenSharingUserIDList = ZegoUIKit()
+        .getScreenSharingList(
+          targetRoomID: widget.liveID,
+        )
+        .map((e) => e.id)
+        .toList();
     users.removeWhere((targetUser) {
       if (screenSharingUserIDList.contains(targetUser.id)) {
         /// not filter screen sharing
@@ -431,14 +476,18 @@ class ZegoLiveStreamingCentralAudioVideoViewState
 
       if (null != widget.config.audioVideoView.visible) {
         var targetUserRole = ZegoLiveStreamingRole.coHost;
-        if (ZegoLiveStreamingManagers().hostManager?.isHost(targetUser) ??
-            false) {
+        if (ZegoLiveStreamingPageLifeCycle()
+            .currentManagers
+            .hostManager
+            .isHost(targetUser)) {
           targetUserRole = ZegoLiveStreamingRole.host;
         }
         if (!widget.config.audioVideoView.visible!.call(
           ZegoUIKit().getLocalUser(),
-          ZegoLiveStreamingManagers().connectManager?.localRole ??
-              ZegoLiveStreamingRole.audience,
+          ZegoLiveStreamingPageLifeCycle()
+              .currentManagers
+              .connectManager
+              .localRole,
           targetUser,
           targetUserRole,
         )) {
@@ -459,12 +508,17 @@ class ZegoLiveStreamingCentralAudioVideoViewState
 
   void onLiveStatusUpdated() {
     ZegoLoggerService.logInfo(
-      'live page, live status mgr updated, ${widget.liveStatusManager.notifier.value}',
+      'live page, live status mgr updated, ${ZegoLiveStreamingPageLifeCycle().currentManagers.liveStatusManager.notifier.value}',
       tag: 'live-streaming',
       subTag: 'central audio video view',
     );
 
-    if (LiveStatus.ended == widget.liveStatusManager.notifier.value) {
+    if (LiveStatus.ended ==
+        ZegoLiveStreamingPageLifeCycle()
+            .currentManagers
+            .liveStatusManager
+            .notifier
+            .value) {
       /// host changed
       audioVideoContainerHostHadSorted = false;
     }

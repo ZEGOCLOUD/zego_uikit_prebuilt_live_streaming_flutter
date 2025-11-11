@@ -12,10 +12,13 @@ mixin ZegoLiveStreamingControllerMinimizingPrivate {
 /// Here are the APIs related to invitation.
 class ZegoLiveStreamingControllerMinimizingPrivateImpl {
   ZegoLiveStreamingMinimizeData? get minimizeData => _minimizeData;
-  ZegoLiveStreamingConnectManager? get _connectManager =>
-      ZegoLiveStreamingManagers().connectManager;
   bool get isLiving =>
-      _connectManager?.liveStatusNotifier.value == LiveStatus.living;
+      ZegoLiveStreamingPageLifeCycle()
+          .currentManagers
+          .liveStatusManager
+          .notifier
+          .value ==
+      LiveStatus.living;
 
   ZegoLiveStreamingMinimizeData? _minimizeData;
   ZegoUIKitPrebuiltLiveStreamingConfig? config;
@@ -149,10 +152,16 @@ class ZegoLiveStreamingControllerMinimizePrivateActiveUser {
   }
 
   void listenAudioVideoList() {
-    audioVideoListSubscription =
-        ZegoUIKit().getAudioVideoListStream().listen(onAudioVideoListUpdated);
+    audioVideoListSubscription = ZegoUIKit()
+        .getAudioVideoListStream(
+          targetRoomID:
+              ZegoUIKitPrebuiltLiveStreamingController().private.liveID,
+        )
+        .listen(onAudioVideoListUpdated);
 
-    final audioVideoList = ZegoUIKit().getAudioVideoList();
+    final audioVideoList = ZegoUIKit().getAudioVideoList(
+      targetRoomID: ZegoUIKitPrebuiltLiveStreamingController().private.liveID,
+    );
     if (ignoreLocalUser) {
       audioVideoList
           .removeWhere((user) => user.id == ZegoUIKit().getLocalUser().id);
@@ -228,7 +237,9 @@ class ZegoLiveStreamingControllerMinimizePrivateActiveUser {
       return activeUserIDNotifier.value;
     }
 
-    final audioVideoList = ZegoUIKit().getAudioVideoList();
+    final audioVideoList = ZegoUIKit().getAudioVideoList(
+      targetRoomID: ZegoUIKitPrebuiltLiveStreamingController().private.liveID,
+    );
     for (int idx = 0; idx < audioVideoList.length; ++idx) {
       final audioVideoUser = audioVideoList[idx];
       if (ZegoUIKit().getLocalUser().id == audioVideoUser.id) {

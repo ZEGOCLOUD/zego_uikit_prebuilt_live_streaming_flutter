@@ -16,13 +16,13 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/inner_text.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/pk_combine_notifier.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/reporter.dart';
+import '../lifecycle/instance.dart';
 
 /// @nodoc
 class ZegoLiveStreamingCoHostControlButton extends StatefulWidget {
   const ZegoLiveStreamingCoHostControlButton({
-    Key? key,
-    required this.hostManager,
-    required this.connectManager,
+    super.key,
+    required this.liveID,
     required this.translationText,
     this.requestCoHostButtonIcon,
     this.cancelRequestCoHostButtonIcon,
@@ -30,10 +30,10 @@ class ZegoLiveStreamingCoHostControlButton extends StatefulWidget {
     this.requestCoHostButtonText,
     this.cancelRequestCoHostButtonText,
     this.endCoHostButtonText,
-  }) : super(key: key);
+  });
 
-  final ZegoLiveStreamingHostManager hostManager;
-  final ZegoLiveStreamingConnectManager connectManager;
+  final String liveID;
+
   final ZegoUIKitPrebuiltLiveStreamingInnerText translationText;
 
   final ButtonIcon? requestCoHostButtonIcon;
@@ -52,10 +52,22 @@ class ZegoLiveStreamingCoHostControlButton extends StatefulWidget {
 class _ZegoLiveStreamingCoHostControlButtonState
     extends State<ZegoLiveStreamingCoHostControlButton> {
   bool get hostExist =>
-      widget.hostManager.notifier.value?.id.isNotEmpty ?? false;
+      ZegoLiveStreamingPageLifeCycle()
+          .currentManagers
+          .hostManager
+          .notifier
+          .value
+          ?.id
+          .isNotEmpty ??
+      false;
 
   bool get isLiving =>
-      widget.connectManager.liveStatusNotifier.value == LiveStatus.living;
+      ZegoLiveStreamingPageLifeCycle()
+          .currentManagers
+          .liveStatusManager
+          .notifier
+          .value ==
+      LiveStatus.living;
 
   ButtonIcon get buttonIcon => ButtonIcon(
         icon: ZegoLiveStreamingImage.asset(
@@ -89,8 +101,10 @@ class _ZegoLiveStreamingCoHostControlButtonState
           return const SizedBox.shrink();
         } else {
           return ValueListenableBuilder<ZegoLiveStreamingAudienceConnectState>(
-            valueListenable:
-                widget.connectManager.audienceLocalConnectStateNotifier,
+            valueListenable: ZegoLiveStreamingPageLifeCycle()
+                .currentManagers
+                .connectManager
+                .audienceLocalConnectStateNotifier,
             builder: (context, connectState, _) {
               switch (connectState) {
                 case ZegoLiveStreamingAudienceConnectState.idle:
@@ -110,7 +124,15 @@ class _ZegoLiveStreamingCoHostControlButtonState
   Widget requestCoHostButton() {
     return ZegoStartInvitationButton(
       invitationType: ZegoLiveStreamingInvitationType.requestCoHost.value,
-      invitees: [widget.hostManager.notifier.value?.id ?? ''],
+      invitees: [
+        ZegoLiveStreamingPageLifeCycle()
+                .currentManagers
+                .hostManager
+                .notifier
+                .value
+                ?.id ??
+            ''
+      ],
       data: '',
       icon: null != widget.requestCoHostButtonIcon?.icon
           ? widget.requestCoHostButtonIcon
@@ -136,16 +158,25 @@ class _ZegoLiveStreamingCoHostControlButtonState
             event: ZegoLiveStreamingReporter.eventCoHostAudienceInvite,
             params: {
               ZegoLiveStreamingReporter.eventKeyCallID: result.invitationID,
-              ZegoLiveStreamingReporter.eventKeyRoomID:
-                  ZegoUIKit().getRoom().id,
+              ZegoLiveStreamingReporter.eventKeyRoomID: widget.liveID,
             },
           );
 
-          widget.connectManager.events.coHost.audience.onRequestSent?.call();
+          ZegoLiveStreamingPageLifeCycle()
+              .currentManagers
+              .connectManager
+              .events
+              ?.coHost
+              .audience
+              .onRequestSent
+              ?.call();
 
-          widget.connectManager.updateAudienceConnectState(
-            ZegoLiveStreamingAudienceConnectState.connecting,
-          );
+          ZegoLiveStreamingPageLifeCycle()
+              .currentManagers
+              .connectManager
+              .updateAudienceConnectState(
+                ZegoLiveStreamingAudienceConnectState.connecting,
+              );
         }
       },
       clickableTextColor: Colors.white,
@@ -155,7 +186,15 @@ class _ZegoLiveStreamingCoHostControlButtonState
 
   Widget cancelRequestCoHostButton() {
     return ZegoCancelInvitationButton(
-      invitees: [widget.hostManager.notifier.value?.id ?? ''],
+      invitees: [
+        ZegoLiveStreamingPageLifeCycle()
+                .currentManagers
+                .hostManager
+                .notifier
+                .value
+                ?.id ??
+            ''
+      ],
       icon: null != widget.cancelRequestCoHostButtonIcon?.icon
           ? widget.cancelRequestCoHostButtonIcon
           : buttonIcon,
@@ -176,12 +215,21 @@ class _ZegoLiveStreamingCoHostControlButtonState
           },
         );
 
-        widget.connectManager.events.coHost.audience.onActionCancelRequest
+        ZegoLiveStreamingPageLifeCycle()
+            .currentManagers
+            .connectManager
+            .events
+            ?.coHost
+            .audience
+            .onActionCancelRequest
             ?.call();
 
-        widget.connectManager.updateAudienceConnectState(
-          ZegoLiveStreamingAudienceConnectState.idle,
-        );
+        ZegoLiveStreamingPageLifeCycle()
+            .currentManagers
+            .connectManager
+            .updateAudienceConnectState(
+              ZegoLiveStreamingAudienceConnectState.idle,
+            );
       },
       clickableTextColor: Colors.white,
       clickableBackgroundColor: const Color(0xff1E2740).withValues(alpha: 0.4),
@@ -201,7 +249,10 @@ class _ZegoLiveStreamingCoHostControlButtonState
           widget.endCoHostButtonText ?? widget.translationText.endCoHostButton,
       textStyle: buttonTextStyle,
       verticalLayout: false,
-      onPressed: widget.connectManager.coHostRequestToEnd,
+      onPressed: ZegoLiveStreamingPageLifeCycle()
+          .currentManagers
+          .connectManager
+          .coHostRequestToEnd,
       clickableTextColor: Colors.white,
       clickableBackgroundColor: const Color(0xffFF0D23).withValues(alpha: 0.6),
     );

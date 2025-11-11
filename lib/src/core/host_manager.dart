@@ -11,24 +11,15 @@ import 'package:zego_uikit/zego_uikit.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/defines.dart';
+import '../internal/defines.dart';
+import '../lifecycle/instance.dart';
 
 /// @nodoc
 class ZegoLiveStreamingHostManager {
-  ZegoLiveStreamingConnectManager? connectManager;
-  final ZegoUIKitPrebuiltLiveStreamingConfig config;
+  ZegoUIKitPrebuiltLiveStreamingConfig? config;
+  String liveID = '';
 
   bool _initialized = false;
-
-  ZegoLiveStreamingHostManager({
-    required this.config,
-  }) {
-    configIsHost = ZegoLiveStreamingRole.host == config.role;
-
-    subscriptions
-      ..add(
-          ZegoUIKit().getRoomPropertiesStream().listen(onRoomPropertiesUpdated))
-      ..add(ZegoUIKit().getUserListStream().listen(onUserListUpdated));
-  }
 
   /// internal variables
   final hostUpdateEnabledNotifier = ValueNotifier<bool>(true);
@@ -51,7 +42,10 @@ class ZegoLiveStreamingHostManager {
         notifier.value != null && user.id == notifier.value!.id;
   }
 
-  Future<void> init() async {
+  Future<void> init({
+    required String liveID,
+    required ZegoUIKitPrebuiltLiveStreamingConfig? config,
+  }) async {
     if (_initialized) {
       ZegoLoggerService.logInfo(
         'had already init',
@@ -62,13 +56,83 @@ class ZegoLiveStreamingHostManager {
       return;
     }
 
-    _initialized = true;
-
     ZegoLoggerService.logInfo(
       'init',
       tag: 'live-streaming',
       subTag: 'host manager',
     );
+
+    _initialized = true;
+
+    this.liveID = liveID;
+    this.config = config;
+
+    configIsHost = ZegoLiveStreamingRole.host ==
+        (config?.role ?? ZegoLiveStreamingRole.audience);
+
+    subscriptions
+      ..add(ZegoUIKit()
+          .getRoomPropertiesStream(targetRoomID: liveID)
+          .listen(onRoomPropertiesUpdated))
+      ..add(ZegoUIKit()
+          .getUserListStream(targetRoomID: liveID)
+          .listen(onUserListUpdated));
+
+    ZegoUIKit()
+        .getRoomStateStream(targetRoomID: liveID)
+        .addListener(onRoomStateUpdated);
+  }
+
+  Future<void> uninit() async {
+    if (!_initialized) {
+      ZegoLoggerService.logInfo(
+        'not init before',
+        tag: 'live-streaming',
+        subTag: 'seat manager',
+      );
+
+      return;
+    }
+
+    _initialized = false;
+
+    ZegoLoggerService.logInfo(
+      'uninit',
+      tag: 'live-streaming',
+      subTag: 'host manager',
+    );
+
+    ZegoUIKit()
+        .getRoomStateStream(targetRoomID: liveID)
+        .removeListener(onRoomStateUpdated);
+
+    if (isLocalHost) {
+      ZegoLoggerService.logInfo(
+        'host uninit host property',
+        tag: 'live-streaming',
+        subTag: 'host manager',
+      );
+      await ZegoUIKit().setRoomProperty(
+        targetRoomID: liveID,
+        RoomPropertyKey.host.text,
+        '',
+      );
+    }
+
+    hostUpdateEnabledNotifier.value = true;
+    notifier.value = null;
+    pendingHostID = '';
+
+    for (final subscription in subscriptions) {
+      subscription?.cancel();
+    }
+  }
+
+  void onRoomStateUpdated() {
+    final roomState = ZegoUIKit().getRoomStateStream(targetRoomID: liveID);
+    if (!roomState.value.isLogin2) {
+      return;
+    }
 
     if (configIsHost) {
       ZegoLoggerService.logInfo(
@@ -92,48 +156,12 @@ class ZegoLiveStreamingHostManager {
           subTag: 'host manager',
         );
         updateHostValue(ZegoUIKit().getLocalUser());
-        await ZegoUIKit().setRoomProperty(
+        ZegoUIKit().setRoomProperty(
+          targetRoomID: liveID,
           RoomPropertyKey.host.text,
           ZegoUIKit().getLocalUser().id,
         );
       }
-    }
-  }
-
-  Future<void> uninit() async {
-    if (!_initialized) {
-      ZegoLoggerService.logInfo(
-        'not init before',
-        tag: 'live-streaming',
-        subTag: 'seat manager',
-      );
-
-      return;
-    }
-
-    _initialized = false;
-
-    ZegoLoggerService.logInfo(
-      'uninit',
-      tag: 'live-streaming',
-      subTag: 'host manager',
-    );
-
-    if (isLocalHost) {
-      ZegoLoggerService.logInfo(
-        'host uninit host property',
-        tag: 'live-streaming',
-        subTag: 'host manager',
-      );
-      await ZegoUIKit().setRoomProperty(RoomPropertyKey.host.text, '');
-    }
-
-    hostUpdateEnabledNotifier.value = true;
-    notifier.value = null;
-    pendingHostID = '';
-
-    for (final subscription in subscriptions) {
-      subscription?.cancel();
     }
   }
 
@@ -145,7 +173,7 @@ class ZegoLiveStreamingHostManager {
         subTag: 'host manager',
       );
 
-      final host = ZegoUIKit().getUser(pendingHostID);
+      final host = ZegoUIKit().getUser(targetRoomID: liveID, pendingHostID);
       if (!host.isEmpty()) {
         ZegoLoggerService.logInfo(
           'host updated, $host',
@@ -168,7 +196,7 @@ class ZegoLiveStreamingHostManager {
       return;
     }
 
-    final roomProperties = ZegoUIKit().getRoomProperties();
+    final roomProperties = ZegoUIKit().getRoomProperties(targetRoomID: liveID);
     ZegoLoggerService.logInfo(
       'onRoomPropertiesUpdated roomProperties:$roomProperties',
       tag: 'live-streaming',
@@ -220,7 +248,10 @@ class ZegoLiveStreamingHostManager {
           subTag: 'host manager',
         );
         ZegoUIKit().setRoomProperty(
-            RoomPropertyKey.host.text, ZegoUIKit().getLocalUser().id);
+          targetRoomID: liveID,
+          RoomPropertyKey.host.text,
+          ZegoUIKit().getLocalUser().id,
+        );
       } else {
         updateHostValue(null);
       }
@@ -230,7 +261,10 @@ class ZegoLiveStreamingHostManager {
         tag: 'live-streaming',
         subTag: 'host manager',
       );
-      final host = ZegoUIKit().getUser(hostIDProperty.value);
+      final host = ZegoUIKit().getUser(
+        targetRoomID: liveID,
+        hostIDProperty.value,
+      );
       if (host.isEmpty() && hostIDProperty.value.isNotEmpty) {
         ZegoLoggerService.logInfo(
           '$hostIDProperty user is not exist, host will be wait update util user list update',
@@ -242,25 +276,21 @@ class ZegoLiveStreamingHostManager {
         if (host.id != notifier.value?.id &&
             notifier.value?.id == ZegoUIKit().getLocalUser().id) {
           /// local host, change by new host, switch to audience
-          connectManager?.updateAudienceConnectState(
-              ZegoLiveStreamingAudienceConnectState.connecting);
-          connectManager?.updateAudienceConnectState(
-              ZegoLiveStreamingAudienceConnectState.idle);
+          ZegoLiveStreamingPageLifeCycle()
+              .currentManagers
+              .connectManager
+              .updateAudienceConnectState(
+                  ZegoLiveStreamingAudienceConnectState.connecting);
+          ZegoLiveStreamingPageLifeCycle()
+              .currentManagers
+              .connectManager
+              .updateAudienceConnectState(
+                  ZegoLiveStreamingAudienceConnectState.idle);
         }
 
         updateHostValue(host);
       }
     }
-  }
-
-  void setConnectManger(ZegoLiveStreamingConnectManager manager) {
-    connectManager = manager;
-
-    ZegoLoggerService.logInfo(
-      'set connect manager',
-      tag: 'live-streaming',
-      subTag: 'host manager',
-    );
   }
 
   void updateHostValue(ZegoUIKitUser? host) {
@@ -271,7 +301,7 @@ class ZegoLiveStreamingHostManager {
         subTag: 'host manager',
       );
       if (notifier.value?.id != host?.id) {
-        if (ZegoLiveStreamingRole.host == config.role &&
+        if (ZegoLiveStreamingRole.host == config?.role &&
             host?.id != ZegoUIKit().getLocalUser().id) {
           configIsHost = false;
         }

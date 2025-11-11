@@ -18,6 +18,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/inner_text.dart';
 class ZegoLiveStreamingPopUpSheetMenu extends StatefulWidget {
   const ZegoLiveStreamingPopUpSheetMenu({
     Key? key,
+    required this.liveID,
     required this.targetUser,
     required this.popupItems,
     required this.translationText,
@@ -26,6 +27,7 @@ class ZegoLiveStreamingPopUpSheetMenu extends StatefulWidget {
     this.onPressed,
   }) : super(key: key);
 
+  final String liveID;
   final List<ZegoLiveStreamingPopupItem> popupItems;
   final ZegoUIKitUser targetUser;
   final ZegoLiveStreamingHostManager hostManager;
@@ -115,8 +117,9 @@ class _ZegoLiveStreamingPopUpSheetMenuState
                 .hostSendCoHostInvitationToAudience(
                   widget.targetUser,
                   withToast: true,
-                  timeoutSecond:
-                      widget.connectManager.config.coHost.inviteTimeoutSecond,
+                  timeoutSecond: widget
+                          .connectManager.config?.coHost.inviteTimeoutSecond ??
+                      60,
                 );
             break;
           case ZegoLiveStreamingPopupItemValue.kickOutAttendance:
@@ -132,8 +135,10 @@ class _ZegoLiveStreamingPopUpSheetMenuState
               break;
             }
 
-            ZegoUIKit()
-                .removeUserFromRoom([widget.targetUser.id]).then((result) {
+            ZegoUIKit().removeUserFromRoom(
+              targetRoomID: widget.liveID,
+              [widget.targetUser.id],
+            ).then((result) {
               ZegoLoggerService.logInfo(
                 'kick out result:$result',
                 tag: 'live-streaming',
@@ -149,7 +154,7 @@ class _ZegoLiveStreamingPopUpSheetMenuState
 
         Navigator.of(
           context,
-          rootNavigator: widget.connectManager.config.rootNavigator,
+          rootNavigator: widget.connectManager.config?.rootNavigator ?? false,
         ).pop();
       },
       child: Container(
@@ -182,6 +187,7 @@ class _ZegoLiveStreamingPopUpSheetMenuState
 
 Future<void> showPopUpSheet({
   required BuildContext context,
+  required String liveID,
   required ZegoUIKitUser user,
   required List<ZegoLiveStreamingPopupItem> popupItems,
   required ZegoUIKitPrebuiltLiveStreamingInnerText translationText,
@@ -197,7 +203,7 @@ Future<void> showPopUpSheet({
     backgroundColor: const Color(0xff111014),
     //ZegoUIKitDefaultTheme.viewBackgroundColor,
     context: context,
-    useRootNavigator: connectManager.config.rootNavigator,
+    useRootNavigator: connectManager.config?.rootNavigator ?? false,
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.only(
         topLeft: Radius.circular(32.0.zR),
@@ -215,6 +221,7 @@ Future<void> showPopUpSheet({
             height: (popupItems.length * 101).zR,
             padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
             child: ZegoLiveStreamingPopUpSheetMenu(
+              liveID: liveID,
               targetUser: user,
               popupItems: popupItems,
               translationText: translationText,

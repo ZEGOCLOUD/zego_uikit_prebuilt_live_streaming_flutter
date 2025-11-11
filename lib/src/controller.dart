@@ -12,33 +12,35 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
-import 'package:zego_uikit_prebuilt_live_streaming/src/components/message/enable_property.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/dialogs.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/toast.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/controller/private/media_player.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/controller/private/pip/pip_android.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/controller/private/pip/pip_interface.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/controller/private/pip/pip_ios.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect_manager.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/core/core_managers.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/core/defines.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/defines.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/events.defines.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/internal/pk_combine_notifier.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/internal/reporter.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/data.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/defines.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/overlay_machine.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/pk/core/core.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/pk/core/defines.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/pk/core/service/defines.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/pk/core/service/services.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/swiping/config.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/instance.dart';
+import 'components/message/enable_property.dart';
+import 'components/utils/dialogs.dart';
+import 'components/utils/toast.dart';
+import 'config.dart';
+import 'controller/private/media_player.dart';
+import 'controller/private/pip/pip_android.dart';
+import 'controller/private/pip/pip_interface.dart';
+import 'controller/private/pip/pip_ios.dart';
+import 'core/connect_manager.dart';
+import 'core/core_managers.dart';
+import 'core/defines.dart';
+import 'core/host_manager.dart';
+import 'core/plugins.dart';
+import 'defines.dart';
+import 'events.dart';
+import 'events.defines.dart';
+import 'internal/defines.dart';
+import 'internal/pk_combine_notifier.dart';
+import 'internal/reporter.dart';
+import 'live_streaming.dart';
+import 'modules/hall/controller.dart';
+import 'modules/minimizing/data.dart';
+import 'modules/minimizing/defines.dart';
+import 'modules/minimizing/overlay_machine.dart';
+import 'modules/pk/core/core.dart';
+import 'modules/pk/core/defines.dart';
+import 'modules/pk/core/service/defines.dart';
+import 'modules/pk/core/service/services.dart';
 
 part 'controller/audio_video.dart';
 
@@ -65,6 +67,10 @@ part 'controller/pk.dart';
 part 'controller/swiping.dart';
 
 part 'controller/private/private.dart';
+
+part 'controller/hall.dart';
+
+part 'controller/private/hall.dart';
 
 part 'controller/private/audio_video.dart';
 
@@ -107,9 +113,9 @@ class ZegoUIKitPrebuiltLiveStreamingController
         ZegoLiveStreamingControllerCoHost,
         ZegoLiveStreamingControllerPK,
         ZegoLiveStreamingControllerLog,
-        ZegoLiveStreamingControllerSwiping,
         ZegoLiveStreamingControllerAudioVideo,
-        ZegoLiveStreamingControllerMedia {
+        ZegoLiveStreamingControllerMedia,
+        ZegoLiveStreamingControllerHall {
   factory ZegoUIKitPrebuiltLiveStreamingController() => instance;
 
   String get version => "3.15.2"; // zego_uikit_prebuilt_live_streaming:
@@ -124,22 +130,14 @@ class ZegoUIKitPrebuiltLiveStreamingController
     BuildContext context, {
     bool showConfirmation = false,
   }) async {
-    final result =
-        await room._leave(context, showConfirmation: showConfirmation);
+    final result = await room._leave(
+      context,
+      showConfirmation: showConfirmation,
+    );
 
     await ZegoUIKitPrebuiltLiveStreamingController().pip.cancelBackground();
 
     private.uninitByPrebuilt();
-    pk.private.uninitByPrebuilt();
-    room.private.uninitByPrebuilt();
-    user.private.uninitByPrebuilt();
-    message.private.uninitByPrebuilt();
-    coHost.private.uninitByPrebuilt();
-    audioVideo.private.uninitByPrebuilt();
-    minimize.private.uninitByPrebuilt();
-    pip.private.uninitByPrebuilt();
-    screenSharing.private.uninitByPrebuilt();
-    swiping.private.uninitByPrebuilt();
 
     return result;
   }

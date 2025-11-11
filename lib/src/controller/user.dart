@@ -18,8 +18,14 @@ class ZegoLiveStreamingControllerUserImpl
   }) {
     return includeFakeUser
         ? (private.streamControllerList?.stream ??
-            ZegoUIKit().getUserListStream())
-        : ZegoUIKit().getUserListStream();
+            ZegoUIKit().getUserListStream(
+              targetRoomID:
+                  ZegoUIKitPrebuiltLiveStreamingController().private.liveID,
+            ))
+        : ZegoUIKit().getUserListStream(
+            targetRoomID:
+                ZegoUIKitPrebuiltLiveStreamingController().private.liveID,
+          );
   }
 
   /// remove user from live, kick out
@@ -34,7 +40,10 @@ class ZegoLiveStreamingControllerUserImpl
       subTag: 'controller.user',
     );
 
-    return ZegoUIKit().removeUserFromRoom(userIDs);
+    return ZegoUIKit().removeUserFromRoom(
+      targetRoomID: ZegoUIKitPrebuiltLiveStreamingController().private.liveID,
+      userIDs,
+    );
   }
 
   ///  add fake user

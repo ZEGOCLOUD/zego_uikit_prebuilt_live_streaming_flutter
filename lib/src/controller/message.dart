@@ -9,8 +9,6 @@ mixin ZegoLiveStreamingControllerMessage {
 /// Here are the APIs related to message.
 class ZegoLiveStreamingControllerMessageImpl
     with ZegoLiveStreamingControllerMessagePrivate {
-  final _enableProperty = ZegoLiveStreamingInRoomMessageEnableProperty();
-
   /// sends the chat message
   ///
   /// [payloadAttributes] same as
@@ -21,7 +19,7 @@ class ZegoLiveStreamingControllerMessageImpl
     String message, {
     ZegoInRoomMessageType type = ZegoInRoomMessageType.broadcastMessage,
   }) async {
-    if (!_enableProperty.value) {
+    if (!private._enableProperty.value) {
       ZegoLoggerService.logInfo(
         'chat enabled property is false, not allow to send message',
         tag: 'live-streaming',
@@ -33,10 +31,15 @@ class ZegoLiveStreamingControllerMessageImpl
 
     final attributes = private.config?.inRoomMessage.attributes?.call();
     if (attributes?.isEmpty ?? true) {
-      return ZegoUIKit().sendInRoomMessage(message, type: type);
+      return ZegoUIKit().sendInRoomMessage(
+        targetRoomID: ZegoUIKitPrebuiltLiveStreamingController().private.liveID,
+        message,
+        type: type,
+      );
     }
 
     return ZegoUIKit().sendInRoomMessage(
+      targetRoomID: ZegoUIKitPrebuiltLiveStreamingController().private.liveID,
       ZegoInRoomMessage.jsonBody(
         message: message,
         attributes: attributes!,
@@ -51,7 +54,10 @@ class ZegoLiveStreamingControllerMessageImpl
   List<ZegoInRoomMessage> list({
     ZegoInRoomMessageType type = ZegoInRoomMessageType.broadcastMessage,
   }) {
-    return ZegoUIKit().getInRoomMessages(type: type);
+    return ZegoUIKit().getInRoomMessages(
+      targetRoomID: ZegoUIKitPrebuiltLiveStreamingController().private.liveID,
+      type: type,
+    );
   }
 
   /// Retrieves a list stream of chat messages that already exist in the room.
@@ -97,9 +103,16 @@ class ZegoLiveStreamingControllerMessageImpl
       return (type == ZegoInRoomMessageType.broadcastMessage
               ? private.streamControllerBroadcastList?.stream
               : private._streamControllerBarrageList?.stream) ??
-          ZegoUIKit().getInRoomMessageListStream(type: type);
+          ZegoUIKit().getInRoomMessageListStream(
+            targetRoomID:
+                ZegoUIKitPrebuiltLiveStreamingController().private.liveID,
+            type: type,
+          );
     }
-    return ZegoUIKit().getInRoomMessageListStream(type: type);
+    return ZegoUIKit().getInRoomMessageListStream(
+      targetRoomID: ZegoUIKitPrebuiltLiveStreamingController().private.liveID,
+      type: type,
+    );
   }
 
   /// send fake message in message list,

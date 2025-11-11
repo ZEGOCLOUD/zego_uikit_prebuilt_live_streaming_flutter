@@ -11,12 +11,12 @@ import 'package:zego_uikit/zego_uikit.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/live_duration_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/instance.dart';
 
 /// @nodoc
 class ZegoLiveStreamingDurationTimeBoard extends StatefulWidget {
   final ZegoLiveStreamingDurationConfig config;
-  final ZegoLiveStreamingDurationEvents events;
-  final ZegoLiveStreamingDurationManager manager;
+  final ZegoLiveStreamingDurationEvents? events;
 
   final double? fontSize;
 
@@ -24,7 +24,6 @@ class ZegoLiveStreamingDurationTimeBoard extends StatefulWidget {
     Key? key,
     required this.config,
     required this.events,
-    required this.manager,
     this.fontSize,
   }) : super(key: key);
 
@@ -50,7 +49,10 @@ class _ZegoLiveStreamingDurationTimeBoardState
         subTag: 'prebuilt',
       );
 
-      if (widget.manager.isValid) {
+      if (ZegoLiveStreamingPageLifeCycle()
+          .currentManagers
+          .liveDurationManager
+          .isValid) {
         startDurationTimerByNetworkTime();
       } else {
         ZegoLoggerService.logInfo(
@@ -59,7 +61,11 @@ class _ZegoLiveStreamingDurationTimeBoardState
           subTag: 'duration time board',
         );
 
-        widget.manager.notifier.addListener(startDurationTimerByNetworkTime);
+        ZegoLiveStreamingPageLifeCycle()
+            .currentManagers
+            .liveDurationManager
+            .notifier
+            .addListener(startDurationTimerByNetworkTime);
       }
     }
   }
@@ -80,7 +86,10 @@ class _ZegoLiveStreamingDurationTimeBoardState
     return ValueListenableBuilder<Duration>(
       valueListenable: durationNotifier,
       builder: (context, elapsedTime, _) {
-        if (!widget.manager.isValid) {
+        if (!ZegoLiveStreamingPageLifeCycle()
+            .currentManagers
+            .liveDurationManager
+            .isValid) {
           return Container();
         }
 
@@ -112,7 +121,10 @@ class _ZegoLiveStreamingDurationTimeBoardState
   }
 
   void startDurationTimerByNetworkTime() {
-    if (widget.manager.isValid) {
+    if (ZegoLiveStreamingPageLifeCycle()
+        .currentManagers
+        .liveDurationManager
+        .isValid) {
       final networkTimeNow = ZegoUIKit().getNetworkTime();
       if (null == networkTimeNow.value) {
         ZegoLoggerService.logInfo(
@@ -147,17 +159,21 @@ class _ZegoLiveStreamingDurationTimeBoardState
 
   void startDurationTimer(DateTime networkTimeNow) {
     ZegoLoggerService.logInfo(
-      'start duration timer, network time is $networkTimeNow, live begin time is ${widget.manager.notifier.value}',
+      'start duration timer, network time is $networkTimeNow, live begin time is ${ZegoLiveStreamingPageLifeCycle().currentManagers.liveDurationManager.notifier.value}',
       tag: 'live-streaming',
       subTag: 'duration time board',
     );
 
-    beginDuration = networkTimeNow.difference(widget.manager.notifier.value);
+    beginDuration = networkTimeNow.difference(ZegoLiveStreamingPageLifeCycle()
+        .currentManagers
+        .liveDurationManager
+        .notifier
+        .value);
 
     durationTimer?.cancel();
     durationTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       durationNotifier.value = beginDuration! + Duration(seconds: timer.tick);
-      widget.events.onUpdated?.call(durationNotifier.value);
+      widget.events?.onUpdated?.call(durationNotifier.value);
     });
   }
 }

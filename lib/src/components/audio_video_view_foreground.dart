@@ -14,15 +14,15 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect_manager.dart
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/inner_text.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
+import '../lifecycle/instance.dart';
 
 /// @nodoc
 class ZegoLiveStreamingAudioVideoForeground extends StatelessWidget {
   final Size size;
+
+  final String liveID;
   final ZegoUIKitUser? user;
 
-  final bool isPluginEnabled;
-  final ZegoLiveStreamingHostManager hostManager;
-  final ZegoLiveStreamingConnectManager connectManager;
   final ZegoLiveStreamingPopUpManager popUpManager;
   final ZegoUIKitPrebuiltLiveStreamingInnerText translationText;
 
@@ -33,10 +33,8 @@ class ZegoLiveStreamingAudioVideoForeground extends StatelessWidget {
   const ZegoLiveStreamingAudioVideoForeground({
     Key? key,
     this.user,
+    required this.liveID,
     required this.size,
-    required this.isPluginEnabled,
-    required this.hostManager,
-    required this.connectManager,
     required this.popUpManager,
     required this.translationText,
     this.showMicrophoneStateOnView = true,
@@ -117,7 +115,7 @@ class ZegoLiveStreamingAudioVideoForeground extends StatelessWidget {
     return SizedBox(
       width: 20.zR,
       height: 33.zR,
-      child: ZegoMicrophoneStateIcon(targetUser: user),
+      child: ZegoMicrophoneStateIcon(roomID: liveID, targetUser: user),
     );
   }
 
@@ -129,7 +127,7 @@ class ZegoLiveStreamingAudioVideoForeground extends StatelessWidget {
     return SizedBox(
       width: 20.zR,
       height: 33.zR,
-      child: ZegoCameraStateIcon(targetUser: user),
+      child: ZegoCameraStateIcon(roomID: liveID, targetUser: user),
     );
   }
 
@@ -139,22 +137,22 @@ class ZegoLiveStreamingAudioVideoForeground extends StatelessWidget {
     double maxWidth,
     double maxHeight,
   ) {
-    if (!hostManager.isLocalHost ||
+    if (!ZegoLiveStreamingPageLifeCycle()
+            .currentManagers
+            .hostManager
+            .isLocalHost ||
         user == null ||
-        user.id == hostManager.notifier.value?.id) {
+        user.id ==
+            ZegoLiveStreamingPageLifeCycle()
+                .currentManagers
+                .hostManager
+                .notifier
+                .value
+                ?.id) {
       return Container();
     }
 
     final popupItems = <ZegoLiveStreamingPopupItem>[];
-
-    // if (user.id != hostManager.notifier.value?.id &&
-    //     isCoHost(user) &&
-    //     (isPluginEnabled)) {
-    //   popupItems.add(PopupItem(
-    //     PopupItemValue.kickCoHost,
-    //     translationText.removeCoHostButton,
-    //   ));
-    // }
 
     if (popupItems.isEmpty) {
       return Container();
@@ -169,10 +167,13 @@ class ZegoLiveStreamingAudioVideoForeground extends StatelessWidget {
       onTap: () {
         showPopUpSheet(
           context: context,
+          liveID: liveID,
           user: user,
           popupItems: popupItems,
-          hostManager: hostManager,
-          connectManager: connectManager,
+          hostManager:
+              ZegoLiveStreamingPageLifeCycle().currentManagers.hostManager,
+          connectManager:
+              ZegoLiveStreamingPageLifeCycle().currentManagers.connectManager,
           popUpManager: popUpManager,
           translationText: translationText,
         );

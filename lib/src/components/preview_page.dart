@@ -1,5 +1,6 @@
 // Dart imports:
 import 'dart:core';
+import 'dart:math' as math;
 
 // Flutter imports:
 import 'package:flutter/material.dart';
@@ -14,10 +15,10 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/components/effects/beauty
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/permissions.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
 
-import 'dart:math' as math; // import this
+import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/instance.dart'; // import this
 
 /// @nodoc
 /// user should be login before page enter
@@ -29,11 +30,8 @@ class ZegoLiveStreamingPreviewPage extends StatefulWidget {
     required this.userID,
     required this.userName,
     required this.liveID,
-    required this.hostManager,
-    required this.startedNotifier,
     required this.config,
     required this.popUpManager,
-    required this.kickOutNotifier,
   }) : super(key: key);
 
   final int appID;
@@ -44,13 +42,9 @@ class ZegoLiveStreamingPreviewPage extends StatefulWidget {
 
   final String liveID;
 
-  final ZegoLiveStreamingHostManager hostManager;
-  final ValueNotifier<bool> startedNotifier;
-
   final ZegoUIKitPrebuiltLiveStreamingConfig config;
 
   final ZegoLiveStreamingPopUpManager popUpManager;
-  final ValueNotifier<bool> kickOutNotifier;
 
   @override
   State<ZegoLiveStreamingPreviewPage> createState() =>
@@ -63,20 +57,29 @@ class _ZegoLiveStreamingPreviewPageState
   @override
   void initState() {
     super.initState();
-
-    if (widget.config.turnOnCameraWhenJoining) {
-      ZegoUIKit().turnCameraOn(widget.hostManager.isLocalHost);
-    }
   }
 
   @override
   void dispose() {
     super.dispose();
 
-    if (!widget.startedNotifier.value) {
+    if (ZegoLiveStreamingPageLifeCycle().previewPageVisibilityNotifier.value) {
       /// not enter live page, render again if exist outside live list
-      widget.config.outsideLives.controller?.private.private.init().then((_) {
-        widget.config.outsideLives.controller?.private.private.forceUpdate();
+      ZegoUIKitPrebuiltLiveStreamingController()
+          .hall
+          .private
+          .controller
+          .private
+          .private
+          .init()
+          .then((_) {
+        ZegoUIKitPrebuiltLiveStreamingController()
+            .hall
+            .private
+            .controller
+            .private
+            .private
+            .forceUpdate();
       });
     }
   }
@@ -90,12 +93,14 @@ class _ZegoLiveStreamingPreviewPageState
         minTextAdapt: true,
         splitScreenMode: true,
         builder: (context, child) {
-          return LayoutBuilder(
+          final page = LayoutBuilder(
             builder: (context, constraints) {
+              debugPrint('1111 preview_page.dart build');
               return Stack(
                 children: [
                   background(constraints.maxHeight),
                   ZegoAudioVideoView(
+                    roomID: widget.liveID,
                     user: ZegoUIKit().getLocalUser(),
                     foregroundBuilder: audioVideoViewForeground,
                     backgroundBuilder: audioVideoViewBackground,
@@ -107,27 +112,6 @@ class _ZegoLiveStreamingPreviewPageState
                       builder: widget.config.avatarBuilder,
                     ),
                   ),
-                  // ZegoAudioVideoContainer(
-                  //   layout: ZegoLayout.pictureInPicture(
-                  //     smallViewPosition: ZegoViewPosition.bottomRight,
-                  //     smallViewSize: Size(139.5.zW, 248.0.zH),
-                  //     smallViewMargin: EdgeInsets.only(
-                  //       left: 24.zR,
-                  //       top: 144.zR,
-                  //       right: 24.zR,
-                  //       bottom: 144.zR,
-                  //     ),
-                  //   ),
-                  //   foregroundBuilder: audioVideoViewForeground,
-                  //   backgroundBuilder: audioVideoViewBackground,
-                  //   avatarConfig: ZegoAvatarConfig(
-                  //     showInAudioMode:
-                  //         widget.config.audioVideoView.showAvatarInAudioMode,
-                  //     showSoundWavesInAudioMode: widget
-                  //         .config.audioVideoView.showSoundWavesInAudioMode,
-                  //     builder: widget.config.avatarBuilder,
-                  //   ),
-                  // ),
                   topBar(),
                   bottomBar(),
                   foreground(
@@ -138,6 +122,29 @@ class _ZegoLiveStreamingPreviewPageState
               );
             },
           );
+
+          debugPrint('1111 preview_page.dart build test');
+          return widget.config.turnOnCameraWhenJoining
+              ? FutureBuilder<List<bool>>(
+                  future: Future.wait([
+                    requestPermission(Permission.camera),
+                    ZegoUIKit().turnCameraOn(
+                      targetRoomID: widget.liveID,
+                      ZegoLiveStreamingPageLifeCycle()
+                          .currentManagers
+                          .hostManager
+                          .isLocalHost,
+                    ),
+                  ]),
+                  builder: (BuildContext context, snapshot) {
+                    if (snapshot.hasData) {
+                      return page;
+                    }
+                    debugPrint('1111 preview_page.dart build loading');
+                    return const Center(child: CircularProgressIndicator());
+                  },
+                )
+              : page;
         },
       ),
     );
@@ -212,6 +219,7 @@ class _ZegoLiveStreamingPreviewPageState
             ),
             const Expanded(child: SizedBox()),
             ZegoSwitchCameraButton(
+              roomID: widget.liveID,
               buttonSize: buttonSize,
               iconSize: iconSize,
               icon: ButtonIcon(
@@ -222,7 +230,9 @@ class _ZegoLiveStreamingPreviewPageState
               ),
               defaultUseFrontFacingCamera: ZegoUIKit()
                   .getUseFrontFacingCameraStateNotifier(
-                      ZegoUIKit().getLocalUser().id)
+                    targetRoomID: widget.liveID,
+                    ZegoUIKit().getLocalUser().id,
+                  )
                   .value,
             ),
           ],
@@ -295,7 +305,8 @@ class _ZegoLiveStreamingPreviewPageState
         translationText: widget.config.innerText,
         rootNavigator: widget.config.rootNavigator,
         popUpManager: widget.popUpManager,
-        kickOutNotifier: widget.kickOutNotifier,
+        kickOutNotifier:
+            ZegoLiveStreamingPageLifeCycle().currentManagers.kickOutNotifier,
       ).then(
         (value) {
           ZegoLoggerService.logInfo(
@@ -304,7 +315,7 @@ class _ZegoLiveStreamingPreviewPageState
             subTag: 'preview page',
           );
 
-          widget.startedNotifier.value = true;
+          ZegoLiveStreamingPageLifeCycle().updatePreviewPageVisibility(false);
         },
       );
     }

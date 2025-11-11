@@ -8,12 +8,17 @@ import 'package:flutter/material.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
-import 'package:zego_uikit_prebuilt_live_streaming/src/components/live_streaming.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/internal/reporter.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/swiping/page.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/instance.dart';
+import '../zego_uikit_prebuilt_live_streaming.dart';
+import 'components/live_streaming_page.dart';
+import 'components/utils/pop_up_manager.dart';
+import 'config.dart';
+import 'controller.dart';
+import 'events.dart';
+import 'internal/reporter.dart';
+import 'lifecycle/defines.dart';
+import 'modules/minimizing/overlay_machine.dart';
+import 'modules/swiping/page.dart';
 
 /// Live Streaming Widget.
 ///
@@ -30,7 +35,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/swiping/page.dart';
 ///
 class ZegoUIKitPrebuiltLiveStreaming extends StatefulWidget {
   const ZegoUIKitPrebuiltLiveStreaming({
-    Key? key,
+    super.key,
     required this.appID,
     required this.userID,
     required this.userName,
@@ -39,7 +44,7 @@ class ZegoUIKitPrebuiltLiveStreaming extends StatefulWidget {
     this.appSign = '',
     this.token = '',
     this.events,
-  }) : super(key: key);
+  });
 
   /// You can create a project and obtain an appID from the [ZEGOCLOUD Admin Console](https://console.zegocloud.com).
   final int appID;
@@ -88,6 +93,10 @@ class ZegoUIKitPrebuiltLiveStreaming extends StatefulWidget {
 
 class _ZegoUIKitPrebuiltLiveStreamingState
     extends State<ZegoUIKitPrebuiltLiveStreaming> {
+  bool isPrebuiltFromMinimizing = false;
+  bool isPrebuiltFromHall = false;
+  final popUpManager = ZegoLiveStreamingPopUpManager();
+
   @override
   void initState() {
     ZegoLoggerService.logInfo(
@@ -98,11 +107,17 @@ class _ZegoUIKitPrebuiltLiveStreamingState
 
     super.initState();
 
+    isPrebuiltFromMinimizing = ZegoLiveStreamingMiniOverlayPageState.idle !=
+        ZegoLiveStreamingMiniOverlayMachine().state;
+    isPrebuiltFromHall = ZegoUIKitHallRoomIDHelper.isRandomRoomID(
+        ZegoUIKit().getCurrentRoom().id);
+
     ZegoUIKit().getZegoUIKitVersion().then((uikitVersion) {
       ZegoLoggerService.logInfo(
         'version: zego_uikit_prebuilt_live_streaming:${ZegoUIKitPrebuiltLiveStreamingController().version}; $uikitVersion, \n'
         'config:${widget.config.toString()}, \n'
-        'events: ${widget.events}, ',
+        'events: ${widget.events}, '
+        'isPrebuiltFromMinimizing:$isPrebuiltFromMinimizing, ',
         tag: 'live-streaming',
         subTag: 'prebuilt',
       );
@@ -133,6 +148,11 @@ class _ZegoUIKitPrebuiltLiveStreamingState
   void dispose() {
     super.dispose();
 
+    ZegoLiveStreamingPageLifeCycle().uninitFromPreview(
+      isPrebuiltFromMinimizing: isPrebuiltFromMinimizing,
+      isPrebuiltFromHall: isPrebuiltFromHall,
+    );
+
     ZegoUIKitPrebuiltLiveStreamingController().pip.cancelBackground();
 
     ZegoUIKit().reporter().report(event: ZegoLiveStreamingReporter.eventUninit);
@@ -146,24 +166,59 @@ class _ZegoUIKitPrebuiltLiveStreamingState
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<bool>(
-      /// Waiting for outside live list de-initialization to complete
-      future: widget.config.outsideLives.controller?.private.private.uninit(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.none ||
-            snapshot.connectionState == ConnectionState.done) {
-          return page();
-        }
+    return Stack(
+      children: [
+        page(),
+        FutureBuilder<void>(
+          future: ZegoLiveStreamingPageLifeCycle().initFromPreview(
+            targetLiveID: widget.liveID,
+            isPrebuiltFromMinimizing: isPrebuiltFromMinimizing,
+            isPrebuiltFromHall: isPrebuiltFromHall,
+            contextData: ZegoLiveStreamingPageLifeCycleContextData(
+              appID: widget.appID,
+              appSign: widget.appSign,
+              token: widget.token,
+              userID: widget.userID,
+              userName: widget.userName,
+              config: widget.config,
+              events: widget.events,
+              popUpManager: popUpManager,
+            ),
+          ),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.none ||
+                snapshot.connectionState == ConnectionState.done) {
+              return Container();
+            }
 
-        return widget.config.outsideLives.loadingBuilder?.call(context) ??
-            const Center(child: CircularProgressIndicator());
-      },
+            return widget.config.hall.loadingBuilder?.call(context) ??
+                const Center(
+                  child: CircularProgressIndicator(),
+                );
+          },
+        ),
+      ],
     );
   }
 
   Widget page() {
-    return null == widget.config.swiping
-        ? ZegoLiveStreamingPage(
+    final usingSwiping = null != widget.config.swiping;
+    return usingSwiping
+        ? ZegoLiveStreamingSwipingPage(
+            appID: widget.appID,
+            appSign: widget.appSign,
+            token: widget.token,
+            userID: widget.userID,
+            userName: widget.userName,
+            config: widget.config,
+            events: widget.events,
+            swipingModel: widget.config.swiping?.model,
+            swipingModelDelegate: widget.config.swiping?.modelDelegate,
+            popUpManager: popUpManager,
+            isPrebuiltFromMinimizing: isPrebuiltFromMinimizing,
+            isPrebuiltFromHall: isPrebuiltFromHall,
+          )
+        : ZegoLiveStreamingPage(
             appID: widget.appID,
             appSign: widget.appSign,
             token: widget.token,
@@ -172,17 +227,9 @@ class _ZegoUIKitPrebuiltLiveStreamingState
             liveID: widget.liveID,
             config: widget.config,
             events: widget.events,
-          )
-        : ZegoLiveStreamingSwipingPage(
-            initialLiveID: widget.liveID,
-            appID: widget.appID,
-            appSign: widget.appSign,
-            token: widget.token,
-            userID: widget.userID,
-            userName: widget.userName,
-            config: widget.config,
-            events: widget.events,
-            swipingConfig: widget.config.swiping!,
+            popUpManager: popUpManager,
+            isPrebuiltFromMinimizing: isPrebuiltFromMinimizing,
+            isPrebuiltFromHall: isPrebuiltFromHall,
           );
   }
 }

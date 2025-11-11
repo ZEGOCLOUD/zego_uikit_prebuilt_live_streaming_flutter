@@ -16,44 +16,32 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/components/top_bar.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect_manager.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/core/live_duration_manager.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/core/live_status_manager.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/core/plugins.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.defines.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/instance.dart';
 
 /// @nodoc
 class ZegoLiveStreamingLivePageSurface extends StatefulWidget {
   const ZegoLiveStreamingLivePageSurface({
     Key? key,
+    required this.liveID,
     required this.config,
     required this.events,
     required this.defaultEndAction,
     required this.defaultLeaveConfirmationAction,
-    required this.hostManager,
-    required this.liveStatusManager,
-    required this.liveDurationManager,
     required this.popUpManager,
-    required this.connectManager,
-    this.plugins,
   }) : super(key: key);
 
+  final String liveID;
   final ZegoUIKitPrebuiltLiveStreamingConfig config;
-  final ZegoUIKitPrebuiltLiveStreamingEvents events;
+  final ZegoUIKitPrebuiltLiveStreamingEvents? events;
   final void Function(ZegoLiveStreamingEndEvent event) defaultEndAction;
   final Future<bool> Function(
     ZegoLiveStreamingLeaveConfirmationEvent event,
   ) defaultLeaveConfirmationAction;
 
-  final ZegoLiveStreamingHostManager hostManager;
-  final ZegoLiveStreamingStatusManager liveStatusManager;
-  final ZegoLiveStreamingDurationManager liveDurationManager;
   final ZegoLiveStreamingPopUpManager popUpManager;
-  final ZegoLiveStreamingPlugins? plugins;
-  final ZegoLiveStreamingConnectManager connectManager;
 
   @override
   State<ZegoLiveStreamingLivePageSurface> createState() =>
@@ -91,7 +79,7 @@ class _ZegoLiveStreamingLivePageSurfaceState
   Widget build(BuildContext context) {
     return widget.config.slideSurfaceToHide
         ? GestureDetector(
-            behavior: HitTestBehavior.translucent, // 添加此行
+            behavior: HitTestBehavior.translucent, // Add this line
 
             onHorizontalDragUpdate: (DragUpdateDetails details) {
               _animationController.value +=
@@ -130,7 +118,10 @@ class _ZegoLiveStreamingLivePageSurfaceState
   }
 
   Widget topBar() {
-    final isCoHostEnabled = (widget.plugins?.isEnabled ?? false) &&
+    final isCoHostEnabled = (ZegoLiveStreamingPageLifeCycle()
+            .currentManagers
+            .plugins
+            .isEnabled) &&
         widget.config.bottomMenuBar.audienceButtons
             .contains(ZegoLiveStreamingMenuBarButtonName.coHostControlButton);
     return Positioned(
@@ -138,14 +129,12 @@ class _ZegoLiveStreamingLivePageSurfaceState
       right: 0,
       top: 5.zR,
       child: ZegoLiveStreamingTopBar(
+        liveID: widget.liveID,
         config: widget.config,
         events: widget.events,
         defaultEndAction: widget.defaultEndAction,
         defaultLeaveConfirmationAction: widget.defaultLeaveConfirmationAction,
         isCoHostEnabled: isCoHostEnabled,
-        hostManager: widget.hostManager,
-        hostUpdateEnabledNotifier: widget.hostManager.hostUpdateEnabledNotifier,
-        connectManager: widget.connectManager,
         popUpManager: widget.popUpManager,
         isLeaveRequestingNotifier: ZegoUIKitPrebuiltLiveStreamingController()
             .isLeaveRequestingNotifier,
@@ -158,15 +147,12 @@ class _ZegoLiveStreamingLivePageSurfaceState
     return Align(
       alignment: Alignment.bottomCenter,
       child: ZegoLiveStreamingBottomBar(
+        liveID: widget.liveID,
         buttonSize: zegoLiveButtonSize,
         config: widget.config,
         events: widget.events,
         defaultEndAction: widget.defaultEndAction,
         defaultLeaveConfirmationAction: widget.defaultLeaveConfirmationAction,
-        hostManager: widget.hostManager,
-        hostUpdateEnabledNotifier: widget.hostManager.hostUpdateEnabledNotifier,
-        liveStatusNotifier: widget.liveStatusManager.notifier,
-        connectManager: widget.connectManager,
         isLeaveRequestingNotifier: ZegoUIKitPrebuiltLiveStreamingController()
             .isLeaveRequestingNotifier,
         popUpManager: widget.popUpManager,
@@ -195,8 +181,9 @@ class _ZegoLiveStreamingLivePageSurfaceState
       child: ConstrainedBox(
         constraints: BoxConstraints.loose(listSize),
         child: ZegoLiveStreamingInRoomLiveMessageView(
+          liveID: widget.liveID,
           config: widget.config.inRoomMessage,
-          events: widget.events.inRoomMessage,
+          events: widget.events?.inRoomMessage,
           innerText: widget.config.innerText,
           avatarBuilder: widget.config.avatarBuilder,
           pseudoStream: ZegoUIKitPrebuiltLiveStreamingController()
@@ -221,8 +208,7 @@ class _ZegoLiveStreamingLivePageSurfaceState
       top: 10,
       child: ZegoLiveStreamingDurationTimeBoard(
         config: widget.config.duration,
-        events: widget.events.duration,
-        manager: widget.liveDurationManager,
+        events: widget.events?.duration,
       ),
     );
   }

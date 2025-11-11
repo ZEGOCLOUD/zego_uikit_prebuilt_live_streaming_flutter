@@ -96,7 +96,7 @@ class ZegoLiveStreamingControllerMediaDefaultPlayerPrivateImpl {
   /// DO NOT CALL!!!
   /// Call Inside By Prebuilt
   void initByPrebuilt({
-    required ZegoUIKitPrebuiltLiveStreamingConfig config,
+    required ZegoUIKitPrebuiltLiveStreamingConfig? config,
   }) {
     ZegoLoggerService.logInfo(
       'init by prebuilt',

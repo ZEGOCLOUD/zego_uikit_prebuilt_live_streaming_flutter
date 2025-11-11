@@ -8,13 +8,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
-import 'package:zego_uikit_prebuilt_live_streaming/src/components/live_list/controller.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/config.defines.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/defines.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/deprecated/deprecated.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/inner_text.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/pk/layout/layout.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/swiping/config.dart';
+import 'config.defines.dart';
+import 'defines.dart';
+import 'deprecated/deprecated.dart';
+import 'inner_text.dart';
+import 'modules/hall/controller.dart';
+import 'modules/pk/layout/layout.dart';
+import 'modules/swiping/defines.dart';
 
 /// Configuration for initializing the Live Streaming
 ///
@@ -60,11 +60,17 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   /// Used to configure the parameters related to the preview of the live streaming.
   ZegoLiveStreamingPreviewConfig preview;
 
-  /// the outside live list, which is displayed outside and does not belong to the [ZegoUIKitPrebuiltLiveStreaming]
+  /// the live hall, which is displayed outside and does not belong to the
+  /// [ZegoUIKitPrebuiltLiveStreaming]
   /// Used to configure the parameters related to the preview list of the live streaming.
   ///
   /// you can see [Document](https://www.zegocloud.com/docs/uikit/live-streaming-kit-flutter/enhance-the-livestream/live-list) here
-  ZegoLiveStreamingOutsideLivesConfig outsideLives;
+  ZegoLiveStreamingHallConfig hall;
+
+  /// swiping config, if you wish to use swiping, please configure this config.
+  /// if it is null, this swiping will not be enabled.
+  /// the [liveID] will be the initial live id of swiping
+  ZegoLiveStreamingSwipingConfig? swiping;
 
   /// Used to configure the parameters related to PK battles
   /// if you want to listen event, please refer [ZegoUIKitPrebuiltLiveStreamingEvents.pk]
@@ -93,11 +99,6 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   ///
   /// you can see [Document](https://www.zegocloud.com/docs/uikit/live-streaming-kit-flutter/enhance-the-livestream/advanced-beauty-effects) here
   ZegoBeautyPluginConfig? beauty;
-
-  /// swiping config, if you wish to use swiping, please configure this config.
-  /// if it is null, this swiping will not be enabled.
-  /// the [liveID] will be the initial live id of swiping
-  ZegoLiveStreamingSwipingConfig? swiping;
 
   /// co-cohost config
   ZegoLiveStreamingCoHostConfig coHost;
@@ -235,7 +236,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   Map<String, String> advanceConfigs;
 
   /// audio video resource mode for audience
-  ZegoAudioVideoResourceMode? audienceAudioVideoResourceMode;
+  ZegoUIKitStreamResourceMode? audienceAudioVideoResourceMode;
 
   bool showToast;
 
@@ -264,7 +265,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         mediaPlayer = ZegoLiveStreamingMediaPlayerConfig(),
         screenSharing = ZegoLiveStreamingScreenSharingConfig(),
         pip = ZegoLiveStreamingPIPConfig(),
-        video = ZegoUIKitVideoConfig.preset360P(),
+        video = ZegoVideoConfigExtension.preset360P(),
         audioVideoView = ZegoLiveStreamingAudioVideoViewConfig(
           showSoundWavesInAudioMode: true,
         ),
@@ -287,7 +288,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
           confirmButtonName: 'Stop it',
         ),
         preview = ZegoLiveStreamingPreviewConfig(),
-        outsideLives = ZegoLiveStreamingOutsideLivesConfig(),
+        hall = ZegoLiveStreamingHallConfig(),
         pkBattle = ZegoLiveStreamingPKBattleConfig(),
         duration = ZegoLiveStreamingDurationConfig(),
         signalingPlugin = ZegoLiveStreamingSignalingPluginConfig(),
@@ -327,7 +328,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         mediaPlayer = ZegoLiveStreamingMediaPlayerConfig(),
         screenSharing = ZegoLiveStreamingScreenSharingConfig(),
         pip = ZegoLiveStreamingPIPConfig(),
-        video = ZegoUIKitVideoConfig.preset360P(),
+        video = ZegoVideoConfigExtension.preset360P(),
         audioVideoView = ZegoLiveStreamingAudioVideoViewConfig(
           showSoundWavesInAudioMode: true,
         ),
@@ -343,7 +344,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         effect = ZegoLiveStreamingEffectConfig(),
         innerText = ZegoUIKitPrebuiltLiveStreamingInnerText(),
         preview = ZegoLiveStreamingPreviewConfig(),
-        outsideLives = ZegoLiveStreamingOutsideLivesConfig(),
+        hall = ZegoLiveStreamingHallConfig(),
         pkBattle = ZegoLiveStreamingPKBattleConfig(),
         duration = ZegoLiveStreamingDurationConfig(),
         signalingPlugin = ZegoLiveStreamingSignalingPluginConfig(),
@@ -398,7 +399,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
     ZegoLiveStreamingTopMenuBarConfig? topMenuBar,
     ZegoLiveStreamingBottomMenuBarConfig? bottomMenuBar,
     ZegoLiveStreamingPreviewConfig? preview,
-    ZegoLiveStreamingOutsideLivesConfig? outsideLives,
+    ZegoLiveStreamingHallConfig? hall,
     ZegoLiveStreamingPKBattleConfig? pkBattle,
     ZegoLiveStreamingMediaPlayerConfig? media,
     ZegoLiveStreamingScreenSharingConfig? screenSharing,
@@ -407,7 +408,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   })  : mediaPlayer = media ?? ZegoLiveStreamingMediaPlayerConfig(),
         screenSharing = screenSharing ?? ZegoLiveStreamingScreenSharingConfig(),
         pip = pip ?? ZegoLiveStreamingPIPConfig(),
-        video = video ?? ZegoUIKitVideoConfig.preset360P(),
+        video = video ?? ZegoVideoConfigExtension.preset360P(),
         audioVideoView =
             audioVideoView ?? ZegoLiveStreamingAudioVideoViewConfig(),
         topMenuBar = topMenuBar ?? ZegoLiveStreamingTopMenuBarConfig(),
@@ -419,7 +420,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         innerText =
             translationText ?? ZegoUIKitPrebuiltLiveStreamingInnerText(),
         preview = preview ?? ZegoLiveStreamingPreviewConfig(),
-        outsideLives = outsideLives ?? ZegoLiveStreamingOutsideLivesConfig(),
+        hall = hall ?? ZegoLiveStreamingHallConfig(),
         pkBattle = pkBattle ?? ZegoLiveStreamingPKBattleConfig(),
         duration = duration ?? ZegoLiveStreamingDurationConfig(),
         signalingPlugin =
@@ -458,12 +459,11 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         'inRoomMessage:$inRoomMessage, '
         'effect:$effect, '
         'preview:$preview, '
-        'outsideLives:$outsideLives, '
+        'hall:$hall, '
         'pkBattle:$pkBattle, '
         'duration:$duration, '
         'signalingPlugin:$signalingPlugin, '
-        'beauty:${beauty != null}, '
-        'swiping:${swiping != null}, '
+        'swiping:$swiping, '
         'coHost:$coHost, '
         'role:$role, '
         'plugins:$plugins, '
@@ -471,19 +471,20 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         'useFrontFacingCamera:$useFrontFacingCamera, '
         'turnOnMicrophoneWhenJoining:$turnOnMicrophoneWhenJoining, '
         'useSpeakerWhenJoining:$useSpeakerWhenJoining, '
-        'confirmDialogInfo:${confirmDialogInfo != null}, '
         'innerText:$innerText, '
-        'layout:${layout != null}, '
         'rootNavigator:$rootNavigator, '
-        'avatarBuilder:${avatarBuilder != null}, '
         'markAsLargeRoom:$markAsLargeRoom, '
         'slideSurfaceToHide:$slideSurfaceToHide, '
-        'foreground:${foreground != null}, '
-        'background:${background != null}, '
         'showBackgroundTips:$showBackgroundTips, '
         'advanceConfigs:$advanceConfigs, '
-        'audienceAudioVideoResourceMode:${audienceAudioVideoResourceMode != null}, '
         'showToast:$showToast, '
+        'beauty:${beauty != null}, '
+        'confirmDialogInfo:${confirmDialogInfo != null}, '
+        'layout:${layout != null}, '
+        'avatarBuilder:${avatarBuilder != null}, '
+        'foreground:${foreground != null}, '
+        'background:${background != null}, '
+        'audienceAudioVideoResourceMode:${audienceAudioVideoResourceMode != null}, '
         '}';
   }
 }
@@ -1392,25 +1393,57 @@ class ZegoLiveStreamingPreviewBottomBarConfig {
   }
 }
 
-class ZegoLiveStreamingOutsideLivesConfig {
-  /// same object as [ZegoLiveStreamingOutsideLiveList.controller]
-  ZegoLiveStreamingOutsideLiveListController? controller;
+///
+/// If you use **ZegoLiveStreamingHallList**, this setting will be invalid because **ZegoLiveStreamingHallList** will reset it
+class ZegoLiveStreamingHallConfig {
+  /// If the current live room is entered through the hall, special internal processing is required when exiting the live stream.
+  /// Please ensure this variable is assigned the correct value.
+  bool fromHall;
 
   /// loading builder, return Container() if you want hide it
   final Widget? Function(
     BuildContext context,
   )? loadingBuilder;
 
-  ZegoLiveStreamingOutsideLivesConfig({
-    this.controller,
+  ZegoLiveStreamingHallConfig({
+    this.fromHall = false,
     this.loadingBuilder,
   });
 
   @override
   String toString() {
-    return 'ZegoLiveStreamingOutsideLivesConfig:{'
-        'controller:${controller != null}, '
+    return 'ZegoLiveStreamingHallConfig:{'
+        'fromHall:$fromHall, '
         'loadingBuilder:${loadingBuilder != null}, '
+        '}';
+  }
+}
+
+/// swiping config, if you wish to use swiping, please configure this config.
+/// if it is null, this swiping will not be enabled.
+/// the [liveID] will be the initial live id of swiping
+///
+/// If you use **ZegoLiveStreamingHallList**, this setting will be invalid because **ZegoLiveStreamingHallList** will reset it
+class ZegoLiveStreamingSwipingConfig {
+  /// swiping model
+  /// list of [live id]
+  /// When swiping up or down, the corresponding LIVE ID will be returned via this [model]
+  final ZegoLiveStreamingSwipingModel? model;
+
+  /// If you want to manage data yourself, please refer to [ZegoLiveStreamingSwipingModel],
+  /// then cancel the setting of [model], and then set [modelDelegate]
+  final ZegoLiveStreamingSwipingModelDelegate? modelDelegate;
+
+  ZegoLiveStreamingSwipingConfig({
+    this.model,
+    this.modelDelegate,
+  });
+
+  @override
+  String toString() {
+    return 'ZegoLiveStreamingSwipingConfig:{'
+        'model:$model, '
+        'model delegate:$modelDelegate, '
         '}';
   }
 }

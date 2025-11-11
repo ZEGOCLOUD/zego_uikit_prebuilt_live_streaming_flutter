@@ -14,18 +14,19 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/inner_text.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/pk_combine_notifier.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/instance.dart';
 
 /// @nodoc
 class ZegoLiveStreamingMemberButton extends StatefulWidget {
   const ZegoLiveStreamingMemberButton({
     Key? key,
+    required this.liveID,
     required this.isCoHostEnabled,
-    required this.hostManager,
-    required this.connectManager,
     required this.popUpManager,
     required this.translationText,
     required this.config,
     required this.events,
+    required this.liveConfig,
     this.avatarBuilder,
     this.itemBuilder,
     this.icon,
@@ -42,15 +43,15 @@ class ZegoLiveStreamingMemberButton extends StatefulWidget {
   /// Customize the background color through [backgroundColor]
   final Color? backgroundColor;
 
+  final String liveID;
   final bool isCoHostEnabled;
   final ZegoAvatarBuilder? avatarBuilder;
   final ZegoMemberListItemBuilder? itemBuilder;
-  final ZegoLiveStreamingHostManager hostManager;
-  final ZegoLiveStreamingConnectManager connectManager;
   final ZegoLiveStreamingPopUpManager popUpManager;
   final ZegoUIKitPrebuiltLiveStreamingInnerText translationText;
+  final ZegoUIKitPrebuiltLiveStreamingConfig? liveConfig;
   final ZegoLiveStreamingMemberListConfig config;
-  final ZegoLiveStreamingMemberListEvents events;
+  final ZegoLiveStreamingMemberListEvents? events;
 
   @override
   State<ZegoLiveStreamingMemberButton> createState() =>
@@ -67,7 +68,10 @@ class _ZegoLiveStreamingMemberButtonState
     super.initState();
 
     onRequestCoHostUsersUpdated();
-    widget.connectManager.requestCoHostUsersNotifier
+    ZegoLiveStreamingPageLifeCycle()
+        .currentManagers
+        .connectManager
+        .requestCoHostUsersNotifier
         .addListener(onRequestCoHostUsersUpdated);
   }
 
@@ -75,7 +79,10 @@ class _ZegoLiveStreamingMemberButtonState
   void dispose() {
     super.dispose();
 
-    widget.connectManager.requestCoHostUsersNotifier
+    ZegoLiveStreamingPageLifeCycle()
+        .currentManagers
+        .connectManager
+        .requestCoHostUsersNotifier
         .removeListener(onRequestCoHostUsersUpdated);
   }
 
@@ -85,11 +92,11 @@ class _ZegoLiveStreamingMemberButtonState
       onTap: () {
         showMemberListSheet(
           context: context,
+          liveID: widget.liveID,
           config: widget.config,
           events: widget.events,
+          liveConfig: widget.liveConfig,
           isCoHostEnabled: widget.isCoHostEnabled,
-          hostManager: widget.hostManager,
-          connectManager: widget.connectManager,
           popUpManager: widget.popUpManager,
           translationText: widget.translationText,
           avatarBuilder: widget.avatarBuilder,
@@ -200,7 +207,11 @@ class _ZegoLiveStreamingMemberButtonState
   }
 
   void onRequestCoHostUsersUpdated() {
-    redPointNotifier.value =
-        widget.connectManager.requestCoHostUsersNotifier.value.isNotEmpty;
+    redPointNotifier.value = ZegoLiveStreamingPageLifeCycle()
+        .currentManagers
+        .connectManager
+        .requestCoHostUsersNotifier
+        .value
+        .isNotEmpty;
   }
 }

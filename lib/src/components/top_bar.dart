@@ -10,28 +10,25 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/components/leave_button.d
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/pip_button.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect_manager.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/inner_text.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/mini_button.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/instance.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/modules/minimizing/mini_button.dart';
 
 /// @nodoc
 class ZegoLiveStreamingTopBar extends StatefulWidget {
+  final String liveID;
+
   final bool isCoHostEnabled;
   final ZegoUIKitPrebuiltLiveStreamingConfig config;
-  final ZegoUIKitPrebuiltLiveStreamingEvents events;
+  final ZegoUIKitPrebuiltLiveStreamingEvents? events;
   final void Function(ZegoLiveStreamingEndEvent event) defaultEndAction;
   final Future<bool> Function(
     ZegoLiveStreamingLeaveConfirmationEvent event,
   ) defaultLeaveConfirmationAction;
 
-  final ZegoLiveStreamingHostManager hostManager;
-  final ValueNotifier<bool> hostUpdateEnabledNotifier;
-
-  final ZegoLiveStreamingConnectManager connectManager;
   final ZegoLiveStreamingPopUpManager popUpManager;
 
   final ZegoUIKitPrebuiltLiveStreamingInnerText translationText;
@@ -39,19 +36,17 @@ class ZegoLiveStreamingTopBar extends StatefulWidget {
   final ValueNotifier<bool>? isLeaveRequestingNotifier;
 
   const ZegoLiveStreamingTopBar({
-    Key? key,
+    super.key,
+    required this.liveID,
     required this.isCoHostEnabled,
     required this.config,
     required this.events,
     required this.defaultEndAction,
     required this.defaultLeaveConfirmationAction,
-    required this.hostManager,
-    required this.hostUpdateEnabledNotifier,
-    required this.connectManager,
     required this.popUpManager,
     required this.translationText,
     this.isLeaveRequestingNotifier,
-  }) : super(key: key);
+  });
 
   @override
   State<ZegoLiveStreamingTopBar> createState() =>
@@ -119,11 +114,11 @@ class _ZegoLiveStreamingTopBarState extends State<ZegoLiveStreamingTopBar> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               ZegoLiveStreamingMemberButton(
+                liveID: widget.liveID,
+                liveConfig: widget.config,
                 config: widget.config.memberList,
-                events: widget.events.memberList,
+                events: widget.events?.memberList,
                 isCoHostEnabled: widget.isCoHostEnabled,
-                hostManager: widget.hostManager,
-                connectManager: widget.connectManager,
                 popUpManager: widget.popUpManager,
                 translationText: widget.translationText,
                 builder: widget.config.memberButton.builder,
@@ -161,6 +156,7 @@ class _ZegoLiveStreamingTopBarState extends State<ZegoLiveStreamingTopBar> {
             .contains(ZegoLiveStreamingMenuBarButtonName.pipButton)
         ? [
             ZegoLiveStreamingPIPButton(
+              liveID: widget.liveID,
               buttonSize: Size(52.zR, 52.zR),
               iconSize: Size(24.zR, 24.zR),
               aspectWidth: widget.config.pip.aspectWidth,
@@ -178,6 +174,7 @@ class _ZegoLiveStreamingTopBarState extends State<ZegoLiveStreamingTopBar> {
             ZegoLiveStreamingMenuBarButtonName.toggleScreenSharingButton)
         ? [
             ZegoScreenSharingToggleButton(
+              roomID: widget.liveID,
               buttonSize: Size(52.zR, 52.zR),
               iconSize: Size(24.zR, 24.zR),
               onPressed: (isScreenSharing) {},
@@ -201,8 +198,9 @@ class _ZegoLiveStreamingTopBarState extends State<ZegoLiveStreamingTopBar> {
     return widget.config.topMenuBar.showCloseButton
         ? [
             ZegoLiveStreamingLeaveButton(
-              buttonSize: Size(52.zR, 52.zR),
-              iconSize: Size(24.zR, 24.zR),
+              liveID: widget.liveID,
+              buttonSize: Size(96.zR, 96.zR),
+              iconSize: Size(56.zR, 56.zR),
               icon: ButtonIcon(
                 icon: const Icon(Icons.close, color: Colors.white),
                 backgroundColor: ZegoUIKitDefaultTheme.buttonBackgroundColor,
@@ -212,8 +210,6 @@ class _ZegoLiveStreamingTopBarState extends State<ZegoLiveStreamingTopBar> {
               defaultEndAction: widget.defaultEndAction,
               defaultLeaveConfirmationAction:
                   widget.defaultLeaveConfirmationAction,
-              hostManager: widget.hostManager,
-              hostUpdateEnabledNotifier: widget.hostUpdateEnabledNotifier,
               isLeaveRequestingNotifier: widget.isLeaveRequestingNotifier,
             ),
             SizedBox(width: 33.zR),
@@ -225,7 +221,8 @@ class _ZegoLiveStreamingTopBarState extends State<ZegoLiveStreamingTopBar> {
 
   Widget hostAvatar() {
     return ValueListenableBuilder<ZegoUIKitUser?>(
-      valueListenable: widget.hostManager.notifier,
+      valueListenable:
+          ZegoLiveStreamingPageLifeCycle().currentManagers.hostManager.notifier,
       builder: (context, host, _) {
         if (host == null) {
           return Container();
@@ -233,7 +230,7 @@ class _ZegoLiveStreamingTopBarState extends State<ZegoLiveStreamingTopBar> {
 
         return GestureDetector(
           onTap: () {
-            widget.events.topMenuBar.onHostAvatarClicked?.call(host);
+            widget.events?.topMenuBar.onHostAvatarClicked?.call(host);
           },
           child: widget.config.topMenuBar.hostAvatarBuilder?.call(host) ??
               SizedBox(
@@ -247,6 +244,7 @@ class _ZegoLiveStreamingTopBarState extends State<ZegoLiveStreamingTopBar> {
                     children: [
                       SizedBox(width: 6.zR),
                       ZegoAvatar(
+                        roomID: widget.liveID,
                         user: host,
                         avatarSize: Size(56.zR, 56.zR),
                         showSoundLevel: false,

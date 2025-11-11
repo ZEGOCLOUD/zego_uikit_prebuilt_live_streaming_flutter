@@ -10,7 +10,7 @@ import 'package:flutter_styled_toast/flutter_styled_toast.dart' as styled_toast;
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
-import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/overlay_machine.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/modules/minimizing/overlay_machine.dart';
 
 /// @nodoc
 typedef ContextQuery = BuildContext Function();

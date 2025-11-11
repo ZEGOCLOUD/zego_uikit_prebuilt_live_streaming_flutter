@@ -10,6 +10,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
 
 /// @nodoc
 class ZegoLiveStreamingDisableChatButton extends StatefulWidget {
+  final String liveID;
   final Size? iconSize;
   final Size? buttonSize;
   final ButtonIcon? enableIcon;
@@ -17,6 +18,7 @@ class ZegoLiveStreamingDisableChatButton extends StatefulWidget {
 
   const ZegoLiveStreamingDisableChatButton({
     Key? key,
+    required this.liveID,
     this.enableIcon,
     this.disableIcon,
     this.iconSize,
@@ -44,9 +46,12 @@ class _ZegoLiveStreamingDisableChatButtonState
     final containerSize = widget.buttonSize ?? Size(96.zR, 96.zR);
     final sizeBoxSize = widget.iconSize ?? Size(56.zR, 56.zR);
 
-    isChatEnabled = toBoolean(
-        ZegoUIKit().getRoomProperties()[disableChatRoomPropertyKey]?.value ??
-            'true');
+    isChatEnabled = toBoolean(ZegoUIKit()
+            .getRoomProperties(
+              targetRoomID: widget.liveID,
+            )[disableChatRoomPropertyKey]
+            ?.value ??
+        'true');
 
     final icon = isChatEnabled ? widget.enableIcon : widget.disableIcon;
     icon?.icon ??= isChatEnabled
@@ -72,6 +77,7 @@ class _ZegoLiveStreamingDisableChatButtonState
         isUpdatingRoomProperty = true;
         ZegoUIKit()
             .setRoomProperty(
+          targetRoomID: widget.liveID,
           disableChatRoomPropertyKey,
           isChatEnabled.toString(),
         )

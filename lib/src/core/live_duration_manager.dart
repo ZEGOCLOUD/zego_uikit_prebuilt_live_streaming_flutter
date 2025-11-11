@@ -9,21 +9,15 @@ import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/instance.dart';
 
 /// @nodoc
 class ZegoLiveStreamingDurationManager {
-  final ZegoLiveStreamingHostManager hostManager;
+  String liveID = '';
 
   bool _initialized = false;
 
   bool get isValid => notifier.value.millisecondsSinceEpoch > 0;
-
-  ZegoLiveStreamingDurationManager({
-    required this.hostManager,
-  }) {
-    roomPropertySubscription =
-        ZegoUIKit().getRoomPropertiesStream().listen(onRoomPropertiesUpdated);
-  }
 
   /// internal variables
   var notifier = ValueNotifier<DateTime>(DateTime(0));
@@ -31,7 +25,9 @@ class ZegoLiveStreamingDurationManager {
 
   bool isPropertyInited = false;
 
-  Future<void> init() async {
+  Future<void> init({
+    required String liveID,
+  }) async {
     if (_initialized) {
       ZegoLoggerService.logInfo(
         'had already init',
@@ -49,6 +45,16 @@ class ZegoLiveStreamingDurationManager {
       tag: 'live-streaming',
       subTag: 'live duration manager',
     );
+
+    this.liveID = liveID;
+
+    roomPropertySubscription = ZegoUIKit()
+        .getRoomPropertiesStream(targetRoomID: liveID)
+        .listen(onRoomPropertiesUpdated);
+
+    ZegoUIKit()
+        .getRoomStateStream(targetRoomID: liveID)
+        .addListener(onRoomStateUpdated);
   }
 
   Future<void> uninit() async {
@@ -70,10 +76,18 @@ class ZegoLiveStreamingDurationManager {
       subTag: 'live duration manager',
     );
     roomPropertySubscription?.cancel();
+
+    ZegoUIKit()
+        .getRoomStateStream(targetRoomID: liveID)
+        .removeListener(onRoomStateUpdated);
+  }
+
+  void onRoomStateUpdated() {
+    setRoomPropertyByHost();
   }
 
   void onRoomPropertiesUpdated(Map<String, RoomProperty> updatedProperties) {
-    final roomProperties = ZegoUIKit().getRoomProperties();
+    final roomProperties = ZegoUIKit().getRoomProperties(targetRoomID: liveID);
     ZegoLoggerService.logInfo(
       'onRoomPropertiesUpdated roomProperties:$roomProperties, updatedProperties:$updatedProperties',
       tag: 'live-streaming',
@@ -94,7 +108,10 @@ class ZegoLiveStreamingDurationManager {
         int.tryParse(propertyTimestamp) ?? 0);
     notifier.value = serverDateTime;
     if (currentDateTime != serverDateTime) {
-      if (hostManager.isLocalHost) {
+      if (ZegoLiveStreamingPageLifeCycle()
+          .currentManagers
+          .hostManager
+          .isLocalHost) {
         ZegoLoggerService.logInfo(
           'live duration value is not equal, host sync value:${notifier.value}',
           tag: 'live-streaming',
@@ -102,7 +119,10 @@ class ZegoLiveStreamingDurationManager {
         );
 
         ZegoUIKit().setRoomProperty(
-            RoomPropertyKey.liveDuration.text, propertyTimestamp);
+          targetRoomID: liveID,
+          RoomPropertyKey.liveDuration.text,
+          propertyTimestamp,
+        );
       }
     } else {
       ZegoLoggerService.logInfo(
@@ -114,9 +134,10 @@ class ZegoLiveStreamingDurationManager {
   }
 
   void setRoomPropertyByHost() {
-    final roomProperties = ZegoUIKit().getRoomProperties();
-
-    if (!hostManager.isLocalHost) {
+    if (!ZegoLiveStreamingPageLifeCycle()
+        .currentManagers
+        .hostManager
+        .isLocalHost) {
       ZegoLoggerService.logInfo(
         'try set value, but is not a host',
         tag: 'live-streaming',
@@ -124,32 +145,6 @@ class ZegoLiveStreamingDurationManager {
       );
       return;
     }
-
-    if (roomProperties.keys.length < 2) {
-      /// should contain 'host' and 'live_status'
-      ZegoLoggerService.logInfo(
-        'try set value, but room properties length is small than 2',
-        tag: 'live-streaming',
-        subTag: 'live duration manager',
-      );
-      return;
-    }
-
-    /// todo
-    // var updateFromRemote = true;
-    // roomProperties.forEach((key, value) {
-    //   if (!value.updateFromRemote) {
-    //     updateFromRemote = false;
-    //   }
-    // });
-    // if (!updateFromRemote) {
-    //   ZegoLoggerService.logInfo(
-    //     'try set value, but room properties is not all update from remote',
-    //     tag: 'live-streaming',
-    //     subTag: 'live duration manager',
-    //   );
-    //   return;
-    // }
 
     /// ignore room property update event, because had updated from local
     roomPropertySubscription?.cancel();
@@ -195,6 +190,7 @@ class ZegoLiveStreamingDurationManager {
     );
 
     ZegoUIKit().setRoomProperty(
+      targetRoomID: liveID,
       RoomPropertyKey.liveDuration.text,
       networkTimeNow.millisecondsSinceEpoch.toString(),
     );

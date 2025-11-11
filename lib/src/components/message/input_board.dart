@@ -10,11 +10,13 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/inner_text.dart';
 /// @nodoc
 class ZegoLiveStreamingInRoomMessageInputBoard extends ModalRoute<String> {
   ZegoLiveStreamingInRoomMessageInputBoard({
+    required this.liveID,
     required this.translationText,
     required this.rootNavigator,
     this.payloadAttributes,
   }) : super();
 
+  final String liveID;
   final ZegoUIKitPrebuiltLiveStreamingInnerText translationText;
   final bool rootNavigator;
   final Map<String, String>? payloadAttributes;
@@ -58,6 +60,7 @@ class ZegoLiveStreamingInRoomMessageInputBoard extends ModalRoute<String> {
             ),
           ),
           ZegoInRoomMessageInput(
+            roomID: liveID,
             placeHolder: translationText.messageEmptyToast,
             payloadAttributes: payloadAttributes,
             onSubmit: () {

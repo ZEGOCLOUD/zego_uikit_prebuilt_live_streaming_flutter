@@ -26,23 +26,26 @@ class ZegoLiveStreamingControllerCoHostPrivateImpl {
 
   bool _alreadyInitByCoreManager = false;
 
+  ZegoUIKitPrebuiltLiveStreamingConfig? configs;
   ZegoUIKitPrebuiltLiveStreamingEvents? events;
 
-  ZegoUIKitPrebuiltLiveStreamingConfig? get prebuiltConfig =>
-      ZegoLiveStreamingManagers().hostManager?.config;
+  ZegoLiveStreamingHostManager get hostManager =>
+      ZegoLiveStreamingPageLifeCycle().currentManagers.hostManager;
 
-  ZegoLiveStreamingHostManager? get hostManager =>
-      ZegoLiveStreamingManagers().hostManager;
+  ZegoLiveStreamingConnectManager get connectManager =>
+      ZegoLiveStreamingPageLifeCycle().currentManagers.connectManager;
 
-  ZegoLiveStreamingConnectManager? get connectManager =>
-      ZegoLiveStreamingManagers().connectManager;
+  bool get isLocalHost => hostManager.isLocalHost;
 
-  bool get isLocalHost => hostManager?.isLocalHost ?? false;
-
-  bool get hostExist => hostManager?.notifier.value?.id.isNotEmpty ?? false;
+  bool get hostExist => hostManager.notifier.value?.id.isNotEmpty ?? false;
 
   bool get isLiving =>
-      connectManager?.liveStatusNotifier.value == LiveStatus.living;
+      ZegoLiveStreamingPageLifeCycle()
+          .currentManagers
+          .liveStatusManager
+          .notifier
+          .value ==
+      LiveStatus.living;
 
   Function(ZegoLiveStreamingCoHostHostEventRequestReceivedData)?
       get onRequestCoHostEvent => events?.coHost.host.onRequestReceived;
@@ -61,12 +64,12 @@ class ZegoLiveStreamingControllerCoHostPrivateImpl {
 
   void _onAudienceLocalConnectStateUpdated() {
     audienceLocalConnectStateNotifier.value =
-        connectManager!.audienceLocalConnectStateNotifier.value;
+        connectManager.audienceLocalConnectStateNotifier.value;
   }
 
   void _onRequestCoHostUsersUpdated() {
     requestCoHostUsersNotifier.value =
-        connectManager!.requestCoHostUsersNotifier.value;
+        connectManager.requestCoHostUsersNotifier.value;
   }
 
   void initByCoreManager() {
@@ -76,39 +79,52 @@ class ZegoLiveStreamingControllerCoHostPrivateImpl {
 
     _alreadyInitByCoreManager = true;
 
-    ZegoLiveStreamingManagers()
+    ZegoLiveStreamingPageLifeCycle()
+        .currentManagers
         .initializedNotifier
         .addListener(_onCoreManagerInitFinished);
     _onCoreManagerInitFinished();
   }
 
   void _onCoreManagerInitFinished() {
-    if (ZegoLiveStreamingManagers().initializedNotifier.value) {
-      hostNotifier.value =
-          ZegoLiveStreamingManagers().hostManager?.notifier.value;
-      ZegoLiveStreamingManagers()
+    if (ZegoLiveStreamingPageLifeCycle()
+        .currentManagers
+        .initializedNotifier
+        .value) {
+      hostNotifier.value = ZegoLiveStreamingPageLifeCycle()
+          .currentManagers
           .hostManager
-          ?.notifier
+          .notifier
+          .value;
+      ZegoLiveStreamingPageLifeCycle()
+          .currentManagers
+          .hostManager
+          .notifier
           .addListener(_onHostUpdated);
     } else {
       hostNotifier.value = null;
-      ZegoLiveStreamingManagers()
+      ZegoLiveStreamingPageLifeCycle()
+          .currentManagers
           .hostManager
-          ?.notifier
+          .notifier
           .removeListener(_onHostUpdated);
     }
   }
 
   void _onHostUpdated() {
-    hostNotifier.value =
-        ZegoLiveStreamingManagers().hostManager?.notifier.value;
+    hostNotifier.value = ZegoLiveStreamingPageLifeCycle()
+        .currentManagers
+        .hostManager
+        .notifier
+        .value;
   }
 
   /// Please do not call this interface. It is the internal logic of Prebuilt.
   /// DO NOT CALL
   /// Call Inside By Prebuilt
   void initByPrebuilt({
-    ZegoUIKitPrebuiltLiveStreamingEvents? events,
+    required ZegoUIKitPrebuiltLiveStreamingConfig? configs,
+    required ZegoUIKitPrebuiltLiveStreamingEvents? events,
   }) {
     ZegoLoggerService.logInfo(
       'init by prebuilt',
@@ -116,23 +132,29 @@ class ZegoLiveStreamingControllerCoHostPrivateImpl {
       subTag: 'controller.connect.invite.p',
     );
 
+    this.configs = configs;
     this.events = events;
 
     for (final subscription in _subscriptions) {
       subscription?.cancel();
     }
     _subscriptions.add(
-      ZegoUIKit().getAudioVideoListStream().listen(_onAudioVideoListUpdated),
+      ZegoUIKit()
+          .getAudioVideoListStream(
+            targetRoomID:
+                ZegoUIKitPrebuiltLiveStreamingController().private.liveID,
+          )
+          .listen(_onAudioVideoListUpdated),
     );
 
-    connectManager?.audienceLocalConnectStateNotifier
+    connectManager.audienceLocalConnectStateNotifier
         .removeListener(_onAudienceLocalConnectStateUpdated);
-    connectManager?.audienceLocalConnectStateNotifier
+    connectManager.audienceLocalConnectStateNotifier
         .addListener(_onAudienceLocalConnectStateUpdated);
 
-    connectManager?.requestCoHostUsersNotifier
+    connectManager.requestCoHostUsersNotifier
         .removeListener(_onRequestCoHostUsersUpdated);
-    connectManager?.requestCoHostUsersNotifier
+    connectManager.requestCoHostUsersNotifier
         .addListener(_onRequestCoHostUsersUpdated);
   }
 
@@ -146,14 +168,15 @@ class ZegoLiveStreamingControllerCoHostPrivateImpl {
     );
 
     events = null;
+    configs = null;
 
     for (final subscription in _subscriptions) {
       subscription?.cancel();
     }
 
-    connectManager?.audienceLocalConnectStateNotifier
+    connectManager.audienceLocalConnectStateNotifier
         .removeListener(_onAudienceLocalConnectStateUpdated);
-    connectManager?.requestCoHostUsersNotifier
+    connectManager.requestCoHostUsersNotifier
         .removeListener(_onRequestCoHostUsersUpdated);
 
     agreeRequestingUserIDs.clear();

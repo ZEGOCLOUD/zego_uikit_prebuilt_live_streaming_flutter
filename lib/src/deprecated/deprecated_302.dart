@@ -1,5 +1,5 @@
 // Project imports:
-import 'package:zego_uikit_prebuilt_live_streaming/src/pk/layout/layout.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/layout/layout.dart';
 
 const deprecatedTipsV302 = ', '
     'deprecated since 3.0.2, '
