@@ -1,3 +1,8 @@
+## 3.15.3
+
+- Bugs
+  - Fixed the black render issue when beauty open on iOS
+
 ## 3.15.2
 
 - Features
