@@ -11,7 +11,6 @@ import 'package:zego_uikit/zego_uikit.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/minimizing/overlay_machine.dart';
-import '../../zego_uikit_prebuilt_live_streaming.dart';
 
 /// @nodoc
 class ZegoLiveStreamingPlugins {

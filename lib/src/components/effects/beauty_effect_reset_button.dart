@@ -15,12 +15,12 @@ class ZegoLiveStreamingBeautyEffectResetButton extends StatefulWidget {
   final VoidCallback? onPressed;
 
   const ZegoLiveStreamingBeautyEffectResetButton({
-    Key? key,
+    super.key,
     this.icon,
     this.iconSize,
     this.buttonSize,
     this.onPressed,
-  }) : super(key: key);
+  });
 
   @override
   State<ZegoLiveStreamingBeautyEffectResetButton> createState() =>

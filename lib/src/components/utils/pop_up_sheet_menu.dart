@@ -17,7 +17,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/inner_text.dart';
 /// @nodoc
 class ZegoLiveStreamingPopUpSheetMenu extends StatefulWidget {
   const ZegoLiveStreamingPopUpSheetMenu({
-    Key? key,
+    super.key,
     required this.liveID,
     required this.targetUser,
     required this.popupItems,
@@ -25,7 +25,7 @@ class ZegoLiveStreamingPopUpSheetMenu extends StatefulWidget {
     required this.hostManager,
     required this.connectManager,
     this.onPressed,
-  }) : super(key: key);
+  });
 
   final String liveID;
   final List<ZegoLiveStreamingPopupItem> popupItems;

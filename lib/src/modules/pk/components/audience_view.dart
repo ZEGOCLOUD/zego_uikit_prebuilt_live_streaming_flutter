@@ -13,7 +13,7 @@ import 'common.dart';
 /// one stream, more host configs
 class ZegoLiveStreamingPKAudienceView extends StatefulWidget {
   const ZegoLiveStreamingPKAudienceView({
-    Key? key,
+    super.key,
     required this.liveID,
     required this.mixerStreamID,
     required this.hosts,
@@ -22,7 +22,7 @@ class ZegoLiveStreamingPKAudienceView extends StatefulWidget {
     this.foregroundBuilder,
     this.backgroundBuilder,
     this.avatarConfig,
-  }) : super(key: key);
+  });
 
   final String liveID;
   final String mixerStreamID;

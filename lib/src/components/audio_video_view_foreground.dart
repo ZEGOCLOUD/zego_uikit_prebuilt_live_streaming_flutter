@@ -10,11 +10,9 @@ import 'package:zego_uikit/zego_uikit.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/pop_up_sheet_menu.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect_manager.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/inner_text.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
-import '../lifecycle/instance.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/lifecycle.dart';
 
 /// @nodoc
 class ZegoLiveStreamingAudioVideoForeground extends StatelessWidget {
@@ -31,7 +29,7 @@ class ZegoLiveStreamingAudioVideoForeground extends StatelessWidget {
   final bool showUserNameOnView;
 
   const ZegoLiveStreamingAudioVideoForeground({
-    Key? key,
+    super.key,
     this.user,
     required this.liveID,
     required this.size,
@@ -40,7 +38,7 @@ class ZegoLiveStreamingAudioVideoForeground extends StatelessWidget {
     this.showMicrophoneStateOnView = true,
     this.showCameraStateOnView = true,
     this.showUserNameOnView = true,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

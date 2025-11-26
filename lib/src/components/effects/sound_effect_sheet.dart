@@ -24,7 +24,7 @@ class ZegoLiveStreamingSoundEffectSheet extends StatefulWidget {
   final ZegoLiveStreamingEffectConfig config;
 
   const ZegoLiveStreamingSoundEffectSheet({
-    Key? key,
+    super.key,
     required this.translationText,
     required this.rootNavigator,
     required this.voiceChangerEffect,
@@ -32,7 +32,7 @@ class ZegoLiveStreamingSoundEffectSheet extends StatefulWidget {
     required this.reverbEffect,
     required this.reverbSelectedIDNotifier,
     required this.config,
-  }) : super(key: key);
+  });
 
   @override
   State<ZegoLiveStreamingSoundEffectSheet> createState() =>

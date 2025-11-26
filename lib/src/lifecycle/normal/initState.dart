@@ -16,7 +16,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/controller/private/pip/pi
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/core_managers.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/defines.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/instance.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/lifecycle.dart';
 
 class ZegoLiveStreamingPageLifeCycleInitState {
   String liveID = '';

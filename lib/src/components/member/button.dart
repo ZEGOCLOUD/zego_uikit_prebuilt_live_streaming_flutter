@@ -9,17 +9,15 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/components/member/list_sh
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect_manager.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/inner_text.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/pk_combine_notifier.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/instance.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/lifecycle.dart';
 
 /// @nodoc
 class ZegoLiveStreamingMemberButton extends StatefulWidget {
   const ZegoLiveStreamingMemberButton({
-    Key? key,
+    super.key,
     required this.liveID,
     required this.isCoHostEnabled,
     required this.popUpManager,
@@ -32,7 +30,7 @@ class ZegoLiveStreamingMemberButton extends StatefulWidget {
     this.icon,
     this.builder,
     this.backgroundColor,
-  }) : super(key: key);
+  });
 
   /// If you want to redefine the entire button, you can return your own Widget through [builder].
   final Widget Function(int)? builder;

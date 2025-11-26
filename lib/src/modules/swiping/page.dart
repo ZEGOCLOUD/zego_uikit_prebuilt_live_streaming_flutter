@@ -7,12 +7,13 @@ import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/live_streaming_page.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/instance.dart';
-import '../../components/utils/pop_up_manager.dart';
-import '../../lifecycle/swiping/page_room_switcher.dart';
-import '../../lifecycle/swiping/room_login_checker.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/lifecycle.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/swiping/page_room_switcher.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/swiping/room_login_checker.dart';
 import 'defines.dart';
 
 /// The encapsulation layer of the "Live Streaming Widget" includes the
@@ -164,13 +165,8 @@ class _ZegoLiveStreamingSwipingPageState
           itemBuilder: (context, pageIndex) {
             ZegoLiveStreamingSwipingHost? itemHost;
 
-            print("swiping view itemBuilder 1, "
-                "page index:$pageIndex, ");
-
             if (pageIndex == currentPageIndex) {
               itemHost = currentHost;
-              print("swiping view itemBuilder 2, "
-                  "same as current, live id:$itemHost");
             } else {
               bool toNext = false;
               if (currentPageIndex == startIndex && pageIndex == endIndex) {
@@ -183,15 +179,9 @@ class _ZegoLiveStreamingSwipingPageState
               }
 
               itemHost = toNext ? nextHost : previousHost;
-
-              print("swiping view itemBuilder 2, "
-                  "toNext:$toNext, live id:$itemHost");
             }
 
             itemHost ??= ZegoLiveStreamingSwipingHost.empty();
-
-            print("swiping view itemBuilder 3, "
-                "live id:$itemHost");
 
             ZegoLoggerService.logInfo(
               'pageIndex:$pageIndex, '
@@ -304,6 +294,13 @@ class _ZegoLiveStreamingSwipingPageState
           currentHost: currentHost ?? ZegoLiveStreamingSwipingHost.empty(),
           nextHost: nextHost ?? ZegoLiveStreamingSwipingHost.empty(),
         );
+    ZegoUIKitPrebuiltLiveStreamingController()
+        .hall
+        .private
+        .controller
+        .private
+        .private
+        .forceUpdate();
 
     /// Push to stack, start room switching flow
     /// What's pushed to stack is the new room ID (currentHost.roomID) and token

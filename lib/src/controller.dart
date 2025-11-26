@@ -12,7 +12,6 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
-import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/instance.dart';
 import 'components/message/enable_property.dart';
 import 'components/utils/dialogs.dart';
 import 'components/utils/toast.dart';
@@ -22,10 +21,8 @@ import 'controller/private/pip/pip_android.dart';
 import 'controller/private/pip/pip_interface.dart';
 import 'controller/private/pip/pip_ios.dart';
 import 'core/connect_manager.dart';
-import 'core/core_managers.dart';
 import 'core/defines.dart';
 import 'core/host_manager.dart';
-import 'core/plugins.dart';
 import 'defines.dart';
 import 'events.dart';
 import 'events.defines.dart';
@@ -33,6 +30,7 @@ import 'internal/defines.dart';
 import 'internal/pk_combine_notifier.dart';
 import 'internal/reporter.dart';
 import 'live_streaming.dart';
+import 'lifecycle/lifecycle.dart';
 import 'modules/hall/controller.dart';
 import 'modules/minimizing/data.dart';
 import 'modules/minimizing/defines.dart';

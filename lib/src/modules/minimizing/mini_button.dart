@@ -12,12 +12,12 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
 /// @nodoc
 class ZegoLiveStreamingMinimizingButton extends StatefulWidget {
   const ZegoLiveStreamingMinimizingButton({
-    Key? key,
+    super.key,
     this.afterClicked,
     this.icon,
     this.iconSize,
     this.buttonSize,
-  }) : super(key: key);
+  });
 
   final ButtonIcon? icon;
 

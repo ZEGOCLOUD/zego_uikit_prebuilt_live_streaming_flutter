@@ -18,13 +18,13 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
 
-import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/instance.dart'; // import this
+import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/lifecycle.dart'; // import this
 
 /// @nodoc
 /// user should be login before page enter
 class ZegoLiveStreamingPreviewPage extends StatefulWidget {
   const ZegoLiveStreamingPreviewPage({
-    Key? key,
+    super.key,
     required this.appID,
     required this.appSign,
     required this.userID,
@@ -32,7 +32,7 @@ class ZegoLiveStreamingPreviewPage extends StatefulWidget {
     required this.liveID,
     required this.config,
     required this.popUpManager,
-  }) : super(key: key);
+  });
 
   final int appID;
   final String appSign;

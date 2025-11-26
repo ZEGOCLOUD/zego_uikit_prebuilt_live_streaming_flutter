@@ -9,7 +9,6 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/modules/swiping/defines.dart';
 import 'controller.dart';
 import 'defines.dart';
 import 'foreground/foreground.dart';

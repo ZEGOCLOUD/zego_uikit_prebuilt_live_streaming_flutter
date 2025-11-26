@@ -12,7 +12,7 @@ import 'common.dart';
 
 class ZegoLiveStreamingPKHostView extends StatefulWidget {
   const ZegoLiveStreamingPKHostView({
-    Key? key,
+    super.key,
     required this.liveID,
     required this.hosts,
     required this.mixerLayout,
@@ -20,7 +20,7 @@ class ZegoLiveStreamingPKHostView extends StatefulWidget {
     this.foregroundBuilder,
     this.backgroundBuilder,
     this.avatarConfig,
-  }) : super(key: key);
+  });
 
   final String liveID;
   final ZegoLiveStreamingPKMixerLayout mixerLayout;

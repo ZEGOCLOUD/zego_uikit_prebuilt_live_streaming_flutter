@@ -27,7 +27,7 @@ class ZegoLiveStreamingInRoomMessageInputBoardButton extends StatefulWidget {
   final ZegoUIKitPrebuiltLiveStreamingInnerText translationText;
 
   const ZegoLiveStreamingInRoomMessageInputBoardButton({
-    Key? key,
+    super.key,
     required this.liveID,
     required this.hostManager,
     required this.translationText,
@@ -37,7 +37,7 @@ class ZegoLiveStreamingInRoomMessageInputBoardButton extends StatefulWidget {
     this.buttonSize,
     this.onSheetPopUp,
     this.onSheetPop,
-  }) : super(key: key);
+  });
 
   @override
   State<ZegoLiveStreamingInRoomMessageInputBoardButton> createState() =>

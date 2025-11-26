@@ -17,13 +17,13 @@ class ZegoLiveStreamingDisableChatButton extends StatefulWidget {
   final ButtonIcon? disableIcon;
 
   const ZegoLiveStreamingDisableChatButton({
-    Key? key,
+    super.key,
     required this.liveID,
     this.enableIcon,
     this.disableIcon,
     this.iconSize,
     this.buttonSize,
-  }) : super(key: key);
+  });
 
   @override
   State<ZegoLiveStreamingDisableChatButton> createState() =>

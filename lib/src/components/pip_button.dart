@@ -12,7 +12,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
 /// @nodoc
 class ZegoLiveStreamingPIPButton extends StatefulWidget {
   const ZegoLiveStreamingPIPButton({
-    Key? key,
+    super.key,
     required this.liveID,
     this.afterClicked,
     this.icon,
@@ -20,7 +20,7 @@ class ZegoLiveStreamingPIPButton extends StatefulWidget {
     this.buttonSize,
     this.aspectWidth = 9,
     this.aspectHeight = 16,
-  }) : super(key: key);
+  });
 
   final String liveID;
 

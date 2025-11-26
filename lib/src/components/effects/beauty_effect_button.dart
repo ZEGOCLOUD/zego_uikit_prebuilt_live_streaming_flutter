@@ -13,14 +13,14 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
 /// @nodoc
 class ZegoLiveStreamingBeautyEffectButton extends StatefulWidget {
   const ZegoLiveStreamingBeautyEffectButton({
-    Key? key,
+    super.key,
     required this.effectConfig,
     required this.translationText,
     required this.rootNavigator,
     this.icon,
     this.iconSize,
     this.buttonSize,
-  }) : super(key: key);
+  });
 
   final Size? iconSize;
   final Size? buttonSize;

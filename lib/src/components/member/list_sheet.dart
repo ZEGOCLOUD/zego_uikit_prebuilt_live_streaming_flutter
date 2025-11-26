@@ -13,18 +13,16 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/pop_up_m
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/pop_up_sheet_menu.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/core/connect_manager.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/inner_text.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/pk_combine_notifier.dart';
-import '../../lifecycle/instance.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/lifecycle.dart';
 
 /// @nodoc
 class ZegoLiveStreamingMemberListSheet extends StatefulWidget {
   const ZegoLiveStreamingMemberListSheet({
-    Key? key,
+    super.key,
     required this.liveID,
     required this.isCoHostEnabled,
     required this.popUpManager,
@@ -33,7 +31,7 @@ class ZegoLiveStreamingMemberListSheet extends StatefulWidget {
     required this.events,
     this.avatarBuilder,
     this.itemBuilder,
-  }) : super(key: key);
+  });
 
   final String liveID;
   final bool isCoHostEnabled;

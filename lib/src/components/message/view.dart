@@ -23,14 +23,14 @@ class ZegoLiveStreamingInRoomLiveMessageView extends StatefulWidget {
   final Stream<ZegoInRoomMessage>? pseudoStream;
 
   const ZegoLiveStreamingInRoomLiveMessageView({
-    Key? key,
+    super.key,
     required this.liveID,
     required this.innerText,
     required this.config,
     required this.events,
     this.pseudoStream,
     this.avatarBuilder,
-  }) : super(key: key);
+  });
 
   @override
   State<ZegoLiveStreamingInRoomLiveMessageView> createState() =>

@@ -8,8 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
-import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/instance.dart';
-import '../zego_uikit_prebuilt_live_streaming.dart';
 import 'components/live_streaming_page.dart';
 import 'components/utils/pop_up_manager.dart';
 import 'config.dart';
@@ -17,6 +15,8 @@ import 'controller.dart';
 import 'events.dart';
 import 'internal/reporter.dart';
 import 'lifecycle/defines.dart';
+import 'lifecycle/lifecycle.dart';
+import 'modules/minimizing/defines.dart';
 import 'modules/minimizing/overlay_machine.dart';
 import 'modules/swiping/page.dart';
 

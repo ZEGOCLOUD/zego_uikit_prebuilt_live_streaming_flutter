@@ -19,19 +19,19 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.defines.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/instance.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/lifecycle.dart';
 
 /// @nodoc
 class ZegoLiveStreamingLivePageSurface extends StatefulWidget {
   const ZegoLiveStreamingLivePageSurface({
-    Key? key,
+    super.key,
     required this.liveID,
     required this.config,
     required this.events,
     required this.defaultEndAction,
     required this.defaultLeaveConfirmationAction,
     required this.popUpManager,
-  }) : super(key: key);
+  });
 
   final String liveID;
   final ZegoUIKitPrebuiltLiveStreamingConfig config;

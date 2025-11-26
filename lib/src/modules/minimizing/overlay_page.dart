@@ -85,7 +85,7 @@ import 'overlay_machine.dart';
 /// ```
 class ZegoUIKitPrebuiltLiveStreamingMiniOverlayPage extends StatefulWidget {
   const ZegoUIKitPrebuiltLiveStreamingMiniOverlayPage({
-    Key? key,
+    super.key,
     required this.contextQuery,
     this.rootNavigator = true,
     this.navigatorWithSafeArea = true,
@@ -104,7 +104,7 @@ class ZegoUIKitPrebuiltLiveStreamingMiniOverlayPage extends StatefulWidget {
     this.backgroundBuilder,
     this.foreground,
     this.avatarBuilder,
-  }) : super(key: key);
+  });
 
   final BuildContext Function() contextQuery;
   final bool rootNavigator;

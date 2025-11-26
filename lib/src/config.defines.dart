@@ -65,10 +65,10 @@ class ZegoLiveStreamingMenuBarExtendButton extends StatelessWidget {
   final Widget child;
 
   const ZegoLiveStreamingMenuBarExtendButton({
-    Key? key,
+    super.key,
     required this.child,
     this.index = -1,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

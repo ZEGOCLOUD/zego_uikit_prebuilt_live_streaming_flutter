@@ -1,3 +1,5 @@
+library;
+
 export 'src/config.dart';
 export 'src/config.defines.dart';
 export 'src/controller.dart';

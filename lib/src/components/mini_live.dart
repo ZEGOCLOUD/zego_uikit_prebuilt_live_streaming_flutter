@@ -12,19 +12,18 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/components/duration_time_
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/controller/private/pip/pip_ios.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/core/core_managers.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/pk_combine_notifier.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/lifecycle.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/components/view.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/core/core.dart';
-import '../lifecycle/instance.dart';
 
 class ZegoMinimizingStreamingPage extends StatefulWidget {
   const ZegoMinimizingStreamingPage({
-    Key? key,
+    super.key,
     required this.liveID,
     required this.size,
     this.config,
@@ -49,7 +48,7 @@ class ZegoMinimizingStreamingPage extends StatefulWidget {
     this.durationConfig,
     this.durationEvents,
     this.background,
-  }) : super(key: key);
+  });
 
   final String liveID;
   final Size size;

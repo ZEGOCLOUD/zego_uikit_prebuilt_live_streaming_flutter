@@ -19,12 +19,12 @@ class ZegoLiveStreamingBeautyEffectSheet extends StatefulWidget {
   final ZegoLiveStreamingEffectConfig config;
 
   const ZegoLiveStreamingBeautyEffectSheet({
-    Key? key,
+    super.key,
     required this.translationText,
     required this.rootNavigator,
     required this.beautyEffects,
     required this.config,
-  }) : super(key: key);
+  });
 
   @override
   State<ZegoLiveStreamingBeautyEffectSheet> createState() =>

@@ -12,7 +12,6 @@ import 'config.defines.dart';
 import 'defines.dart';
 import 'deprecated/deprecated.dart';
 import 'inner_text.dart';
-import 'modules/hall/controller.dart';
 import 'modules/pk/layout/layout.dart';
 import 'modules/swiping/defines.dart';
 

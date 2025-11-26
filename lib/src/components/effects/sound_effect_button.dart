@@ -24,7 +24,7 @@ class ZegoLiveStreamingSoundEffectButton extends StatefulWidget {
   final ZegoLiveStreamingEffectConfig effectConfig;
 
   const ZegoLiveStreamingSoundEffectButton({
-    Key? key,
+    super.key,
     required this.translationText,
     required this.rootNavigator,
     required this.voiceChangeEffect,
@@ -33,7 +33,7 @@ class ZegoLiveStreamingSoundEffectButton extends StatefulWidget {
     this.iconSize,
     this.buttonSize,
     this.icon,
-  }) : super(key: key);
+  });
 
   @override
   State<ZegoLiveStreamingSoundEffectButton> createState() =>

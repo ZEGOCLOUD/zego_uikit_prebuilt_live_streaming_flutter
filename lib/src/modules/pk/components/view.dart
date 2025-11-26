@@ -19,7 +19,7 @@ import 'host_view.dart';
 
 class ZegoLiveStreamingPKV2View extends StatefulWidget {
   const ZegoLiveStreamingPKV2View({
-    Key? key,
+    super.key,
     required this.liveID,
     required this.constraints,
     required this.hostManager,
@@ -27,7 +27,7 @@ class ZegoLiveStreamingPKV2View extends StatefulWidget {
     this.foregroundBuilder,
     this.backgroundBuilder,
     this.avatarConfig,
-  }) : super(key: key);
+  });
   final String liveID;
 
   final ZegoLiveStreamingHostManager hostManager;
