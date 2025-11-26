@@ -23,8 +23,10 @@ class ZegoUIKitPrebuiltLiveStreamingInnerTextZhCN
           cancelRequestCoHostButton: '取消申请',
           removeCoHostButton: '移除连麦',
           cancelMenuDialogButton: '取消',
-          inviteCoHostButton: '邀请 ${ZegoUIKitPrebuiltLiveStreamingInnerText.param_1} 连麦',
-          removeUserMenuDialogButton: '将 ${ZegoUIKitPrebuiltLiveStreamingInnerText.param_1} 移出房间',
+          inviteCoHostButton:
+              '邀请 ${ZegoUIKitPrebuiltLiveStreamingInnerText.param_1} 连麦',
+          removeUserMenuDialogButton:
+              '将 ${ZegoUIKitPrebuiltLiveStreamingInnerText.param_1} 移出房间',
 
           /// 提示文本
           noHostOnline: '暂无主播在线',
@@ -153,8 +155,7 @@ class ZegoUIKitPrebuiltLiveStreamingInnerTextZhCN
           outgoingPKBattleRequestRejectedCauseByBusy:
               ZegoLiveStreamingDialogInfo(
             title: 'PK 发起失败',
-            message:
-                '主播 ${ZegoUIKitPrebuiltLiveStreamingInnerText.param_1} 正忙',
+            message: '主播 ${ZegoUIKitPrebuiltLiveStreamingInnerText.param_1} 正忙',
             cancelButtonName: '',
             confirmButtonName: '确定',
           ),
@@ -183,4 +184,3 @@ class ZegoUIKitPrebuiltLiveStreamingInnerTextZhCN
           enterLiveButtonText: '进入直播间',
         );
 }
-

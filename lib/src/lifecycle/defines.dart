@@ -2,9 +2,9 @@
 import 'package:flutter/cupertino.dart';
 
 // Project imports:
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
-import '../components/utils/pop_up_manager.dart';
 
 enum ZegoLiveStreamingPageLifeCycleEventType {
   contextInit,

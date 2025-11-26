@@ -10,13 +10,13 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
+import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/permissions.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/controller/private/pip/pip_ios.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/core/core_managers.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/defines.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/instance.dart';
-import '../components/utils/permissions.dart';
-import '../controller/private/pip/pip_ios.dart';
-import '../core/core_managers.dart';
-import 'defines.dart';
 
 class ZegoLiveStreamingPageLifeCycleInitState {
   String liveID = '';

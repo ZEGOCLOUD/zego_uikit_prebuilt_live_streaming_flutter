@@ -3,10 +3,10 @@ import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
-import '../../zego_uikit_prebuilt_live_streaming.dart';
-import '../core/core_managers.dart';
-import '../modules/minimizing/overlay_machine.dart';
-import 'defines.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/core/core_managers.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/defines.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/defines.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/modules/minimizing/overlay_machine.dart';
 
 class ZegoLiveStreamingPageLifeCycleDispose {
   Future<void> run({

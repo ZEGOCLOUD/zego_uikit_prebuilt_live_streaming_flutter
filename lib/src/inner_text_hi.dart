@@ -38,8 +38,10 @@ class ZegoUIKitPrebuiltLiveStreamingInnerTextHi
           /// Toast संकेत
           sendRequestCoHostToast:
               'आप सह-होस्टिंग के लिए आवेदन कर रहे हैं, कृपया पुष्टि की प्रतीक्षा करें',
-          hostRejectCoHostRequestToast: 'आपका सह-होस्टिंग आवेदन अस्वीकार कर दिया गया है',
-          inviteCoHostFailedToast: 'सह-होस्ट से कनेक्ट करने में विफल, कृपया पुनः प्रयास करें',
+          hostRejectCoHostRequestToast:
+              'आपका सह-होस्टिंग आवेदन अस्वीकार कर दिया गया है',
+          inviteCoHostFailedToast:
+              'सह-होस्ट से कनेक्ट करने में विफल, कृपया पुनः प्रयास करें',
           repeatInviteCoHostFailedToast:
               'आपने आमंत्रण भेज दिया है, कृपया पुष्टि की प्रतीक्षा करें',
           messageEmptyToast: 'कुछ कहें...',
@@ -189,4 +191,3 @@ class ZegoUIKitPrebuiltLiveStreamingInnerTextHi
           enterLiveButtonText: 'लाइव रूम में प्रवेश करें',
         );
 }
-

@@ -81,10 +81,6 @@ class _ZegoLiveStreamingSwipingPageState
     extends State<ZegoLiveStreamingSwipingPage> {
   /// todo token expiration update
 
-  ZegoLiveStreamingSwipingHost? currentHost;
-  ZegoLiveStreamingSwipingHost? previousHost;
-  ZegoLiveStreamingSwipingHost? nextHost;
-
   int currentPageIndex = 0;
   final _canScrollNotifier = ValueNotifier<bool>(false);
   late ZegoLiveStreamingRoomLoginChecker initialRoomLoginChecker;
@@ -95,6 +91,18 @@ class _ZegoLiveStreamingSwipingPageState
   int get endIndex => 2;
   int get pageCount => (endIndex - startIndex) + 1;
 
+  ZegoLiveStreamingSwipingHost? get previousHost =>
+      widget.swipingModel?.activeContext?.previous ??
+      widget.swipingModelDelegate?.activeContext.previous;
+
+  ZegoLiveStreamingSwipingHost? get currentHost =>
+      widget.swipingModel?.activeRoom ??
+      widget.swipingModelDelegate?.activeRoom;
+
+  ZegoLiveStreamingSwipingHost? get nextHost =>
+      widget.swipingModel?.activeContext?.next ??
+      widget.swipingModelDelegate?.activeContext.next;
+
   @override
   void initState() {
     super.initState();
@@ -104,13 +112,6 @@ class _ZegoLiveStreamingSwipingPageState
     roomSwitchManager = ZegoLiveStreamingSwipingPageRoomSwitcher(
       configPlugins: widget.config.plugins,
     );
-
-    currentHost = widget.swipingModel?.activeRoom ??
-        widget.swipingModelDelegate?.activeRoom;
-    previousHost = widget.swipingModel?.activeContext?.previous ??
-        widget.swipingModelDelegate?.activeContext.previous;
-    nextHost = widget.swipingModel?.activeContext?.next ??
-        widget.swipingModelDelegate?.activeContext.next;
 
     /// Listen to initial room login status, once successful allow swiping, then stop listening
     initialRoomLoginChecker = ZegoLiveStreamingRoomLoginChecker(
@@ -279,22 +280,15 @@ class _ZegoLiveStreamingSwipingPageState
       toNext = pageIndex > currentPageIndex;
     }
 
-    /// update current stream user
-    currentHost = toNext ? nextHost : previousHost;
-
     final oldCurrentPageIndex = currentPageIndex;
     currentPageIndex = pageIndex;
 
-    final sliderContext = (toNext
-            ? widget.swipingModel?.next()
-            : widget.swipingModel?.previous()) ??
-        widget.swipingModelDelegate?.delegate?.call(toNext) ??
-        ZegoLiveStreamingSwipingSlideContext(
-          previous: ZegoLiveStreamingSwipingHost.empty(),
-          next: ZegoLiveStreamingSwipingHost.empty(),
-        );
-    previousHost = sliderContext.previous;
-    nextHost = sliderContext.next;
+    if (toNext) {
+      widget.swipingModel?.next();
+    } else {
+      widget.swipingModel?.previous();
+    }
+    widget.swipingModelDelegate?.delegate?.call(toNext);
 
     ZegoLoggerService.logInfo(
       'page index:{now:$pageIndex, previous:$oldCurrentPageIndex},'
@@ -305,11 +299,10 @@ class _ZegoLiveStreamingSwipingPageState
       subTag: 'onPageChanged',
     );
 
-    /// todo This and below should be together
     await ZegoLiveStreamingPageLifeCycle().swiping.streamContext.updateContext(
-          previousHost: previousHost!,
+          previousHost: previousHost ?? ZegoLiveStreamingSwipingHost.empty(),
           currentHost: currentHost ?? ZegoLiveStreamingSwipingHost.empty(),
-          nextHost: nextHost!,
+          nextHost: nextHost ?? ZegoLiveStreamingSwipingHost.empty(),
         );
 
     /// Push to stack, start room switching flow

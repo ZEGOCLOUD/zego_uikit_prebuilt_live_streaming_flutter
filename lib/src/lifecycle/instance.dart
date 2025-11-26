@@ -8,16 +8,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
-import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/swiping/swiping.dart';
-import '../../zego_uikit_prebuilt_live_streaming.dart';
-import '../core/core_managers.dart';
-import '../modules/minimizing/data.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/core/core_managers.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/modules/minimizing/data.dart';
+
 import 'defines.dart';
-import 'dispose.dart';
-import 'initState.dart';
-import 'normal.dart';
-import 'swiping/stream_context.dart';
+import 'normal/normal.dart';
 
 /// Lifecycle management for ZegoLiveStreamingPage
 ///
@@ -29,9 +26,6 @@ class ZegoLiveStreamingPageLifeCycle {
 
   /// Only start initialization after RTC room login is complete
   final currentManagers = ZegoLiveStreamingManagers();
-
-  final initStateDelegate = ZegoLiveStreamingPageLifeCycleInitState();
-  final disposeDelegate = ZegoLiveStreamingPageLifeCycleDispose();
 
   final swiping = ZegoLiveStreamingSwipingLifeCycle();
   final normal = ZegoLiveStreamingNormalLifeCycle();
@@ -117,14 +111,16 @@ class ZegoLiveStreamingPageLifeCycle {
       contextQuery,
     );
 
+    normal.initFromPreview(
+      liveID: targetLiveID,
+    );
+
     /// Only host needs preview page, audience directly enters room
     updatePreviewPageVisibility(
       !isPrebuiltFromMinimizing &&
           currentManagers.hostManager.isLocalHost &&
           contextData.config.preview.showPreviewForHost,
     );
-
-    ZegoUIKit().getRoomsStateStream().addListener(_onRoomsStateUpdated);
   }
 
   Future<void> uninitFromPreview({
@@ -156,8 +152,6 @@ class ZegoLiveStreamingPageLifeCycle {
       subscription?.cancel();
     }
 
-    ZegoUIKit().getRoomsStateStream().removeListener(_onRoomsStateUpdated);
-
     if (!isPrebuiltFromHall) {
       /// If not entered from live hall, should completely exit room
       /// Should make leaving room directly stop pulling streams
@@ -167,7 +161,7 @@ class ZegoLiveStreamingPageLifeCycle {
       /// Using live streaming swiping
       /// 1. Need to leave room: If not from live hall, need to leave room because entire ZegoUIKitPrebuiltLiveStreaming is exiting
       /// 2. Need to switch room: From live hall
-      disposeDelegate.run(
+      normal.disposeDelegate.run(
         targetLiveID: ZegoUIKit().getCurrentRoom().id,
         currentManagers: currentManagers,
         data: currentContextData!,
@@ -177,6 +171,7 @@ class ZegoLiveStreamingPageLifeCycle {
 
     /// Handle live hall scenario
     swiping.uninitFromPreview();
+    normal.uninitFromPreview();
 
     currentLiveID = '';
     currentContextData = null;
@@ -217,7 +212,7 @@ class ZegoLiveStreamingPageLifeCycle {
       );
     } else {
       /// Single live scenario, or swiping first time entering from non-hall, will enter here, same data as initFromPreview
-      initStateDelegate.initFromLive(
+      normal.initStateDelegate.initFromLive(
         liveID: currentLiveID,
         contextData: currentContextData!,
         contextQuery: contextQuery,
@@ -242,13 +237,13 @@ class ZegoLiveStreamingPageLifeCycle {
       subTag: 'disposeFromLive',
     );
 
-    initStateDelegate.clear();
+    normal.initStateDelegate.clear();
 
     if (null == currentContextData || currentLiveID != targetLiveID) {
       return false;
     }
 
-    await disposeDelegate.run(
+    await normal.disposeDelegate.run(
       targetLiveID: targetLiveID,
       data: currentContextData!,
       currentManagers: currentManagers,
@@ -268,62 +263,6 @@ class ZegoLiveStreamingPageLifeCycle {
       subTag: 'updateContextQuery',
     );
     this.contextQuery = contextQuery;
-  }
-
-  /// Plugins wait for RTC room entry
-  /// todo This should not be placed here
-  void _onRoomsStateUpdated() {
-    if (currentLiveID.isEmpty) {
-      ZegoLoggerService.logInfo(
-        'current live id is empty, ignore',
-        tag: 'live-streaming-lifecyle',
-        subTag: 'onRoomsStateUpdated',
-      );
-
-      return;
-    }
-
-    final roomsState = ZegoUIKit().getRoomsStateStream().value;
-    if (!roomsState.containsKey(currentLiveID)) {
-      ZegoLoggerService.logInfo(
-        'not contain current live id, ignore'
-        'currentLiveID:$currentLiveID, '
-        'roomsState:$roomsState, ',
-        tag: 'live-streaming-lifecyle',
-        subTag: 'onRoomsStateUpdated',
-      );
-
-      return;
-    }
-
-    final roomState = roomsState[currentLiveID]!;
-    if (!roomState.isLogin2) {
-      ZegoLoggerService.logInfo(
-        'room not login, ignore'
-        'currentLiveID:$currentLiveID, '
-        'roomState:$roomState, ',
-        tag: 'live-streaming-lifecyle',
-        subTag: 'onRoomsStateUpdated',
-      );
-
-      return;
-    }
-
-    ZegoLoggerService.logInfo(
-      'room login'
-      'currentLiveID:$currentLiveID, '
-      'roomState:$roomState, ',
-      tag: 'live-streaming-lifecyle',
-      subTag: 'onRoomsStateUpdated',
-    );
-    initStateDelegate.onRoomLogin(ZegoUIKitRoomLoginResult(
-      ZegoUIKitErrorCode.success,
-      {},
-    ));
-
-    currentManagers.plugins.joinRoom(
-      liveID: currentLiveID,
-    );
   }
 
   void _initControllerByPrebuilt({
