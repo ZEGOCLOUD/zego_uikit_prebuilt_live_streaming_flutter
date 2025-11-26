@@ -324,6 +324,14 @@ class ZegoUIKitPrebuiltLiveStreamingInnerText {
   ///When screen sharing, stop sharing button on the sharing side
   String stopScreenSharingButtonText;
 
+  /// The text displayed on the living flag in the hall foreground.
+  /// The **default value** is *"Living"*.
+  String livingFlagText;
+
+  /// The text of the button to enter the live room from the hall foreground.
+  /// The **default value** is *"Click to Enter Live"*.
+  String enterLiveButtonText;
+
   ZegoUIKitPrebuiltLiveStreamingInnerText({
     String? disagreeButton,
     String? agreeButton,
@@ -398,6 +406,8 @@ class ZegoUIKitPrebuiltLiveStreamingInnerText {
     ZegoLiveStreamingDialogInfo? outgoingPKBattleRequestRejectedCauseByReject,
     String? screenSharingTipText,
     String? stopScreenSharingButtonText,
+    String? livingFlagText,
+    String? enterLiveButtonText,
   })  : disagreeButton = disagreeButton ?? 'Disagree',
         agreeButton = agreeButton ?? 'Agree',
         startLiveStreamingButton = startLiveStreamingButton ?? 'Start',
@@ -564,5 +574,7 @@ class ZegoUIKitPrebuiltLiveStreamingInnerText {
                   confirmButtonName: 'OK',
                 ),
         screenSharingTipText = 'You are sharing screen',
-        stopScreenSharingButtonText = 'Stop sharing';
+        stopScreenSharingButtonText = 'Stop sharing',
+        livingFlagText = livingFlagText ?? 'Living',
+        enterLiveButtonText = enterLiveButtonText ?? 'Click to Enter Live';
 }
