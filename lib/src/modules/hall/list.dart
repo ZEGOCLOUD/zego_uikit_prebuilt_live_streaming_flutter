@@ -26,10 +26,9 @@ class ZegoUIKitLiveStreamingHallList extends StatefulWidget {
     this.hallController,
     this.hallModel,
     this.hallModelDelegate,
-    ZegoLiveStreamingHallListStyle? hallStyle,
-    ZegoLiveStreamingHallListConfig? hallConfig,
-  })  : hallStyle = hallStyle ?? const ZegoLiveStreamingHallListStyle(),
-        hallConfig = hallConfig ?? const ZegoLiveStreamingHallListConfig();
+    this.hallStyle = const ZegoLiveStreamingHallListStyle(),
+    this.hallConfig = const ZegoLiveStreamingHallListConfig(),
+  });
 
   /// You can create a project and obtain an appID from the [ZEGOCLOUD Admin Console](https://console.zegocloud.com).
   final int appID;
@@ -163,10 +162,11 @@ class _ZegoUIKitLiveStreamingHallListState
                 return listWidget();
               },
             ),
-            Align(
-              alignment: Alignment.topRight,
-              child: closeButton(),
-            )
+            if (widget.hallStyle.foreground.showCloseButton)
+              Align(
+                alignment: Alignment.topRight,
+                child: closeButton(),
+              )
           ],
         ),
       ),
@@ -182,7 +182,7 @@ class _ZegoUIKitLiveStreamingHallListState
       appSign: widget.appSign,
       token: widget.token,
       scenario: ZegoUIKitScenario.Broadcast,
-      style: ZegoLiveStreamingHallListStyle(
+      style: ZegoUIKitHallRoomListStyle(
         loadingBuilder: widget.hallStyle.loadingBuilder,
         item: ZegoLiveStreamingHallListItemStyle(
           backgroundBuilder: widget.hallStyle.item.backgroundBuilder,
@@ -200,18 +200,21 @@ class _ZegoUIKitLiveStreamingHallListState
   }
 
   Widget closeButton() {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.black.withAlpha(70),
-        shape: BoxShape.circle,
-      ),
-      child: IconButton(
-        onPressed: () {
-          Navigator.of(context).pop();
-        },
-        icon: Icon(
-          Icons.close,
-          color: Colors.white,
+    return GestureDetector(
+      onTap: () async {
+        Navigator.of(context).pop();
+      },
+      child: Container(
+        margin: EdgeInsets.all(32.zR),
+        width: 96.zR,
+        height: 96.zR,
+        decoration: BoxDecoration(
+          color: ZegoUIKitDefaultTheme.buttonBackgroundColor.withAlpha(70),
+          shape: BoxShape.circle,
+        ),
+        child: SizedBox.fromSize(
+          size: Size(56.zR, 56.zR),
+          child: const Icon(Icons.close, color: Colors.white),
         ),
       ),
     );
@@ -252,10 +255,14 @@ class _ZegoUIKitLiveStreamingHallListState
     String roomID,
   ) {
     final roomConfigs = widget.configsQuery.call(roomID);
+    widget.hallStyle.item;
+
     return ZegoLiveStreamingHallForeground(
       user: user,
       liveID: roomID,
       innerText: roomConfigs.innerText,
+      showLivingFlag: widget.hallStyle.foreground.showLivingFlag,
+      showUserInfo: widget.hallStyle.foreground.showUserInfo,
       onEnterLivePressed: (String liveID) {
         final configs = widget.configsQuery.call(liveID);
         configs.hall = ZegoLiveStreamingHallConfig(

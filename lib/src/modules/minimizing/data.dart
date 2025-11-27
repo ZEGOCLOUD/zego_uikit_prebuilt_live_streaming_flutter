@@ -15,6 +15,7 @@ class ZegoLiveStreamingMinimizeData {
     required this.liveID,
     required this.config,
     required this.isPrebuiltFromMinimizing,
+    required this.isPrebuiltFromHall,
     required this.events,
     this.durationStartTime,
   });
@@ -40,6 +41,8 @@ class ZegoLiveStreamingMinimizeData {
 
   final bool isPrebuiltFromMinimizing;
 
+  final bool isPrebuiltFromHall;
+
   /// call duration
   final DateTime? durationStartTime;
 
@@ -49,6 +52,7 @@ class ZegoLiveStreamingMinimizeData {
         'app id:$appID, '
         'live id:$liveID, '
         'isPrebuiltFromMinimizing: $isPrebuiltFromMinimizing, '
+        'isPrebuiltFromHall: $isPrebuiltFromHall, '
         'user id:$userID, user name:$userName, '
         'duration start time:$durationStartTime, '
         'config:$config, '

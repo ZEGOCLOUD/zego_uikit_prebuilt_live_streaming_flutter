@@ -18,12 +18,17 @@ class ZegoLiveStreamingHallForeground extends StatefulWidget {
   /// Inner text configuration
   final ZegoUIKitPrebuiltLiveStreamingInnerText innerText;
 
+  final bool showUserInfo;
+  final bool showLivingFlag;
+
   const ZegoLiveStreamingHallForeground({
     super.key,
     required this.user,
     required this.liveID,
     required this.onEnterLivePressed,
     required this.innerText,
+    this.showUserInfo = true,
+    this.showLivingFlag = true,
   });
 
   @override
@@ -34,7 +39,7 @@ class ZegoLiveStreamingHallForeground extends StatefulWidget {
 
 class _ZegoLiveStreamingHallPageState
     extends State<ZegoLiveStreamingHallForeground> {
-  bool get userDebugMode => false && kDebugMode;
+  bool get userDebugMode => true && kDebugMode;
 
   @override
   Widget build(BuildContext context) {
@@ -52,8 +57,10 @@ class _ZegoLiveStreamingHallPageState
           bottom: 120.zR,
           child: joinButton(),
         ),
-        Positioned(left: 10.zR, bottom: 80.zR, child: livingFlag()),
-        Positioned(left: 10.zR, bottom: 20.zR, child: userName()),
+        if (widget.showLivingFlag)
+          Positioned(left: 10.zR, bottom: 80.zR, child: livingFlag()),
+        if (widget.showUserInfo)
+          Positioned(left: 10.zR, bottom: 20.zR, child: userName()),
       ],
     );
   }

@@ -3,24 +3,25 @@ import 'dart:async';
 
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
-
+import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/lifecycle.dart';
+
 import 'room_login_checker.dart';
 
 /// Room information (room ID and token)
-class _RoomInfo {
-  _RoomInfo({
-    required this.roomID,
+class ZegoLiveStreamingSwipingRoomInfo {
+  ZegoLiveStreamingSwipingRoomInfo({
+    required this.liveID,
     required this.token,
   });
 
-  final String roomID;
+  final String liveID;
   final String token;
 
   @override
   String toString() {
-    return 'room id:$roomID';
+    return 'room id:$liveID';
   }
 }
 
@@ -35,7 +36,7 @@ class ZegoLiveStreamingSwipingPageRoomSwitcher {
   final List<IZegoUIKitPlugin> _configPlugins;
 
   /// Room information stack (LIFO - Last In First Out)
-  final List<_RoomInfo> _roomStack = [];
+  final List<ZegoLiveStreamingSwipingRoomInfo> _roomStack = [];
 
   /// Currently processing room ID
   String? _processingRoomID;
@@ -47,17 +48,17 @@ class ZegoLiveStreamingSwipingPageRoomSwitcher {
   StreamSubscription<dynamic>? _loginSubscription;
 
   /// Push room ID and token to stack and start processing flow
-  /// [roomID] Room ID to push to stack
+  /// [liveID] Room ID to push to stack
   /// [token] Token to push to stack
   /// [shouldCheckCurrentRoom] Whether to check if the popped element is the current room, default is true. If false, skip check and switch directly
-  Future<void> pushRoomID(
-    String roomID,
+  Future<void> updateRoomID(
+    String liveID,
     String token, {
     bool shouldCheckCurrentRoom = true,
   }) async {
     ZegoLoggerService.logInfo(
       'push room id to stack, '
-      'room id:$roomID, '
+      'room id:$liveID, '
       'token:$token, '
       'shouldCheckCurrentRoom:$shouldCheckCurrentRoom, '
       'processingRoomID:$_processingRoomID, '
@@ -66,8 +67,17 @@ class ZegoLiveStreamingSwipingPageRoomSwitcher {
       subTag: 'pushRoomID',
     );
 
-    _roomStack.add(_RoomInfo(roomID: roomID, token: token));
+    /// 更新最新的直播间
+    ZegoUIKitPrebuiltLiveStreamingController().private.liveID = liveID;
 
+    ///
+    _roomStack.add(ZegoLiveStreamingSwipingRoomInfo(
+      liveID: liveID,
+      token: token,
+    ));
+
+    /// If it is the first switch, switch directly;
+    /// otherwise, wait for the room status to change, then obtain the latest LIVE room for processing
     if (_processingRoomID == null) {
       await _processStack(shouldCheckCurrentRoom: shouldCheckCurrentRoom);
     }
@@ -98,7 +108,7 @@ class ZegoLiveStreamingSwipingPageRoomSwitcher {
 
     /// Pop from stack top and clear stack
     final targetRoomInfo = _roomStack.removeLast();
-    final targetRoomID = targetRoomInfo.roomID;
+    final targetRoomID = targetRoomInfo.liveID;
     final targetToken = targetRoomInfo.token;
     _roomStack.clear();
 

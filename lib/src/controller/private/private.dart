@@ -17,12 +17,13 @@ class ZegoLiveStreamingControllerPrivateImpl {
     return _liveID;
   }
 
+  set liveID(String value) => _liveID = value;
+
   /// Please do not call this interface. It is the internal logic of Prebuilt.
   /// DO NOT CALL!!!
   /// Call Inside By Prebuilt
 
   void initByPrebuilt({
-    required String liveID,
     required ZegoUIKitPrebuiltLiveStreamingConfig? config,
     required ZegoUIKitPrebuiltLiveStreamingEvents? events,
     required ZegoLiveStreamingMinimizeData minimizeData,
@@ -33,8 +34,6 @@ class ZegoLiveStreamingControllerPrivateImpl {
       tag: 'live-streaming',
       subTag: 'controller.p',
     );
-
-    _liveID = liveID;
 
     ZegoUIKitPrebuiltLiveStreamingController().pk.private.initByPrebuilt();
     ZegoUIKitPrebuiltLiveStreamingController()

@@ -108,15 +108,21 @@ class _ZegoUIKitPrebuiltLiveStreamingState
 
     isPrebuiltFromMinimizing = ZegoLiveStreamingMiniOverlayPageState.idle !=
         ZegoLiveStreamingMiniOverlayMachine().state;
-    isPrebuiltFromHall = ZegoUIKitHallRoomIDHelper.isRandomRoomID(
-        ZegoUIKit().getCurrentRoom().id);
+    isPrebuiltFromHall = ZegoUIKitPrebuiltLiveStreamingController()
+            .minimize
+            .private
+            .minimizeData
+            ?.isPrebuiltFromHall ??
+        ZegoUIKitHallRoomIDHelper.isRandomRoomID(
+            ZegoUIKit().getCurrentRoom().id);
 
     ZegoUIKit().getZegoUIKitVersion().then((uikitVersion) {
       ZegoLoggerService.logInfo(
         'version: zego_uikit_prebuilt_live_streaming:${ZegoUIKitPrebuiltLiveStreamingController().version}; $uikitVersion, \n'
         'config:${widget.config.toString()}, \n'
         'events: ${widget.events}, '
-        'isPrebuiltFromMinimizing:$isPrebuiltFromMinimizing, ',
+        'isPrebuiltFromMinimizing:$isPrebuiltFromMinimizing, '
+        'isPrebuiltFromHall:$isPrebuiltFromHall, ',
         tag: 'live-streaming',
         subTag: 'prebuilt',
       );

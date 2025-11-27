@@ -79,19 +79,23 @@ class ZegoLiveStreamingPageLifeCycle {
     rtcContextReadyNotifier.value =
         isPrebuiltFromMinimizing || isPrebuiltFromHall;
 
-    _initControllerByPrebuilt(
-      data: contextData,
-      minimizeData: ZegoLiveStreamingMinimizeData(
-        appID: contextData.appID,
-        appSign: contextData.appSign,
-        liveID: targetLiveID,
-        userID: contextData.userID,
-        userName: contextData.userName,
-        config: contextData.config,
-        events: contextData.events,
-        isPrebuiltFromMinimizing: isPrebuiltFromMinimizing,
-      ),
-    );
+    ZegoUIKitPrebuiltLiveStreamingController().private.liveID = currentLiveID;
+    ZegoUIKitPrebuiltLiveStreamingController().private.initByPrebuilt(
+          config: contextData.config,
+          events: contextData.events,
+          minimizeData: ZegoLiveStreamingMinimizeData(
+            appID: contextData.appID,
+            appSign: contextData.appSign,
+            liveID: targetLiveID,
+            userID: contextData.userID,
+            userName: contextData.userName,
+            config: contextData.config,
+            events: contextData.events,
+            isPrebuiltFromMinimizing: isPrebuiltFromMinimizing,
+            isPrebuiltFromHall: isPrebuiltFromHall,
+          ),
+        );
+
     swiping.initFromPreview(
       token: contextData.token,
       liveID: targetLiveID,
@@ -270,24 +274,6 @@ class ZegoLiveStreamingPageLifeCycle {
       subTag: 'updateContextQuery',
     );
     this.contextQuery = contextQuery;
-  }
-
-  void _initControllerByPrebuilt({
-    required ZegoLiveStreamingPageLifeCycleContextData data,
-    required ZegoLiveStreamingMinimizeData minimizeData,
-  }) {
-    ZegoLoggerService.logInfo(
-      'minimizeData:$minimizeData, ',
-      tag: 'live-streaming-lifecyle',
-      subTag: 'initControllerByPrebuilt',
-    );
-
-    ZegoUIKitPrebuiltLiveStreamingController().private.initByPrebuilt(
-          liveID: currentLiveID,
-          config: data.config,
-          events: data.events,
-          minimizeData: minimizeData,
-        );
   }
 
   factory ZegoLiveStreamingPageLifeCycle() => _instance;

@@ -80,7 +80,7 @@ class ZegoLiveStreamingSwipingPage extends StatefulWidget {
 /// @nodoc
 class _ZegoLiveStreamingSwipingPageState
     extends State<ZegoLiveStreamingSwipingPage> {
-  bool get userDebugMode => false && kDebugMode;
+  bool get userDebugMode => true && kDebugMode;
 
   /// todo token expiration update
 
@@ -233,18 +233,6 @@ class _ZegoLiveStreamingSwipingPageState
     );
   }
 
-  void updateStreamPlayStateInRoom(
-    ZegoLiveStreamingSwipingHost host,
-    String liveID,
-  ) {}
-
-  void onRoomStreamUpdate() {
-    /// audio video list updated
-    /// update play state
-  }
-
-  void onStreamPlayStateUpdate() {}
-
   Future<void> onPageChanged(int pageIndex) async {
     ZegoLoggerService.logInfo(
       'pageIndex:$pageIndex, '
@@ -309,7 +297,7 @@ class _ZegoLiveStreamingSwipingPageState
     /// What's pushed to stack is the new room ID (currentHost.roomID) and token
     /// shouldCheckCurrentRoom is set to false, because currentHost was just updated in onPageChanged, no need to check
     if (currentHost?.roomID.isNotEmpty ?? false) {
-      roomSwitchManager.pushRoomID(
+      roomSwitchManager.updateRoomID(
         currentHost!.roomID,
         widget.token,
         shouldCheckCurrentRoom: false,
