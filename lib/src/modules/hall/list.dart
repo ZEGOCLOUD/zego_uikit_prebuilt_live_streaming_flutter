@@ -148,26 +148,33 @@ class _ZegoUIKitLiveStreamingHallListState
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Stack(
-          children: [
-            ValueListenableBuilder<bool>(
-              valueListenable: roomLogoutNotifier,
-              builder: (context, isRoomLogout, _) {
-                if (!isRoomLogout) {
-                  /// wait previous room logout
-                  return widget.hallStyle.loadingBuilder?.call(context) ??
-                      const CircularProgressIndicator();
-                }
+        child: ZegoScreenUtilInit(
+          designSize: const Size(750, 1334),
+          minTextAdapt: true,
+          splitScreenMode: true,
+          builder: (context, child) {
+            return Stack(
+              children: [
+                ValueListenableBuilder<bool>(
+                  valueListenable: roomLogoutNotifier,
+                  builder: (context, isRoomLogout, _) {
+                    if (!isRoomLogout) {
+                      /// wait previous room logout
+                      return widget.hallStyle.loadingBuilder?.call(context) ??
+                          const CircularProgressIndicator();
+                    }
 
-                return listWidget();
-              },
-            ),
-            if (widget.hallStyle.foreground.showCloseButton)
-              Align(
-                alignment: Alignment.topRight,
-                child: closeButton(),
-              )
-          ],
+                    return listWidget();
+                  },
+                ),
+                if (widget.hallStyle.foreground.showCloseButton)
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: closeButton(),
+                  )
+              ],
+            );
+          },
         ),
       ),
     );
