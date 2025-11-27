@@ -428,6 +428,8 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
               widget.events?.hall.onPagePushReplace?.call(
                 context,
                 widget.liveID,
+                widget.config.swiping?.model,
+                widget.config.swiping?.modelDelegate,
               );
               if (null == widget.events?.hall.onPagePushReplace) {
                 ZegoLoggerService.logError(

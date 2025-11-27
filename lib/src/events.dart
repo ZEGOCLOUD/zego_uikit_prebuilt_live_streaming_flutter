@@ -1,12 +1,12 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'defines.dart';
 import 'events.defines.dart';
+import 'modules/hall/defines.dart';
 import 'modules/pk/core/event/defines.dart';
 
 /// You can listen to events that you are interested in here, such as Co-hosting
@@ -685,5 +685,10 @@ class ZegoLiveStreamingHallEvents {
     this.onPagePushReplace,
   });
 
-  Function(BuildContext context, String fromLiveID)? onPagePushReplace;
+  Function(
+    BuildContext context,
+    String fromLiveID,
+    ZegoLiveStreamingHallListModel? hallListModel,
+    ZegoLiveStreamingHallListModelDelegate? hallListModelDelegate,
+  )? onPagePushReplace;
 }
