@@ -118,12 +118,21 @@ class _ZegoLiveStreamingSwipingPageState
       configPlugins: widget.config.plugins,
     );
 
+    ZegoLoggerService.logInfo(
+      'previous host:$previousHost, '
+      'current host:$currentHost, '
+      'next host:$nextHost, ',
+      tag: 'live-streaming-swiping-page',
+      subTag: 'initState',
+    );
+
     /// Listen to initial room login status, once successful allow swiping, then stop listening
     initialRoomLoginChecker = ZegoLiveStreamingRoomLoginChecker(
       configPlugins: widget.config.plugins,
     );
-    initialRoomLoginChecker.notifier.addListener(_onInitialRoomLoginChanged);
     initialRoomLoginChecker.resetCheckingData(currentHost!.roomID);
+    _onInitialRoomLoginChanged();
+    initialRoomLoginChecker.notifier.addListener(_onInitialRoomLoginChanged);
 
     ZegoLiveStreamingPageLifeCycle().swiping.streamContext.updateContext(
           previousHost: previousHost ?? ZegoLiveStreamingSwipingHost.empty(),
@@ -133,6 +142,14 @@ class _ZegoLiveStreamingSwipingPageState
   }
 
   void _onInitialRoomLoginChanged() {
+    ZegoLoggerService.logInfo(
+      'checker room id:${initialRoomLoginChecker.targetRoomID}, '
+      'checker value:${initialRoomLoginChecker.notifier.value}, '
+      'current host:$currentHost, ',
+      tag: 'live-streaming-swiping-page',
+      subTag: 'onInitialRoomLoginChanged',
+    );
+
     if (initialRoomLoginChecker.notifier.value) {
       /// Initial room login successful, allow swiping, and remove listener
       _canScrollNotifier.value = true;

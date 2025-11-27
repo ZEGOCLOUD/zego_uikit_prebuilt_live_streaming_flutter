@@ -3,7 +3,6 @@ import 'dart:async';
 
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
-
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
 
@@ -29,9 +28,13 @@ class ZegoLiveStreamingRoomLoginChecker {
   }
 
   final notifier = ValueNotifier<bool>(false);
+
   bool get value => notifier.value;
 
   String _targetRoomID = '';
+
+  String get targetRoomID => _targetRoomID;
+
   final List<IZegoUIKitPlugin> _configPlugins;
 
   final List<bool> _result = [false, false];

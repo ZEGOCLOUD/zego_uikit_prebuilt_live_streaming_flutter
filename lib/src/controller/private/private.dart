@@ -17,7 +17,15 @@ class ZegoLiveStreamingControllerPrivateImpl {
     return _liveID;
   }
 
-  set liveID(String value) => _liveID = value;
+  set liveID(String value) {
+    ZegoLoggerService.logInfo(
+      'update live id from $_liveID to $value, ',
+      tag: 'live-streaming',
+      subTag: 'controller.p',
+    );
+
+    _liveID = value;
+  }
 
   /// Please do not call this interface. It is the internal logic of Prebuilt.
   /// DO NOT CALL!!!
