@@ -25,12 +25,17 @@ class ZegoLiveStreamingControllerHallPrivateImpl {
     required ZegoLiveStreamingHallListController? hallController,
   }) {
     ZegoLoggerService.logInfo(
-      'init by prebuilt',
+      'init by prebuilt,'
+      'controller:${hallController.hashCode}, '
+      'default controller:${_defaultHallListController.hashCode}, ',
       tag: 'live-streaming',
       subTag: 'controller.hall.p',
     );
 
     _hallController = hallController;
+
+    /// 重置状态，否则会不退房和不清理数据
+    controller.private.private.uninitOnDispose = true;
   }
 
   /// Please do not call this interface. It is the internal logic of ZegoUIKitPrebuiltLiveStreaming.

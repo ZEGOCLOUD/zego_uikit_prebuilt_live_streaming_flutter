@@ -30,8 +30,8 @@ class ZegoLiveStreamingDurationManager {
     if (_initialized) {
       ZegoLoggerService.logInfo(
         'had already init',
-        tag: 'live-streaming',
-        subTag: 'seat manager',
+        tag: 'live.streaming.live-duration-mgr',
+        subTag: 'init',
       );
 
       return;
@@ -41,8 +41,8 @@ class ZegoLiveStreamingDurationManager {
 
     ZegoLoggerService.logInfo(
       'init',
-      tag: 'live-streaming',
-      subTag: 'live duration manager',
+      tag: 'live.streaming.live-duration-mgr',
+      subTag: 'init',
     );
 
     this.liveID = liveID;
@@ -60,8 +60,8 @@ class ZegoLiveStreamingDurationManager {
     if (!_initialized) {
       ZegoLoggerService.logInfo(
         'not init before',
-        tag: 'live-streaming',
-        subTag: 'seat manager',
+        tag: 'live.streaming.live-duration-mgr',
+        subTag: 'uninit',
       );
 
       return;
@@ -70,9 +70,9 @@ class ZegoLiveStreamingDurationManager {
     _initialized = false;
 
     ZegoLoggerService.logInfo(
-      'uninit',
-      tag: 'live-streaming',
-      subTag: 'live duration manager',
+      '',
+      tag: 'live.streaming.live-duration-mgr',
+      subTag: 'uninit',
     );
     roomPropertySubscription?.cancel();
 
@@ -88,9 +88,10 @@ class ZegoLiveStreamingDurationManager {
   void onRoomPropertiesUpdated(Map<String, RoomProperty> updatedProperties) {
     final roomProperties = ZegoUIKit().getRoomProperties(targetRoomID: liveID);
     ZegoLoggerService.logInfo(
-      'onRoomPropertiesUpdated roomProperties:$roomProperties, updatedProperties:$updatedProperties',
-      tag: 'live-streaming',
-      subTag: 'live duration manager',
+      'roomProperties:$roomProperties, '
+      'updatedProperties:$updatedProperties',
+      tag: 'live.streaming.live-duration-mgr',
+      subTag: 'onRoomPropertiesUpdated',
     );
 
     if (roomProperties.containsKey(RoomPropertyKey.liveDuration.text)) {
@@ -113,8 +114,8 @@ class ZegoLiveStreamingDurationManager {
           .isLocalHost) {
         ZegoLoggerService.logInfo(
           'live duration value is not equal, host sync value:${notifier.value}',
-          tag: 'live-streaming',
-          subTag: 'live duration manager',
+          tag: 'live.streaming.live-duration-mgr',
+          subTag: 'trySyncValueByRoomProperties',
         );
 
         ZegoUIKit().setRoomProperty(
@@ -126,8 +127,8 @@ class ZegoLiveStreamingDurationManager {
     } else {
       ZegoLoggerService.logInfo(
         'live duration value is exist:${notifier.value}',
-        tag: 'live-streaming',
-        subTag: 'live duration manager',
+        tag: 'live.streaming.live-duration-mgr',
+        subTag: 'trySyncValueByRoomProperties',
       );
     }
   }
@@ -139,8 +140,8 @@ class ZegoLiveStreamingDurationManager {
         .isLocalHost) {
       ZegoLoggerService.logInfo(
         'try set value, but is not a host',
-        tag: 'live-streaming',
-        subTag: 'live duration manager',
+        tag: 'live.streaming.live-duration-mgr',
+        subTag: 'setRoomPropertyByHost',
       );
       return;
     }
@@ -152,8 +153,8 @@ class ZegoLiveStreamingDurationManager {
     if (null == networkTimeNow.value) {
       ZegoLoggerService.logInfo(
         'network time is null, wait..',
-        tag: 'live-streaming',
-        subTag: 'live duration manager',
+        tag: 'live.streaming.live-duration-mgr',
+        subTag: 'setRoomPropertyByHost',
       );
 
       ZegoUIKit()
@@ -172,8 +173,8 @@ class ZegoLiveStreamingDurationManager {
     final networkTimeNow = ZegoUIKit().getNetworkTime();
     ZegoLoggerService.logInfo(
       'network time update:$networkTimeNow',
-      tag: 'live-streaming',
-      subTag: 'live duration manager',
+      tag: 'live.streaming.live-duration-mgr',
+      subTag: 'waitNetworkTimeUpdatedForSetProperty',
     );
 
     setPropertyByNetworkTime(networkTimeNow.value!);
@@ -184,8 +185,8 @@ class ZegoLiveStreamingDurationManager {
 
     ZegoLoggerService.logInfo(
       'live duration value is not exist, host set value:${notifier.value}',
-      tag: 'live-streaming',
-      subTag: 'live duration manager',
+      tag: 'live.streaming.live-duration-mgr',
+      subTag: 'setPropertyByNetworkTime',
     );
 
     ZegoUIKit().setRoomProperty(

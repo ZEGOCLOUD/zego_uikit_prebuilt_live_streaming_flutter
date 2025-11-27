@@ -4,13 +4,11 @@ import 'dart:core';
 import 'dart:io' show Platform;
 import 'dart:ui';
 
-// Flutter imports:
-import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:floating/floating.dart';
+// Flutter imports:
+import 'package:flutter/material.dart';
 import 'package:zego_uikit/zego_uikit.dart';
-
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
@@ -23,6 +21,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/internal/events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/lifecycle.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/minimizing/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/minimizing/overlay_machine.dart';
+
 import 'live_page.dart';
 import 'mini_live.dart';
 import 'preview_page.dart';
@@ -407,7 +406,10 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
     ZegoLiveStreamingEndEvent event,
   ) {
     ZegoLoggerService.logInfo(
-      'default end event, event:$event',
+      'default end event, '
+      'event:$event, '
+      'isPrebuiltFromHall:${widget.isPrebuiltFromHall}, '
+      'hall onPagePushReplace:${null != widget.events?.hall.onPagePushReplace}, ',
       tag: 'live-streaming',
       subTag: 'prebuilt',
     );
@@ -422,13 +424,31 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
           ZegoUIKitPrebuiltLiveStreamingController().minimize.hide();
         } else {
           try {
-            Navigator.of(
-              context,
-              rootNavigator: widget.config.rootNavigator,
-            ).pop(true);
+            if (widget.isPrebuiltFromHall) {
+              widget.events?.hall.onPagePushReplace?.call(
+                context,
+                widget.liveID,
+              );
+              if (null == widget.events?.hall.onPagePushReplace) {
+                ZegoLoggerService.logError(
+                  'please assign value to ZegoUIKitPrebuiltLiveStreamingEvents.hall.onPagePushReplace',
+                  tag: 'live-streaming',
+                  subTag: 'prebuilt',
+                );
+
+                assert(false);
+              }
+            } else {
+              Navigator.of(
+                context,
+                rootNavigator: widget.config.rootNavigator,
+              ).pop(true);
+            }
           } catch (e) {
             ZegoLoggerService.logError(
-              'live end, navigator exception:$e, event:$event',
+              'live end, navigator exception:$e, '
+              'isPrebuiltFromHall:${widget.isPrebuiltFromHall}, '
+              'event:$event',
               tag: 'live-streaming',
               subTag: 'prebuilt',
             );

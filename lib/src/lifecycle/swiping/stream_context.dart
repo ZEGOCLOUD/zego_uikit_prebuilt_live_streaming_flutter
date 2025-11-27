@@ -60,16 +60,16 @@ class LiveStreamingSwipingStreamContext {
   }) async {
     ZegoLoggerService.logInfo(
       'update, '
-      'current:{\n '
-      'previous:$previousSwipingHost, \n'
-      'current:$currentSwipingHost, \n'
-      'next:$nextSwipingHost, \n'
-      '}, \n'
-      'target:{\n '
-      'previous:$previousHost, \n'
-      'current:$currentHost, \n'
-      'next:$nextHost, \n'
-      '}, \n',
+      'current:{ '
+      'previous:$previousSwipingHost, '
+      'current:$currentSwipingHost, '
+      'next:$nextSwipingHost, '
+      '}, '
+      'target:{ '
+      'previous:$previousHost, '
+      'current:$currentHost, '
+      'next:$nextHost, '
+      '}, ',
       tag: 'live.swiping.stream-context',
       subTag: 'updateContext',
     );
@@ -88,7 +88,9 @@ class LiveStreamingSwipingStreamContext {
     currentHost.syncPlayingState();
     nextHost.syncPlayingState();
 
-    audioVideoStreamSubscriptions.forEach((e) => e?.cancel());
+    for (var e in audioVideoStreamSubscriptions) {
+      e?.cancel();
+    }
 
     /// Streams to pull
     List<ZegoLiveStreamingSwipingHost> startPlayingHosts = [

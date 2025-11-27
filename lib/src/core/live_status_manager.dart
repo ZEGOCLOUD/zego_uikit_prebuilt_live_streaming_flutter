@@ -36,14 +36,14 @@ class ZegoLiveStreamingStatusManager {
         notifier.value != LiveStatus.living;
     ZegoLoggerService.logInfo(
       'need stop:$needStop',
-      tag: 'live-streaming-live-status-mgr',
+      tag: 'live.streaming.live-status-mgr',
       subTag: 'checkShouldStopPlayAllAudioVideo',
     );
 
     if (isPrebuiltFromHall) {
       ZegoLoggerService.logInfo(
         'but is from hall, ignore',
-        tag: 'live-streaming-live-status-mgr',
+        tag: 'live.streaming.live-status-mgr',
         subTag: 'checkShouldStopPlayAllAudioVideo',
       );
     } else if (needStop) {
@@ -60,8 +60,8 @@ class ZegoLiveStreamingStatusManager {
     if (_initialized) {
       ZegoLoggerService.logInfo(
         'had already init',
-        tag: 'live-streaming-live-status-mgr',
-        subTag: 'live status manager',
+        tag: 'live.streaming.live-status-mgr',
+        subTag: 'init',
       );
 
       return;
@@ -74,9 +74,9 @@ class ZegoLiveStreamingStatusManager {
     this.events = events;
 
     ZegoLoggerService.logInfo(
-      'init',
-      tag: 'live-streaming-live-status-mgr',
-      subTag: 'live status manager',
+      '',
+      tag: 'live.streaming.live-status-mgr',
+      subTag: 'init',
     );
 
     subscriptions.add(ZegoUIKit()
@@ -104,8 +104,8 @@ class ZegoLiveStreamingStatusManager {
     if (!_initialized) {
       ZegoLoggerService.logInfo(
         'not init before',
-        tag: 'live-streaming-live-status-mgr',
-        subTag: 'live status manager',
+        tag: 'live.streaming.live-status-mgr',
+        subTag: 'uninit',
       );
 
       return;
@@ -114,9 +114,9 @@ class ZegoLiveStreamingStatusManager {
     _initialized = false;
 
     ZegoLoggerService.logInfo(
-      'uninit',
-      tag: 'live-streaming-live-status-mgr',
-      subTag: 'live status manager',
+      '',
+      tag: 'live.streaming.live-status-mgr',
+      subTag: 'uninit',
     );
 
     ZegoUIKit()
@@ -130,8 +130,8 @@ class ZegoLiveStreamingStatusManager {
         .isLocalHost) {
       ZegoLoggerService.logInfo(
         'host uninit live status property to end',
-        tag: 'live-streaming-live-status-mgr',
-        subTag: 'live status manager',
+        tag: 'live.streaming.live-status-mgr',
+        subTag: 'uninit',
       );
 
       events?.onStateUpdated?.call(ZegoLiveStreamingState.ended);
@@ -165,8 +165,8 @@ class ZegoLiveStreamingStatusManager {
         .isLocalHost) {
       ZegoLoggerService.logInfo(
         'host init live status to end and start play all audio video',
-        tag: 'live-streaming-live-status-mgr',
-        subTag: 'live status manager',
+        tag: 'live.streaming.live-status-mgr',
+        subTag: 'onRoomStateUpdated',
       );
       ZegoUIKit().unmuteAllRemoteAudioVideo(targetRoomID: liveID);
 
@@ -182,8 +182,8 @@ class ZegoLiveStreamingStatusManager {
     if (!updatedProperties.containsKey(RoomPropertyKey.liveStatus.text)) {
       ZegoLoggerService.logInfo(
         'update properties not contain live status',
-        tag: 'live-streaming-live-status-mgr',
-        subTag: 'live status manager',
+        tag: 'live.streaming.live-status-mgr',
+        subTag: 'onRoomPropertiesUpdated',
       );
       return;
     }
@@ -191,17 +191,17 @@ class ZegoLiveStreamingStatusManager {
     final roomProperties = ZegoUIKit().getRoomProperties(targetRoomID: liveID);
 
     ZegoLoggerService.logInfo(
-      'onRoomPropertiesUpdated roomProperties:$roomProperties',
-      tag: 'live-streaming-live-status-mgr',
-      subTag: 'live status manager',
+      'roomProperties:$roomProperties',
+      tag: 'live.streaming.live-status-mgr',
+      subTag: 'onRoomPropertiesUpdated',
     );
 
     if (!roomProperties.containsKey(RoomPropertyKey.liveStatus.text)) {
       /// live is not start if host not enter
       ZegoLoggerService.logInfo(
         'host key is not exist, set live status not start',
-        tag: 'live-streaming-live-status-mgr',
-        subTag: 'live status manager',
+        tag: 'live.streaming.live-status-mgr',
+        subTag: 'onRoomPropertiesUpdated',
       );
       notifier.value = LiveStatus.notStart;
     } else if (roomProperties.containsKey(RoomPropertyKey.liveStatus.text)) {
@@ -223,15 +223,15 @@ class ZegoLiveStreamingStatusManager {
 
       ZegoLoggerService.logInfo(
         'update live status, value is $liveStatusValue, status is ${notifier.value}',
-        tag: 'live-streaming-live-status-mgr',
-        subTag: 'live status manager',
+        tag: 'live.streaming.live-status-mgr',
+        subTag: 'onRoomPropertiesUpdated',
       );
     } else {
       /// live is not start
       ZegoLoggerService.logInfo(
         'live status key is not exist, live is not start',
-        tag: 'live-streaming-live-status-mgr',
-        subTag: 'live status manager',
+        tag: 'live.streaming.live-status-mgr',
+        subTag: 'onRoomPropertiesUpdated',
       );
       notifier.value = LiveStatus.notStart;
     }
@@ -259,8 +259,8 @@ class ZegoLiveStreamingStatusManager {
             .isLocalHost) {
       ZegoLoggerService.logInfo(
         'live status is end, co-host switch to audience',
-        tag: 'live-streaming-live-status-mgr',
-        subTag: 'live status manager',
+        tag: 'live.streaming.live-status-mgr',
+        subTag: 'onRoomPropertiesUpdated',
       );
       ZegoLiveStreamingPageLifeCycle()
           .currentManagers
@@ -274,8 +274,8 @@ class ZegoLiveStreamingStatusManager {
   void onLiveStatusUpdated() {
     ZegoLoggerService.logInfo(
       'live status update to ${notifier.value}',
-      tag: 'live-streaming-live-status-mgr',
-      subTag: 'live status manager',
+      tag: 'live.streaming.live-status-mgr',
+      subTag: 'onLiveStatusUpdated',
     );
 
     switch (notifier.value) {

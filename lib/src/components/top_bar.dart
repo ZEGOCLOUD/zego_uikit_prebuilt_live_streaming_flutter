@@ -141,8 +141,8 @@ class _ZegoLiveStreamingTopBarState extends State<ZegoLiveStreamingTopBar> {
             .contains(ZegoLiveStreamingMenuBarButtonName.minimizingButton)
         ? [
             ZegoLiveStreamingMinimizingButton(
-              buttonSize: Size(52.zR, 52.zR),
-              iconSize: Size(24.zR, 24.zR),
+              buttonSize: Size(96.zR, 96.zR),
+              iconSize: Size(56.zR, 56.zR),
             ),
             SizedBox(width: 20.zR),
           ]
@@ -157,8 +157,8 @@ class _ZegoLiveStreamingTopBarState extends State<ZegoLiveStreamingTopBar> {
         ? [
             ZegoLiveStreamingPIPButton(
               liveID: widget.liveID,
-              buttonSize: Size(52.zR, 52.zR),
-              iconSize: Size(24.zR, 24.zR),
+              buttonSize: Size(96.zR, 96.zR),
+              iconSize: Size(56.zR, 56.zR),
               aspectWidth: widget.config.pip.aspectWidth,
               aspectHeight: widget.config.pip.aspectHeight,
             ),
@@ -175,8 +175,8 @@ class _ZegoLiveStreamingTopBarState extends State<ZegoLiveStreamingTopBar> {
         ? [
             ZegoScreenSharingToggleButton(
               roomID: widget.liveID,
-              buttonSize: Size(52.zR, 52.zR),
-              iconSize: Size(24.zR, 24.zR),
+              buttonSize: Size(96.zR, 96.zR),
+              iconSize: Size(56.zR, 56.zR),
               onPressed: (isScreenSharing) {},
               iconStartSharing: ButtonIcon(
                 icon: widget.config.bottomMenuBar.buttonStyle

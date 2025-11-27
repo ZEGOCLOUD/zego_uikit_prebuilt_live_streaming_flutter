@@ -89,22 +89,5 @@ class ZegoLiveStreamingPageLifeCycleDispose {
 
     /// only effect call after leave room
     ZegoUIKit().enableCustomVideoProcessing(false);
-
-    ZegoUIKitPrebuiltLiveStreamingController()
-        .hall
-        .private
-        .controller
-        .private
-        .private
-        .init()
-        .then((_) {
-      ZegoUIKitPrebuiltLiveStreamingController()
-          .hall
-          .private
-          .controller
-          .private
-          .private
-          .forceUpdate();
-    });
   }
 }

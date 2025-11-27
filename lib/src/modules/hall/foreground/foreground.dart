@@ -1,11 +1,11 @@
 // Flutter imports:
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
-
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/inner_text.dart';
+
 import 'enter_wave_animation.dart';
 
 class ZegoLiveStreamingHallForeground extends StatefulWidget {
@@ -34,32 +34,26 @@ class ZegoLiveStreamingHallForeground extends StatefulWidget {
 
 class _ZegoLiveStreamingHallPageState
     extends State<ZegoLiveStreamingHallForeground> {
+  bool get userDebugMode => false && kDebugMode;
+
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        /// todo:test
-        Positioned(
-          right: 20.zR,
-          top: 120.zR,
-          child: Text('live id:${widget.liveID}, host:${widget.user?.id}'),
-        ),
+        if (userDebugMode)
+          Positioned(
+            right: 20.zR,
+            top: 120.zR,
+            child: Text('live id:${widget.liveID}, host:${widget.user?.id}'),
+          ),
         Positioned(
           left: 20.zR,
           right: 20.zR,
           bottom: 120.zR,
           child: joinButton(),
         ),
-        Positioned(
-          left: 10.zR,
-          bottom: 80.zR,
-          child: livingFlag(),
-        ),
-        Positioned(
-          left: 10.zR,
-          bottom: 20.zR,
-          child: userName(),
-        ),
+        Positioned(left: 10.zR, bottom: 80.zR, child: livingFlag()),
+        Positioned(left: 10.zR, bottom: 20.zR, child: userName()),
       ],
     );
   }
@@ -77,10 +71,7 @@ class _ZegoLiveStreamingHallPageState
 
   Widget livingFlag() {
     return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: 12.zR,
-        vertical: 4.zR,
-      ),
+      padding: EdgeInsets.symmetric(horizontal: 12.zR, vertical: 4.zR),
       decoration: BoxDecoration(
         color: const Color(0xFFFF69B4), // Pink
         borderRadius: BorderRadius.circular(4.zR),
@@ -106,10 +97,7 @@ class _ZegoLiveStreamingHallPageState
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(30.zR),
             ),
-            padding: EdgeInsets.symmetric(
-              vertical: 12.zR,
-              horizontal: 24.zR,
-            ),
+            padding: EdgeInsets.symmetric(vertical: 12.zR, horizontal: 24.zR),
           ),
           onPressed: () {
             widget.onEnterLivePressed.call(widget.liveID);

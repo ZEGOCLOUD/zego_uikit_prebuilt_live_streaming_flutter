@@ -1,10 +1,9 @@
 // Flutter imports:
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:loop_page_view/loop_page_view.dart';
 import 'package:zego_uikit/zego_uikit.dart';
-
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/live_streaming_page.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/pop_up_manager.dart';
@@ -14,6 +13,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/lifecycle.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/swiping/page_room_switcher.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/swiping/room_login_checker.dart';
+
 import 'defines.dart';
 
 /// The encapsulation layer of the "Live Streaming Widget" includes the
@@ -80,6 +80,8 @@ class ZegoLiveStreamingSwipingPage extends StatefulWidget {
 /// @nodoc
 class _ZegoLiveStreamingSwipingPageState
     extends State<ZegoLiveStreamingSwipingPage> {
+  bool get userDebugMode => false && kDebugMode;
+
   /// todo token expiration update
 
   int currentPageIndex = 0;
@@ -89,7 +91,9 @@ class _ZegoLiveStreamingSwipingPageState
   late final ZegoLiveStreamingSwipingPageRoomSwitcher roomSwitchManager;
 
   int get startIndex => 0;
+
   int get endIndex => 2;
+
   int get pageCount => (endIndex - startIndex) + 1;
 
   ZegoLiveStreamingSwipingHost? get previousHost =>
@@ -205,23 +209,22 @@ class _ZegoLiveStreamingSwipingPageState
                   isPrebuiltFromMinimizing: widget.isPrebuiltFromMinimizing,
                   isPrebuiltFromHall: widget.isPrebuiltFromHall,
                 ),
-
-                /// todo:test
-                // Positioned(
-                //   bottom: 100,
-                //   left: 0,
-                //   right: 0,
-                //   child: Text(
-                //     'Page '
-                //     '$pageIndex, '
-                //     'live id:$itemHost',
-                //     style: TextStyle(
-                //       fontSize: 12,
-                //       color: Colors.red,
-                //       decoration: TextDecoration.none,
-                //     ),
-                //   ),
-                // ),
+                if (userDebugMode)
+                  Positioned(
+                    bottom: 100,
+                    left: 0,
+                    right: 0,
+                    child: Text(
+                      'Page '
+                      '$pageIndex, '
+                      'live id:${itemHost.roomID}',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.red,
+                        decoration: TextDecoration.none,
+                      ),
+                    ),
+                  ),
               ],
             );
           },

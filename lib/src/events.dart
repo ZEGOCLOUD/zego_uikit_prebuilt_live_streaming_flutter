@@ -41,6 +41,8 @@ class ZegoUIKitPrebuiltLiveStreamingEvents {
   /// events about beauty
   ZegoLiveStreamingBeautyEvents beauty;
 
+  ZegoLiveStreamingHallEvents hall;
+
   /// events about media
   ZegoUIKitMediaPlayerEvent media;
 
@@ -126,6 +128,7 @@ class ZegoUIKitPrebuiltLiveStreamingEvents {
     ZegoLiveStreamingInRoomMessageEvents? inRoomMessage,
     ZegoLiveStreamingDurationEvents? duration,
     ZegoLiveStreamingBeautyEvents? beauty,
+    ZegoLiveStreamingHallEvents? hall,
     ZegoUIKitMediaPlayerEvent? media,
   })  : user = user ?? ZegoLiveStreamingUserEvents(),
         room = room ?? ZegoLiveStreamingRoomEvents(),
@@ -137,6 +140,7 @@ class ZegoUIKitPrebuiltLiveStreamingEvents {
         inRoomMessage = inRoomMessage ?? ZegoLiveStreamingInRoomMessageEvents(),
         duration = duration ?? ZegoLiveStreamingDurationEvents(),
         beauty = beauty ?? ZegoLiveStreamingBeautyEvents(),
+        hall = hall ?? ZegoLiveStreamingHallEvents(),
         media = media ?? ZegoUIKitMediaPlayerEvent();
 }
 
@@ -674,4 +678,12 @@ class ZegoLiveStreamingBeautyEvents {
   /// }
   /// ```
   Function(ZegoBeautyPluginFaceDetectionData)? onFaceDetection;
+}
+
+class ZegoLiveStreamingHallEvents {
+  ZegoLiveStreamingHallEvents({
+    this.onPagePushReplace,
+  });
+
+  Function(BuildContext context, String fromLiveID)? onPagePushReplace;
 }

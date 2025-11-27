@@ -4,20 +4,16 @@ import 'dart:math' as math;
 
 // Flutter imports:
 import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:permission_handler/permission_handler.dart';
 import 'package:zego_uikit/zego_uikit.dart';
-
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/effects/beauty_effect_button.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/permissions.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
-
 import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/lifecycle.dart'; // import this
 
 /// @nodoc
@@ -54,36 +50,6 @@ class ZegoLiveStreamingPreviewPage extends StatefulWidget {
 /// @nodoc
 class _ZegoLiveStreamingPreviewPageState
     extends State<ZegoLiveStreamingPreviewPage> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-
-    if (ZegoLiveStreamingPageLifeCycle().previewPageVisibilityNotifier.value) {
-      /// not enter live page, render again if exist outside live list
-      ZegoUIKitPrebuiltLiveStreamingController()
-          .hall
-          .private
-          .controller
-          .private
-          .private
-          .init()
-          .then((_) {
-        ZegoUIKitPrebuiltLiveStreamingController()
-            .hall
-            .private
-            .controller
-            .private
-            .private
-            .forceUpdate();
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

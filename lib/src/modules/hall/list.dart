@@ -1,14 +1,13 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
-
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming.dart';
+
 import 'controller.dart';
 import 'defines.dart';
 import 'foreground/foreground.dart';
@@ -97,6 +96,9 @@ class _ZegoUIKitLiveStreamingHallListState
     extends State<ZegoUIKitLiveStreamingHallList> {
   final roomLogoutNotifier = ValueNotifier<bool>(true);
 
+  ZegoLiveStreamingHallListController get controller =>
+      ZegoUIKitPrebuiltLiveStreamingController().hall.private.controller;
+
   @override
   void initState() {
     super.initState();
@@ -108,33 +110,19 @@ class _ZegoUIKitLiveStreamingHallListState
 
     if (null != widget.hallConfig.audioVideoResourceMode) {
       ZegoUIKit().setPlayerResourceMode(
-        targetRoomID: ZegoUIKitPrebuiltLiveStreamingController()
-            .hall
-            .private
-            .controller
-            .roomID,
+        targetRoomID: controller.roomID,
         widget.hallConfig.audioVideoResourceMode!,
       );
     }
 
     roomLogoutNotifier.value = ZegoUIKitRoomStateChangedReason.Logout ==
         ZegoUIKit()
-            .getRoomStateStream(
-                targetRoomID: ZegoUIKitPrebuiltLiveStreamingController()
-                    .hall
-                    .private
-                    .controller
-                    .roomID)
+            .getRoomStateStream(targetRoomID: controller.roomID)
             .value
             .reason;
     if (!roomLogoutNotifier.value) {
       ZegoUIKit()
-          .getRoomStateStream(
-              targetRoomID: ZegoUIKitPrebuiltLiveStreamingController()
-                  .hall
-                  .private
-                  .controller
-                  .roomID)
+          .getRoomStateStream(targetRoomID: controller.roomID)
           .addListener(onRoomStateUpdated);
     }
   }
@@ -146,21 +134,12 @@ class _ZegoUIKitLiveStreamingHallListState
     ZegoUIKitPrebuiltLiveStreamingController().hall.private.uninitByPrebuilt();
 
     ZegoUIKit()
-        .getRoomStateStream(
-            targetRoomID: ZegoUIKitPrebuiltLiveStreamingController()
-                .hall
-                .private
-                .controller
-                .roomID)
+        .getRoomStateStream(targetRoomID: controller.roomID)
         .removeListener(onRoomStateUpdated);
 
     if (null != widget.hallConfig.audioVideoResourceMode) {
       ZegoUIKit().setPlayerResourceMode(
-        targetRoomID: ZegoUIKitPrebuiltLiveStreamingController()
-            .hall
-            .private
-            .controller
-            .roomID,
+        targetRoomID: controller.roomID,
         ZegoUIKitStreamResourceMode.Default,
       );
     }
@@ -168,41 +147,73 @@ class _ZegoUIKitLiveStreamingHallListState
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<bool>(
-      valueListenable: roomLogoutNotifier,
-      builder: (context, isRoomLogout, _) {
-        if (!isRoomLogout) {
-          /// wait previous room logout
-          return widget.hallStyle.loadingBuilder?.call(context) ??
-              const CircularProgressIndicator();
-        }
+    return Scaffold(
+      body: SafeArea(
+        child: Stack(
+          children: [
+            ValueListenableBuilder<bool>(
+              valueListenable: roomLogoutNotifier,
+              builder: (context, isRoomLogout, _) {
+                if (!isRoomLogout) {
+                  /// wait previous room logout
+                  return widget.hallStyle.loadingBuilder?.call(context) ??
+                      const CircularProgressIndicator();
+                }
 
-        return ZegoUIKitHallRoomList(
-          appID: widget.appID,
-          controller: ZegoUIKitPrebuiltLiveStreamingController()
-              .hall
-              .private
-              .controller
-              .private,
-          appSign: widget.appSign,
-          token: widget.token,
-          scenario: ZegoUIKitScenario.Broadcast,
-          style: ZegoLiveStreamingHallListStyle(
-            loadingBuilder: widget.hallStyle.loadingBuilder,
-            item: ZegoLiveStreamingHallListItemStyle(
-              backgroundBuilder: widget.hallStyle.item.backgroundBuilder,
-              foregroundBuilder: widget.hallStyle.item.foregroundBuilder ??
-                  defaultItemForeground,
-              loadingBuilder:
-                  widget.hallStyle.item.loadingBuilder ?? defaultLoadingBuilder,
-              avatar: widget.hallStyle.item.avatar,
+                return listWidget();
+              },
             ),
-          ),
-          config: widget.hallConfig,
-          model: widget.hallModel,
-          modelDelegate: widget.hallModelDelegate,
-        );
-      },
+            Align(
+              alignment: Alignment.topRight,
+              child: closeButton(),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget listWidget() {
+    return ZegoUIKitHallRoomList(
+      appID: widget.appID,
+      userID: widget.userID,
+      userName: widget.userName,
+      controller: controller.private,
+      appSign: widget.appSign,
+      token: widget.token,
+      scenario: ZegoUIKitScenario.Broadcast,
+      style: ZegoLiveStreamingHallListStyle(
+        loadingBuilder: widget.hallStyle.loadingBuilder,
+        item: ZegoLiveStreamingHallListItemStyle(
+          backgroundBuilder: widget.hallStyle.item.backgroundBuilder,
+          foregroundBuilder:
+              widget.hallStyle.item.foregroundBuilder ?? defaultItemForeground,
+          loadingBuilder:
+              widget.hallStyle.item.loadingBuilder ?? defaultLoadingBuilder,
+          avatar: widget.hallStyle.item.avatar,
+        ),
+      ),
+      config: widget.hallConfig,
+      model: widget.hallModel,
+      modelDelegate: widget.hallModelDelegate,
+    );
+  }
+
+  Widget closeButton() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.black.withAlpha(70),
+        shape: BoxShape.circle,
+      ),
+      child: IconButton(
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+        icon: Icon(
+          Icons.close,
+          color: Colors.white,
+        ),
+      ),
     );
   }
 
@@ -256,7 +267,14 @@ class _ZegoUIKitLiveStreamingHallListState
           model: widget.hallModel,
         );
 
-        Navigator.push(
+        /// ZegoUIKitHallRoomList dispose不退房和清数据
+        ///
+        /// 在ZegoLiveStreamingSwipingLifeCycle中会处理
+        /// clearData 和 switch room
+        ///
+        /// 在ZegoLiveStreamingControllerHallPrivateImpl会重置状态
+        controller.private.private.uninitOnDispose = false;
+        Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) => SafeArea(
@@ -277,25 +295,14 @@ class _ZegoUIKitLiveStreamingHallListState
   }
 
   void onRoomStateUpdated() {
-    final roomState = ZegoUIKit()
-        .getRoomStateStream(
-            targetRoomID: ZegoUIKitPrebuiltLiveStreamingController()
-                .hall
-                .private
-                .controller
-                .roomID)
-        .value;
+    final roomState =
+        ZegoUIKit().getRoomStateStream(targetRoomID: controller.roomID).value;
     roomLogoutNotifier.value =
         ZegoUIKitRoomStateChangedReason.Logout == roomState.reason;
 
     if (roomLogoutNotifier.value) {
       ZegoUIKit()
-          .getRoomStateStream(
-              targetRoomID: ZegoUIKitPrebuiltLiveStreamingController()
-                  .hall
-                  .private
-                  .controller
-                  .roomID)
+          .getRoomStateStream(targetRoomID: controller.roomID)
           .removeListener(onRoomStateUpdated);
     }
   }

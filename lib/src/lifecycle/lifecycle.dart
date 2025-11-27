@@ -3,15 +3,16 @@ import 'dart:async';
 
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
-
+import 'package:flutter/material.dart';
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
-
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/core_managers.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/swiping/swiping.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/minimizing/data.dart';
+
 import 'defines.dart';
 import 'normal/normal.dart';
 
@@ -34,6 +35,7 @@ class ZegoLiveStreamingPageLifeCycle {
 
   /// Whether preview page is visible
   var previewPageVisibilityNotifier = ValueNotifier<bool>(true);
+
   void updatePreviewPageVisibility(bool value) {
     previewPageVisibilityNotifier.value = value;
   }
@@ -123,8 +125,11 @@ class ZegoLiveStreamingPageLifeCycle {
   }
 
   Future<void> uninitFromPreview({
+    required BuildContext context,
+    required String liveID,
     required bool isPrebuiltFromMinimizing,
     required bool isPrebuiltFromHall,
+    required ZegoUIKitPrebuiltLiveStreamingEvents? events,
   }) async {
     if (!_initialized) {
       ZegoLoggerService.logInfo(
@@ -146,7 +151,6 @@ class ZegoLiveStreamingPageLifeCycle {
     );
 
     _initialized = false;
-
     for (final subscription in _subscriptions) {
       subscription?.cancel();
     }
@@ -156,6 +160,10 @@ class ZegoLiveStreamingPageLifeCycle {
       /// Should make leaving room directly stop pulling streams
       await ZegoUIKit().enableSwitchRoomNotStopPlay(false);
     }
+
+    final hostID = currentManagers.hostManager.notifier.value?.id;
+
+    /// host id
     if (swiping.usingRoomSwiping) {
       /// Using live streaming swiping
       /// 1. Need to leave room: If not from live hall, need to leave room because entire ZegoUIKitPrebuiltLiveStreaming is exiting
@@ -169,7 +177,7 @@ class ZegoLiveStreamingPageLifeCycle {
     }
 
     /// Handle live hall scenario
-    swiping.uninitFromPreview();
+    await swiping.uninitFromPreview(isPrebuiltFromHall: isPrebuiltFromHall);
     normal.uninitFromPreview();
 
     currentLiveID = '';

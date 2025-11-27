@@ -1,15 +1,14 @@
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
-
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/lifecycle.dart';
+
 import 'stream_context.dart';
 
 class ZegoLiveStreamingSwipingLifeCycle {
-  bool isPrebuiltFromHall = false;
   String currentLiveID = '';
   String hallRoomID = '';
   ZegoLiveStreamingSwipingConfig? config;
@@ -37,7 +36,6 @@ class ZegoLiveStreamingSwipingLifeCycle {
     config = swipingConfig;
     currentLiveID = liveID;
     this.hallConfig = hallConfig;
-    this.isPrebuiltFromHall = isPrebuiltFromHall;
 
     /// If entered from live hall, use live hall's enter live flow, which has optimizations
     await ZegoUIKitPrebuiltLiveStreamingController()
@@ -46,6 +44,20 @@ class ZegoLiveStreamingSwipingLifeCycle {
         .controller
         .private
         .moveStreamToTheirRoom();
+    ZegoUIKitPrebuiltLiveStreamingController()
+        .hall
+        .private
+        .controller
+        .private
+        .private
+      ..clearData()
+      ..uninit(
+        /// 都不需要销毁，只是
+        needEnableSwitchRoomNotStopPlay: false,
+        needStopPlayAll: false,
+        needLeaveRoom: false,
+        needUninitSDK: false,
+      );
 
     if (usingRoomSwiping) {
       /// Initialize initial live streaming swiping context data
@@ -76,38 +88,17 @@ class ZegoLiveStreamingSwipingLifeCycle {
     }
   }
 
-  Future<void> uninitFromPreview() async {
-    /// If entered from live hall, use live hall's exit live flow, which has optimizations
-    /// todo: ignoreFilter only copy host's main
-    await ZegoUIKitPrebuiltLiveStreamingController()
-        .hall
-        .private
-        .controller
-        .private
-        .moveStreamToHall();
-
+  Future<void> uninitFromPreview({
+    required bool isPrebuiltFromHall,
+  }) async {
     if (ZegoUIKit().getScreenSharingStateNotifier().value) {
       ZegoUIKit().stopSharingScreen(targetRoomID: currentLiveID);
     }
 
     streamContext.uninit();
 
-    isPrebuiltFromHall = false;
     config = null;
-
-    if (hallRoomID.isNotEmpty) {
-      /// Switch back to live hall
-      await ZegoUIKit().switchRoom(toRoomID: hallRoomID);
-    }
     hallRoomID = '';
-
-    ZegoUIKitPrebuiltLiveStreamingController()
-        .hall
-        .private
-        .controller
-        .private
-        .private
-        .forceUpdate();
     hallConfig = null;
   }
 }
