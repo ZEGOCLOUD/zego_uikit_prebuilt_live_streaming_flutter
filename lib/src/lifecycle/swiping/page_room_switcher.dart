@@ -31,7 +31,10 @@ class ZegoLiveStreamingSwipingRoomInfo {
 class ZegoLiveStreamingSwipingPageRoomSwitcher {
   ZegoLiveStreamingSwipingPageRoomSwitcher({
     required List<IZegoUIKitPlugin> configPlugins,
+    required this.onRoomSwitched,
   }) : _configPlugins = configPlugins;
+
+  void Function(String liveID) onRoomSwitched;
 
   final List<IZegoUIKitPlugin> _configPlugins;
 
@@ -254,6 +257,8 @@ class ZegoLiveStreamingSwipingPageRoomSwitcher {
 
     final completedRoomID = _processingRoomID;
     _processingRoomID = null;
+
+    onRoomSwitched(completedRoomID ?? '');
 
     /// After room joining completes, if stack is not empty, continue the process
     if (_roomStack.isNotEmpty) {

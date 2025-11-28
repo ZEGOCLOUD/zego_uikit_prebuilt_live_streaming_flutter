@@ -3,10 +3,8 @@ import 'dart:async';
 
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
-
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
-
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/lifecycle.dart';
 
@@ -47,13 +45,7 @@ class ZegoLiveStreamingDurationManager {
 
     this.liveID = liveID;
 
-    roomPropertySubscription = ZegoUIKit()
-        .getRoomPropertiesStream(targetRoomID: liveID)
-        .listen(onRoomPropertiesUpdated);
-
-    ZegoUIKit()
-        .getRoomStateStream(targetRoomID: liveID)
-        .addListener(onRoomStateUpdated);
+    registerRoomEvents(liveID);
   }
 
   Future<void> uninit() async {
@@ -74,11 +66,50 @@ class ZegoLiveStreamingDurationManager {
       tag: 'live.streaming.live-duration-mgr',
       subTag: 'uninit',
     );
+
+    unregisterRoomEvents(liveID);
+
+    liveID = '';
+  }
+
+  void registerRoomEvents(String liveID) {
+    onRoomPropertiesUpdated(
+      ZegoUIKit().getRoomProperties(targetRoomID: liveID),
+    );
+    roomPropertySubscription = ZegoUIKit()
+        .getRoomPropertiesStream(targetRoomID: liveID)
+        .listen(onRoomPropertiesUpdated);
+
+    onRoomStateUpdated();
+    ZegoUIKit()
+        .getRoomStateStream(targetRoomID: liveID)
+        .addListener(onRoomStateUpdated);
+  }
+
+  void unregisterRoomEvents(String liveID) {
     roomPropertySubscription?.cancel();
+    roomPropertySubscription = null;
 
     ZegoUIKit()
         .getRoomStateStream(targetRoomID: liveID)
         .removeListener(onRoomStateUpdated);
+  }
+
+  void onRoomSwitched({
+    required String liveID,
+  }) {
+    ZegoLoggerService.logInfo(
+      'live id:$liveID, ',
+      tag: 'live.streaming.live-duration-mgr',
+      subTag: 'onRoomSwitched',
+    );
+
+    /// Cancel the event listener for the previous LIVE broadcast room
+    unregisterRoomEvents(this.liveID);
+
+    this.liveID = liveID;
+
+    registerRoomEvents(this.liveID);
   }
 
   void onRoomStateUpdated() {
@@ -107,6 +138,13 @@ class ZegoLiveStreamingDurationManager {
     final serverDateTime = DateTime.fromMillisecondsSinceEpoch(
         int.tryParse(propertyTimestamp) ?? 0);
     notifier.value = serverDateTime;
+    ZegoLoggerService.logInfo(
+      'previous value:$currentDateTime, '
+      'now value:${notifier.value}, ',
+      tag: 'live.streaming.live-duration-mgr',
+      subTag: 'trySyncValueByRoomProperties',
+    );
+
     if (currentDateTime != serverDateTime) {
       if (ZegoLiveStreamingPageLifeCycle()
           .currentManagers

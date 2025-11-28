@@ -3,10 +3,8 @@ import 'dart:async';
 
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
-
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
-
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/defines.dart';
@@ -24,7 +22,7 @@ class ZegoLiveStreamingStatusManager {
 
   /// internal variables
   var notifier = ValueNotifier<LiveStatus>(LiveStatus.notStart);
-  List<StreamSubscription<dynamic>?> subscriptions = [];
+  StreamSubscription<dynamic>? onRoomPropertiesUpdatedSubscription = null;
 
   Future<void> checkShouldStopPlayAllAudioVideo({
     required bool isPrebuiltFromHall,
@@ -79,13 +77,10 @@ class ZegoLiveStreamingStatusManager {
       subTag: 'init',
     );
 
-    subscriptions.add(ZegoUIKit()
-        .getRoomPropertiesStream(targetRoomID: liveID)
-        .listen(onRoomPropertiesUpdated));
+    onLiveStatusUpdated();
+    notifier.addListener(onLiveStatusUpdated);
 
-    ZegoUIKit()
-        .getRoomStateStream(targetRoomID: liveID)
-        .addListener(onRoomStateUpdated);
+    registerRoomEvents(liveID);
 
     if (ZegoLiveStreamingPageLifeCycle()
             .currentManagers
@@ -119,9 +114,9 @@ class ZegoLiveStreamingStatusManager {
       subTag: 'uninit',
     );
 
-    ZegoUIKit()
-        .getRoomStateStream(targetRoomID: liveID)
-        .removeListener(onRoomStateUpdated);
+    unregisterRoomEvents(liveID);
+
+    notifier.value = LiveStatus.notStart;
     notifier.removeListener(onLiveStatusUpdated);
 
     if (ZegoLiveStreamingPageLifeCycle()
@@ -144,20 +139,54 @@ class ZegoLiveStreamingStatusManager {
       );
     }
 
-    notifier.value = LiveStatus.notStart;
+    liveID = '';
+  }
 
-    for (final subscription in subscriptions) {
-      subscription?.cancel();
-    }
+  void registerRoomEvents(String liveID) {
+    onRoomPropertiesUpdated(
+      ZegoUIKit().getRoomProperties(targetRoomID: liveID),
+    );
+    onRoomPropertiesUpdatedSubscription = ZegoUIKit()
+        .getRoomPropertiesStream(targetRoomID: liveID)
+        .listen(onRoomPropertiesUpdated);
+
+    onRoomStateUpdated();
+    ZegoUIKit()
+        .getRoomStateStream(targetRoomID: liveID)
+        .addListener(onRoomStateUpdated);
+  }
+
+  void unregisterRoomEvents(String liveID) {
+    onRoomPropertiesUpdatedSubscription?.cancel();
+    onRoomPropertiesUpdatedSubscription = null;
+
+    ZegoUIKit()
+        .getRoomStateStream(targetRoomID: liveID)
+        .removeListener(onRoomStateUpdated);
+  }
+
+  void onRoomSwitched({
+    required String liveID,
+    ZegoUIKitPrebuiltLiveStreamingConfig? config,
+    ZegoUIKitPrebuiltLiveStreamingEvents? events,
+  }) {
+    ZegoLoggerService.logInfo(
+      'live id:$liveID, ',
+      tag: 'live.streaming.live-status-mgr',
+      subTag: 'onRoomSwitched',
+    );
+
+    unregisterRoomEvents(this.liveID);
+
+    this.liveID = liveID;
+
+    registerRoomEvents(this.liveID);
   }
 
   void onRoomStateUpdated() {
     if (!ZegoUIKit().getRoom(targetRoomID: liveID).isLogin) {
       return;
     }
-
-    onLiveStatusUpdated();
-    notifier.addListener(onLiveStatusUpdated);
 
     if (ZegoLiveStreamingPageLifeCycle()
         .currentManagers

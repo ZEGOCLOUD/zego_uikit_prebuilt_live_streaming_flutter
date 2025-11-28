@@ -116,6 +116,13 @@ class _ZegoLiveStreamingSwipingPageState
     pageController = LoopPageController(initialPage: startIndex);
     roomSwitchManager = ZegoLiveStreamingSwipingPageRoomSwitcher(
       configPlugins: widget.config.plugins,
+      onRoomSwitched: (String liveID) {
+        ZegoLiveStreamingPageLifeCycle().currentManagers.onRoomSwitched(
+              liveID: liveID,
+              config: widget.config,
+              events: widget.events,
+            );
+      },
     );
 
     ZegoLoggerService.logInfo(

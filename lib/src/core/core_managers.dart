@@ -3,10 +3,8 @@ import 'dart:async';
 
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
-
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
-
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.defines.dart';
@@ -42,17 +40,17 @@ class ZegoLiveStreamingManagers {
     if (_initialized) {
       ZegoLoggerService.logInfo(
         'had init',
-        tag: 'live-streaming',
-        subTag: 'core manager',
+        tag: 'live.streaming.core-mgr',
+        subTag: 'initPluginAndManagers',
       );
 
       return;
     }
 
     ZegoLoggerService.logInfo(
-      'init plugin and managers',
-      tag: 'live-streaming',
-      subTag: 'core manager',
+      '',
+      tag: 'live.streaming.core-mgr',
+      subTag: 'initPluginAndManagers',
     );
 
     _initialized = true;
@@ -93,16 +91,16 @@ class ZegoLiveStreamingManagers {
 
   Future<void> uninitPluginAndManagers() async {
     ZegoLoggerService.logInfo(
-      'uninit plugin and managers',
-      tag: 'live-streaming',
-      subTag: 'core manager',
+      '',
+      tag: 'live.streaming.core-mgr',
+      subTag: 'uninitPluginAndManagers',
     );
 
     if (!_initialized) {
       ZegoLoggerService.logInfo(
         'had not init',
-        tag: 'live-streaming',
-        subTag: 'core manager',
+        tag: 'live.streaming.core-mgr',
+        subTag: 'uninitPluginAndManagers',
       );
 
       return;
@@ -123,12 +121,36 @@ class ZegoLiveStreamingManagers {
 
     /// Even if from live hall, still need to uninit plugins, probably won't be used
     await plugins.uninit();
+
     await hostManager.uninit();
     await liveStatusManager.uninit();
     await liveDurationManager.uninit();
     connectManager.uninit();
 
     _liveID = '';
+  }
+
+  void onRoomSwitched({
+    required String liveID,
+    required ZegoUIKitPrebuiltLiveStreamingConfig config,
+    required ZegoUIKitPrebuiltLiveStreamingEvents? events,
+  }) {
+    ZegoLoggerService.logInfo(
+      'live id:$liveID, ',
+      tag: 'live.streaming.core-mgr',
+      subTag: 'onRoomSwitched',
+    );
+
+    _liveID = liveID;
+
+    hostManager.onRoomSwitched(liveID: liveID, config: config);
+    liveStatusManager.onRoomSwitched(liveID: liveID);
+    liveDurationManager.onRoomSwitched(liveID: liveID);
+    connectManager.onRoomSwitched(
+      liveID: liveID,
+      config: config,
+      events: events,
+    );
   }
 
   bool _initialized = false;

@@ -3,10 +3,8 @@ import 'dart:io' show Platform;
 
 // Flutter imports:
 import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
-
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/duration_time_board.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
@@ -391,6 +389,7 @@ class ZegoMinimizingStreamingPageState
       right: 0,
       top: 2.zR,
       child: ZegoLiveStreamingDurationTimeBoard(
+        liveID: widget.liveID,
         config: widget.durationConfig ?? ZegoLiveStreamingDurationConfig(),
         events: widget.durationEvents ?? ZegoLiveStreamingDurationEvents(),
         fontSize: 15.zR,

@@ -62,7 +62,8 @@ class ZegoLiveStreamingConnectManager {
   bool get isMaxCoHostReached => coHostCount.value >= maxCoHostCount;
 
   List<String> audienceIDsOfInvitingConnect = [];
-  List<StreamSubscription<dynamic>?> subscriptions = [];
+  List<StreamSubscription<dynamic>?> signalingSubscriptions = [];
+  List<StreamSubscription<dynamic>?> rtcSubscriptions = [];
 
   ZegoLiveStreamingRole get localRole {
     var role = ZegoLiveStreamingRole.audience;
@@ -138,28 +139,9 @@ class ZegoLiveStreamingConnectManager {
       subTag: 'connect manager',
     );
 
-    listenStream();
+    listenSignalingEvents();
 
-    ZegoUIKit()
-        .getRoomStateStream(targetRoomID: liveID)
-        .addListener(onRoomStateUpdated);
-  }
-
-  Future<bool> audienceCancelCoHostIfRequesting() async {
-    if (audienceLocalConnectStateNotifier.value ==
-        ZegoLiveStreamingAudienceConnectState.connecting) {
-      ZegoLoggerService.logInfo(
-        'local user is still in requesting connect, cancel the request internally',
-        tag: 'live-streaming-coHost',
-        subTag: 'connect manager',
-      );
-
-      return ZegoUIKitPrebuiltLiveStreamingController()
-          .coHost
-          .audienceCancelCoHostRequest();
-    }
-
-    return true;
+    registerRTCRoom(liveID);
   }
 
   void uninit() {
@@ -181,10 +163,6 @@ class ZegoLiveStreamingConnectManager {
       subTag: 'connect manager',
     );
 
-    ZegoUIKit()
-        .getRoomStateStream(targetRoomID: liveID)
-        .removeListener(onRoomStateUpdated);
-
     audienceLocalConnectStateNotifier.value =
         ZegoLiveStreamingAudienceConnectState.idle;
 
@@ -194,12 +172,55 @@ class ZegoLiveStreamingConnectManager {
     isEndCoHostDialogVisible = false;
     audienceIDsOfInvitingConnect.clear();
 
-    for (final subscription in subscriptions) {
+    unregisterRTCRoom(liveID);
+
+    for (final subscription in signalingSubscriptions) {
+      subscription?.cancel();
+    }
+
+    liveID = '';
+  }
+
+  void unregisterRTCRoom(String liveID) {
+    ZegoUIKit()
+        .getRoomStateStream(targetRoomID: liveID)
+        .removeListener(onRTCRoomStateUpdated);
+
+    for (final subscription in rtcSubscriptions) {
       subscription?.cancel();
     }
   }
 
-  void onRoomStateUpdated() {
+  void registerRTCRoom(String liveID) {
+    listenRTCCoHostEvents();
+
+    onRTCRoomStateUpdated();
+    ZegoUIKit()
+        .getRoomStateStream(targetRoomID: liveID)
+        .addListener(onRTCRoomStateUpdated);
+  }
+
+  void onRoomSwitched({
+    required String liveID,
+    ZegoUIKitPrebuiltLiveStreamingConfig? config,
+    ZegoUIKitPrebuiltLiveStreamingEvents? events,
+  }) {
+    ZegoLoggerService.logInfo(
+      'live id:$liveID, ',
+      tag: 'live-streaming-coHost',
+      subTag: 'onRoomSwitched',
+    );
+
+    unregisterRTCRoom(this.liveID);
+
+    this.liveID = liveID;
+    this.config = config;
+    this.events = events;
+
+    registerRTCRoom(this.liveID);
+  }
+
+  void onRTCRoomStateUpdated() {
     if (ZegoLiveStreamingRole.host == config?.role &&
         ZegoLiveStreamingPageLifeCycle()
                 .currentManagers
@@ -250,13 +271,28 @@ class ZegoLiveStreamingConnectManager {
             ZegoLiveStreamingAudienceConnectState.connected);
       });
     }
-
-    initCoHostMixin();
   }
 
-  void listenStream() {
+  Future<bool> audienceCancelCoHostIfRequesting() async {
+    if (audienceLocalConnectStateNotifier.value ==
+        ZegoLiveStreamingAudienceConnectState.connecting) {
+      ZegoLoggerService.logInfo(
+        'local user is still in requesting connect, cancel the request internally',
+        tag: 'live.streaming.connect-mgr',
+        subTag: 'connect manager',
+      );
+
+      return ZegoUIKitPrebuiltLiveStreamingController()
+          .coHost
+          .audienceCancelCoHostRequest();
+    }
+
+    return true;
+  }
+
+  void listenSignalingEvents() {
     if (config?.plugins.isNotEmpty ?? false) {
-      subscriptions
+      signalingSubscriptions
         ..add(ZegoUIKit()
             .getSignalingPlugin()
             .getInvitationReceivedStream()

@@ -3,10 +3,8 @@ import 'dart:async';
 
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
-
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
-
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/defines.dart';
@@ -68,17 +66,7 @@ class ZegoLiveStreamingHostManager {
     configIsHost = ZegoLiveStreamingRole.host ==
         (config?.role ?? ZegoLiveStreamingRole.audience);
 
-    subscriptions
-      ..add(ZegoUIKit()
-          .getRoomPropertiesStream(targetRoomID: liveID)
-          .listen(onRoomPropertiesUpdated))
-      ..add(ZegoUIKit()
-          .getUserListStream(targetRoomID: liveID)
-          .listen(onUserListUpdated));
-
-    ZegoUIKit()
-        .getRoomStateStream(targetRoomID: liveID)
-        .addListener(onRoomStateUpdated);
+    registerRoomEvents(liveID);
   }
 
   Future<void> uninit() async {
@@ -100,10 +88,6 @@ class ZegoLiveStreamingHostManager {
       subTag: 'uninit',
     );
 
-    ZegoUIKit()
-        .getRoomStateStream(targetRoomID: liveID)
-        .removeListener(onRoomStateUpdated);
-
     if (isLocalHost) {
       ZegoLoggerService.logInfo(
         'host uninit host property',
@@ -117,13 +101,63 @@ class ZegoLiveStreamingHostManager {
       );
     }
 
+    unregisterRoomEvents(liveID);
+
     hostUpdateEnabledNotifier.value = true;
     notifier.value = null;
     pendingHostID = '';
 
+    liveID = '';
+  }
+
+  void registerRoomEvents(String liveID) {
+    onRoomPropertiesUpdated(
+        ZegoUIKit().getRoomProperties(targetRoomID: liveID));
+    subscriptions.add(ZegoUIKit()
+        .getRoomPropertiesStream(targetRoomID: liveID)
+        .listen(onRoomPropertiesUpdated));
+
+    onUserListUpdated(ZegoUIKit().getAllUsers(targetRoomID: liveID));
+    subscriptions.add(ZegoUIKit()
+        .getUserListStream(targetRoomID: liveID)
+        .listen(onUserListUpdated));
+
+    onRoomStateUpdated();
+    ZegoUIKit()
+        .getRoomStateStream(targetRoomID: liveID)
+        .addListener(onRoomStateUpdated);
+  }
+
+  void unregisterRoomEvents(String liveID) {
+    ZegoUIKit()
+        .getRoomStateStream(targetRoomID: liveID)
+        .removeListener(onRoomStateUpdated);
+
     for (final subscription in subscriptions) {
       subscription?.cancel();
     }
+    subscriptions.clear();
+  }
+
+  void onRoomSwitched({
+    required String liveID,
+    required ZegoUIKitPrebuiltLiveStreamingConfig? config,
+  }) {
+    ZegoLoggerService.logInfo(
+      'live id:$liveID, ',
+      tag: 'live.streaming.host-mgr',
+      subTag: 'onRoomSwitched',
+    );
+
+    unregisterRoomEvents(this.liveID);
+
+    this.liveID = liveID;
+    this.config = config;
+
+    configIsHost = ZegoLiveStreamingRole.host ==
+        (config?.role ?? ZegoLiveStreamingRole.audience);
+
+    registerRoomEvents(this.liveID);
   }
 
   void onRoomStateUpdated() {
@@ -214,6 +248,12 @@ class ZegoLiveStreamingHostManager {
     }
 
     if (hostIDProperty.updateUserID == ZegoUIKit().getLocalUser().id) {
+      ZegoLoggerService.logInfo(
+        'cause by local user update, ignore',
+        tag: 'live.streaming.host-mgr',
+        subTag: 'onRoomPropertiesUpdated',
+      );
+
       return;
     }
 

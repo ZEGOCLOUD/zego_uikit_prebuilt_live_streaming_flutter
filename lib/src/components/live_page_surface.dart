@@ -207,6 +207,7 @@ class _ZegoLiveStreamingLivePageSurfaceState
       right: 0,
       top: 10,
       child: ZegoLiveStreamingDurationTimeBoard(
+        liveID: widget.liveID,
         config: widget.config.duration,
         events: widget.events?.duration,
       ),
