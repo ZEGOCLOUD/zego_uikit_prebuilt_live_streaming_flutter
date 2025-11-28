@@ -2,14 +2,12 @@
 import 'dart:async';
 import 'dart:convert';
 
+// Package imports:
+import 'package:collection/collection.dart';
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-
-// Package imports:
-import 'package:collection/collection.dart';
 import 'package:zego_uikit/zego_uikit.dart';
-
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/dialogs.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
@@ -25,20 +23,16 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/core/data.dart
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/core/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/core/event/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/core/mixer.dart';
+
 import 'defines.dart';
 import 'protocol.dart';
 
-part 'completer.dart';
-
-part 'dialogs.dart';
-
-part 'host.pk.dart';
-
-part 'host.request.dart';
-
-part 'pk_users.dart';
-
 part '../event/events.dart';
+part 'completer.dart';
+part 'dialogs.dart';
+part 'host.pk.dart';
+part 'host.request.dart';
+part 'pk_users.dart';
 
 mixin ZegoUIKitPrebuiltLiveStreamingPKServices {
   bool _serviceInitialized = false;
@@ -73,9 +67,9 @@ mixin ZegoUIKitPrebuiltLiveStreamingPKServices {
     }
 
     ZegoLoggerService.logInfo(
-      'update pk state, from ${pkStateNotifier.value} to $value',
+      'from ${pkStateNotifier.value} to $value',
       tag: 'live.streaming.pk.services',
-      subTag: 'service',
+      subTag: 'updatePKState',
     );
     pkStateNotifier.value = value;
 
@@ -112,7 +106,7 @@ mixin ZegoUIKitPrebuiltLiveStreamingPKServices {
       ZegoLoggerService.logInfo(
         'had already init',
         tag: 'live.streaming.pk.services',
-        subTag: 'service',
+        subTag: 'init',
       );
 
       return;
@@ -130,9 +124,9 @@ mixin ZegoUIKitPrebuiltLiveStreamingPKServices {
     listenPKUserChanged();
 
     ZegoLoggerService.logInfo(
-      'init',
+      '',
       tag: 'live.streaming.pk.services',
-      subTag: 'service',
+      subTag: 'init',
     );
   }
 
@@ -141,16 +135,16 @@ mixin ZegoUIKitPrebuiltLiveStreamingPKServices {
       ZegoLoggerService.logInfo(
         'not init before',
         tag: 'live.streaming.pk.services',
-        subTag: 'service',
+        subTag: 'uninit',
       );
 
       return;
     }
 
     ZegoLoggerService.logInfo(
-      'uninit',
+      '',
       tag: 'live.streaming.pk.services',
-      subTag: 'service',
+      subTag: 'uninit',
     );
 
     removeListenPKUserChanged();
@@ -173,7 +167,7 @@ mixin ZegoUIKitPrebuiltLiveStreamingPKServices {
     ZegoLoggerService.logInfo(
       'targetHostIDs:$targetHostIDs, isMute:$isMute, ',
       tag: 'live.streaming.pk.services',
-      subTag: 'service, muteUserAudio',
+      subTag: 'muteUserAudio',
     );
 
     return _mixer.muteUserAudio(

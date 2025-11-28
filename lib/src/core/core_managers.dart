@@ -43,7 +43,7 @@ class ZegoLiveStreamingManagers {
       ZegoLoggerService.logInfo(
         'had init',
         tag: 'live.streaming.core-mgr',
-        subTag: 'initPluginAndManagers',
+        subTag: 'init',
       );
 
       return;
@@ -52,7 +52,7 @@ class ZegoLiveStreamingManagers {
     ZegoLoggerService.logInfo(
       '',
       tag: 'live.streaming.core-mgr',
-      subTag: 'initPluginAndManagers',
+      subTag: 'init',
     );
 
     _initialized = true;
@@ -95,14 +95,14 @@ class ZegoLiveStreamingManagers {
     ZegoLoggerService.logInfo(
       '',
       tag: 'live.streaming.core-mgr',
-      subTag: 'uninitPluginAndManagers',
+      subTag: 'uninit',
     );
 
     if (!_initialized) {
       ZegoLoggerService.logInfo(
         'had not init',
         tag: 'live.streaming.core-mgr',
-        subTag: 'uninitPluginAndManagers',
+        subTag: 'uninit',
       );
 
       return;

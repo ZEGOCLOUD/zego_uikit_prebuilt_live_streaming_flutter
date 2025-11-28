@@ -3,11 +3,11 @@ import 'dart:async';
 import 'dart:io' show Platform;
 import 'dart:typed_data';
 
-// Flutter imports:
-import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:floating/floating.dart';
+
+// Flutter imports:
+import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
@@ -44,35 +44,27 @@ part 'controller/audio_video.dart';
 
 part 'controller/co.host.dart';
 
+part 'controller/hall.dart';
+
+part 'controller/log.dart';
+
+part 'controller/media.dart';
+
 part 'controller/message.dart';
 
 part 'controller/minimize.dart';
 
 part 'controller/pip.dart';
 
-part 'controller/log.dart';
-
-part 'controller/room.dart';
-
-part 'controller/user.dart';
-
-part 'controller/screen.dart';
-
-part 'controller/media.dart';
-
 part 'controller/pk.dart';
-
-part 'controller/swiping.dart';
-
-part 'controller/private/private.dart';
-
-part 'controller/hall.dart';
-
-part 'controller/private/hall.dart';
 
 part 'controller/private/audio_video.dart';
 
 part 'controller/private/co.host.dart';
+
+part 'controller/private/hall.dart';
+
+part 'controller/private/media.dart';
 
 part 'controller/private/message.dart';
 
@@ -80,17 +72,25 @@ part 'controller/private/minimize.dart';
 
 part 'controller/private/pip.dart';
 
-part 'controller/private/room.dart';
-
-part 'controller/private/user.dart';
-
 part 'controller/private/pk.dart';
 
-part 'controller/private/swiping.dart';
+part 'controller/private/private.dart';
+
+part 'controller/private/room.dart';
 
 part 'controller/private/screen.dart';
 
-part 'controller/private/media.dart';
+part 'controller/private/swiping.dart';
+
+part 'controller/private/user.dart';
+
+part 'controller/room.dart';
+
+part 'controller/screen.dart';
+
+part 'controller/swiping.dart';
+
+part 'controller/user.dart';
 
 /// Used to control the live streaming functionality.
 ///
@@ -146,8 +146,8 @@ class ZegoUIKitPrebuiltLiveStreamingController
   ZegoUIKitPrebuiltLiveStreamingController._internal() {
     ZegoLoggerService.logInfo(
       'ZegoUIKitPrebuiltLiveStreamingController create',
-      tag: 'live.streaming.',
-      subTag: 'controller',
+      tag: 'live.streaming.controller',
+      subTag: 'constructor',
     );
   }
 

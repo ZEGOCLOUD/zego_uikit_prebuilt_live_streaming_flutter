@@ -200,15 +200,15 @@ class ZegoLiveStreamingPlugins {
     return ZegoUIKit().getSignalingPlugin().joinRoom(liveID).then((result) {
       if (result.error != null) {
         ZegoLoggerService.logInfo(
-          'plugins joinRoom failed: ${result.error}',
+          'failed: ${result.error}',
           tag: 'live.streaming.plugin',
-          subTag: 'plugin',
+          subTag: 'joinRoom',
         );
       } else {
         roomHasInitLogin = true;
 
         ZegoLoggerService.logInfo(
-          'plugins joinRoom success',
+          'success',
           tag: 'live.streaming.plugin',
           subTag: 'plugin',
         );
@@ -308,7 +308,7 @@ class ZegoLiveStreamingPlugins {
       ZegoLoggerService.logInfo(
         'effects plugin init done',
         tag: 'live.streaming.plugin',
-        subTag: 'install',
+        subTag: 'initAdvanceEffectsPlugins',
       );
     });
   }
@@ -317,7 +317,7 @@ class ZegoLiveStreamingPlugins {
     ZegoLoggerService.logInfo(
       'effects plugin uninit',
       tag: 'live.streaming.plugin',
-      subTag: 'install',
+      subTag: 'uninitAdvanceEffectsPlugins',
     );
 
     if (ZegoPluginAdapter().getPlugin(ZegoUIKitPluginType.beauty) != null) {

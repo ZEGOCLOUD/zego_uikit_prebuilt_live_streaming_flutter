@@ -34,10 +34,9 @@ class ZegoLiveStreamingControllerPIPAndroid
     final isPipAvailable = await _private.floating.isPipAvailable;
     if (!isPipAvailable) {
       ZegoLoggerService.logError(
-        'enable, '
         'but pip is not available, ',
         tag: 'live.streaming.controller.pip',
-        subTag: 'controller.pip',
+        subTag: 'enable',
       );
 
       return ZegoPiPStatus.unavailable;
@@ -53,9 +52,9 @@ class ZegoLiveStreamingControllerPIPAndroid
           .toZego();
     } catch (e) {
       ZegoLoggerService.logInfo(
-        'enable exception:${e.toString()}',
+        'exception:${e.toString()}',
         tag: 'live.streaming.controller.pip',
-        subTag: 'controller.pip',
+        subTag: 'enable',
       );
     }
     return status;
@@ -74,9 +73,9 @@ class ZegoLiveStreamingControllerPIPAndroid
       );
     } catch (e) {
       ZegoLoggerService.logInfo(
-        'enableWhenBackground exception:${e.toString()}',
+        'exception:${e.toString()}',
         tag: 'live.streaming.controller.pip',
-        subTag: 'controller.pip',
+        subTag: 'enableWhenBackground',
       );
     }
     return status;
@@ -91,9 +90,9 @@ class ZegoLiveStreamingControllerPIPAndroid
       await _private.floating.cancelOnLeavePiP();
     } catch (e) {
       ZegoLoggerService.logInfo(
-        'cancelOnLeavePiP exception:${e.toString()}',
+        'exception:${e.toString()}',
         tag: 'live.streaming.controller.pip',
-        subTag: 'controller.pip',
+        subTag: 'cancelOnLeavePiP',
       );
     }
   }
@@ -126,9 +125,9 @@ class ZegoCallControllerPIPImplPrivateAndroid {
     required ZegoUIKitPrebuiltLiveStreamingConfig? config,
   }) async {
     ZegoLoggerService.logInfo(
-      'init by prebuilt',
+      '',
       tag: 'live.streaming.controller.pip',
-      subTag: 'controller.pip.p android',
+      subTag: 'initByPrebuilt',
     );
 
     this.config = config;
@@ -151,9 +150,9 @@ class ZegoCallControllerPIPImplPrivateAndroid {
 
   void uninitByPrebuilt() {
     ZegoLoggerService.logInfo(
-      'un-init by prebuilt',
+      '',
       tag: 'live.streaming.controller.pip',
-      subTag: 'controller.pip.p android',
+      subTag: 'uninitByPrebuilt',
     );
 
     config = null;
@@ -174,10 +173,9 @@ class ZegoCallControllerPIPImplPrivateAndroid {
     final isPipAvailable = await floating.isPipAvailable;
     if (!isPipAvailable) {
       ZegoLoggerService.logError(
-        'enableWhenBackground, '
         'but pip is not available, ',
         tag: 'live.streaming.controller.pip',
-        subTag: 'controller.pip',
+        subTag: 'enableWhenBackground',
       );
 
       return ZegoPiPStatus.unavailable;
@@ -192,10 +190,9 @@ class ZegoCallControllerPIPImplPrivateAndroid {
           .toZego();
     } catch (e) {
       ZegoLoggerService.logWarn(
-        'enableWhenBackground, '
         'exception:$e, ',
         tag: 'live.streaming.controller.pip',
-        subTag: 'controller.pip',
+        subTag: 'enableWhenBackground',
       );
 
       return ZegoPiPStatus.disabled;
@@ -215,9 +212,9 @@ class ZegoCallControllerPIPImplPrivateAndroid {
 
   void onPIPStatusUpdated(PiPStatus status) {
     ZegoLoggerService.logInfo(
-      'onPIPStatusUpdated, $status',
+      'status:$status, ',
       tag: 'live.streaming.controller.pip',
-      subTag: 'controller.pip.p android',
+      subTag: 'onPIPStatusUpdated',
     );
 
     switch (status) {

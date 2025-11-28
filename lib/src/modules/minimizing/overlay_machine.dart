@@ -4,11 +4,11 @@ import 'dart:async';
 // Package imports:
 import 'package:statemachine/statemachine.dart' as sm;
 import 'package:zego_uikit/zego_uikit.dart';
-
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/lifecycle.dart';
+
 import 'defines.dart';
 
 /// @nodoc
@@ -59,7 +59,7 @@ class ZegoLiveStreamingMiniOverlayMachine {
     ZegoLoggerService.logInfo(
       'change state outside to $state',
       tag: 'live.streaming.minimize.machine',
-      subTag: 'overlay machine',
+      subTag: 'changeState',
     );
 
     switch (state) {
@@ -88,16 +88,16 @@ class ZegoLiveStreamingMiniOverlayMachine {
 
   void _init() {
     ZegoLoggerService.logInfo(
-      'init',
+      '',
       tag: 'live.streaming.minimize.machine',
-      subTag: 'overlay machine',
+      subTag: 'init',
     );
 
     _machine.onAfterTransition.listen((event) {
       ZegoLoggerService.logInfo(
-        'mini overlay, from ${event.source} to ${event.target}',
+        'from ${event.source} to ${event.target}',
         tag: 'live.streaming.minimize.machine',
-        subTag: 'overlay machine',
+        subTag: 'onAfterTransition',
       );
 
       for (final listener in _onStateChangedListeners) {
@@ -117,7 +117,7 @@ class ZegoLiveStreamingMiniOverlayMachine {
     ZegoLoggerService.logInfo(
       'local user removed by $fromUserID',
       tag: 'live.streaming.minimize.machine',
-      subTag: 'mini overlay page, removed users',
+      subTag: 'onMeRemovedFromRoom',
     );
     changeState(ZegoLiveStreamingMiniOverlayPageState.idle);
 

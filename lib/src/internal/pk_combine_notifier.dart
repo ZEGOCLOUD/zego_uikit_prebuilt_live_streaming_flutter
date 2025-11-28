@@ -29,11 +29,10 @@ class ZegoLiveStreamingPKBattleStateCombineNotifier {
         v2RequestReceivedEventInMinimizingNotifier,
   }) {
     ZegoLoggerService.logInfo(
-      'init, '
       'v2 State:${v2StateNotifier.value}, '
       'v2 RequestReceivedEventInMinimizing:${v2RequestReceivedEventInMinimizingNotifier.value}, ',
-      tag: 'live.streaming.pk',
-      subTag: 'pk combine state notifier',
+      tag: 'live.streaming.pk.state-notifier',
+      subTag: 'init',
     );
 
     _v2StateNotifier = v2StateNotifier;
@@ -49,9 +48,9 @@ class ZegoLiveStreamingPKBattleStateCombineNotifier {
 
   void uninit() {
     ZegoLoggerService.logInfo(
-      'uninit',
-      tag: 'live.streaming.pk',
-      subTag: 'pk combine state notifier',
+      '',
+      tag: 'live.streaming.pk.state-notifier',
+      subTag: 'uninit',
     );
 
     _v2StateNotifier?.removeListener(_onV2StateChanged);
@@ -67,9 +66,9 @@ class ZegoLiveStreamingPKBattleStateCombineNotifier {
         _v2StateNotifier?.value ?? ZegoLiveStreamingPKBattleState.idle;
 
     ZegoLoggerService.logInfo(
-      '_onV2StateChanged, state:$pkBattleState',
-      tag: 'live.streaming.pk',
-      subTag: 'pk combine state notifier',
+      'state:$pkBattleState',
+      tag: 'live.streaming.pk.state-notifier',
+      subTag: 'onStateChanged',
     );
 
     state.value = pkBattleState == ZegoLiveStreamingPKBattleState.inPK ||
@@ -78,9 +77,9 @@ class ZegoLiveStreamingPKBattleStateCombineNotifier {
 
   void onV2RequestReceivedEventInMinimizingChanged() {
     ZegoLoggerService.logInfo(
-      'onV2RequestReceivedEventInMinimizingChanged, event:${_v2RequestReceivedEventInMinimizingNotifier?.value}',
-      tag: 'live.streaming.pk',
-      subTag: 'pk combine state notifier',
+      'event:${_v2RequestReceivedEventInMinimizingNotifier?.value}',
+      tag: 'live.streaming.pk.state-notifier',
+      subTag: 'onRequestReceivedEventInMinimizingChanged',
     );
 
     hasRequestEvent.value =

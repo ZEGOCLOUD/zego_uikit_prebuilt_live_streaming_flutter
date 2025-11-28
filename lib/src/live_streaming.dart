@@ -124,8 +124,8 @@ class _ZegoUIKitPrebuiltLiveStreamingState
         'events: ${widget.events}, '
         'isPrebuiltFromMinimizing:$isPrebuiltFromMinimizing, '
         'isPrebuiltFromHall:$isPrebuiltFromHall, ',
-        tag: 'live.streaming.',
-        subTag: 'prebuilt',
+        tag: 'live.streaming.prebuilt',
+        subTag: 'initState',
       );
     });
 
@@ -167,9 +167,9 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     ZegoUIKit().reporter().report(event: ZegoLiveStreamingReporter.eventUninit);
 
     ZegoLoggerService.logInfo(
-      '----------dispose----------',
-      tag: 'live.streaming.',
-      subTag: 'ZegoUIKitPrebuiltLiveStreaming',
+      '',
+      tag: 'live.streaming.prebuilt',
+      subTag: 'dispose',
     );
   }
 

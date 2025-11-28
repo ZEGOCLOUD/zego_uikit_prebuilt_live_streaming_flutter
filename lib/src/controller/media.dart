@@ -54,11 +54,10 @@ class ZegoLiveStreamingControllerMediaImpl
     bool autoStart = true,
   }) async {
     ZegoLoggerService.logInfo(
-      'play, '
       'filePathOrURL:$filePathOrURL, '
       'enableRepeat:$enableRepeat, ',
       tag: 'live.streaming.controller.media',
-      subTag: 'controller.media',
+      subTag: 'play',
     );
 
     return ZegoUIKit().playMedia(
@@ -71,9 +70,9 @@ class ZegoLiveStreamingControllerMediaImpl
   /// stop play current media
   Future<void> stop() async {
     ZegoLoggerService.logInfo(
-      'stop, ',
+      '',
       tag: 'live.streaming.controller.media',
-      subTag: 'controller.media',
+      subTag: 'stop',
     );
 
     return ZegoUIKit().stopMedia();
@@ -82,9 +81,9 @@ class ZegoLiveStreamingControllerMediaImpl
   /// destroy current media
   Future<void> destroy() async {
     ZegoLoggerService.logInfo(
-      'destroy, ',
+      '',
       tag: 'live.streaming.controller.media',
-      subTag: 'controller.media',
+      subTag: 'destroy',
     );
 
     return ZegoUIKit().destroyMedia();
@@ -93,9 +92,9 @@ class ZegoLiveStreamingControllerMediaImpl
   /// pause current media
   Future<void> pause() async {
     ZegoLoggerService.logInfo(
-      'pause, ',
+      '',
       tag: 'live.streaming.controller.media',
-      subTag: 'controller.media',
+      subTag: 'pause',
     );
 
     return ZegoUIKit().pauseMedia();
@@ -104,9 +103,9 @@ class ZegoLiveStreamingControllerMediaImpl
   /// resume current media
   Future<void> resume() async {
     ZegoLoggerService.logInfo(
-      'resume, ',
+      '',
       tag: 'live.streaming.controller.media',
-      subTag: 'controller.media',
+      subTag: 'resume',
     );
 
     return ZegoUIKit().resumeMedia();
@@ -116,10 +115,9 @@ class ZegoLiveStreamingControllerMediaImpl
   /// - [millisecond] Point in time of specified playback progress
   Future<ZegoUIKitMediaSeekToResult> seekTo(int millisecond) async {
     ZegoLoggerService.logInfo(
-      'seekTo, '
       'millisecond:$millisecond, ',
       tag: 'live.streaming.controller.media',
-      subTag: 'controller.media',
+      subTag: 'seekTo',
     );
 
     return ZegoUIKit().seekTo(millisecond);
@@ -137,11 +135,10 @@ class ZegoLiveStreamingControllerMediaImpl
     bool isSyncToRemote = false,
   }) async {
     ZegoLoggerService.logInfo(
-      'setVolume, '
       'volume:$volume, '
       'isSyncToRemote:$isSyncToRemote, ',
       tag: 'live.streaming.controller.media',
-      subTag: 'controller.media',
+      subTag: 'setVolume',
     );
 
     return ZegoUIKit().setMediaVolume(
@@ -153,10 +150,9 @@ class ZegoLiveStreamingControllerMediaImpl
   /// mute current media
   Future<void> muteLocal(bool mute) async {
     ZegoLoggerService.logInfo(
-      'muteLocal, '
       'mute:$mute, ',
       tag: 'live.streaming.controller.media',
-      subTag: 'controller.media',
+      subTag: 'muteLocal',
     );
 
     return ZegoUIKit().muteMediaLocal(mute);
@@ -165,9 +161,9 @@ class ZegoLiveStreamingControllerMediaImpl
   /// pick pure audio media file
   Future<List<ZegoUIKitPlatformFile>> pickPureAudioFile() async {
     ZegoLoggerService.logInfo(
-      'pickPureAudioFile, ',
+      '',
       tag: 'live.streaming.controller.media',
-      subTag: 'controller.media',
+      subTag: 'pickPureAudioFile',
     );
 
     return ZegoUIKit().pickPureAudioMediaFile();
@@ -176,9 +172,9 @@ class ZegoLiveStreamingControllerMediaImpl
   /// pick video media file
   Future<List<ZegoUIKitPlatformFile>> pickVideoFile() async {
     ZegoLoggerService.logInfo(
-      'pickVideoFile, ',
+      '',
       tag: 'live.streaming.controller.media',
-      subTag: 'controller.media',
+      subTag: 'pickVideoFile',
     );
 
     return ZegoUIKit().pickVideoMediaFile();
@@ -190,10 +186,10 @@ class ZegoLiveStreamingControllerMediaImpl
   Future<List<ZegoUIKitPlatformFile>> pickFile(
       {List<String>? allowedExtensions}) async {
     ZegoLoggerService.logInfo(
-      'pickFile, '
+      ''
       'allowedExtensions:$allowedExtensions, ',
       tag: 'live.streaming.controller.media',
-      subTag: 'controller.media',
+      subTag: 'pickFile',
     );
 
     return ZegoUIKit().pickMediaFile(

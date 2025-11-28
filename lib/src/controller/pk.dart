@@ -78,7 +78,7 @@ class ZegoLiveStreamingControllerPKImpl
       'customData:$customData, '
       'isAutoAccept:$isAutoAccept, ',
       tag: 'live.streaming.controller.pk',
-      subTag: 'controller.pk, sendRequest',
+      subTag: 'sendRequest',
     );
 
     return ZegoUIKitPrebuiltLiveStreamingPK.instance.sendPKBattleRequest(
@@ -102,7 +102,7 @@ class ZegoLiveStreamingControllerPKImpl
       'targetHostIDs:$targetHostIDs, '
       'customData:$customData, ',
       tag: 'live.streaming.controller.pk',
-      subTag: 'controller.pk, cancelRequest',
+      subTag: 'cancelRequest',
     );
 
     return ZegoUIKitPrebuiltLiveStreamingPK.instance.cancelPKBattleRequest(
@@ -128,7 +128,7 @@ class ZegoLiveStreamingControllerPKImpl
       'timeout:$timeout, '
       'customData:$customData, ',
       tag: 'live.streaming.controller.pk',
-      subTag: 'controller.pk, acceptRequest',
+      subTag: 'acceptRequest',
     );
 
     return ZegoUIKitPrebuiltLiveStreamingPK.instance.acceptPKBattleRequest(
@@ -155,7 +155,7 @@ class ZegoLiveStreamingControllerPKImpl
       'timeout:$timeout, '
       'customData:$customData, ',
       tag: 'live.streaming.controller.pk',
-      subTag: 'controller.pk, rejectRequest',
+      subTag: 'rejectRequest',
     );
 
     return ZegoUIKitPrebuiltLiveStreamingPK.instance.rejectPKBattleRequest(
@@ -173,7 +173,7 @@ class ZegoLiveStreamingControllerPKImpl
     ZegoLoggerService.logInfo(
       'quit',
       tag: 'live.streaming.controller.pk',
-      subTag: 'controller.pk, quit',
+      subTag: 'quit',
     );
 
     return ZegoUIKitPrebuiltLiveStreamingPK.instance.quitPKBattle(
@@ -187,7 +187,7 @@ class ZegoLiveStreamingControllerPKImpl
     ZegoLoggerService.logInfo(
       'stop',
       tag: 'live.streaming.controller.pk',
-      subTag: 'controller.pk, stop',
+      subTag: 'stop',
     );
 
     return ZegoUIKitPrebuiltLiveStreamingPK.instance.stopPKBattle(
@@ -206,7 +206,7 @@ class ZegoLiveStreamingControllerPKImpl
     ZegoLoggerService.logInfo(
       'targetHostIDs:$targetHostIDs, isMute:$isMute, ',
       tag: 'live.streaming.controller.pk',
-      subTag: 'controller.pk, muteAudios',
+      subTag: 'muteAudios',
     );
 
     return ZegoUIKitPrebuiltLiveStreamingPK.instance.muteUserAudio(

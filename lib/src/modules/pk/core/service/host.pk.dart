@@ -16,7 +16,7 @@ extension PKServiceHost on ZegoUIKitPrebuiltLiveStreamingPKServices {
         'is living:$isLiving, '
         'is host:$isHost, ',
         tag: 'live.streaming.pk.services',
-        subTag: 'service, host, quitPKBattle',
+        subTag: 'quitPKBattle',
       );
 
       return ZegoLiveStreamingPKServiceResult(
@@ -32,9 +32,9 @@ extension PKServiceHost on ZegoUIKitPrebuiltLiveStreamingPKServices {
     }
 
     ZegoLoggerService.logInfo(
-      'quit pk battle, force:$force',
+      'force:$force',
       tag: 'live.streaming.pk.services',
-      subTag: 'service, host, quitPKBattle',
+      subTag: 'quitPKBattle',
     );
 
     updatePKUsers([]);
@@ -52,7 +52,7 @@ extension PKServiceHost on ZegoUIKitPrebuiltLiveStreamingPKServices {
     ZegoLoggerService.logInfo(
       'requestID:$requestID, result:$quitResult',
       tag: 'live.streaming.pk.services',
-      subTag: 'service, host, quitPKBattle',
+      subTag: 'quitPKBattle',
     );
 
     ZegoLiveStreamingReporter().report(
@@ -85,7 +85,7 @@ extension PKServiceHost on ZegoUIKitPrebuiltLiveStreamingPKServices {
         'is host:$isHost, '
         'isRequestFromLocal:$isRequestFromLocal, ',
         tag: 'live.streaming.pk.services',
-        subTag: 'service, host, stopPKBattle',
+        subTag: 'stopPKBattle',
       );
 
       return ZegoLiveStreamingPKServiceResult(
@@ -116,7 +116,7 @@ extension PKServiceHost on ZegoUIKitPrebuiltLiveStreamingPKServices {
     ZegoLoggerService.logInfo(
       'requestID:$requestID, result:$endResult',
       tag: 'live.streaming.pk.services',
-      subTag: 'service, host, stopPKBattle',
+      subTag: 'stopPKBattle',
     );
 
     ZegoLiveStreamingReporter().report(

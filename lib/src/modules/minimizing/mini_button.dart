@@ -54,7 +54,7 @@ class _ZegoLiveStreamingMinimizingButtonState
           ZegoLoggerService.logInfo(
             'is minimizing, ignore',
             tag: 'live.streaming.minimize.button',
-            subTag: 'overlay button',
+            subTag: 'onTap',
           );
 
           return;

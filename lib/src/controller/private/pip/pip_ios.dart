@@ -39,8 +39,8 @@ class ZegoLiveStreamingControllerIOSPIP
     if (systemVersion.major < 15) {
       ZegoLoggerService.logInfo(
         'not support smaller than 15',
-        tag: 'uikit-channel',
-        subTag: 'enablePIPInIOS',
+        tag: 'live.streaming.controller.pip',
+        subTag: 'enable',
       );
 
       return ZegoPiPStatus.unavailable;
@@ -49,8 +49,8 @@ class ZegoLiveStreamingControllerIOSPIP
     if (!_private.isSupportInConfig) {
       ZegoLoggerService.logInfo(
         'not enable PIP in config',
-        tag: 'uikit-channel',
-        subTag: 'enablePIPInIOS',
+        tag: 'live.streaming.controller.pip',
+        subTag: 'enable',
       );
 
       return ZegoPiPStatus.unavailable;
@@ -73,9 +73,9 @@ class ZegoLiveStreamingControllerIOSPIP
       );
     } catch (e) {
       ZegoLoggerService.logInfo(
-        'enableWhenBackground exception:${e.toString()}',
+        'exception:${e.toString()}',
         tag: 'live.streaming.controller.pip',
-        subTag: 'controller.pip',
+        subTag: 'enableWhenBackground',
       );
     }
     return status;
@@ -124,7 +124,7 @@ class ZegoCallControllerPIPImplPrivateIOS {
           ZegoLoggerService.logInfo(
             'not support pip smaller than 15',
             tag: 'live.streaming.controller.pip',
-            subTag: 'controller.pip',
+            subTag: 'isSupportInConfig',
           );
 
           _isSupportInConfig = false;
@@ -139,18 +139,18 @@ class ZegoCallControllerPIPImplPrivateIOS {
     required ZegoUIKitPrebuiltLiveStreamingConfig? config,
   }) async {
     ZegoLoggerService.logInfo(
-      'init by prebuilt',
+      '',
       tag: 'live.streaming.controller.pip',
-      subTag: 'controller.pip.p ios',
+      subTag: 'initByPrebuilt',
     );
 
     this.config = config;
 
     if (!Platform.isIOS) {
       ZegoLoggerService.logInfo(
-        'initByPrebuilt, only support iOS',
+        'only support iOS',
         tag: 'live.streaming.controller.pip',
-        subTag: 'controller.pip',
+        subTag: 'initByPrebuilt',
       );
 
       return;
@@ -184,9 +184,9 @@ class ZegoCallControllerPIPImplPrivateIOS {
 
   void uninitByPrebuilt() {
     ZegoLoggerService.logInfo(
-      'un-init by prebuilt',
+      '',
       tag: 'live.streaming.controller.pip',
-      subTag: 'controller.pip.p ios',
+      subTag: 'uninitByPrebuilt',
     );
 
     config = null;
@@ -295,9 +295,9 @@ class ZegoCallControllerPIPImplPrivateIOS {
   /// sync app background state
   void _onAppLifecycleStateChanged(AppLifecycleState appLifecycleState) async {
     ZegoLoggerService.logInfo(
-      '_onAppLifecycleStateChanged, $appLifecycleState',
+      'state:$appLifecycleState',
       tag: 'live.streaming.controller.pip',
-      subTag: 'controller.pip.p ios',
+      subTag: 'onAppLifecycleStateChanged',
     );
 
     if (!isSupportInConfig) {

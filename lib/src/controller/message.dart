@@ -22,8 +22,8 @@ class ZegoLiveStreamingControllerMessageImpl
     if (!private._enableProperty.value) {
       ZegoLoggerService.logInfo(
         'chat enabled property is false, not allow to send message',
-        tag: 'live.streaming.message',
-        subTag: 'controller.message',
+        tag: 'live-streaming',
+        subTag: 'send',
       );
 
       return false;
