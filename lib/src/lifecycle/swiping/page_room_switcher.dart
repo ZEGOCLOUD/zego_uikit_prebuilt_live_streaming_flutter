@@ -185,6 +185,23 @@ class ZegoLiveStreamingSwipingPageRoomSwitcher {
     );
 
     try {
+      /// 不用stop publish，因为coHost状态不允许滑动
+      final hostStreamID = ZegoLiveStreamingPageLifeCycle()
+              .currentManagers
+              .hostManager
+              .notifier
+              .value
+              ?.streamID ??
+          '';
+      await ZegoUIKit().stopPlayingAllStream(
+        targetRoomID: ZegoUIKit().getCurrentRoom().id,
+        ignoreStreamIDs: hostStreamID.isEmpty
+            ? []
+            : [
+                hostStreamID // host流不能停
+              ],
+      );
+
       await ZegoUIKit().switchRoom(
         toRoomID: targetRoomID,
         token: token,

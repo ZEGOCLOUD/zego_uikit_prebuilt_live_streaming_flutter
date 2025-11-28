@@ -430,6 +430,23 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
         } else {
           try {
             if (widget.isPrebuiltFromHall) {
+              ZegoUIKit().stopPublishingAllStream(targetRoomID: widget.liveID);
+              final hostStreamID = ZegoLiveStreamingPageLifeCycle()
+                      .currentManagers
+                      .hostManager
+                      .notifier
+                      .value
+                      ?.streamID ??
+                  '';
+              ZegoUIKit().stopPlayingAllStream(
+                targetRoomID: widget.liveID,
+                ignoreStreamIDs: hostStreamID.isEmpty
+                    ? []
+                    : [
+                        hostStreamID // host流不能停
+                      ],
+              );
+
               widget.events?.hall.onPagePushReplace?.call(
                 context,
                 widget.liveID,
