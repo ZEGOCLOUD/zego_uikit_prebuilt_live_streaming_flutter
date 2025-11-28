@@ -146,7 +146,7 @@ class ZegoLiveStreamingHostManager {
     required ZegoUIKitPrebuiltLiveStreamingConfig? config,
   }) {
     ZegoLoggerService.logInfo(
-      'live id:$liveID, ',
+      'from ${this.liveID} to $liveID, ',
       tag: 'live.streaming.host-mgr',
       subTag: 'onRoomSwitched',
     );

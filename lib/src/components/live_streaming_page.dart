@@ -103,6 +103,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
   ZegoLiveStreamingEventListener? _eventListener;
 
   bool isFromMinimizing = false;
+  BuildContext? _savedContext;
 
   @override
   void initState() {
@@ -117,6 +118,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
     );
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      _savedContext = context;
       ZegoLiveStreamingPageLifeCycle().updateContextQuery(() {
         return context;
       });
@@ -160,6 +162,12 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
   void dispose() {
     super.dispose();
 
+    ZegoLoggerService.logInfo(
+      'dispose',
+      tag: 'live.streaming.page',
+      subTag: 'prebuilt',
+    );
+
     _eventListener?.uninit();
 
     WidgetsBinding.instance.removeObserver(this);
@@ -178,11 +186,8 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
       subscription?.cancel();
     }
 
-    ZegoLoggerService.logInfo(
-      'dispose',
-      tag: 'live.streaming.page',
-      subTag: 'prebuilt',
-    );
+    ZegoLiveStreamingPageLifeCycle()
+        .updateContextQuery(null, contextToRemove: _savedContext);
   }
 
   @override

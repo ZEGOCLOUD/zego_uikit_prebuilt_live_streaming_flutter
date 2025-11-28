@@ -3,10 +3,8 @@ import 'dart:async';
 
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
-
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
-
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.defines.dart';
@@ -130,6 +128,18 @@ class ZegoLiveStreamingManagers {
     connectManager.uninit();
 
     _liveID = '';
+  }
+
+  void onRoomWillSwitch({
+    required String liveID,
+  }) {
+    ZegoLoggerService.logInfo(
+      'live id:$liveID, ',
+      tag: 'live.streaming.core-mgr',
+      subTag: 'onRoomWillSwitch',
+    );
+
+    connectManager.onRoomWillSwitch(liveID: liveID);
   }
 
   void onRoomSwitched({

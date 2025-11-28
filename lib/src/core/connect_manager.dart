@@ -3,11 +3,9 @@ import 'dart:async';
 
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
-
 // Package imports:
 import 'package:permission_handler/permission_handler.dart';
 import 'package:zego_uikit/zego_uikit.dart';
-
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/dialogs.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/permissions.dart';
@@ -200,13 +198,29 @@ class ZegoLiveStreamingConnectManager {
         .addListener(onRTCRoomStateUpdated);
   }
 
+  void onRoomWillSwitch({
+    required String liveID,
+  }) {
+    ZegoLoggerService.logInfo(
+      'from ${this.liveID} to $liveID, ',
+      tag: 'live.streaming.connect-mgr',
+      subTag: 'onRoomWillSwitch',
+    );
+
+    if (ZegoLiveStreamingAudienceConnectState.idle !=
+        audienceLocalConnectStateNotifier.value) {
+      events?.coHost.audience.onActionCancelRequest?.call();
+      updateAudienceConnectState(ZegoLiveStreamingAudienceConnectState.idle);
+    }
+  }
+
   void onRoomSwitched({
     required String liveID,
     ZegoUIKitPrebuiltLiveStreamingConfig? config,
     ZegoUIKitPrebuiltLiveStreamingEvents? events,
   }) {
     ZegoLoggerService.logInfo(
-      'live id:$liveID, ',
+      'from ${this.liveID} to $liveID, ',
       tag: 'live.streaming.connect-mgr',
       subTag: 'onRoomSwitched',
     );

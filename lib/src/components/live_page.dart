@@ -72,6 +72,7 @@ class _ZegoLiveStreamingLivePageState extends State<ZegoLiveStreamingLivePage>
     with SingleTickerProviderStateMixin {
   List<StreamSubscription<dynamic>?> subscriptions = [];
   bool isFromMinimizing = false;
+  BuildContext? _savedContext;
 
   bool get isLiving =>
       LiveStatus.living ==
@@ -116,6 +117,7 @@ class _ZegoLiveStreamingLivePageState extends State<ZegoLiveStreamingLivePage>
 
     /// ---
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      _savedContext = context;
       ZegoLiveStreamingPageLifeCycle().updateContextQuery(() => context);
     });
 
@@ -136,7 +138,8 @@ class _ZegoLiveStreamingLivePageState extends State<ZegoLiveStreamingLivePage>
       subscription?.cancel();
     }
 
-    ZegoLiveStreamingPageLifeCycle().updateContextQuery(null);
+    ZegoLiveStreamingPageLifeCycle()
+        .updateContextQuery(null, contextToRemove: _savedContext);
   }
 
   @override

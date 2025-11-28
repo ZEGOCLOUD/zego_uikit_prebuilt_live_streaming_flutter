@@ -173,7 +173,7 @@ class ZegoLiveStreamingStatusManager {
     ZegoUIKitPrebuiltLiveStreamingEvents? events,
   }) {
     ZegoLoggerService.logInfo(
-      'live id:$liveID, ',
+      'from ${this.liveID} to $liveID, ',
       tag: 'live.streaming.live-status-mgr',
       subTag: 'onRoomSwitched',
     );

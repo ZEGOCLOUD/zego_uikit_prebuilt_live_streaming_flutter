@@ -3,10 +3,10 @@ import 'dart:async';
 
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
-
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/lifecycle.dart';
+
 import 'room_login_checker.dart';
 
 /// Room information (room ID and token)
@@ -34,8 +34,10 @@ class ZegoLiveStreamingSwipingPageRoomSwitcher {
   ZegoLiveStreamingSwipingPageRoomSwitcher({
     required List<IZegoUIKitPlugin> configPlugins,
     required this.onRoomSwitched,
+    required this.onRoomWillSwitch,
   }) : _configPlugins = configPlugins;
 
+  void Function(String liveID) onRoomWillSwitch;
   void Function(String liveID) onRoomSwitched;
 
   final List<IZegoUIKitPlugin> _configPlugins;
@@ -156,6 +158,8 @@ class ZegoLiveStreamingSwipingPageRoomSwitcher {
         subTag: 'processStack',
       );
     }
+
+    onRoomWillSwitch.call(targetRoomID);
 
     /// If not, then switchRoom
     _processingRoomID = targetRoomID;

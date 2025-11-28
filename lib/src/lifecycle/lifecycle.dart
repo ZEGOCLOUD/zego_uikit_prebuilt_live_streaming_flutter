@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/core_managers.dart';
@@ -30,7 +31,20 @@ class ZegoLiveStreamingPageLifeCycle {
   final swiping = ZegoLiveStreamingSwipingLifeCycle();
   final normal = ZegoLiveStreamingNormalLifeCycle();
 
-  BuildContext Function()? contextQuery;
+  /// Get the current context query (most recently added)
+  BuildContext Function()? get contextQuery {
+    if (_contextQueryMap.isEmpty) {
+      return null;
+    }
+    // Return the most recently added context
+    return _contextQueryMap.values.last;
+  }
+  
+  /// Map to manage multiple context queries during swiping
+  /// Key is the identity hash code of the context, value is the context query function
+  /// This allows us to remove specific contexts even if dispose is called out of order
+  final Map<int, BuildContext Function()> _contextQueryMap = {};
+  
   final List<StreamSubscription<dynamic>?> _subscriptions = [];
 
   /// Whether preview page is visible
@@ -287,13 +301,79 @@ class ZegoLiveStreamingPageLifeCycle {
     return false;
   }
 
-  void updateContextQuery(BuildContext Function()? contextQuery) {
-    ZegoLoggerService.logInfo(
-      '',
-      tag: 'live.streaming.lifecyle',
-      subTag: 'updateContextQuery',
+  void onRoomWillSwitch({
+    required String liveID,
+  }) {
+    currentManagers.onRoomWillSwitch(liveID: liveID);
+  }
+
+  void onRoomSwitched({
+    required String liveID,
+    required ZegoUIKitPrebuiltLiveStreamingConfig config,
+    required ZegoUIKitPrebuiltLiveStreamingEvents? events,
+  }) {
+    currentManagers.onRoomSwitched(
+      liveID: liveID,
+      config: config,
+      events: events,
     );
-    this.contextQuery = contextQuery;
+  }
+
+  void updateContextQuery(BuildContext Function()? contextQuery, {BuildContext? contextToRemove}) {
+    if (contextQuery != null) {
+      // Add new context to map using its identity hash code as key
+      try {
+        final context = contextQuery();
+        final key = identityHashCode(context);
+        _contextQueryMap[key] = contextQuery;
+        ZegoLoggerService.logInfo(
+          'add contextQuery, key:$key, map size:${_contextQueryMap.length}, ',
+          tag: 'live.streaming.lifecyle',
+          subTag: 'updateContextQuery',
+        );
+      } catch (e) {
+        ZegoLoggerService.logError(
+          'failed to get context from contextQuery: $e, ',
+          tag: 'live.streaming.lifecyle',
+          subTag: 'updateContextQuery',
+        );
+      }
+    } else {
+      // Remove context from map
+      if (contextToRemove != null) {
+        final key = identityHashCode(contextToRemove);
+        if (_contextQueryMap.remove(key) != null) {
+          ZegoLoggerService.logInfo(
+            'remove contextQuery by key:$key, map size:${_contextQueryMap.length}, ',
+            tag: 'live.streaming.lifecyle',
+            subTag: 'updateContextQuery',
+          );
+        } else {
+          ZegoLoggerService.logInfo(
+            'contextQuery not found for key:$key, map size:${_contextQueryMap.length}, ',
+            tag: 'live.streaming.lifecyle',
+            subTag: 'updateContextQuery',
+          );
+        }
+      } else {
+        // Fallback: remove the most recently added context
+        if (_contextQueryMap.isNotEmpty) {
+          final lastKey = _contextQueryMap.keys.last;
+          _contextQueryMap.remove(lastKey);
+          ZegoLoggerService.logInfo(
+            'remove last contextQuery, key:$lastKey, map size:${_contextQueryMap.length}, ',
+            tag: 'live.streaming.lifecyle',
+            subTag: 'updateContextQuery',
+          );
+        } else {
+          ZegoLoggerService.logInfo(
+            'remove contextQuery but map is empty, ',
+            tag: 'live.streaming.lifecyle',
+            subTag: 'updateContextQuery',
+          );
+        }
+      }
+    }
   }
 
   factory ZegoLiveStreamingPageLifeCycle() => _instance;
