@@ -39,12 +39,12 @@ class ZegoLiveStreamingPageLifeCycle {
     // Return the most recently added context
     return _contextQueryMap.values.last;
   }
-  
+
   /// Map to manage multiple context queries during swiping
   /// Key is the identity hash code of the context, value is the context query function
   /// This allows us to remove specific contexts even if dispose is called out of order
   final Map<int, BuildContext Function()> _contextQueryMap = {};
-  
+
   final List<StreamSubscription<dynamic>?> _subscriptions = [];
 
   /// Whether preview page is visible
@@ -110,22 +110,6 @@ class ZegoLiveStreamingPageLifeCycle {
           ),
         );
 
-    await ZegoUIKit().turnCameraOn(
-      targetRoomID: targetLiveID,
-      contextData.config.turnOnCameraWhenJoining,
-    );
-    await ZegoUIKit().turnMicrophoneOn(
-      targetRoomID: targetLiveID,
-      contextData.config.turnOnMicrophoneWhenJoining,
-    );
-
-    await ZegoLiveStreamingPageLifeCycle()
-        .currentManagers
-        .liveStatusManager
-        .checkShouldStopPlayAllAudioVideo(
-          isPrebuiltFromHall: isPrebuiltFromHall,
-        );
-
     swiping.initFromPreview(
       token: contextData.token,
       liveID: targetLiveID,
@@ -146,6 +130,13 @@ class ZegoLiveStreamingPageLifeCycle {
       contextQuery,
     );
 
+    await ZegoLiveStreamingPageLifeCycle()
+        .currentManagers
+        .liveStatusManager
+        .checkShouldStopPlayAllAudioVideo(
+          isPrebuiltFromHall: isPrebuiltFromHall,
+        );
+
     normal.initFromPreview(
       liveID: targetLiveID,
     );
@@ -155,6 +146,15 @@ class ZegoLiveStreamingPageLifeCycle {
       !isPrebuiltFromMinimizing &&
           currentManagers.hostManager.isLocalHost &&
           contextData.config.preview.showPreviewForHost,
+    );
+
+    await ZegoUIKit().turnCameraOn(
+      targetRoomID: targetLiveID,
+      contextData.config.turnOnCameraWhenJoining,
+    );
+    await ZegoUIKit().turnMicrophoneOn(
+      targetRoomID: targetLiveID,
+      contextData.config.turnOnMicrophoneWhenJoining,
     );
   }
 
@@ -319,7 +319,10 @@ class ZegoLiveStreamingPageLifeCycle {
     );
   }
 
-  void updateContextQuery(BuildContext Function()? contextQuery, {BuildContext? contextToRemove}) {
+  void updateContextQuery(
+    BuildContext Function()? contextQuery, {
+    BuildContext? contextToRemove,
+  }) {
     if (contextQuery != null) {
       // Add new context to map using its identity hash code as key
       try {
