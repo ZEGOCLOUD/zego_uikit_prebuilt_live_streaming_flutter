@@ -188,6 +188,8 @@ class ZegoLiveStreamingSwipingPageRoomSwitcher {
       await ZegoUIKit().switchRoom(
         toRoomID: targetRoomID,
         token: token,
+        stopPublishAllStream: false,
+        stopPlayAllStream: false,
       );
       await ZegoLiveStreamingPageLifeCycle().currentManagers.plugins.switchRoom(
             targetLiveID: targetRoomID,

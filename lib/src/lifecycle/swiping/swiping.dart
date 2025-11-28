@@ -75,7 +75,13 @@ class ZegoLiveStreamingSwipingLifeCycle {
 
     if (isPrebuiltFromHall) {
       hallRoomID = ZegoUIKit().getCurrentRoom().id;
-      await ZegoUIKit().switchRoom(toRoomID: liveID);
+
+      /// 这里不需要停止推拉流，因为hall都是拉的host流
+      await ZegoUIKit().switchRoom(
+        toRoomID: liveID,
+        stopPublishAllStream: false,
+        stopPlayAllStream: false,
+      );
     }
   }
 
