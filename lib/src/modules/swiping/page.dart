@@ -81,7 +81,7 @@ class ZegoLiveStreamingSwipingPage extends StatefulWidget {
 /// @nodoc
 class _ZegoLiveStreamingSwipingPageState
     extends State<ZegoLiveStreamingSwipingPage> {
-  bool get useDebugMode => true && kDebugMode;
+  bool get useDebugMode => false && kDebugMode;
 
   /// todo token expiration update
 

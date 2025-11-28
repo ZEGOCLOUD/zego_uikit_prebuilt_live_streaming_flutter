@@ -39,7 +39,7 @@ class ZegoLiveStreamingHallForeground extends StatefulWidget {
 
 class _ZegoLiveStreamingHallPageState
     extends State<ZegoLiveStreamingHallForeground> {
-  bool get useDebugMode => true && kDebugMode;
+  bool get useDebugMode => false && kDebugMode;
 
   @override
   Widget build(BuildContext context) {
