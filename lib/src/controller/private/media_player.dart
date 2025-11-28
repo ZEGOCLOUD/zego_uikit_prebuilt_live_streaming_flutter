@@ -15,14 +15,14 @@ class ZegoLiveStreamingControllerMediaDefaultPlayer
     ZegoLoggerService.logInfo(
       'sharing, '
       'path:$filePathOrURL',
-      tag: 'live-streaming',
+      tag: 'live.streaming.controller.media-player',
       subTag: 'controller.media.player',
     );
 
     if (!(private.config?.mediaPlayer.defaultPlayer.support ?? false)) {
       ZegoLoggerService.logInfo(
         'sharing, but {config.mediaPlayer.defaultPlayer.support} is not support',
-        tag: 'live-streaming',
+        tag: 'live.streaming.controller.media-player',
         subTag: 'controller.media.player',
       );
 
@@ -40,7 +40,7 @@ class ZegoLiveStreamingControllerMediaDefaultPlayer
     if (!supportExtensions.contains(fileExtension)) {
       ZegoLoggerService.logInfo(
         'extension($fileExtension) is not valid, only support:$supportExtensions',
-        tag: 'live-streaming',
+        tag: 'live.streaming.controller.media-player',
         subTag: 'controller.media.player',
       );
 
@@ -54,7 +54,7 @@ class ZegoLiveStreamingControllerMediaDefaultPlayer
   void show() {
     ZegoLoggerService.logInfo(
       'showPlayer, ',
-      tag: 'live-streaming',
+      tag: 'live.streaming.controller.media-player',
       subTag: 'controller.media.player',
     );
 
@@ -67,7 +67,7 @@ class ZegoLiveStreamingControllerMediaDefaultPlayer
     ZegoLoggerService.logInfo(
       'hidePlayer, '
       'needStop:$needStop, ',
-      tag: 'live-streaming',
+      tag: 'live.streaming.controller.media-player',
       subTag: 'controller.media.player',
     );
 
@@ -100,7 +100,7 @@ class ZegoLiveStreamingControllerMediaDefaultPlayerPrivateImpl {
   }) {
     ZegoLoggerService.logInfo(
       'init by prebuilt',
-      tag: 'live-streaming',
+      tag: 'live.streaming.controller.media-player',
       subTag: 'controller.media.p',
     );
 
@@ -115,7 +115,7 @@ class ZegoLiveStreamingControllerMediaDefaultPlayerPrivateImpl {
   void uninitByPrebuilt() {
     ZegoLoggerService.logInfo(
       'uninit by prebuilt',
-      tag: 'live-streaming',
+      tag: 'live.streaming.controller.media-player',
       subTag: 'controller.media.p',
     );
 
@@ -131,7 +131,7 @@ class ZegoLiveStreamingControllerMediaDefaultPlayerPrivateImpl {
 
     ZegoLoggerService.logInfo(
       'onPlayStateChanged, state:$playState',
-      tag: 'live-streaming',
+      tag: 'live.streaming.controller.media-player',
       subTag: 'controller.media.p',
     );
 

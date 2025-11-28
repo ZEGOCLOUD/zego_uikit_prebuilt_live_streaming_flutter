@@ -508,7 +508,7 @@ class ZegoLiveStreamingCentralAudioVideoViewState
   void onLiveStatusUpdated() {
     ZegoLoggerService.logInfo(
       'live page, live status mgr updated, ${ZegoLiveStreamingPageLifeCycle().currentManagers.liveStatusManager.notifier.value}',
-      tag: 'live-streaming',
+      tag: 'live.streaming.av-view',
       subTag: 'central audio video view',
     );
 

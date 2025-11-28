@@ -164,7 +164,7 @@ class _ZegoLiveStreamingLivePageState extends State<ZegoLiveStreamingLivePage>
               false;
           ZegoLoggerService.logInfo(
             'onPopInvoked, canLeave:$canLeave',
-            tag: 'live-streaming',
+            tag: 'live.streaming.page',
             subTag: 'prebuilt',
           );
 
@@ -200,7 +200,7 @@ class _ZegoLiveStreamingLivePageState extends State<ZegoLiveStreamingLivePage>
             } else {
               ZegoLoggerService.logInfo(
                 'onPopInvoked, context not mounted',
-                tag: 'live-streaming',
+                tag: 'live.streaming.page',
                 subTag: 'prebuilt',
               );
             }
@@ -397,7 +397,7 @@ class _ZegoLiveStreamingLivePageState extends State<ZegoLiveStreamingLivePage>
 
       ZegoLoggerService.logInfo(
         'exist a invite to join co-host when minimizing($dataOfInvitedToJoinCoHostInMinimizing), show now',
-        tag: 'live-streaming',
+        tag: 'live.streaming.page',
         subTag: 'live page',
       );
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -417,7 +417,7 @@ class _ZegoLiveStreamingLivePageState extends State<ZegoLiveStreamingLivePage>
             .value) {
       ZegoLoggerService.logInfo(
         'exist a pk battle request when minimizing, show now',
-        tag: 'live-streaming',
+        tag: 'live.streaming.page',
         subTag: 'live page',
       );
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -505,7 +505,7 @@ class _ZegoLiveStreamingLivePageState extends State<ZegoLiveStreamingLivePage>
   void onHostManagerUpdated() {
     ZegoLoggerService.logInfo(
       'live page, host mgr updated, ${ZegoLiveStreamingPageLifeCycle().currentManagers.hostManager.notifier.value}',
-      tag: 'live-streaming',
+      tag: 'live.streaming.page',
       subTag: 'live page',
     );
   }
@@ -513,7 +513,7 @@ class _ZegoLiveStreamingLivePageState extends State<ZegoLiveStreamingLivePage>
   void onLiveStatusUpdated() {
     ZegoLoggerService.logInfo(
       'live page, live status mgr updated, ${ZegoLiveStreamingPageLifeCycle().currentManagers.liveStatusManager.notifier.value}',
-      tag: 'live-streaming',
+      tag: 'live.streaming.page',
       subTag: 'live page',
     );
 
@@ -525,7 +525,7 @@ class _ZegoLiveStreamingLivePageState extends State<ZegoLiveStreamingLivePage>
         'audience, live streaming end by host, '
         'host: ${ZegoLiveStreamingPageLifeCycle().currentManagers.hostManager.notifier.value}, '
         'live status: ${ZegoLiveStreamingPageLifeCycle().currentManagers.liveStatusManager.notifier.value}',
-        tag: 'live-streaming',
+        tag: 'live.streaming.page',
         subTag: 'live page',
       );
 
@@ -556,14 +556,14 @@ class _ZegoLiveStreamingLivePageState extends State<ZegoLiveStreamingLivePage>
   Future<void> onTurnOnYourCameraRequest(String fromUserID) async {
     ZegoLoggerService.logInfo(
       'onTurnOnYourCameraRequest, fromUserID:$fromUserID',
-      tag: 'live-streaming',
+      tag: 'live.streaming.page',
       subTag: 'live page',
     );
 
     if (ZegoUIKit().getLocalUser().microphone.value) {
       ZegoLoggerService.logInfo(
         'camera is open now, not need request',
-        tag: 'live-streaming',
+        tag: 'live.streaming.page',
         subTag: 'live page',
       );
 
@@ -576,7 +576,7 @@ class _ZegoLiveStreamingLivePageState extends State<ZegoLiveStreamingLivePage>
         false;
     ZegoLoggerService.logInfo(
       'canMicrophoneTurnOnByOthers:$canCameraTurnOnByOthers',
-      tag: 'live-streaming',
+      tag: 'live.streaming.page',
       subTag: 'live page',
     );
     if (canCameraTurnOnByOthers) {
@@ -588,14 +588,14 @@ class _ZegoLiveStreamingLivePageState extends State<ZegoLiveStreamingLivePage>
       ZegoUIKitReceiveTurnOnLocalMicrophoneEvent event) async {
     ZegoLoggerService.logInfo(
       'onTurnOnYourMicrophoneRequest, event:$event',
-      tag: 'live-streaming',
+      tag: 'live.streaming.page',
       subTag: 'live page',
     );
 
     if (ZegoUIKit().getLocalUser().microphone.value) {
       ZegoLoggerService.logInfo(
         'microphone is open now, not need request',
-        tag: 'live-streaming',
+        tag: 'live.streaming.page',
         subTag: 'live page',
       );
 
@@ -608,7 +608,7 @@ class _ZegoLiveStreamingLivePageState extends State<ZegoLiveStreamingLivePage>
         false;
     ZegoLoggerService.logInfo(
       'canMicrophoneTurnOnByOthers:$canMicrophoneTurnOnByOthers',
-      tag: 'live-streaming',
+      tag: 'live.streaming.page',
       subTag: 'live page',
     );
     if (canMicrophoneTurnOnByOthers) {

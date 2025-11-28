@@ -63,7 +63,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   /// [ZegoUIKitPrebuiltLiveStreaming]
   /// Used to configure the parameters related to the preview list of the live streaming.
   ///
-  /// you can see [Document](https://www.zegocloud.com/docs/uikit/live-streaming-kit-flutter/enhance-the-livestream/live-list) here
+  /// you can see [Document](https://www.zegocloud.com/docs/uikit/live.streaming.kit-flutter/enhance-the-livestream/live-list) here
   ZegoLiveStreamingHallConfig hall;
 
   /// swiping config, if you wish to use swiping, please configure this config.
@@ -74,7 +74,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   /// Used to configure the parameters related to PK battles
   /// if you want to listen event, please refer [ZegoUIKitPrebuiltLiveStreamingEvents.pk]
   ///
-  /// you can see [Document](https://www.zegocloud.com/docs/uikit/live-streaming-kit-flutter/enhance-the-livestream/pk-battles) here
+  /// you can see [Document](https://www.zegocloud.com/docs/uikit/live.streaming.kit-flutter/enhance-the-livestream/pk-battles) here
   ZegoLiveStreamingPKBattleConfig pkBattle;
 
   /// Live Streaming timing configuration.
@@ -87,7 +87,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   ///  ..duration.isVisible = true
   /// ```
   ///
-  /// you can see [Document](https://www.zegocloud.com/docs/uikit/live-streaming-kit-flutter/customize-the-livestream/calculate-live-duration) here
+  /// you can see [Document](https://www.zegocloud.com/docs/uikit/live.streaming.kit-flutter/customize-the-livestream/calculate-live-duration) here
   ///
   ///<img src = "https://doc.oa.zego.im/Pics/ZegoUIKit/Flutter/live/live_duration.jpeg" width=200 />
   ZegoLiveStreamingDurationConfig duration;
@@ -96,7 +96,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
 
   /// advance beauty config
   ///
-  /// you can see [Document](https://www.zegocloud.com/docs/uikit/live-streaming-kit-flutter/enhance-the-livestream/advanced-beauty-effects) here
+  /// you can see [Document](https://www.zegocloud.com/docs/uikit/live.streaming.kit-flutter/enhance-the-livestream/advanced-beauty-effects) here
   ZegoBeautyPluginConfig? beauty;
 
   /// co-cohost config
@@ -445,7 +445,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
 
   @override
   String toString() {
-    return 'ZegoUIKitPrebuiltLiveStreamingConfig:{'
+    return '{'
         'video:$video, '
         'audioVideoView:$audioVideoView, '
         'mediaPlayer:$mediaPlayer, '
@@ -598,7 +598,7 @@ class ZegoLiveStreamingAudioVideoViewConfig {
 
   @override
   String toString() {
-    return 'ZegoLiveStreamingAudioVideoViewConfig:{'
+    return '{'
         'visible:${visible != null}, '
         'playCoHostAudio:${playCoHostAudio != null}, '
         'playCoHostVideo:${playCoHostVideo != null}, '
@@ -653,7 +653,7 @@ class ZegoLiveStreamingTopMenuBarConfig {
 
   @override
   String toString() {
-    return 'ZegoLiveStreamingTopMenuBarConfig:{'
+    return '{'
         'buttons:$buttons, '
         'padding:$padding, '
         'margin:$margin, '
@@ -748,7 +748,7 @@ class ZegoLiveStreamingBottomMenuBarConfig {
 
   @override
   String toString() {
-    return 'ZegoLiveStreamingBottomMenuBarConfig:{'
+    return '{'
         'showInRoomMessageButton:$showInRoomMessageButton, '
         'hostButtons:$hostButtons, '
         'coHostButtons:$coHostButtons, '
@@ -785,7 +785,7 @@ class ZegoLiveStreamingMemberButtonConfig {
 
   @override
   String toString() {
-    return 'ZegoLiveStreamingMemberButtonConfig:{'
+    return '{'
         'builder:${builder != null}, '
         'icon:${icon != null}, '
         'backgroundColor:$backgroundColor, '
@@ -829,7 +829,7 @@ class ZegoLiveStreamingMemberListConfig {
 
   @override
   String toString() {
-    return 'ZegoLiveStreamingMemberListConfig:{'
+    return '{'
         'itemBuilder:${itemBuilder != null}, '
         'showFakeUser:$showFakeUser, '
         '}';
@@ -998,7 +998,7 @@ class ZegoLiveStreamingInRoomMessageConfig {
 
   @override
   String toString() {
-    return 'ZegoLiveStreamingInRoomMessageConfig:{'
+    return '{'
         'itemBuilder:${itemBuilder != null}, '
         'avatarLeadingBuilder:${avatarLeadingBuilder != null}, '
         'avatarTailingBuilder:${avatarTailingBuilder != null}, '
@@ -1169,7 +1169,7 @@ class ZegoLiveStreamingEffectConfig {
 
   @override
   String toString() {
-    return 'ZegoLiveStreamingEffectConfig:{'
+    return '{'
         'beautyEffects:$beautyEffects, '
         'voiceChangeEffect:$voiceChangeEffect, '
         'reverbEffect:$reverbEffect, '
@@ -1263,7 +1263,7 @@ class ZegoLiveStreamingPKBattleConfig {
 
   @override
   String toString() {
-    return 'ZegoLiveStreamingPKBattleConfig:{'
+    return '{'
         'userReconnectingSecond:$userReconnectingSecond, '
         'userDisconnectedSecond:$userDisconnectedSecond, '
         'mixerLayout:$mixerLayout, '
@@ -1347,7 +1347,7 @@ class ZegoLiveStreamingPreviewConfig {
 
   @override
   String toString() {
-    return 'ZegoLiveStreamingPreviewConfig:{'
+    return '{'
         'showPreviewForHost:$showPreviewForHost, '
         'pageBackIcon:${pageBackIcon != null}, '
         'beautyEffectIcon:${beautyEffectIcon != null}, '
@@ -1368,7 +1368,7 @@ class ZegoLiveStreamingPreviewTopBarConfig {
 
   @override
   String toString() {
-    return 'ZegoLiveStreamingPreviewTopBarConfig:{'
+    return '{'
         'isVisible:$isVisible, '
         '}';
   }
@@ -1385,7 +1385,7 @@ class ZegoLiveStreamingPreviewBottomBarConfig {
 
   @override
   String toString() {
-    return 'ZegoLiveStreamingPreviewBottomBarConfig:{'
+    return '{'
         'isVisible:$isVisible, '
         'showBeautyEffectButton:$showBeautyEffectButton, '
         '}';
@@ -1411,7 +1411,7 @@ class ZegoLiveStreamingHallConfig {
 
   @override
   String toString() {
-    return 'ZegoLiveStreamingHallConfig:{'
+    return '{'
         'fromHall:$fromHall, '
         'loadingBuilder:${loadingBuilder != null}, '
         '}';
@@ -1440,7 +1440,7 @@ class ZegoLiveStreamingSwipingConfig {
 
   @override
   String toString() {
-    return 'ZegoLiveStreamingSwipingConfig:{'
+    return '{'
         'model:$model, '
         'model delegate:$modelDelegate, '
         '}';
@@ -1458,7 +1458,7 @@ class ZegoLiveStreamingDurationConfig {
 
   @override
   String toString() {
-    return 'ZegoLiveStreamingDurationConfig:{'
+    return '{'
         'isVisible:$isVisible, '
         '}';
   }
@@ -1475,7 +1475,7 @@ class ZegoLiveStreamingSignalingPluginConfig {
 
   @override
   String toString() {
-    return 'ZegoLiveStreamingSignalingPluginConfig:{'
+    return '{'
         'leaveRoomOnDispose:$leaveRoomOnDispose, '
         'uninitOnDispose:$uninitOnDispose, '
         '}';
@@ -1499,7 +1499,7 @@ class ZegoLiveStreamingScreenSharingConfig {
 
   @override
   String toString() {
-    return 'ZegoLiveStreamingScreenSharingConfig:{'
+    return '{'
         'autoStop:$autoStop, '
         'defaultFullScreen:$defaultFullScreen, '
         '}';
@@ -1523,7 +1523,7 @@ class ZegoLiveStreamingScreenSharingAutoStopConfig {
 
   @override
   String toString() {
-    return 'ZegoLiveStreamingScreenSharingAutoStopConfig:{'
+    return '{'
         'invalidCount:$invalidCount, '
         'canEnd:${canEnd != null}, '
         '}';
@@ -1546,7 +1546,7 @@ class ZegoLiveStreamingMediaPlayerConfig {
 
   @override
   String toString() {
-    return 'ZegoLiveStreamingMediaPlayerConfig:{'
+    return '{'
         'supportTransparent:$supportTransparent, '
         'defaultPlayer:$defaultPlayer, '
         '}';
@@ -1563,7 +1563,7 @@ class ZegoLiveStreamingMediaPlayerQueryParameter {
 
   @override
   String toString() {
-    return 'ZegoLiveStreamingMediaPlayerQueryParameter:{'
+    return '{'
         'localRole:$localRole, '
         '}';
   }
@@ -1607,7 +1607,7 @@ class ZegoLiveStreamingMediaPlayerDefaultPlayerConfig {
 
   @override
   String toString() {
-    return 'ZegoLiveStreamingMediaPlayerDefaultPlayerConfig:{'
+    return '{'
         'support:$support, '
         'rolesCanControl:$rolesCanControl, '
         'topLeftQuery:${topLeftQuery != null}, '
@@ -1657,7 +1657,7 @@ class ZegoLiveStreamingPIPConfig {
 
   @override
   String toString() {
-    return 'ZegoLiveStreamingPIPConfig:{'
+    return '{'
         'android:$android, '
         'iOS:$iOS, '
         'aspectWidth:$aspectWidth, '
@@ -1679,7 +1679,7 @@ class ZegoLiveStreamingPIPAndroidConfig {
 
   @override
   String toString() {
-    return 'ZegoLiveStreamingPIPAndroidConfig:{'
+    return '{'
         'background:${background != null}, '
         '}';
   }
@@ -1696,7 +1696,7 @@ class ZegoLiveStreamingPIPIOSConfig {
 
   @override
   String toString() {
-    return 'ZegoLiveStreamingPIPIOSConfig:{'
+    return '{'
         'support:$support, '
         '}';
   }

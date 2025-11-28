@@ -3,8 +3,10 @@ import 'dart:async';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
+
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
+
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/live_duration_manager.dart';
@@ -48,7 +50,7 @@ class _ZegoLiveStreamingDurationTimeBoardState
     if (widget.config.isVisible) {
       ZegoLoggerService.logInfo(
         'init duration',
-        tag: 'live-streaming',
+        tag: 'live.streaming.duration-board',
         subTag: 'prebuilt',
       );
 
@@ -57,7 +59,7 @@ class _ZegoLiveStreamingDurationTimeBoardState
       } else {
         ZegoLoggerService.logInfo(
           'manager notifier value is null, wait...',
-          tag: 'live-streaming',
+          tag: 'live.streaming.duration-board',
           subTag: 'duration time board',
         );
 
@@ -123,7 +125,7 @@ class _ZegoLiveStreamingDurationTimeBoardState
       if (null == networkTimeNow.value) {
         ZegoLoggerService.logInfo(
           'network time is null, wait...',
-          tag: 'live-streaming',
+          tag: 'live.streaming.duration-board',
           subTag: 'duration time board',
         );
 
@@ -144,7 +146,7 @@ class _ZegoLiveStreamingDurationTimeBoardState
     final networkTimeNow = ZegoUIKit().getNetworkTime();
     ZegoLoggerService.logInfo(
       'network time update:$networkTimeNow',
-      tag: 'live-streaming',
+      tag: 'live.streaming.duration-board',
       subTag: 'duration time board',
     );
 
@@ -154,7 +156,7 @@ class _ZegoLiveStreamingDurationTimeBoardState
   void startDurationTimer(DateTime networkTimeNow) {
     ZegoLoggerService.logInfo(
       'start duration timer, network time is $networkTimeNow, live begin time is ${ZegoLiveStreamingPageLifeCycle().currentManagers.liveDurationManager.notifier.value}',
-      tag: 'live-streaming',
+      tag: 'live.streaming.duration-board',
       subTag: 'duration time board',
     );
 

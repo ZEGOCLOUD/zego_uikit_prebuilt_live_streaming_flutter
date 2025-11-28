@@ -48,7 +48,7 @@ class ZegoLiveStreamingMinimizeData {
 
   @override
   String toString() {
-    return 'ZegoUIKitPrebuiltLiveStreamingData{'
+    return '{'
         'app id:$appID, '
         'live id:$liveID, '
         'isPrebuiltFromMinimizing: $isPrebuiltFromMinimizing, '

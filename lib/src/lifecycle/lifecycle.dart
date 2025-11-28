@@ -4,15 +4,16 @@ import 'dart:async';
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
+
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/core_managers.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/swiping/swiping.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/minimizing/data.dart';
-
 import 'defines.dart';
 import 'normal/normal.dart';
 
@@ -51,7 +52,7 @@ class ZegoLiveStreamingPageLifeCycle {
     if (_initialized) {
       ZegoLoggerService.logInfo(
         'init before, ignore',
-        tag: 'live-streaming-lifecyle',
+        tag: 'live.streaming.lifecyle',
         subTag: 'initFromPreview',
       );
 
@@ -63,7 +64,7 @@ class ZegoLiveStreamingPageLifeCycle {
       'isPrebuiltFromHall:$isPrebuiltFromHall, '
       'isPrebuiltFromMinimizing:$isPrebuiltFromMinimizing, '
       'contextData:$contextData, ',
-      tag: 'live-streaming-lifecyle',
+      tag: 'live.streaming.lifecyle',
       subTag: 'initFromPreview',
     );
     _initialized = true;
@@ -138,7 +139,7 @@ class ZegoLiveStreamingPageLifeCycle {
     if (!_initialized) {
       ZegoLoggerService.logInfo(
         'not init, ignore',
-        tag: 'live-streaming-lifecyle',
+        tag: 'live.streaming.lifecyle',
         subTag: 'uninitFromPreview',
       );
 
@@ -150,7 +151,7 @@ class ZegoLiveStreamingPageLifeCycle {
       'isPrebuiltFromHall:$isPrebuiltFromHall, '
       'currentLiveID:$currentLiveID, '
       'currentContextData:$currentContextData, ',
-      tag: 'live-streaming-lifecyle',
+      tag: 'live.streaming.lifecyle',
       subTag: 'uninitFromPreview',
     );
 
@@ -199,7 +200,7 @@ class ZegoLiveStreamingPageLifeCycle {
       'isPrebuiltFromMinimizing:$isPrebuiltFromMinimizing, '
       'isPrebuiltFromHall:$isPrebuiltFromHall, '
       'currentLiveID:$currentLiveID, ',
-      tag: 'live-streaming-lifecyle',
+      tag: 'live.streaming.lifecyle',
       subTag: 'initFromLive',
     );
 
@@ -207,7 +208,7 @@ class ZegoLiveStreamingPageLifeCycle {
     if (isPrebuiltFromMinimizing) {
       ZegoLoggerService.logInfo(
         'isPrebuiltFromMinimizing, ignore, ',
-        tag: 'live-streaming-lifecyle',
+        tag: 'live.streaming.lifecyle',
         subTag: 'initFromLive',
       );
 
@@ -218,7 +219,7 @@ class ZegoLiveStreamingPageLifeCycle {
       /// When using swiping, use page builder's events to drive room entry/exit
       ZegoLoggerService.logInfo(
         'using swiping, wait run by page builder, ',
-        tag: 'live-streaming-lifecyle',
+        tag: 'live.streaming.lifecyle',
         subTag: 'initFromLive',
       );
     } else {
@@ -244,7 +245,7 @@ class ZegoLiveStreamingPageLifeCycle {
   }) async {
     ZegoLoggerService.logInfo(
       'currentLiveID:$currentLiveID, ',
-      tag: 'live-streaming-lifecyle',
+      tag: 'live.streaming.lifecyle',
       subTag: 'disposeFromLive',
     );
 
@@ -270,7 +271,7 @@ class ZegoLiveStreamingPageLifeCycle {
   void updateContextQuery(BuildContext Function()? contextQuery) {
     ZegoLoggerService.logInfo(
       '',
-      tag: 'live-streaming-lifecyle',
+      tag: 'live.streaming.lifecyle',
       subTag: 'updateContextQuery',
     );
     this.contextQuery = contextQuery;

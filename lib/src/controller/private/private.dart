@@ -20,7 +20,7 @@ class ZegoLiveStreamingControllerPrivateImpl {
   set liveID(String value) {
     ZegoLoggerService.logInfo(
       'update live id from $_liveID to $value, ',
-      tag: 'live-streaming',
+      tag: 'live.streaming.controller',
       subTag: 'controller.p',
     );
 
@@ -39,7 +39,7 @@ class ZegoLiveStreamingControllerPrivateImpl {
     ZegoLoggerService.logInfo(
       'init by prebuilt, '
       'live id: $liveID, ',
-      tag: 'live-streaming',
+      tag: 'live.streaming.controller',
       subTag: 'controller.p',
     );
 
@@ -88,7 +88,7 @@ class ZegoLiveStreamingControllerPrivateImpl {
   void uninitByPrebuilt() {
     ZegoLoggerService.logInfo(
       'uninit by prebuilt',
-      tag: 'live-streaming',
+      tag: 'live.streaming.controller',
       subTag: 'controller.p',
     );
 

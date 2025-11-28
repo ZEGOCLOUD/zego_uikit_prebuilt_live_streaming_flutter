@@ -40,7 +40,7 @@ class ZegoLiveStreamingControllerCoHostImpl
   }) async {
     ZegoLoggerService.logInfo(
       'make audience: ${audience.id} to be a co-host',
-      tag: 'live-streaming-coHost',
+      tag: 'live.streaming.controller.co-host',
       subTag: 'controller, hostSendCoHostInvitationToAudience',
     );
 
@@ -50,7 +50,7 @@ class ZegoLiveStreamingControllerCoHostImpl
         'hostManager:${private.hostManager}, '
         'connectManager:${private.connectManager}, '
         'prebuiltConfig:${private.configs}, ',
-        tag: 'live-streaming-coHost',
+        tag: 'live.streaming.controller.co-host',
         subTag: 'controller, hostSendCoHostInvitationToAudience',
       );
 
@@ -60,7 +60,7 @@ class ZegoLiveStreamingControllerCoHostImpl
     if (!private.isLocalHost) {
       ZegoLoggerService.logInfo(
         'local is not a host, can not invite',
-        tag: 'live-streaming-coHost',
+        tag: 'live.streaming.controller.co-host',
         subTag: 'controller, hostSendCoHostInvitationToAudience',
       );
 
@@ -72,7 +72,7 @@ class ZegoLiveStreamingControllerCoHostImpl
     if (isInPK) {
       ZegoLoggerService.logInfo(
         'local in the pk-battle, can not invite',
-        tag: 'live-streaming-coHost',
+        tag: 'live.streaming.controller.co-host',
         subTag: 'controller, hostSendCoHostInvitationToAudience',
       );
 
@@ -84,7 +84,7 @@ class ZegoLiveStreamingControllerCoHostImpl
           ?.call(private.configs!.coHost.maxCoHostCount);
       ZegoLoggerService.logInfo(
         'co-host max count had reached, can not invite',
-        tag: 'live-streaming-coHost',
+        tag: 'live.streaming.controller.co-host',
         subTag: 'controller, hostSendCoHostInvitationToAudience',
       );
 
@@ -100,7 +100,7 @@ class ZegoLiveStreamingControllerCoHostImpl
     if (targetUserIsInviting || targetUserIsRequesting) {
       ZegoLoggerService.logInfo(
         "you've sent the invitation, please wait for confirmation.",
-        tag: 'live-streaming-coHost',
+        tag: 'live.streaming.controller.co-host',
         subTag: 'controller, hostSendCoHostInvitationToAudience',
       );
 
@@ -128,7 +128,7 @@ class ZegoLiveStreamingControllerCoHostImpl
   }) async {
     ZegoLoggerService.logInfo(
       'withToast:$withToast, customData:$customData, ',
-      tag: 'live-streaming-coHost',
+      tag: 'live.streaming.controller.co-host',
       subTag: 'controller, audienceAgreeCoHostInvitation',
     );
 
@@ -138,7 +138,7 @@ class ZegoLiveStreamingControllerCoHostImpl
         'hostManager:${private.hostManager}, '
         'connectManager:${private.connectManager}, '
         'prebuiltConfig:${private.configs}, ',
-        tag: 'live-streaming-coHost',
+        tag: 'live.streaming.controller.co-host',
         subTag: 'controller, audienceAgreeCoHostInvitation',
       );
 
@@ -152,7 +152,7 @@ class ZegoLiveStreamingControllerCoHostImpl
 
       ZegoLoggerService.logInfo(
         'co-host max count had reached',
-        tag: 'live-streaming-coHost',
+        tag: 'live.streaming.controller.co-host',
         subTag: 'controller, audienceAgreeCoHostInvitation',
       );
 
@@ -162,7 +162,7 @@ class ZegoLiveStreamingControllerCoHostImpl
     if (private.hostManager.notifier.value?.id.isEmpty ?? true) {
       ZegoLoggerService.logInfo(
         'host(${private.hostManager.notifier.value?.id}) is null',
-        tag: 'live-streaming-coHost',
+        tag: 'live.streaming.controller.co-host',
         subTag: 'controller, audienceAgreeCoHostInvitation',
       );
 
@@ -177,7 +177,7 @@ class ZegoLiveStreamingControllerCoHostImpl
             .value) {
       ZegoLoggerService.logInfo(
         'not living now',
-        tag: 'live-streaming-coHost',
+        tag: 'live.streaming.controller.co-host',
         subTag: 'controller, audienceAgreeCoHostInvitation',
       );
     }
@@ -191,7 +191,7 @@ class ZegoLiveStreamingControllerCoHostImpl
         .then((result) async {
       ZegoLoggerService.logInfo(
         'result:$result',
-        tag: 'live-streaming-coHost',
+        tag: 'live.streaming.controller.co-host',
         subTag: 'controller, audienceAgreeCoHostInvitation',
       );
 
@@ -221,7 +221,7 @@ class ZegoLiveStreamingControllerCoHostImpl
             statuses[Permission.camera] != PermissionStatus.granted) {
           ZegoLoggerService.logInfo(
             'camera not granted when audience switch to co-host',
-            tag: 'live-streaming-coHost',
+            tag: 'live.streaming.controller.co-host',
             subTag: 'controller, audienceAgreeCoHostInvitation',
           );
         }
@@ -230,7 +230,7 @@ class ZegoLiveStreamingControllerCoHostImpl
             statuses[Permission.microphone] != PermissionStatus.granted) {
           ZegoLoggerService.logInfo(
             'camera not granted when audience switch to co-host',
-            tag: 'live-streaming-coHost',
+            tag: 'live.streaming.controller.co-host',
             subTag: 'controller, audienceAgreeCoHostInvitation',
           );
         }
@@ -249,7 +249,7 @@ class ZegoLiveStreamingControllerCoHostImpl
   }) async {
     ZegoLoggerService.logInfo(
       'customData:$customData',
-      tag: 'live-streaming-coHost',
+      tag: 'live.streaming.controller.co-host',
       subTag: 'controller, audienceRejectCoHostInvitation',
     );
 
@@ -259,7 +259,7 @@ class ZegoLiveStreamingControllerCoHostImpl
         'hostManager:${private.hostManager}, '
         'connectManager:${private.connectManager}, '
         'prebuiltConfig:${private.configs}, ',
-        tag: 'live-streaming-coHost',
+        tag: 'live.streaming.controller.co-host',
         subTag: 'controller, audienceRejectCoHostInvitation',
       );
 
@@ -269,7 +269,7 @@ class ZegoLiveStreamingControllerCoHostImpl
     if (private.hostManager.notifier.value?.id.isEmpty ?? true) {
       ZegoLoggerService.logInfo(
         'host(${private.hostManager.notifier.value?.id}) is null',
-        tag: 'live-streaming-coHost',
+        tag: 'live.streaming.controller.co-host',
         subTag: 'controller, audienceRejectCoHostInvitation',
       );
 
@@ -284,7 +284,7 @@ class ZegoLiveStreamingControllerCoHostImpl
             .value) {
       ZegoLoggerService.logInfo(
         'not living now',
-        tag: 'live-streaming-coHost',
+        tag: 'live.streaming.controller.co-host',
         subTag: 'controller, audienceRejectCoHostInvitation',
       );
     }
@@ -298,7 +298,7 @@ class ZegoLiveStreamingControllerCoHostImpl
         .then((result) {
       ZegoLoggerService.logInfo(
         'result:$result',
-        tag: 'live-streaming-coHost',
+        tag: 'live.streaming.controller.co-host',
         subTag: 'controller, audienceRejectCoHostInvitation',
       );
 
@@ -333,7 +333,7 @@ class ZegoLiveStreamingControllerCoHostImpl
   }) async {
     ZegoLoggerService.logInfo(
       'withToast:$withToast, customData:$customData, ',
-      tag: 'live-streaming-coHost',
+      tag: 'live.streaming.controller.co-host',
       subTag: 'controller, audienceSendCoHostRequest',
     );
 
@@ -343,7 +343,7 @@ class ZegoLiveStreamingControllerCoHostImpl
         'hostManager:${private.hostManager}, '
         'connectManager:${private.connectManager}, '
         'prebuiltConfig:${private.configs}, ',
-        tag: 'live-streaming-coHost',
+        tag: 'live.streaming.controller.co-host',
         subTag: 'controller, audienceSendCoHostRequest',
       );
 
@@ -368,7 +368,7 @@ class ZegoLiveStreamingControllerCoHostImpl
         private.connectManager.audienceLocalConnectStateNotifier.value) {
       ZegoLoggerService.logInfo(
         'not need request more',
-        tag: 'live-streaming-coHost',
+        tag: 'live.streaming.controller.co-host',
         subTag: 'controller, audienceSendCoHostRequest',
       );
       return false;
@@ -387,7 +387,7 @@ class ZegoLiveStreamingControllerCoHostImpl
         .then((result) {
       ZegoLoggerService.logInfo(
         'result:$result',
-        tag: 'live-streaming-coHost',
+        tag: 'live.streaming.controller.co-host',
         subTag: 'controller, audienceSendCoHostRequest',
       );
 
@@ -430,7 +430,7 @@ class ZegoLiveStreamingControllerCoHostImpl
   }) async {
     ZegoLoggerService.logInfo(
       'customData:$customData',
-      tag: 'live-streaming-coHost',
+      tag: 'live.streaming.controller.co-host',
       subTag: 'controller, audienceCancelCoHostRequest',
     );
 
@@ -440,7 +440,7 @@ class ZegoLiveStreamingControllerCoHostImpl
         'hostManager:${private.hostManager}, '
         'connectManager:${private.connectManager}, '
         'prebuiltConfig:${private.configs}, ',
-        tag: 'live-streaming-coHost',
+        tag: 'live.streaming.controller.co-host',
         subTag: 'controller, audienceCancelCoHostRequest',
       );
 
@@ -451,7 +451,7 @@ class ZegoLiveStreamingControllerCoHostImpl
         private.connectManager.audienceLocalConnectStateNotifier.value) {
       ZegoLoggerService.logInfo(
         'not need cancel',
-        tag: 'live-streaming-coHost',
+        tag: 'live.streaming.controller.co-host',
         subTag: 'controller, audienceCancelCoHostRequest',
       );
       return false;
@@ -463,7 +463,7 @@ class ZegoLiveStreamingControllerCoHostImpl
     );
     ZegoLoggerService.logInfo(
       'result:$result',
-      tag: 'live-streaming-coHost',
+      tag: 'live.streaming.controller.co-host',
       subTag: 'controller, audienceCancelCoHostRequest',
     );
 
@@ -491,7 +491,7 @@ class ZegoLiveStreamingControllerCoHostImpl
   Future<bool> startCoHost() async {
     ZegoLoggerService.logInfo(
       'audience switch to co-host',
-      tag: 'live-streaming-coHost',
+      tag: 'live.streaming.controller.co-host',
       subTag: 'controller, startCoHost',
     );
 
@@ -501,7 +501,7 @@ class ZegoLiveStreamingControllerCoHostImpl
         'hostManager:${private.hostManager}, '
         'connectManager:${private.connectManager}, '
         'prebuiltConfig:${private.configs}, ',
-        tag: 'live-streaming-coHost',
+        tag: 'live.streaming.controller.co-host',
         subTag: 'controller, startCoHost',
       );
 
@@ -511,7 +511,7 @@ class ZegoLiveStreamingControllerCoHostImpl
     if (!private.hostExist) {
       ZegoLoggerService.logInfo(
         'host is not exist, ignore current co-host switch',
-        tag: 'live-streaming-coHost',
+        tag: 'live.streaming.controller.co-host',
         subTag: 'controller, startCoHost',
       );
 
@@ -521,7 +521,7 @@ class ZegoLiveStreamingControllerCoHostImpl
     if (!private.isLiving) {
       ZegoLoggerService.logInfo(
         'is not in living, ignore current co-host switch',
-        tag: 'live-streaming-coHost',
+        tag: 'live.streaming.controller.co-host',
         subTag: 'controller, startCoHost',
       );
 
@@ -531,7 +531,7 @@ class ZegoLiveStreamingControllerCoHostImpl
     if (private.connectManager.isCoHost(ZegoUIKit().getLocalUser())) {
       ZegoLoggerService.logInfo(
         'audience is co-host now',
-        tag: 'live-streaming-coHost',
+        tag: 'live.streaming.controller.co-host',
         subTag: 'controller, startCoHost',
       );
       return false;
@@ -544,7 +544,7 @@ class ZegoLiveStreamingControllerCoHostImpl
 
       ZegoLoggerService.logInfo(
         'co-host max count had reached, ignore current co-host switch',
-        tag: 'live-streaming-coHost',
+        tag: 'live.streaming.controller.co-host',
         subTag: 'controller, startCoHost',
       );
 
@@ -559,7 +559,7 @@ class ZegoLiveStreamingControllerCoHostImpl
           statuses[Permission.camera] != PermissionStatus.granted) {
         ZegoLoggerService.logInfo(
           'camera not granted when audience switch to co-host',
-          tag: 'live-streaming-coHost',
+          tag: 'live.streaming.controller.co-host',
           subTag: 'controller, startCoHost',
         );
       }
@@ -567,7 +567,7 @@ class ZegoLiveStreamingControllerCoHostImpl
           statuses[Permission.microphone] != PermissionStatus.granted) {
         ZegoLoggerService.logInfo(
           'microphone not granted when audience switch to co-host',
-          tag: 'live-streaming-coHost',
+          tag: 'live.streaming.controller.co-host',
           subTag: 'controller, startCoHost',
         );
       }
@@ -593,7 +593,7 @@ class ZegoLiveStreamingControllerCoHostImpl
   }) async {
     ZegoLoggerService.logInfo(
       'co-host switch to audience',
-      tag: 'live-streaming-coHost',
+      tag: 'live.streaming.controller.co-host',
       subTag: 'controller, stopCoHost',
     );
 
@@ -603,7 +603,7 @@ class ZegoLiveStreamingControllerCoHostImpl
         'hostManager:${private.hostManager}, '
         'connectManager:${private.connectManager}, '
         'prebuiltConfig:${private.configs}, ',
-        tag: 'live-streaming-coHost',
+        tag: 'live.streaming.controller.co-host',
         subTag: 'controller, stopCoHost',
       );
 
@@ -626,7 +626,7 @@ class ZegoLiveStreamingControllerCoHostImpl
   }) async {
     ZegoLoggerService.logInfo(
       'audience:${audience.id}, customData:$customData, ',
-      tag: 'live-streaming-coHost',
+      tag: 'live.streaming.controller.co-host',
       subTag: 'controller, hostAgreeCoHostRequest',
     );
 
@@ -636,7 +636,7 @@ class ZegoLiveStreamingControllerCoHostImpl
         'hostManager:${private.hostManager}, '
         'connectManager:${private.connectManager}, '
         'prebuiltConfig:${private.configs}, ',
-        tag: 'live-streaming-coHost',
+        tag: 'live.streaming.controller.co-host',
         subTag: 'controller, hostAgreeCoHostRequest',
       );
 
@@ -646,7 +646,7 @@ class ZegoLiveStreamingControllerCoHostImpl
     if (!private.isLocalHost) {
       ZegoLoggerService.logInfo(
         'local is not a host, can not agree',
-        tag: 'live-streaming-coHost',
+        tag: 'live.streaming.controller.co-host',
         subTag: 'controller, hostAgreeCoHostRequest',
       );
 
@@ -661,7 +661,7 @@ class ZegoLiveStreamingControllerCoHostImpl
 
       ZegoLoggerService.logInfo(
         'co-host max count had reached, can not agree',
-        tag: 'live-streaming-coHost',
+        tag: 'live.streaming.controller.co-host',
         subTag: 'controller, hostAgreeCoHostRequest',
       );
 
@@ -671,7 +671,7 @@ class ZegoLiveStreamingControllerCoHostImpl
     private.agreeRequestingUserIDs.add(audience.id);
     ZegoLoggerService.logInfo(
       'agree requesting count:${private.agreeRequestingUserIDs.length}',
-      tag: 'live-streaming-coHost',
+      tag: 'live.streaming.controller.co-host',
       subTag: 'controller, hostAgreeCoHostRequest',
     );
 
@@ -684,7 +684,7 @@ class ZegoLiveStreamingControllerCoHostImpl
         .then((result) {
       ZegoLoggerService.logInfo(
         'agree the co-host request from ${audience.id}, result:$result',
-        tag: 'live-streaming-coHost',
+        tag: 'live.streaming.controller.co-host',
         subTag: 'controller, hostAgreeCoHostRequest',
       );
 
@@ -718,7 +718,7 @@ class ZegoLiveStreamingControllerCoHostImpl
   }) async {
     ZegoLoggerService.logInfo(
       'audience:${audience.id}, customData:$customData',
-      tag: 'live-streaming-coHost',
+      tag: 'live.streaming.controller.co-host',
       subTag: 'controller, hostRejectCoHostRequest',
     );
 
@@ -728,7 +728,7 @@ class ZegoLiveStreamingControllerCoHostImpl
         'hostManager:${private.hostManager}, '
         'connectManager:${private.connectManager}, '
         'prebuiltConfig:${private.configs}, ',
-        tag: 'live-streaming-coHost',
+        tag: 'live.streaming.controller.co-host',
         subTag: 'controller, hostRejectCoHostRequest',
       );
 
@@ -738,7 +738,7 @@ class ZegoLiveStreamingControllerCoHostImpl
     if (!private.isLocalHost) {
       ZegoLoggerService.logInfo(
         'local is not a host',
-        tag: 'live-streaming-coHost',
+        tag: 'live.streaming.controller.co-host',
         subTag: 'controller, hostRejectCoHostRequest',
       );
 
@@ -754,7 +754,7 @@ class ZegoLiveStreamingControllerCoHostImpl
         .then((result) {
       ZegoLoggerService.logInfo(
         'refuse audience ${audience.name} co-host request, $result',
-        tag: 'live-streaming-coHost',
+        tag: 'live.streaming.controller.co-host',
         subTag: 'controller, hostRejectCoHostRequest',
       );
 
@@ -789,7 +789,7 @@ class ZegoLiveStreamingControllerCoHostImpl
     ZegoLoggerService.logInfo(
       'remove co-host:${coHost.id}, '
       'customData:$customData, ',
-      tag: 'live-streaming-coHost',
+      tag: 'live.streaming.controller.co-host',
       subTag: 'controller, removeCoHost',
     );
 
@@ -799,7 +799,7 @@ class ZegoLiveStreamingControllerCoHostImpl
         'hostManager:${private.hostManager}, '
         'connectManager:${private.connectManager}, '
         'prebuiltConfig:${private.configs}, ',
-        tag: 'live-streaming-coHost',
+        tag: 'live.streaming.controller.co-host',
         subTag: 'controller, removeCoHost',
       );
 
@@ -809,7 +809,7 @@ class ZegoLiveStreamingControllerCoHostImpl
     if (!private.isLocalHost) {
       ZegoLoggerService.logInfo(
         'local is not a host',
-        tag: 'live-streaming-coHost',
+        tag: 'live.streaming.controller.co-host',
         subTag: 'controller, removeCoHost',
       );
 

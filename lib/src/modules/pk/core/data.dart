@@ -49,7 +49,7 @@ class ZegoUIKitPrebuiltLiveStreamingPKData
   }) {
     ZegoLoggerService.logInfo(
       'init',
-      tag: 'live-streaming-pk',
+      tag: 'live.streaming.pk.data',
       subTag: 'service data',
     );
 
@@ -61,7 +61,7 @@ class ZegoUIKitPrebuiltLiveStreamingPKData
   void uninit() {
     ZegoLoggerService.logInfo(
       'uninit',
-      tag: 'live-streaming-pk',
+      tag: 'live.streaming.pk.data',
       subTag: 'service data',
     );
 
@@ -77,7 +77,7 @@ class ZegoUIKitPrebuiltLiveStreamingPKData
   ) {
     ZegoLoggerService.logInfo(
       'cacheRequestReceivedEventInMinimizing, event:$event',
-      tag: 'live-streaming-pk',
+      tag: 'live.streaming.pk.data',
       subTag: 'service data',
     );
 
@@ -87,7 +87,7 @@ class ZegoUIKitPrebuiltLiveStreamingPKData
   void clearRequestReceivedEventInMinimizing() {
     ZegoLoggerService.logInfo(
       'clearRequestReceivedEventInMinimizing',
-      tag: 'live-streaming-pk',
+      tag: 'live.streaming.pk.data',
       subTag: 'service data',
     );
 
@@ -134,7 +134,7 @@ mixin ZegoUIKitPrebuiltLiveStreamingPKServiceData {
   set currentRequestID(String value) {
     ZegoLoggerService.logInfo(
       'current request id set to:$value',
-      tag: 'live-streaming-pk',
+      tag: 'live.streaming.pk.data',
       subTag: 'service',
     );
 

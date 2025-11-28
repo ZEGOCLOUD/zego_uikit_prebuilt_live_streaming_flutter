@@ -46,7 +46,7 @@ class ZegoUIKitPrebuiltLiveStreamingPKServiceMixer {
 
     ZegoLoggerService.logInfo(
       'init',
-      tag: 'live-streaming-pk',
+      tag: 'live.streaming.pk.mixer',
       subTag: 'mixer',
     );
 
@@ -60,7 +60,7 @@ class ZegoUIKitPrebuiltLiveStreamingPKServiceMixer {
   Future<void> uninit() async {
     ZegoLoggerService.logInfo(
       'uninit',
-      tag: 'live-streaming-pk',
+      tag: 'live.streaming.pk.mixer',
       subTag: 'mixer',
     );
 
@@ -76,7 +76,7 @@ class ZegoUIKitPrebuiltLiveStreamingPKServiceMixer {
 
     ZegoLoggerService.logInfo(
       'uninit done',
-      tag: 'live-streaming-pk',
+      tag: 'live.streaming.pk.mixer',
       subTag: 'mixer',
     );
   }
@@ -87,7 +87,7 @@ class ZegoUIKitPrebuiltLiveStreamingPKServiceMixer {
     if (!_init) {
       ZegoLoggerService.logInfo(
         'update mixer, but not init',
-        tag: 'live-streaming-pk',
+        tag: 'live.streaming.pk.mixer',
         subTag: 'mixer',
       );
 
@@ -96,7 +96,7 @@ class ZegoUIKitPrebuiltLiveStreamingPKServiceMixer {
     if (_mixerID.isEmpty) {
       ZegoLoggerService.logInfo(
         'update mixer, but mixer stream id is empty',
-        tag: 'live-streaming-pk',
+        tag: 'live.streaming.pk.mixer',
         subTag: 'mixer',
       );
 
@@ -110,20 +110,20 @@ class ZegoUIKitPrebuiltLiveStreamingPKServiceMixer {
       'users:$pkHosts, '
       'mutedHosts:${mutedUsersNotifier.value}, '
       'task:${_task?.toStringX()}',
-      tag: 'live-streaming-pk',
+      tag: 'live.streaming.pk.mixer',
       subTag: 'mixer',
     );
 
     final mixResult = await ZegoUIKit().startMixerTask(_task!);
     ZegoLoggerService.logInfo(
       'update mixer result:${mixResult.toStringX()}',
-      tag: 'live-streaming-pk',
+      tag: 'live.streaming.pk.mixer',
       subTag: 'mixer',
     );
     if (ZegoLiveStreamingErrorCode.success != mixResult.errorCode) {
       ZegoLoggerService.logError(
         'update mixer error: ${mixResult.errorCode}, ${mixResult.extendedData}',
-        tag: 'live-streaming-pk',
+        tag: 'live.streaming.pk.mixer',
         subTag: 'mixer',
       );
 

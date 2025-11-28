@@ -53,7 +53,7 @@ class ZegoLiveStreamingEndEvent {
 
   @override
   String toString() {
-    return 'ZegoLiveStreamingEndEvent{'
+    return '{'
         'kickerUserID:$kickerUserID, '
         'isFromMinimizing:$isFromMinimizing, '
         'reason:$reason, '
@@ -72,7 +72,7 @@ class ZegoLiveStreamingCoHostHostEventRequestReceivedData {
 
   @override
   String toString() {
-    return 'ZegoLiveStreamingCoHostHostEventRequestReceivedData{'
+    return '{'
         'audience:$audience, '
         'customData:$customData, '
         '}';
@@ -90,7 +90,7 @@ class ZegoLiveStreamingCoHostHostEventRequestCanceledData {
 
   @override
   String toString() {
-    return 'ZegoLiveStreamingCoHostHostEventRequestCanceledData{'
+    return '{'
         'audience:$audience, '
         'customData:$customData, '
         '}';
@@ -106,7 +106,7 @@ class ZegoLiveStreamingCoHostHostEventRequestTimeoutData {
 
   @override
   String toString() {
-    return 'ZegoLiveStreamingCoHostHostEventRequestTimeoutData{'
+    return '{'
         'audience:$audience, '
         '}';
   }
@@ -121,7 +121,7 @@ class ZegoLiveStreamingCoHostHostEventInvitationSentData {
 
   @override
   String toString() {
-    return 'ZegoLiveStreamingCoHostHostEventInvitationSentData{'
+    return '{'
         'audience:$audience, '
         '}';
   }
@@ -136,7 +136,7 @@ class ZegoLiveStreamingCoHostHostEventInvitationTimeoutData {
 
   @override
   String toString() {
-    return 'ZegoLiveStreamingCoHostHostEventInvitationTimeoutData{'
+    return '{'
         'audience:$audience, '
         '}';
   }
@@ -153,7 +153,7 @@ class ZegoLiveStreamingCoHostHostEventInvitationAcceptedData {
 
   @override
   String toString() {
-    return 'ZegoLiveStreamingCoHostHostEventInvitationAcceptedData{'
+    return '{'
         'audience:$audience, '
         'customData:$customData, '
         '}';
@@ -171,7 +171,7 @@ class ZegoLiveStreamingCoHostHostEventInvitationRefusedData {
 
   @override
   String toString() {
-    return 'ZegoLiveStreamingCoHostHostEventInvitationRefusedData{'
+    return '{'
         'audience:$audience, '
         'customData:$customData, '
         '}';
@@ -187,7 +187,7 @@ class ZegoLiveStreamingCoHostAudienceEventRequestAcceptedData {
 
   @override
   String toString() {
-    return 'ZegoLiveStreamingCoHostAudienceEventRequestAcceptedData{'
+    return '{'
         'customData:$customData, '
         '}';
   }
@@ -202,7 +202,7 @@ class ZegoLiveStreamingCoHostAudienceEventRequestRefusedData {
 
   @override
   String toString() {
-    return 'ZegoLiveStreamingCoHostAudienceEventRequestRefusedData{'
+    return '{'
         'customData:$customData, '
         '}';
   }
@@ -219,7 +219,7 @@ class ZegoLiveStreamingCoHostAudienceEventRequestReceivedData {
 
   @override
   String toString() {
-    return 'ZegoLiveStreamingCoHostAudienceEventRequestReceivedData{'
+    return '{'
         'host:$host, '
         'customData:$customData, '
         '}';

@@ -39,7 +39,7 @@ Future<void> checkPermissions({
           } else {
             ZegoLoggerService.logInfo(
               'show app settings dialog, context is not mounted',
-              tag: 'live-streaming',
+              tag: 'live.streaming.permissions',
               subTag: 'permissions',
             );
           }
@@ -63,7 +63,7 @@ Future<void> checkPermissions({
           } else {
             ZegoLoggerService.logInfo(
               'show app settings dialog, context is not mounted',
-              tag: 'live-streaming',
+              tag: 'live.streaming.permissions',
               subTag: 'permissions',
             );
           }
@@ -103,7 +103,7 @@ Future<void> requestPermissions({
         } else {
           ZegoLoggerService.logInfo(
             'requestPermissions, context not mounted',
-            tag: 'live-streaming',
+            tag: 'live.streaming.permissions',
             subTag: 'permissions',
           );
         }
@@ -124,7 +124,7 @@ Future<void> requestPermissions({
         } else {
           ZegoLoggerService.logInfo(
             'show app settings dialog, context is not mounted',
-            tag: 'live-streaming',
+            tag: 'live.streaming.permissions',
             subTag: 'permissions',
           );
         }
@@ -144,7 +144,7 @@ Future<bool> showAppSettingsDialog({
   if (kickOutNotifier?.value ?? false) {
     ZegoLoggerService.logInfo(
       'local user is kick-out, ignore show app settings dialog',
-      tag: 'live-streaming',
+      tag: 'live.streaming.permissions',
       subTag: 'permissions',
     );
     return false;
@@ -168,7 +168,7 @@ Future<bool> showAppSettingsDialog({
       } else {
         ZegoLoggerService.logInfo(
           'show app settings dialog, context is not mounted',
-          tag: 'live-streaming',
+          tag: 'live.streaming.permissions',
           subTag: 'permissions',
         );
       }
@@ -185,7 +185,7 @@ Future<bool> showAppSettingsDialog({
       } else {
         ZegoLoggerService.logInfo(
           'show app settings dialog, context is not mounted',
-          tag: 'live-streaming',
+          tag: 'live.streaming.permissions',
           subTag: 'permissions',
         );
       }

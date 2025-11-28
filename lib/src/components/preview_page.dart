@@ -4,9 +4,11 @@ import 'dart:math' as math;
 
 // Flutter imports:
 import 'package:flutter/material.dart';
+
 // Package imports:
 import 'package:permission_handler/permission_handler.dart';
 import 'package:zego_uikit/zego_uikit.dart';
+
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/effects/beauty_effect_button.dart';
@@ -14,6 +16,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/permissi
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
+
 import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/lifecycle.dart'; // import this
 
 /// @nodoc
@@ -277,7 +280,7 @@ class _ZegoLiveStreamingPreviewPageState
         (value) {
           ZegoLoggerService.logInfo(
             'started',
-            tag: 'live-streaming',
+            tag: 'live.streaming.preview-page',
             subTag: 'preview page',
           );
 

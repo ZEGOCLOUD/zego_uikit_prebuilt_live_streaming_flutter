@@ -77,7 +77,7 @@ class ZegoLiveStreamingMenuBarExtendButton extends StatelessWidget {
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'ZegoLiveStreamingMenuBarExtendButton:{'
+    return '{'
         'index:$index, '
         'child:$child, '
         '}';
@@ -196,7 +196,7 @@ class ZegoLiveStreamingBottomMenuBarButtonStyle {
 
   @override
   String toString() {
-    return 'ZegoLiveStreamingBottomMenuBarButtonStyle:{'
+    return '{'
         'chatEnabledButtonIcon:${chatEnabledButtonIcon != null}, '
         'chatDisabledButtonIcon:${chatDisabledButtonIcon != null}, '
         'toggleMicrophoneOnButtonIcon:${toggleMicrophoneOnButtonIcon != null}, '
@@ -265,7 +265,7 @@ class ZegoLiveStreamingCoHostConfig {
 
   @override
   String toString() {
-    return 'ZegoLiveStreamingCoHostConfig:{'
+    return '{'
         'turnOnCameraWhenCohosted:${turnOnCameraWhenCohosted != null}, '
         'stopCoHostingWhenMicCameraOff:$stopCoHostingWhenMicCameraOff, '
         'disableCoHostInvitationReceivedDialog:$disableCoHostInvitationReceivedDialog, '

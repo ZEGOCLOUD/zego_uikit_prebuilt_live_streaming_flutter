@@ -35,7 +35,7 @@ class ZegoLiveStreamingControllerUserImplPrivateImpl {
   }) {
     ZegoLoggerService.logInfo(
       'init by prebuilt',
-      tag: 'call',
+      tag: 'live.streaming.controller.usercontroller.user',
       subTag: 'controller.user.p',
     );
 
@@ -73,7 +73,7 @@ class ZegoLiveStreamingControllerUserImplPrivateImpl {
   void uninitByPrebuilt() {
     ZegoLoggerService.logInfo(
       'un-init by prebuilt',
-      tag: 'call',
+      tag: 'live.streaming.controller.usercontroller.user',
       subTag: 'controller.user.p',
     );
 

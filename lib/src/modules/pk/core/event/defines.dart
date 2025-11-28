@@ -36,7 +36,8 @@ class ZegoLiveStreamingIncomingPKBattleRequestReceivedEvent {
   final List<ZegoLiveStreamingIncomingPKBattleRequestUser> sessionHosts;
 
   @override
-  String toString() => '{requestID:$requestID, '
+  String toString() => '{'
+      'requestID:$requestID, '
       'fromHost:${fromHost.id}(${fromHost.name}), '
       'timeoutSecond:$timeoutSecond, '
       'fromLiveID:$fromLiveID, '
@@ -86,8 +87,10 @@ class ZegoLiveStreamingIncomingPKBattleRequestTimeoutEvent {
   final ZegoUIKitUser fromHost;
 
   @override
-  String toString() => '{requestID:$requestID, '
-      'anotherHost:$fromHost}';
+  String toString() => '{'
+      'requestID:$requestID, '
+      'anotherHost:$fromHost'
+      '}';
 }
 
 class ZegoLiveStreamingIncomingPKBattleRequestCancelledEvent {
@@ -103,9 +106,11 @@ class ZegoLiveStreamingIncomingPKBattleRequestCancelledEvent {
   final String customData;
 
   @override
-  String toString() => '{requestID:$requestID, '
+  String toString() => '{'
+      'requestID:$requestID, '
       'fromHost:$fromHost, '
-      'customData:$customData}';
+      'customData:$customData'
+      '}';
 }
 
 /// @nodoc
@@ -122,9 +127,11 @@ class ZegoLiveStreamingOutgoingPKBattleRequestAcceptedEvent {
   final String fromLiveID;
 
   @override
-  String toString() => '{requestID:$requestID, '
+  String toString() => '{'
+      'requestID:$requestID, '
       'fromHost:$fromHost, '
-      'fromLiveID:$fromLiveID,}';
+      'fromLiveID:$fromLiveID,'
+      '}';
 }
 
 /// @nodoc
@@ -143,8 +150,11 @@ class ZegoLiveStreamingOutgoingPKBattleRequestRejectedEvent {
   final int refuseCode;
 
   @override
-  String toString() =>
-      '{requestID:$requestID, fromHost:$fromHost), refuseCode:$refuseCode}';
+  String toString() => '{'
+      'requestID:$requestID, '
+      'fromHost:$fromHost), '
+      'refuseCode:$refuseCode'
+      '}';
 }
 
 /// @nodoc
@@ -159,8 +169,10 @@ class ZegoLiveStreamingOutgoingPKBattleRequestTimeoutEvent {
   final ZegoUIKitUser fromHost;
 
   @override
-  String toString() => '{requestID:$requestID, '
-      'fromHost:$fromHost}';
+  String toString() => '{'
+      'requestID:$requestID, '
+      'fromHost:$fromHost, '
+      '}';
 }
 
 /// @nodoc
@@ -192,7 +204,8 @@ class ZegoLiveStreamingPKBattleEndedEvent {
       'isRequestFromLocal:$isRequestFromLocal, '
       'fromHost:$fromHost, '
       'time:$time, '
-      'code:$code,}';
+      'code:$code, '
+      '}';
 }
 
 /// @nodoc
@@ -207,7 +220,10 @@ class ZegoLiveStreamingPKBattleUserOfflineEvent {
   final ZegoUIKitUser fromHost;
 
   @override
-  String toString() => '{requestID:$requestID, fromHost:$fromHost}';
+  String toString() => '{'
+      'requestID:$requestID, '
+      'fromHost:$fromHost, '
+      '}';
 }
 
 /// @nodoc
@@ -222,5 +238,8 @@ class ZegoLiveStreamingPKBattleUserQuitEvent {
   final ZegoUIKitUser fromHost;
 
   @override
-  String toString() => '{requestID:$requestID, fromHost:$fromHost}';
+  String toString() => '{'
+      'requestID:$requestID, '
+      'fromHost:$fromHost, '
+      '}';
 }

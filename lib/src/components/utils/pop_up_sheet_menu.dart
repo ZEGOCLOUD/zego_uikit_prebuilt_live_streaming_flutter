@@ -77,7 +77,7 @@ class _ZegoLiveStreamingPopUpSheetMenuState
       onTap: () {
         ZegoLoggerService.logInfo(
           '[pop-up sheet] click ${popupItem.text}',
-          tag: 'live-streaming',
+          tag: 'live.streaming.pop-up-menu',
           subTag: 'pop-up sheet',
         );
 
@@ -91,7 +91,7 @@ class _ZegoLiveStreamingPopUpSheetMenuState
               /// pseudo user can't be co-host
               ZegoLoggerService.logInfo(
                 'pseudo user, ignore',
-                tag: 'live-streaming',
+                tag: 'live.streaming.pop-up-menu',
                 subTag: 'pop-up sheet',
               );
               break;
@@ -106,7 +106,7 @@ class _ZegoLiveStreamingPopUpSheetMenuState
               /// pseudo user can't be co-host
               ZegoLoggerService.logInfo(
                 'pseudo user, ignore',
-                tag: 'live-streaming',
+                tag: 'live.streaming.pop-up-menu',
                 subTag: 'pop-up sheet',
               );
               break;
@@ -126,7 +126,7 @@ class _ZegoLiveStreamingPopUpSheetMenuState
             if (isPseudoMember) {
               ZegoLoggerService.logInfo(
                 'pseudo user, remove',
-                tag: 'live-streaming',
+                tag: 'live.streaming.pop-up-menu',
                 subTag: 'pop-up sheet',
               );
               ZegoUIKitPrebuiltLiveStreamingController()
@@ -141,7 +141,7 @@ class _ZegoLiveStreamingPopUpSheetMenuState
             ).then((result) {
               ZegoLoggerService.logInfo(
                 'kick out result:$result',
-                tag: 'live-streaming',
+                tag: 'live.streaming.pop-up-menu',
                 subTag: 'pop-up sheet',
               );
             });

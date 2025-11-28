@@ -26,7 +26,7 @@ class ZegoLiveStreamingControllerRoomPrivateImpl {
   ) async {
     ZegoLoggerService.logInfo(
       'default call end event, event:$event',
-      tag: 'live-streaming',
+      tag: 'live.streaming.controller.room',
       subTag: 'controller.room.p',
     );
 
@@ -44,14 +44,14 @@ class ZegoLiveStreamingControllerRoomPrivateImpl {
         } else {
           ZegoLoggerService.logInfo(
             'live streaming end, context is not mounted',
-            tag: 'live-streaming',
+            tag: 'live.streaming.controller.room',
             subTag: 'controller.room.p',
           );
         }
       } catch (e) {
         ZegoLoggerService.logError(
           'live streaming end, navigator exception:$e, event:$event',
-          tag: 'live-streaming',
+          tag: 'live.streaming.controller.room',
           subTag: 'controller.room.p',
         );
       }
@@ -67,7 +67,7 @@ class ZegoLiveStreamingControllerRoomPrivateImpl {
   }) {
     ZegoLoggerService.logInfo(
       'init by prebuilt, ',
-      tag: 'live-streaming',
+      tag: 'live.streaming.controller.room',
       subTag: 'controller.room.p',
     );
 
@@ -83,7 +83,7 @@ class ZegoLiveStreamingControllerRoomPrivateImpl {
   void uninitByPrebuilt() {
     ZegoLoggerService.logInfo(
       'uninit by prebuilt',
-      tag: 'live-streaming',
+      tag: 'live.streaming.controller.room',
       subTag: 'controller.room.p',
     );
 
@@ -126,7 +126,7 @@ class ZegoLiveStreamingControllerRoomPrivateImpl {
             'call hangup confirmation, '
             'navigator exception:$e, '
             'event:$event',
-            tag: 'live-streaming',
+            tag: 'live.streaming.controller.room',
             subTag: 'controller.p',
           );
         }
@@ -144,7 +144,7 @@ class ZegoLiveStreamingControllerRoomPrivateImpl {
             'call hangup confirmation, '
             'navigator exception:$e, '
             'event:$event',
-            tag: 'live-streaming',
+            tag: 'live.streaming.controller.room',
             subTag: 'controller.p',
           );
         }

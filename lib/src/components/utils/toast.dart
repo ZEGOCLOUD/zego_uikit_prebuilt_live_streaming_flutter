@@ -39,7 +39,7 @@ class ZegoLiveStreamingToast {
     ZegoLoggerService.logInfo(
       'init, '
       'enabled:$enabled, ',
-      tag: 'live-streaming',
+      tag: 'live.streaming-toast',
       subTag: 'toast',
     );
 

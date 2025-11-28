@@ -57,7 +57,7 @@ class ZegoLiveStreamingControllerMediaImpl
       'play, '
       'filePathOrURL:$filePathOrURL, '
       'enableRepeat:$enableRepeat, ',
-      tag: 'live-streaming',
+      tag: 'live.streaming.controller.media',
       subTag: 'controller.media',
     );
 
@@ -72,7 +72,7 @@ class ZegoLiveStreamingControllerMediaImpl
   Future<void> stop() async {
     ZegoLoggerService.logInfo(
       'stop, ',
-      tag: 'live-streaming',
+      tag: 'live.streaming.controller.media',
       subTag: 'controller.media',
     );
 
@@ -83,7 +83,7 @@ class ZegoLiveStreamingControllerMediaImpl
   Future<void> destroy() async {
     ZegoLoggerService.logInfo(
       'destroy, ',
-      tag: 'live-streaming',
+      tag: 'live.streaming.controller.media',
       subTag: 'controller.media',
     );
 
@@ -94,7 +94,7 @@ class ZegoLiveStreamingControllerMediaImpl
   Future<void> pause() async {
     ZegoLoggerService.logInfo(
       'pause, ',
-      tag: 'live-streaming',
+      tag: 'live.streaming.controller.media',
       subTag: 'controller.media',
     );
 
@@ -105,7 +105,7 @@ class ZegoLiveStreamingControllerMediaImpl
   Future<void> resume() async {
     ZegoLoggerService.logInfo(
       'resume, ',
-      tag: 'live-streaming',
+      tag: 'live.streaming.controller.media',
       subTag: 'controller.media',
     );
 
@@ -118,7 +118,7 @@ class ZegoLiveStreamingControllerMediaImpl
     ZegoLoggerService.logInfo(
       'seekTo, '
       'millisecond:$millisecond, ',
-      tag: 'live-streaming',
+      tag: 'live.streaming.controller.media',
       subTag: 'controller.media',
     );
 
@@ -140,7 +140,7 @@ class ZegoLiveStreamingControllerMediaImpl
       'setVolume, '
       'volume:$volume, '
       'isSyncToRemote:$isSyncToRemote, ',
-      tag: 'live-streaming',
+      tag: 'live.streaming.controller.media',
       subTag: 'controller.media',
     );
 
@@ -155,7 +155,7 @@ class ZegoLiveStreamingControllerMediaImpl
     ZegoLoggerService.logInfo(
       'muteLocal, '
       'mute:$mute, ',
-      tag: 'live-streaming',
+      tag: 'live.streaming.controller.media',
       subTag: 'controller.media',
     );
 
@@ -166,7 +166,7 @@ class ZegoLiveStreamingControllerMediaImpl
   Future<List<ZegoUIKitPlatformFile>> pickPureAudioFile() async {
     ZegoLoggerService.logInfo(
       'pickPureAudioFile, ',
-      tag: 'live-streaming',
+      tag: 'live.streaming.controller.media',
       subTag: 'controller.media',
     );
 
@@ -177,7 +177,7 @@ class ZegoLiveStreamingControllerMediaImpl
   Future<List<ZegoUIKitPlatformFile>> pickVideoFile() async {
     ZegoLoggerService.logInfo(
       'pickVideoFile, ',
-      tag: 'live-streaming',
+      tag: 'live.streaming.controller.media',
       subTag: 'controller.media',
     );
 
@@ -192,7 +192,7 @@ class ZegoLiveStreamingControllerMediaImpl
     ZegoLoggerService.logInfo(
       'pickFile, '
       'allowedExtensions:$allowedExtensions, ',
-      tag: 'live-streaming',
+      tag: 'live.streaming.controller.media',
       subTag: 'controller.media',
     );
 

@@ -28,7 +28,7 @@ class ZegoLiveStreamingControllerHallPrivateImpl {
       'init by prebuilt,'
       'controller:${hallController.hashCode}, '
       'default controller:${_defaultHallListController.hashCode}, ',
-      tag: 'live-streaming',
+      tag: 'live.streaming.controller.hall',
       subTag: 'controller.hall.p',
     );
 
@@ -44,7 +44,7 @@ class ZegoLiveStreamingControllerHallPrivateImpl {
   void uninitByPrebuilt() {
     ZegoLoggerService.logInfo(
       'uninit by prebuilt',
-      tag: 'live-streaming',
+      tag: 'live.streaming.controller.hall',
       subTag: 'controller.hall.p',
     );
 

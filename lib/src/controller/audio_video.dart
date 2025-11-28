@@ -62,7 +62,7 @@ class ZegoLiveStreamingControllerAudioVideoMicrophoneImpl
     ZegoLoggerService.logInfo(
       "turn ${isOn ? "on" : "off"} $userID microphone,"
       "mute mode:$needUseMuteMode, ",
-      tag: 'live-streaming',
+      tag: 'live.streaming.controller.audio-video',
       subTag: 'controller-audioVideo',
     );
 
@@ -125,7 +125,7 @@ class ZegoLiveStreamingControllerAudioVideoCameraImpl
   Future<void> turnOn(bool isOn, {String? userID}) async {
     ZegoLoggerService.logInfo(
       "turn ${isOn ? "on" : "off"} $userID camera",
-      tag: 'live-streaming',
+      tag: 'live.streaming.controller.audio-video',
       subTag: 'controller-audioVideo',
     );
 
@@ -181,7 +181,7 @@ class ZegoLiveStreamingControllerAudioVideoAudioOutputImpl
   void switchToSpeaker(bool isSpeaker) {
     ZegoLoggerService.logInfo(
       "switchToSpeaker, isSpeaker:$isSpeaker, ",
-      tag: 'live-streaming',
+      tag: 'live.streaming.controller.audio-video',
       subTag: 'controller-audioVideo',
     );
 

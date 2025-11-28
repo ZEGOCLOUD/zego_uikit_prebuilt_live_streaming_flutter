@@ -36,7 +36,7 @@ class ZegoLiveStreamingControllerUserImpl
   Future<bool> remove(List<String> userIDs) async {
     ZegoLoggerService.logInfo(
       'remove user:$userIDs',
-      tag: 'live-streaming',
+      tag: 'live.streaming.controller.user',
       subTag: 'controller.user',
     );
 
@@ -50,7 +50,7 @@ class ZegoLiveStreamingControllerUserImpl
   void addFakeUser(ZegoUIKitUser user) {
     ZegoLoggerService.logInfo(
       'add fake user:$user',
-      tag: 'live-streaming',
+      tag: 'live.streaming.controller.user',
       subTag: 'controller.user',
     );
 
@@ -61,7 +61,7 @@ class ZegoLiveStreamingControllerUserImpl
   void removeFakeUser(ZegoUIKitUser user) {
     ZegoLoggerService.logInfo(
       'remove fake user:$user',
-      tag: 'live-streaming',
+      tag: 'live.streaming.controller.user',
       subTag: 'controller.user',
     );
 

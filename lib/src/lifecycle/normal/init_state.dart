@@ -40,7 +40,7 @@ class ZegoLiveStreamingPageLifeCycleInitState {
   void clear() {
     ZegoLoggerService.logInfo(
       'liveID:$liveID, ',
-      tag: 'live-streaming-lifecyle-initState',
+      tag: 'live.streaming.lifecyle-initState',
       subTag: 'clear',
     );
 
@@ -67,7 +67,7 @@ class ZegoLiveStreamingPageLifeCycleInitState {
       'isPrebuiltFromMinimizing:$isPrebuiltFromMinimizing, '
       'isPrebuiltFromHall:$isPrebuiltFromHall, '
       'rtcContextReadyNotifier:${rtcContextReadyNotifier.value}, ',
-      tag: 'live-streaming-lifecyle-initState',
+      tag: 'live.streaming.lifecyle-initState',
       subTag: 'clear',
     );
 
@@ -151,7 +151,7 @@ class ZegoLiveStreamingPageLifeCycleInitState {
 
     ZegoLoggerService.logInfo(
       'onPreviewPageVisibilityUpdated:$onPreviewPageVisibilityUpdated, ',
-      tag: 'live-streaming-lifecyle-initState',
+      tag: 'live.streaming.lifecyle-initState',
       subTag: 'onPreviewPageVisibilityUpdated',
     );
 
@@ -182,7 +182,7 @@ class ZegoLiveStreamingPageLifeCycleInitState {
       ZegoLoggerService.logInfo(
         'hashcode:$hashCode, '
         'express engine is not created, waiting',
-        tag: 'live-streaming-lifecyle-initState',
+        tag: 'live.streaming.lifecyle-initState',
         subTag: 'prebuilt',
       );
 
@@ -197,7 +197,7 @@ class ZegoLiveStreamingPageLifeCycleInitState {
     ZegoLoggerService.logInfo(
       'request camera:${data.config.turnOnCameraWhenJoining}, '
       'request microphone:${data.config.turnOnMicrophoneWhenJoining}, ',
-      tag: 'live-streaming-lifecyle-initState',
+      tag: 'live.streaming.lifecyle-initState',
       subTag: 'initPermissions',
     );
 
@@ -215,7 +215,7 @@ class ZegoLiveStreamingPageLifeCycleInitState {
     ZegoLoggerService.logInfo(
       'camera result:$isCameraGranted, '
       'microphone result:$isMicrophoneGranted, ',
-      tag: 'live-streaming-lifecyle-initState',
+      tag: 'live.streaming.lifecyle-initState',
       subTag: 'initPermissions',
     );
 
@@ -252,7 +252,7 @@ class ZegoLiveStreamingPageLifeCycleInitState {
   }) async {
     ZegoLoggerService.logInfo(
       'video config:${data.config.video}',
-      tag: 'live-streaming-lifecyle-initState',
+      tag: 'live.streaming.lifecyle-initState',
       subTag: 'setVideoConfig',
     );
 
@@ -278,7 +278,7 @@ class ZegoLiveStreamingPageLifeCycleInitState {
   }) async {
     ZegoLoggerService.logInfo(
       '',
-      tag: 'live-streaming-lifecyle-initState',
+      tag: 'live.streaming.lifecyle-initState',
       subTag: 'initBaseBeautyConfig',
     );
 
@@ -303,7 +303,7 @@ class ZegoLiveStreamingPageLifeCycleInitState {
     final isCreated = ZegoUIKit().engineCreatedNotifier.value;
     ZegoLoggerService.logInfo(
       'express engine created:$isCreated',
-      tag: 'live-streaming-lifecyle-initState',
+      tag: 'live.streaming.lifecyle-initState',
       subTag: 'joinRoomWaitEngineCreated',
     );
 
@@ -335,7 +335,7 @@ class ZegoLiveStreamingPageLifeCycleInitState {
     ZegoLoggerService.logInfo(
       'room id:$roomID, '
       'markAsLargeRoom:$markAsLargeRoom, ',
-      tag: 'live-streaming-lifecyle-initState',
+      tag: 'live.streaming.lifecyle-initState',
       subTag: 'joinRoom',
     );
 
@@ -355,7 +355,7 @@ class ZegoLiveStreamingPageLifeCycleInitState {
       ZegoLoggerService.logError(
         'hashcode:$hashCode, '
         'failed to login room:${result.errorCode},${result.extendedData}',
-        tag: 'live-streaming-lifecyle-initState',
+        tag: 'live.streaming.lifecyle-initState',
         subTag: 'onRoomLogin',
       );
     }
@@ -363,7 +363,7 @@ class ZegoLiveStreamingPageLifeCycleInitState {
     ZegoLoggerService.logInfo(
       'login room done:${result.errorCode},${result.extendedData}, '
       'room id:$liveID',
-      tag: 'live-streaming-lifecyle-initState',
+      tag: 'live.streaming.lifecyle-initState',
       subTag: 'onRoomLogin',
     );
     assert(result.errorCode == 0);

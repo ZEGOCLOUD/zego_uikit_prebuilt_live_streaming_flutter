@@ -29,8 +29,8 @@ import 'events.defines.dart';
 import 'internal/defines.dart';
 import 'internal/pk_combine_notifier.dart';
 import 'internal/reporter.dart';
-import 'live_streaming.dart';
 import 'lifecycle/lifecycle.dart';
+import 'live_streaming.dart';
 import 'modules/hall/controller.dart';
 import 'modules/minimizing/data.dart';
 import 'modules/minimizing/defines.dart';
@@ -146,7 +146,7 @@ class ZegoUIKitPrebuiltLiveStreamingController
   ZegoUIKitPrebuiltLiveStreamingController._internal() {
     ZegoLoggerService.logInfo(
       'ZegoUIKitPrebuiltLiveStreamingController create',
-      tag: 'live-streaming',
+      tag: 'live.streaming.',
       subTag: 'controller',
     );
   }

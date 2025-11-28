@@ -1,11 +1,12 @@
 // Flutter imports:
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
+
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/inner_text.dart';
-
 import 'enter_wave_animation.dart';
 
 class ZegoLiveStreamingHallForeground extends StatefulWidget {

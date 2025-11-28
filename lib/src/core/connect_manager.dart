@@ -120,7 +120,7 @@ class ZegoLiveStreamingConnectManager {
     if (_initialized) {
       ZegoLoggerService.logInfo(
         'had already init',
-        tag: 'live-streaming-coHost',
+        tag: 'live.streaming.connect-mgr',
         subTag: 'seat manager',
       );
 
@@ -135,7 +135,7 @@ class ZegoLiveStreamingConnectManager {
 
     ZegoLoggerService.logInfo(
       'init',
-      tag: 'live-streaming-coHost',
+      tag: 'live.streaming.connect-mgr',
       subTag: 'connect manager',
     );
 
@@ -148,7 +148,7 @@ class ZegoLiveStreamingConnectManager {
     if (!_initialized) {
       ZegoLoggerService.logInfo(
         'not init before',
-        tag: 'live-streaming-coHost',
+        tag: 'live.streaming.connect-mgr',
         subTag: 'connect manager',
       );
 
@@ -159,7 +159,7 @@ class ZegoLiveStreamingConnectManager {
 
     ZegoLoggerService.logInfo(
       'uninit',
-      tag: 'live-streaming-coHost',
+      tag: 'live.streaming.connect-mgr',
       subTag: 'connect manager',
     );
 
@@ -207,7 +207,7 @@ class ZegoLiveStreamingConnectManager {
   }) {
     ZegoLoggerService.logInfo(
       'live id:$liveID, ',
-      tag: 'live-streaming-coHost',
+      tag: 'live.streaming.connect-mgr',
       subTag: 'onRoomSwitched',
     );
 
@@ -237,16 +237,16 @@ class ZegoLiveStreamingConnectManager {
             ZegoUIKit().getLocalUser().id) {
       ZegoLoggerService.logInfo(
         'switch local to be co-host',
-        tag: 'live-streaming-coHost',
-        subTag: 'connect manager',
+        tag: 'live.streaming.connect-mgr',
+        subTag: 'onRoomStateUpdated',
       );
 
       updateAudienceConnectState(ZegoLiveStreamingAudienceConnectState.idle);
     } else if (ZegoLiveStreamingRole.coHost == config?.role) {
       ZegoLoggerService.logInfo(
         "config's role is co-host, connect state default to be connected",
-        tag: 'live-streaming-coHost',
-        subTag: 'connect manager',
+        tag: 'live.streaming.connect-mgr',
+        subTag: 'onRoomStateUpdated',
       );
 
       final permissions = getCoHostPermissions();
@@ -337,9 +337,9 @@ class ZegoLiveStreamingConnectManager {
     String customData = '',
   }) async {
     ZegoLoggerService.logInfo(
-      'kick-out co-host $coHost',
-      tag: 'live-streaming-coHost',
-      subTag: 'connect manager',
+      'co-host: $coHost',
+      tag: 'live.streaming.connect-mgr',
+      subTag: 'kickCoHost',
     );
 
     return ZegoUIKit()
@@ -363,9 +363,9 @@ class ZegoLiveStreamingConnectManager {
       );
 
       ZegoLoggerService.logInfo(
-        'kick co-host ${coHost.id} ${coHost.name}, result:$result',
-        tag: 'live-streaming-coHost',
-        subTag: 'connect manager',
+        'result:$result',
+        tag: 'live.streaming.connect-mgr',
+        subTag: 'kickCoHost',
       );
       return result.error == null;
     });
@@ -377,15 +377,15 @@ class ZegoLiveStreamingConnectManager {
     String customData = '',
   }) async {
     ZegoLoggerService.logInfo(
-      'invite audience connect, ${invitee.id} ${invitee.name}',
-      tag: 'live-streaming-coHost',
-      subTag: 'connect manager',
+      'inviter:${invitee.id} ${invitee.name}',
+      tag: 'live.streaming.connect-mgr',
+      subTag: 'inviteAudienceConnect',
     );
 
     if (audienceIDsOfInvitingConnect.contains(invitee.id)) {
       ZegoLoggerService.logInfo(
         'audience is int connect inviting',
-        tag: 'live-streaming-coHost',
+        tag: 'live.streaming.connect-mgr',
         subTag: 'connect manager',
       );
       return true;
@@ -430,7 +430,7 @@ class ZegoLiveStreamingConnectManager {
   bool coHostEndConnect() {
     ZegoLoggerService.logInfo(
       'co-host end connect',
-      tag: 'live-streaming-coHost',
+      tag: 'live.streaming.connect-mgr',
       subTag: 'connect manager',
     );
 
@@ -454,7 +454,7 @@ class ZegoLiveStreamingConnectManager {
       'inviter:$inviter, '
       'type:$type($invitationType) ,'
       'data:$customData, ',
-      tag: 'live-streaming-coHost',
+      tag: 'live.streaming.connect-mgr',
       subTag: 'connect, on invitation received',
     );
 
@@ -536,7 +536,7 @@ class ZegoLiveStreamingConnectManager {
     if (isCoHost(ZegoUIKit().getLocalUser())) {
       ZegoLoggerService.logInfo(
         'audience is co-host now',
-        tag: 'live-streaming-coHost',
+        tag: 'live.streaming.connect-mgr',
         subTag: 'connect, onAudienceReceivedCoHostInvitation',
       );
       return;
@@ -547,7 +547,7 @@ class ZegoLiveStreamingConnectManager {
 
       ZegoLoggerService.logInfo(
         'co-host max count had reached, ignore current co-host invitation',
-        tag: 'live-streaming-coHost',
+        tag: 'live.streaming.connect-mgr',
         subTag: 'connect, onAudienceReceivedCoHostInvitation',
       );
 
@@ -565,7 +565,7 @@ class ZegoLiveStreamingConnectManager {
     if (ZegoLiveStreamingMiniOverlayMachine().isMinimizing) {
       ZegoLoggerService.logInfo(
         'is minimizing now, cache the inviter:$host',
-        tag: 'live-streaming-coHost',
+        tag: 'live.streaming.connect-mgr',
         subTag: 'connect, onAudienceReceivedCoHostInvitation',
       );
 
@@ -581,7 +581,7 @@ class ZegoLiveStreamingConnectManager {
     if (config?.coHost.disableCoHostInvitationReceivedDialog ?? false) {
       ZegoLoggerService.logInfo(
         'config set not show co-host invitation dialog',
-        tag: 'live-streaming-coHost',
+        tag: 'live.streaming.connect-mgr',
         subTag: 'connect, onAudienceReceivedCoHostInvitation',
       );
       return;
@@ -590,7 +590,7 @@ class ZegoLiveStreamingConnectManager {
     if (isInvitedToJoinCoHostDlgVisible) {
       ZegoLoggerService.logInfo(
         'invite to join co-host dialog is visible',
-        tag: 'live-streaming-coHost',
+        tag: 'live.streaming.connect-mgr',
         subTag: 'connect, onAudienceReceivedCoHostInvitation',
       );
       return;
@@ -638,14 +638,14 @@ class ZegoLiveStreamingConnectManager {
 
             ZegoLoggerService.logInfo(
               'refuse co-host invite, result:$result',
-              tag: 'live-streaming-coHost',
+              tag: 'live.streaming.connect-mgr',
               subTag: 'connect, onAudienceReceivedCoHostInvitation',
             );
           });
         } else {
           ZegoLoggerService.logInfo(
             'refuse co-host invite, not living now',
-            tag: 'live-streaming-coHost',
+            tag: 'live.streaming.connect-mgr',
             subTag: 'connect, onAudienceReceivedCoHostInvitation',
           );
         }
@@ -665,7 +665,7 @@ class ZegoLiveStreamingConnectManager {
 
             ZegoLoggerService.logInfo(
               'co-host max count had reached, ignore current accept co-host invite',
-              tag: 'live-streaming-coHost',
+              tag: 'live.streaming.connect-mgr',
               subTag: 'connect, onAudienceReceivedCoHostInvitation',
             );
 
@@ -674,7 +674,7 @@ class ZegoLiveStreamingConnectManager {
 
           ZegoLoggerService.logInfo(
             'accept co-host invite',
-            tag: 'live-streaming-coHost',
+            tag: 'live.streaming.connect-mgr',
             subTag: 'connect, onAudienceReceivedCoHostInvitation',
           );
           if (LiveStatus.living ==
@@ -689,7 +689,7 @@ class ZegoLiveStreamingConnectManager {
                 .then((result) {
               ZegoLoggerService.logInfo(
                 'accept co-host invite, result:$result',
-                tag: 'live-streaming-coHost',
+                tag: 'live.streaming.connect-mgr',
                 subTag: 'connect, onAudienceReceivedCoHostInvitation',
               );
 
@@ -731,7 +731,7 @@ class ZegoLiveStreamingConnectManager {
           } else {
             ZegoLoggerService.logInfo(
               'accept co-host invite, not living now',
-              tag: 'live-streaming-coHost',
+              tag: 'live.streaming.connect-mgr',
               subTag: 'connect, onAudienceReceivedCoHostInvitation',
             );
           }
@@ -757,7 +757,7 @@ class ZegoLiveStreamingConnectManager {
     ZegoLoggerService.logInfo(
       'invitee:$invitee, '
       'customData:$customData, ',
-      tag: 'live-streaming-coHost',
+      tag: 'live.streaming.connect-mgr',
       subTag: 'connect, on invitation accepted',
     );
 
@@ -811,7 +811,7 @@ class ZegoLiveStreamingConnectManager {
     ZegoLoggerService.logInfo(
       'inviter:$inviter, '
       'customData:$customData, ',
-      tag: 'live-streaming-coHost',
+      tag: 'live.streaming.connect-mgr',
       subTag: 'connect, on invitation canceled',
     );
 
@@ -839,7 +839,7 @@ class ZegoLiveStreamingConnectManager {
     ZegoLoggerService.logInfo(
       'invitee:$invitee, '
       'customData: $customData, ',
-      tag: 'live-streaming-coHost',
+      tag: 'live.streaming.connect-mgr',
       subTag: 'connect, on invitation refused',
     );
 
@@ -882,7 +882,7 @@ class ZegoLiveStreamingConnectManager {
 
     ZegoLoggerService.logInfo(
       'inviter:$inviter, data:$data',
-      tag: 'live-streaming-coHost',
+      tag: 'live.streaming.connect-mgr',
       subTag: 'connect, on invitation timeout',
     );
 
@@ -945,7 +945,7 @@ class ZegoLiveStreamingConnectManager {
     ZegoLoggerService.logInfo(
       'data: $data, '
       'invitees:${invitees.map((e) => e.toString())}',
-      tag: 'live-streaming-coHost',
+      tag: 'live.streaming.connect-mgr',
       subTag: 'connect, on invitation response timeout',
     );
 
@@ -982,7 +982,7 @@ class ZegoLiveStreamingConnectManager {
     if (isEndCoHostDialogVisible) {
       ZegoLoggerService.logInfo(
         'end host dialog is visible',
-        tag: 'live-streaming-coHost',
+        tag: 'live.streaming.connect-mgr',
         subTag: 'connect manager',
       );
       return false;
@@ -1031,7 +1031,7 @@ class ZegoLiveStreamingConnectManager {
     if (state == audienceLocalConnectStateNotifier.value) {
       ZegoLoggerService.logInfo(
         'audience connect state is same: $state',
-        tag: 'live-streaming-coHost',
+        tag: 'live.streaming.connect-mgr',
         subTag: 'connect, updateAudienceConnectState',
       );
       return;
@@ -1039,7 +1039,7 @@ class ZegoLiveStreamingConnectManager {
 
     ZegoLoggerService.logInfo(
       'update audience connect state: $state',
-      tag: 'live-streaming-coHost',
+      tag: 'live.streaming.connect-mgr',
       subTag: 'connect, updateAudienceConnectState',
     );
 
@@ -1130,7 +1130,7 @@ class ZegoLiveStreamingConnectManager {
       ZegoLoggerService.logInfo(
         "co-host's camera and microphone are closed, update connect state to idle, "
         'local user:${ZegoUIKit().getLocalUser()} ',
-        tag: 'live-streaming-coHost',
+        tag: 'live.streaming.connect-mgr',
         subTag: 'connect, onLocalCameraStateChanged',
       );
 
@@ -1147,7 +1147,7 @@ class ZegoLiveStreamingConnectManager {
       ZegoLoggerService.logInfo(
         "co-host's camera and microphone are closed, update connect state to idle, "
         'local user:${ZegoUIKit().getLocalUser()} ',
-        tag: 'live-streaming-coHost',
+        tag: 'live.streaming.connect-mgr',
         subTag: 'connect, onLocalMicrophoneStateChanged',
       );
 
@@ -1157,8 +1157,8 @@ class ZegoLiveStreamingConnectManager {
 }
 
 extension ZegoLiveConnectManagerCoHostCount on ZegoLiveStreamingConnectManager {
-  void initCoHostMixin() {
-    subscriptions
+  void listenRTCCoHostEvents() {
+    rtcSubscriptions
       ..add(ZegoUIKit()
           .getUserListStream(targetRoomID: liveID)
           .listen(onUserListUpdated))
@@ -1181,7 +1181,7 @@ extension ZegoLiveConnectManagerCoHostCount on ZegoLiveStreamingConnectManager {
 
     ZegoLoggerService.logInfo(
       'audio video list changed, co-host count changed to ${coHostCount.value}',
-      tag: 'live-streaming-coHost',
+      tag: 'live.streaming.connect-mgr',
       subTag: 'connect, onAudioVideoListUpdated',
     );
 
@@ -1208,7 +1208,7 @@ extension ZegoLiveConnectManagerCoHostCount on ZegoLiveStreamingConnectManager {
       ZegoLoggerService.logInfo(
         'audio video list changed, max co-host count reach, '
         'will kick $kickCount user in ${coHosts.length} by sort:$kickUsers',
-        tag: 'live-streaming-coHost',
+        tag: 'live.streaming.connect-mgr',
         subTag: 'connect, onAudioVideoListUpdated',
       );
 
@@ -1221,7 +1221,7 @@ extension ZegoLiveConnectManagerCoHostCount on ZegoLiveStreamingConnectManager {
 
     ZegoLoggerService.logInfo(
       'user list changed, co-host count changed to ${coHostCount.value}',
-      tag: 'live-streaming-coHost',
+      tag: 'live.streaming.connect-mgr',
       subTag: 'connect, onUserListUpdated',
     );
   }
@@ -1264,7 +1264,7 @@ extension ZegoLiveConnectManagerCoHostCount on ZegoLiveStreamingConnectManager {
 
     ZegoLoggerService.logInfo(
       'user camera state changed, co-host count changed to ${coHostCount.value}',
-      tag: 'live-streaming-coHost',
+      tag: 'live.streaming.connect-mgr',
       subTag: 'connect, onUserCameraStateChanged',
     );
   }
@@ -1277,7 +1277,7 @@ extension ZegoLiveConnectManagerCoHostCount on ZegoLiveStreamingConnectManager {
 
     ZegoLoggerService.logInfo(
       'user microphone state changed, co-host count changed to ${coHostCount.value}',
-      tag: 'live-streaming-coHost',
+      tag: 'live.streaming.connect-mgr',
       subTag: 'connect, onUserMicrophoneStateChanged',
     );
   }

@@ -1,11 +1,11 @@
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
+
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/lifecycle.dart';
-
 import 'stream_context.dart';
 
 class ZegoLiveStreamingSwipingLifeCycle {
@@ -29,7 +29,7 @@ class ZegoLiveStreamingSwipingLifeCycle {
   }) async {
     ZegoLoggerService.logInfo(
       '',
-      tag: 'live-streaming-lifecyle-swiping',
+      tag: 'live.streaming.lifecyle-swiping',
       subTag: 'initFromPreview',
     );
 

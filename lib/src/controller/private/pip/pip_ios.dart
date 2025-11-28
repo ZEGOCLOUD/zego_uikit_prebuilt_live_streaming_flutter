@@ -74,7 +74,7 @@ class ZegoLiveStreamingControllerIOSPIP
     } catch (e) {
       ZegoLoggerService.logInfo(
         'enableWhenBackground exception:${e.toString()}',
-        tag: 'call',
+        tag: 'live.streaming.controller.pip',
         subTag: 'controller.pip',
       );
     }
@@ -123,7 +123,7 @@ class ZegoCallControllerPIPImplPrivateIOS {
         if (systemVersion.major < 15) {
           ZegoLoggerService.logInfo(
             'not support pip smaller than 15',
-            tag: 'call',
+            tag: 'live.streaming.controller.pip',
             subTag: 'controller.pip',
           );
 
@@ -140,7 +140,7 @@ class ZegoCallControllerPIPImplPrivateIOS {
   }) async {
     ZegoLoggerService.logInfo(
       'init by prebuilt',
-      tag: 'call',
+      tag: 'live.streaming.controller.pip',
       subTag: 'controller.pip.p ios',
     );
 
@@ -149,7 +149,7 @@ class ZegoCallControllerPIPImplPrivateIOS {
     if (!Platform.isIOS) {
       ZegoLoggerService.logInfo(
         'initByPrebuilt, only support iOS',
-        tag: 'call',
+        tag: 'live.streaming.controller.pip',
         subTag: 'controller.pip',
       );
 
@@ -185,7 +185,7 @@ class ZegoCallControllerPIPImplPrivateIOS {
   void uninitByPrebuilt() {
     ZegoLoggerService.logInfo(
       'un-init by prebuilt',
-      tag: 'call',
+      tag: 'live.streaming.controller.pip',
       subTag: 'controller.pip.p ios',
     );
 
@@ -218,7 +218,7 @@ class ZegoCallControllerPIPImplPrivateIOS {
     if (systemVersion.major < 15) {
       ZegoLoggerService.logInfo(
         'not support smaller than 15',
-        tag: 'uikit-channel',
+        tag: 'live.streaming.controller.pip',
         subTag: 'enableWhenBackground',
       );
 
@@ -250,7 +250,7 @@ class ZegoCallControllerPIPImplPrivateIOS {
     //
     // ZegoLoggerService.logInfo(
     //   'onMinimizeActiveUserChanged, $targetUserID',
-    //   tag: 'call',
+    //   tag: 'live.streaming.controller.pip',
     //   subTag: 'controller.pip.p ios',
     // );
     //
@@ -296,7 +296,7 @@ class ZegoCallControllerPIPImplPrivateIOS {
   void _onAppLifecycleStateChanged(AppLifecycleState appLifecycleState) async {
     ZegoLoggerService.logInfo(
       '_onAppLifecycleStateChanged, $appLifecycleState',
-      tag: 'call',
+      tag: 'live.streaming.controller.pip',
       subTag: 'controller.pip.p ios',
     );
 

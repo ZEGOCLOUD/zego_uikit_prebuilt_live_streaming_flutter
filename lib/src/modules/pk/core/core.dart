@@ -45,7 +45,7 @@ class ZegoUIKitPrebuiltLiveStreamingPK
 
     ZegoLoggerService.logInfo(
       'init',
-      tag: 'live-streaming-pk',
+      tag: 'live.streaming.pk',
       subTag: 'service',
     );
 
@@ -68,7 +68,7 @@ class ZegoUIKitPrebuiltLiveStreamingPK
 
     ZegoLoggerService.logInfo(
       'uninit',
-      tag: 'live-streaming-pk',
+      tag: 'live.streaming.pk',
       subTag: 'service',
     );
 

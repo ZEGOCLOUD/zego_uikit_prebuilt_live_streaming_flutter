@@ -18,14 +18,14 @@ class ZegoLiveStreamingPageLifeCycleDispose {
     ZegoLoggerService.logInfo(
       'room id:$targetLiveID, '
       'canLeaveRoom:$canLeaveRoom, ',
-      tag: 'live-streaming-lifecyle-dispose',
+      tag: 'live.streaming.lifecyle-dispose',
       subTag: 'run',
     );
 
     if (ZegoLiveStreamingMiniOverlayMachine().isMinimizing) {
       ZegoLoggerService.logInfo(
         'isMinimizing, ignore',
-        tag: 'live-streaming-lifecyle-dispose',
+        tag: 'live.streaming.lifecyle-dispose',
         subTag: 'run',
       );
 
@@ -68,7 +68,7 @@ class ZegoLiveStreamingPageLifeCycleDispose {
   Future<void> _uninitBaseBeautyConfig() async {
     ZegoLoggerService.logInfo(
       '',
-      tag: 'live-streaming-lifecyle-dispose',
+      tag: 'live.streaming.lifecyle-dispose',
       subTag: 'uninitBaseBeautyConfig',
     );
 
@@ -83,7 +83,7 @@ class ZegoLiveStreamingPageLifeCycleDispose {
   }) {
     ZegoLoggerService.logInfo(
       '',
-      tag: 'live-streaming-lifecyle-dispose',
+      tag: 'live.streaming.lifecyle-dispose',
       subTag: 'onRoomLogout',
     );
 

@@ -4,7 +4,7 @@ class ZegoLiveStreamingSwipingStyle {
 
   @override
   String toString() {
-    return 'ZegoLiveStreamingSwipingStyle:{'
+    return '{'
         '}';
   }
 }

@@ -18,7 +18,7 @@ class ZegoLiveStreamingControllerScreenImplPrivateImpl {
   }) async {
     ZegoLoggerService.logInfo(
       'init by prebuilt',
-      tag: 'live-streaming',
+      tag: 'live.streaming.controller.screen',
       subTag: 'controller.screenSharing.p',
     );
 
@@ -42,7 +42,7 @@ class ZegoLiveStreamingControllerScreenImplPrivateImpl {
   void uninitByPrebuilt() {
     ZegoLoggerService.logInfo(
       'un-init by prebuilt',
-      tag: 'live-streaming',
+      tag: 'live.streaming.controller.screen',
       subTag: 'controller.pip.p',
     );
   }

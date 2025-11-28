@@ -32,7 +32,7 @@ class ZegoLiveStreamingNormalLifeCycle {
     if (currentLiveID.isEmpty) {
       ZegoLoggerService.logInfo(
         'current live id is empty, ignore',
-        tag: 'live-streaming-lifecyle',
+        tag: 'live.streaming.lifecyle',
         subTag: 'onRoomsStateUpdated',
       );
 
@@ -45,7 +45,7 @@ class ZegoLiveStreamingNormalLifeCycle {
         'not contain current live id, ignore'
         'currentLiveID:$currentLiveID, '
         'roomsState:$roomsState, ',
-        tag: 'live-streaming-lifecyle',
+        tag: 'live.streaming.lifecyle',
         subTag: 'onRoomsStateUpdated',
       );
 
@@ -58,7 +58,7 @@ class ZegoLiveStreamingNormalLifeCycle {
         'room not login, ignore'
         'currentLiveID:$currentLiveID, '
         'roomState:$roomState, ',
-        tag: 'live-streaming-lifecyle',
+        tag: 'live.streaming.lifecyle',
         subTag: 'onRoomsStateUpdated',
       );
 
@@ -69,7 +69,7 @@ class ZegoLiveStreamingNormalLifeCycle {
       'room login'
       'currentLiveID:$currentLiveID, '
       'roomState:$roomState, ',
-      tag: 'live-streaming-lifecyle',
+      tag: 'live.streaming.lifecyle',
       subTag: 'onRoomsStateUpdated',
     );
     initStateDelegate.onRoomLogin(ZegoUIKitRoomLoginResult(

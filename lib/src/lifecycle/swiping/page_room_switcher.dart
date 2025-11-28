@@ -3,10 +3,10 @@ import 'dart:async';
 
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
-// Project imports:
-import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/lifecycle.dart';
 
+// Project imports:
+import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/lifecycle.dart';
 import 'room_login_checker.dart';
 
 /// Room information (room ID and token)
@@ -21,7 +21,9 @@ class ZegoLiveStreamingSwipingRoomInfo {
 
   @override
   String toString() {
-    return 'room id:$liveID';
+    return '{'
+        'room id:$liveID'
+        '}';
   }
 }
 
@@ -66,7 +68,7 @@ class ZegoLiveStreamingSwipingPageRoomSwitcher {
       'shouldCheckCurrentRoom:$shouldCheckCurrentRoom, '
       'processingRoomID:$_processingRoomID, '
       'stack(${_roomStack.length}):$_roomStack, ',
-      tag: 'live-streaming-room-switch',
+      tag: 'live.streaming.room-switch',
       subTag: 'pushRoomID',
     );
 
@@ -93,7 +95,7 @@ class ZegoLiveStreamingSwipingPageRoomSwitcher {
     if (_roomStack.isEmpty) {
       ZegoLoggerService.logError(
         'room stack is empty, this should not happen',
-        tag: 'live-streaming-room-switch',
+        tag: 'live.streaming.room-switch',
         subTag: 'processStack',
       );
       return;
@@ -103,7 +105,7 @@ class ZegoLiveStreamingSwipingPageRoomSwitcher {
     if (_processingRoomID != null) {
       ZegoLoggerService.logInfo(
         'already processing room id:$_processingRoomID, wait...',
-        tag: 'live-streaming-room-switch',
+        tag: 'live.streaming.room-switch',
         subTag: 'processStack',
       );
       return;
@@ -122,7 +124,7 @@ class ZegoLiveStreamingSwipingPageRoomSwitcher {
       if (currentRoomID.isEmpty) {
         ZegoLoggerService.logError(
           'current room id is null or empty, cannot process stack',
-          tag: 'live-streaming-room-switch',
+          tag: 'live.streaming.room-switch',
           subTag: 'processStack',
         );
         _processingRoomID = null;
@@ -132,7 +134,7 @@ class ZegoLiveStreamingSwipingPageRoomSwitcher {
       ZegoLoggerService.logInfo(
         'process stack, target room id:$targetRoomID, '
         'current room id:$currentRoomID',
-        tag: 'live-streaming-room-switch',
+        tag: 'live.streaming.room-switch',
         subTag: 'processStack',
       );
 
@@ -141,7 +143,7 @@ class ZegoLiveStreamingSwipingPageRoomSwitcher {
         /// If yes, clear stack and finish
         ZegoLoggerService.logInfo(
           'target room id is same as current room id, clear stack and finish',
-          tag: 'live-streaming-room-switch',
+          tag: 'live.streaming.room-switch',
           subTag: 'processStack',
         );
         _processingRoomID = null;
@@ -150,7 +152,7 @@ class ZegoLiveStreamingSwipingPageRoomSwitcher {
     } else {
       ZegoLoggerService.logInfo(
         'process stack, target room id:$targetRoomID, skip check current room',
-        tag: 'live-streaming-room-switch',
+        tag: 'live.streaming.room-switch',
         subTag: 'processStack',
       );
     }
@@ -165,7 +167,7 @@ class ZegoLiveStreamingSwipingPageRoomSwitcher {
     if (!ZegoLiveStreamingPageLifeCycle().swiping.usingRoomSwiping) {
       ZegoLoggerService.logError(
         'room delegate is null, cannot switch room',
-        tag: 'live-streaming-room-switch',
+        tag: 'live.streaming.room-switch',
         subTag: 'switchRoom',
       );
       _processingRoomID = null;
@@ -174,7 +176,7 @@ class ZegoLiveStreamingSwipingPageRoomSwitcher {
 
     ZegoLoggerService.logInfo(
       'switch room, from:${ZegoUIKit().getCurrentRoom().id}, to:$targetRoomID',
-      tag: 'live-streaming-room-switch',
+      tag: 'live.streaming.room-switch',
       subTag: 'switchRoom',
     );
 
@@ -192,7 +194,7 @@ class ZegoLiveStreamingSwipingPageRoomSwitcher {
     } catch (e) {
       ZegoLoggerService.logError(
         'switch room failed, error:$e',
-        tag: 'live-streaming-room-switch',
+        tag: 'live.streaming.room-switch',
         subTag: 'switchRoom',
       );
       _processingRoomID = null;
@@ -203,7 +205,7 @@ class ZegoLiveStreamingSwipingPageRoomSwitcher {
   Future<void> _waitForRoomLogin(String targetRoomID) async {
     ZegoLoggerService.logInfo(
       'wait for room login, target room id:$targetRoomID',
-      tag: 'live-streaming-room-switch',
+      tag: 'live.streaming.room-switch',
       subTag: 'waitForRoomLogin',
     );
 
@@ -221,7 +223,7 @@ class ZegoLiveStreamingSwipingPageRoomSwitcher {
     if (_loginNotifier!.value) {
       ZegoLoggerService.logInfo(
         'room already logged in, target room id:$targetRoomID',
-        tag: 'live-streaming-room-switch',
+        tag: 'live.streaming.room-switch',
         subTag: 'waitForRoomLogin',
       );
       _onRoomLoginCompleted();
@@ -243,7 +245,7 @@ class ZegoLiveStreamingSwipingPageRoomSwitcher {
   void _onRoomLoginCompleted() {
     ZegoLoggerService.logInfo(
       'room login completed, processing room id:$_processingRoomID',
-      tag: 'live-streaming-room-switch',
+      tag: 'live.streaming.room-switch',
       subTag: 'onRoomLoginCompleted',
     );
 
@@ -265,7 +267,7 @@ class ZegoLiveStreamingSwipingPageRoomSwitcher {
       ZegoLoggerService.logInfo(
         'room stack is not empty after login, continue process, '
         'completed room id:$completedRoomID, stack:$_roomStack',
-        tag: 'live-streaming-room-switch',
+        tag: 'live.streaming.room-switch',
         subTag: 'onRoomLoginCompleted',
       );
       _processStack(shouldCheckCurrentRoom: true);
@@ -273,7 +275,7 @@ class ZegoLiveStreamingSwipingPageRoomSwitcher {
       ZegoLoggerService.logInfo(
         'room stack is empty after login, finish process, '
         'completed room id:$completedRoomID',
-        tag: 'live-streaming-room-switch',
+        tag: 'live.streaming.room-switch',
         subTag: 'onRoomLoginCompleted',
       );
     }
@@ -283,7 +285,7 @@ class ZegoLiveStreamingSwipingPageRoomSwitcher {
   void dispose() {
     ZegoLoggerService.logInfo(
       'dispose room switch manager',
-      tag: 'live-streaming-room-switch',
+      tag: 'live.streaming.room-switch',
       subTag: 'dispose',
     );
 

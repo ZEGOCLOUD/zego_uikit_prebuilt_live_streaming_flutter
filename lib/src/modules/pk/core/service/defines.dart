@@ -43,9 +43,11 @@ class ZegoLiveStreamingPKServiceSendRequestResult {
   final PlatformException? error;
 
   @override
-  String toString() => '{requestID;$requestID, '
+  String toString() => '{'
+      'requestID;$requestID, '
       'errorUserIDs:$errorUserIDs, '
-      'error: $error}';
+      'error: $error, '
+      '}';
 }
 
 /// result of request in pk service
@@ -59,5 +61,8 @@ class ZegoLiveStreamingPKServiceResult {
   final PlatformException? error;
 
   @override
-  String toString() => '{errorUserIDs:$errorUserIDs, error: $error}';
+  String toString() => '{'
+      'errorUserIDs:$errorUserIDs, '
+      'error: $error, '
+      '}';
 }

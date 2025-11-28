@@ -26,7 +26,7 @@ class ZegoLiveStreamingControllerMinimizingImpl
     if (ZegoLiveStreamingMiniOverlayPageState.minimizing != state) {
       ZegoLoggerService.logInfo(
         'is not minimizing, ignore',
-        tag: 'live-streaming',
+        tag: 'live.streaming.controller.minimize',
         subTag: 'controller.minimize, restore',
       );
 
@@ -37,7 +37,7 @@ class ZegoLiveStreamingControllerMinimizingImpl
     if (null == minimizeData) {
       ZegoLoggerService.logError(
         'prebuiltData is null',
-        tag: 'live-streaming',
+        tag: 'live.streaming.controller.minimize',
         subTag: 'controller.minimize, restore',
       );
 
@@ -80,7 +80,7 @@ class ZegoLiveStreamingControllerMinimizingImpl
     } catch (e) {
       ZegoLoggerService.logInfo(
         'restore from mini exception:$e',
-        tag: 'live-streaming',
+        tag: 'live.streaming.controller.minimize',
         subTag: 'controller.minimize, restore',
       );
     }
@@ -96,7 +96,7 @@ class ZegoLiveStreamingControllerMinimizingImpl
     if (ZegoLiveStreamingMiniOverlayMachine().isMinimizing) {
       ZegoLoggerService.logInfo(
         'is minimizing, ignore',
-        tag: 'live-streaming',
+        tag: 'live.streaming.controller.minimize',
         subTag: 'controller.minimize, minimize',
       );
 
@@ -106,7 +106,7 @@ class ZegoLiveStreamingControllerMinimizingImpl
     if (!private.isLiving) {
       ZegoLoggerService.logInfo(
         'is not living, ignore',
-        tag: 'live-streaming',
+        tag: 'live.streaming.controller.minimize',
         subTag: 'controller.minimize, minimize',
       );
 
@@ -126,7 +126,7 @@ class ZegoLiveStreamingControllerMinimizingImpl
     } catch (e) {
       ZegoLoggerService.logError(
         'navigator pop exception:$e',
-        tag: 'live-streaming',
+        tag: 'live.streaming.controller.minimize',
         subTag: 'controller.minimize, minimize',
       );
 

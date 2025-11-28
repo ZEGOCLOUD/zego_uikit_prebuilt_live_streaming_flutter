@@ -21,7 +21,7 @@ class ZegoLiveStreamingControllerPKPrivateImpl {
   void initByPrebuilt() {
     ZegoLoggerService.logInfo(
       'init by prebuilt',
-      tag: 'live-streaming',
+      tag: 'live.streaming.controller.pk',
       subTag: 'controller.pk.p',
     );
 
@@ -39,7 +39,7 @@ class ZegoLiveStreamingControllerPKPrivateImpl {
   void uninitByPrebuilt() {
     ZegoLoggerService.logInfo(
       'uninit by prebuilt',
-      tag: 'live-streaming',
+      tag: 'live.streaming.controller.pk',
       subTag: 'controller.pk.p',
     );
 
@@ -55,7 +55,7 @@ class ZegoLiveStreamingControllerPKPrivateImpl {
 
     ZegoLoggerService.logInfo(
       'onPKStateChanged, pkState:$pkState',
-      tag: 'live-streaming',
+      tag: 'live.streaming.controller.pk',
       subTag: 'controller.pk.p',
     );
 
@@ -68,7 +68,7 @@ class ZegoLiveStreamingControllerPKPrivateImpl {
 
     ZegoLoggerService.logInfo(
       'onMutedUsersChanged, mutedUsers:$mutedUsers',
-      tag: 'live-streaming',
+      tag: 'live.streaming.controller.pk',
       subTag: 'controller.pk.p',
     );
 

@@ -12,7 +12,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
     if (_eventInitialized) {
       ZegoLoggerService.logInfo(
         'had already init',
-        tag: 'live-streaming-pk',
+        tag: 'live.streaming.pk.events',
         subTag: 'pk event',
       );
 
@@ -23,7 +23,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
 
     ZegoLoggerService.logInfo(
       'init',
-      tag: 'live-streaming-pk',
+      tag: 'live.streaming.pk.events',
       subTag: 'pk event',
     );
 
@@ -54,7 +54,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
   ) {
     ZegoLoggerService.logInfo(
       'onWaitingQueryRoomProperties, event:$event',
-      tag: 'live-streaming-pk',
+      tag: 'live.streaming.pk.events',
       subTag: 'pk event',
     );
 
@@ -65,7 +65,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
   void queryRoomProperties() {
     ZegoLoggerService.logInfo(
       'queryRoomProperties',
-      tag: 'live-streaming-pk',
+      tag: 'live.streaming.pk.events',
       subTag: 'pk event',
     );
 
@@ -73,7 +73,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
     if (ZegoSignalingPluginRoomState.connected != signalingRoomState) {
       ZegoLoggerService.logInfo(
         'room state($signalingRoomState) is not connected, wait...',
-        tag: 'live-streaming-pk',
+        tag: 'live.streaming.pk.events',
         subTag: 'pk event',
       );
 
@@ -90,7 +90,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
           .then((result) async {
         ZegoLoggerService.logInfo(
           'queryRoomProperties done: $result',
-          tag: 'live-streaming-pk',
+          tag: 'live.streaming.pk.events',
           subTag: 'pk event',
         );
 
@@ -101,7 +101,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
 
           ZegoLoggerService.logInfo(
             'room property contain pk keys, quit pk',
-            tag: 'live-streaming-pk',
+            tag: 'live.streaming.pk.events',
             subTag: 'pk event',
           );
 
@@ -124,7 +124,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
     if (!_eventInitialized) {
       ZegoLoggerService.logInfo(
         'not init before',
-        tag: 'live-streaming-pk',
+        tag: 'live.streaming.pk.events',
         subTag: 'pk event',
       );
 
@@ -134,7 +134,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
     _eventInitialized = false;
     ZegoLoggerService.logInfo(
       'uninit',
-      tag: 'live-streaming-pk',
+      tag: 'live.streaming.pk.events',
       subTag: 'pk event',
     );
 
@@ -156,7 +156,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
   ) {
     ZegoLoggerService.logInfo(
       'onInvitationUserStateChanged, event:$event',
-      tag: 'live-streaming-pk',
+      tag: 'live.streaming.pk.events',
       subTag: 'pk event',
     );
 
@@ -169,7 +169,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
 
       ZegoLoggerService.logInfo(
         'event is not advance invitation',
-        tag: 'live-streaming-pk',
+        tag: 'live.streaming.pk.events',
         subTag: 'pk event',
       );
 
@@ -191,7 +191,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
   ) {
     ZegoLoggerService.logInfo(
       '_onLocalInvitationUserStateChanged, user info:$userInfo',
-      tag: 'live-streaming-pk',
+      tag: 'live.streaming.pk.events',
       subTag: 'pk event',
     );
 
@@ -249,7 +249,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
       '_onRemoteInvitationUserStateChanged, '
       'sessionInitiator:$sessionInitiator, '
       'user info:$remoteUserInfo, ',
-      tag: 'live-streaming-pk',
+      tag: 'live.streaming.pk.events',
       subTag: 'pk event',
     );
 
@@ -261,7 +261,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
     } catch (e) {
       ZegoLoggerService.logInfo(
         'extendedData is not a json:${remoteUserInfo.extendedData}',
-        tag: 'live-streaming-pk',
+        tag: 'live.streaming.pk.events',
         subTag: 'pk event',
       );
     }
@@ -421,7 +421,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
               'heartbeat timer, ${pkUser.userInfo.id} heartbeat had broken,'
               'heartbeat: ${pkUser.heartbeat}, '
               'now:$now, mute audio',
-              tag: 'live-streaming-pk',
+              tag: 'live.streaming.pk.events',
               subTag: 'pk event',
             );
 
@@ -442,7 +442,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
         if (tempBrokenIDs.isNotEmpty) {
           ZegoLoggerService.logInfo(
             'heartbeat timer, temp broken user:$tempBrokenIDs, ',
-            tag: 'live-streaming-pk',
+            tag: 'live.streaming.pk.events',
             subTag: 'pk event',
           );
         }
@@ -450,7 +450,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
         if (alreadyBrokenIDs.isNotEmpty) {
           ZegoLoggerService.logInfo(
             'heartbeat timer, $alreadyBrokenIDs heartbeat had broken so long, remove from pk,',
-            tag: 'live-streaming-pk',
+            tag: 'live.streaming.pk.events',
             subTag: 'pk event',
           );
 
@@ -469,14 +469,14 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
     if (_coreData.prebuiltConfig?.plugins.isEmpty ?? true) {
       ZegoLoggerService.logInfo(
         'listen, but plugin is empty',
-        tag: 'live-streaming-pk',
+        tag: 'live.streaming.pk.events',
         subTag: 'pk event',
       );
     }
 
     ZegoLoggerService.logInfo(
       'listen',
-      tag: 'live-streaming-pk',
+      tag: 'live.streaming.pk.events',
       subTag: 'pk event',
     );
 
@@ -502,7 +502,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
           .map((params) {
         ZegoLoggerService.logInfo(
           'params:$params',
-          tag: 'live-streaming-pk',
+          tag: 'live.streaming.pk.events',
           subTag: 'pk event, on invitation received',
         );
 
@@ -563,7 +563,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
           .map((params) {
         ZegoLoggerService.logInfo(
           'onInvitationCanceled, params:$params, ',
-          tag: 'live-streaming-pk',
+          tag: 'live.streaming.pk.events',
           subTag: 'pk event',
         );
 
@@ -585,7 +585,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
           .map((params) {
         ZegoLoggerService.logInfo(
           'onInvitationTimeout, params:$params',
-          tag: 'live-streaming-pk',
+          tag: 'live.streaming.pk.events',
           subTag: 'pk event',
         );
 
@@ -606,7 +606,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
           .map((params) {
         ZegoLoggerService.logInfo(
           'on invitation ended, params:$params, ',
-          tag: 'live-streaming-pk',
+          tag: 'live.streaming.pk.events',
           subTag: 'pk event',
         );
 
@@ -652,7 +652,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
       /// user reconnected
       ZegoLoggerService.logInfo(
         'received ${pkUser.userInfo.id} sei, un-mute audio',
-        tag: 'live-streaming-pk',
+        tag: 'live.streaming.pk.events',
         subTag: 'pk event',
       );
 
@@ -676,7 +676,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
   ) async {
     ZegoLoggerService.logInfo(
       'onRoomAttributesUpdated, event:$event',
-      tag: 'live-streaming-pk',
+      tag: 'live.streaming.pk.events',
       subTag: 'pk event',
     );
     _coreData.updatePropertyHostID(event);
@@ -730,14 +730,14 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
               .addListener(onLiveStartedByLocal);
           ZegoLoggerService.logInfo(
             'onRoomAttributesUpdated, waiting for startedByLocalNotifier',
-            tag: 'live-streaming-pk',
+            tag: 'live.streaming.pk.events',
             subTag: 'pk event',
           );
           await completer.future;
           ZegoLoggerService.logInfo(
             'onRoomAttributesUpdated, startedByLocalNotifier change to '
             'true, check liveStatusNotifier',
-            tag: 'live-streaming-pk',
+            tag: 'live.streaming.pk.events',
             subTag: 'pk event',
           );
         }
@@ -774,14 +774,14 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
             .addListener(onLiveStatusChanged);
         ZegoLoggerService.logInfo(
           'onRoomAttributesUpdated, waiting for liveStatusNotifier',
-          tag: 'live-streaming-pk',
+          tag: 'live.streaming.pk.events',
           subTag: 'pk event',
         );
 
         await completer.future;
         ZegoLoggerService.logInfo(
           'onRoomAttributesUpdated, liveStatusNotifier change to living, startPK',
-          tag: 'live-streaming-pk',
+          tag: 'live.streaming.pk.events',
           subTag: 'pk event',
         );
       }
@@ -836,7 +836,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
   ) async {
     ZegoLoggerService.logInfo(
       'event:$event, state:${pkStateNotifier.value}',
-      tag: 'live-streaming-pk',
+      tag: 'live.streaming.pk.events',
       subTag: 'pk event, on invitation received',
     );
 
@@ -847,7 +847,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
         'isHost:$isHost, '
         'auto reject with code '
         '${ZegoLiveStreamingPKBattleRejectCode.hostStateError.index}',
-        tag: 'live-streaming-pk',
+        tag: 'live.streaming.pk.events',
         subTag: 'pk event, on invitation received',
       );
 
@@ -881,7 +881,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
           .call(
         'busy(${pkStateNotifier.value}), '
         'auto reject, ret:$ret',
-        tag: 'live-streaming-pk',
+        tag: 'live.streaming.pk.events',
         subTag: 'pk event, on invitation received',
       );
 
@@ -925,7 +925,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
     if (ZegoLiveStreamingMiniOverlayMachine().isMinimizing) {
       ZegoLoggerService.logInfo(
         'is minimizing now, cache the event:$event',
-        tag: 'live-streaming-pk',
+        tag: 'live.streaming.pk.events',
         subTag: 'pk event',
       );
 
@@ -966,7 +966,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
         _coreData.pkBattleRequestReceivedEventInMinimizingNotifier.value) {
       ZegoLoggerService.logInfo(
         'restore pk battle request from minimizing, event is null',
-        tag: 'live-streaming-pk',
+        tag: 'live.streaming.pk.events',
         subTag: 'pk event',
       );
       return;
@@ -974,7 +974,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
 
     ZegoLoggerService.logInfo(
       'restore pk battle request from minimizing',
-      tag: 'live-streaming-pk',
+      tag: 'live.streaming.pk.events',
       subTag: 'pk event',
     );
     _onInvitationReceived(
@@ -987,7 +987,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
   ) async {
     ZegoLoggerService.logInfo(
       'on invitation accepted, event:$event, ',
-      tag: 'live-streaming-pk',
+      tag: 'live.streaming.pk.events',
       subTag: 'pk event',
     );
 
@@ -1027,7 +1027,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
   ) {
     ZegoLoggerService.logInfo(
       'onInvitationCanceled, event:$event',
-      tag: 'live-streaming-pk',
+      tag: 'live.streaming.pk.events',
       subTag: 'pk event',
     );
 
@@ -1058,7 +1058,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
       'event:$event, '
       'message:$message, '
       'remaining number of participants in the PK session:${ZegoUIKit().getSignalingPlugin().getAdvanceInvitees(event.requestID)}, ',
-      tag: 'live-streaming-pk',
+      tag: 'live.streaming.pk.events',
       subTag: 'pk event',
     );
 
@@ -1105,7 +1105,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
       'onInvitationTimeout, '
       'event:$event, '
       'remaining number of participants in the PK session:${ZegoUIKit().getSignalingPlugin().getAdvanceInvitees(event.requestID)}, ',
-      tag: 'live-streaming-pk',
+      tag: 'live.streaming.pk.events',
       subTag: 'pk event',
     );
 
@@ -1134,7 +1134,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
       'onInvitationResponseTimeout, '
       'event:$event, '
       'remaining number of participants in the PK session:${ZegoUIKit().getSignalingPlugin().getAdvanceInvitees(event.requestID)}, ',
-      tag: 'live-streaming-pk',
+      tag: 'live.streaming.pk.events',
       subTag: 'pk event',
     );
 
@@ -1146,7 +1146,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
   void _onInvitationEnded(ZegoLiveStreamingPKBattleEndedEvent event) {
     ZegoLoggerService.logInfo(
       'on invitation ended, event:$event, ',
-      tag: 'live-streaming-pk',
+      tag: 'live.streaming.pk.events',
       subTag: 'pk event',
     );
 
@@ -1172,7 +1172,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
       '_onInvitationUserOffline, '
       'event:$event, '
       'remaining number of participants in the PK session:${ZegoUIKit().getSignalingPlugin().getAdvanceInvitees(event.requestID)}, ',
-      tag: 'live-streaming-pk',
+      tag: 'live.streaming.pk.events',
       subTag: 'pk event',
     );
 
@@ -1194,7 +1194,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
       '_onInvitationUserQuit, '
       'event:$event, '
       'remaining number of participants in the PK session:${ZegoUIKit().getSignalingPlugin().getAdvanceInvitees(event.requestID)}, ',
-      tag: 'live-streaming-pk',
+      tag: 'live.streaming.pk.events',
       subTag: 'pk event',
     );
 

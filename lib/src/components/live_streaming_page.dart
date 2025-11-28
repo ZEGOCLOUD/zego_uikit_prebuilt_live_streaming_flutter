@@ -4,11 +4,13 @@ import 'dart:core';
 import 'dart:io' show Platform;
 import 'dart:ui';
 
-// Package imports:
-import 'package:floating/floating.dart';
 // Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:floating/floating.dart';
 import 'package:zego_uikit/zego_uikit.dart';
+
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
@@ -21,7 +23,6 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/internal/events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/lifecycle.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/minimizing/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/minimizing/overlay_machine.dart';
-
 import 'live_page.dart';
 import 'mini_live.dart';
 import 'preview_page.dart';
@@ -111,7 +112,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
 
     ZegoLoggerService.logInfo(
       'initState',
-      tag: 'live-streaming',
+      tag: 'live.streaming.page',
       subTag: 'prebuilt',
     );
 
@@ -145,7 +146,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
 
     ZegoLoggerService.logInfo(
       'mini machine state is ${ZegoLiveStreamingMiniOverlayMachine().state}',
-      tag: 'live-streaming',
+      tag: 'live.streaming.page',
       subTag: 'prebuilt',
     );
 
@@ -179,7 +180,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
 
     ZegoLoggerService.logInfo(
       'dispose',
-      tag: 'live-streaming',
+      tag: 'live.streaming.page',
       subTag: 'prebuilt',
     );
   }
@@ -190,7 +191,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
 
     ZegoLoggerService.logInfo(
       'didChangeAppLifecycleState $state',
-      tag: 'live-streaming',
+      tag: 'live.streaming.page',
       subTag: 'prebuilt',
     );
 
@@ -322,7 +323,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
   void onMeRemovedFromRoom(String fromUserID) {
     ZegoLoggerService.logInfo(
       'local user removed by $fromUserID',
-      tag: 'live-streaming',
+      tag: 'live.streaming.page',
       subTag: 'prebuilt, removed users',
     );
 
@@ -376,7 +377,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
             'leave confirmation left click, '
             'navigator exception:$e, '
             'event:$event',
-            tag: 'live-streaming',
+            tag: 'live.streaming.page',
             subTag: 'prebuilt',
           );
         }
@@ -394,7 +395,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
             'leave confirmation right click, '
             'navigator exception:$e, '
             'event:$event',
-            tag: 'live-streaming',
+            tag: 'live.streaming.page',
             subTag: 'prebuilt',
           );
         }
@@ -410,7 +411,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
       'event:$event, '
       'isPrebuiltFromHall:${widget.isPrebuiltFromHall}, '
       'hall onPagePushReplace:${null != widget.events?.hall.onPagePushReplace}, ',
-      tag: 'live-streaming',
+      tag: 'live.streaming.page',
       subTag: 'prebuilt',
     );
 
@@ -434,7 +435,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
               if (null == widget.events?.hall.onPagePushReplace) {
                 ZegoLoggerService.logError(
                   'please assign value to ZegoUIKitPrebuiltLiveStreamingEvents.hall.onPagePushReplace',
-                  tag: 'live-streaming',
+                  tag: 'live.streaming.page',
                   subTag: 'prebuilt',
                 );
 
@@ -451,7 +452,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
               'live end, navigator exception:$e, '
               'isPrebuiltFromHall:${widget.isPrebuiltFromHall}, '
               'event:$event',
-              tag: 'live-streaming',
+              tag: 'live.streaming.page',
               subTag: 'prebuilt',
             );
           }
@@ -463,7 +464,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
   void onUIKitError(ZegoUIKitError error) {
     ZegoLoggerService.logError(
       'on uikit error:$error',
-      tag: 'live-streaming',
+      tag: 'live.streaming.page',
       subTag: 'prebuilt',
     );
 

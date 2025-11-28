@@ -77,7 +77,7 @@ class ZegoLiveStreamingControllerPKImpl
       'timeout:$timeout, '
       'customData:$customData, '
       'isAutoAccept:$isAutoAccept, ',
-      tag: 'live-streaming',
+      tag: 'live.streaming.controller.pk',
       subTag: 'controller.pk, sendRequest',
     );
 
@@ -101,7 +101,7 @@ class ZegoLiveStreamingControllerPKImpl
     ZegoLoggerService.logInfo(
       'targetHostIDs:$targetHostIDs, '
       'customData:$customData, ',
-      tag: 'live-streaming',
+      tag: 'live.streaming.controller.pk',
       subTag: 'controller.pk, cancelRequest',
     );
 
@@ -127,7 +127,7 @@ class ZegoLiveStreamingControllerPKImpl
       'targetHost:$targetHost, '
       'timeout:$timeout, '
       'customData:$customData, ',
-      tag: 'live-streaming',
+      tag: 'live.streaming.controller.pk',
       subTag: 'controller.pk, acceptRequest',
     );
 
@@ -154,7 +154,7 @@ class ZegoLiveStreamingControllerPKImpl
       'targetHostID:$targetHostID, '
       'timeout:$timeout, '
       'customData:$customData, ',
-      tag: 'live-streaming',
+      tag: 'live.streaming.controller.pk',
       subTag: 'controller.pk, rejectRequest',
     );
 
@@ -172,7 +172,7 @@ class ZegoLiveStreamingControllerPKImpl
   Future<ZegoLiveStreamingPKServiceResult> quit() async {
     ZegoLoggerService.logInfo(
       'quit',
-      tag: 'live-streaming',
+      tag: 'live.streaming.controller.pk',
       subTag: 'controller.pk, quit',
     );
 
@@ -186,7 +186,7 @@ class ZegoLiveStreamingControllerPKImpl
   Future<ZegoLiveStreamingPKServiceResult> stop() async {
     ZegoLoggerService.logInfo(
       'stop',
-      tag: 'live-streaming',
+      tag: 'live.streaming.controller.pk',
       subTag: 'controller.pk, stop',
     );
 
@@ -205,7 +205,7 @@ class ZegoLiveStreamingControllerPKImpl
   }) async {
     ZegoLoggerService.logInfo(
       'targetHostIDs:$targetHostIDs, isMute:$isMute, ',
-      tag: 'live-streaming',
+      tag: 'live.streaming.controller.pk',
       subTag: 'controller.pk, muteAudios',
     );
 

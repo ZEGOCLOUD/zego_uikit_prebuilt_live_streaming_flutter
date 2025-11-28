@@ -3,6 +3,7 @@ import 'dart:core';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
+
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
 
@@ -100,7 +101,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
   void initState() {
     ZegoLoggerService.logInfo(
       '----------init----------',
-      tag: 'live-streaming',
+      tag: 'live.streaming.',
       subTag: 'ZegoUIKitPrebuiltLiveStreaming',
     );
 
@@ -123,7 +124,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
         'events: ${widget.events}, '
         'isPrebuiltFromMinimizing:$isPrebuiltFromMinimizing, '
         'isPrebuiltFromHall:$isPrebuiltFromHall, ',
-        tag: 'live-streaming',
+        tag: 'live.streaming.',
         subTag: 'prebuilt',
       );
     });
@@ -167,7 +168,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
 
     ZegoLoggerService.logInfo(
       '----------dispose----------',
-      tag: 'live-streaming',
+      tag: 'live.streaming.',
       subTag: 'ZegoUIKitPrebuiltLiveStreaming',
     );
   }

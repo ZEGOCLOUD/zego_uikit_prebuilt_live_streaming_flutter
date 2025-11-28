@@ -70,7 +70,7 @@ extension PKServiceConnectedUsers on ZegoUIKitPrebuiltLiveStreamingPKServices {
         if (pkUser.heartbeatBrokenNotifier.value) {
           ZegoLoggerService.logInfo(
             'un-mute ${pkUser.userInfo.id} audio',
-            tag: 'live-streaming-pk',
+            tag: 'live.streaming.pk.services',
             subTag: 'service, connect-users, update pk users',
           );
 
@@ -91,7 +91,7 @@ extension PKServiceConnectedUsers on ZegoUIKitPrebuiltLiveStreamingPKServices {
         'previous:${_coreData.previousPKUsers.value}, '
         'current:$updatedPKUsers, '
         'current details:$updatedPKUsers, ',
-        tag: 'live-streaming-pk',
+        tag: 'live.streaming.pk.services',
         subTag: 'service, connect-users, update pk users',
       );
       _coreData.currentPKUsers.value = updatedPKUsers;
@@ -101,7 +101,7 @@ extension PKServiceConnectedUsers on ZegoUIKitPrebuiltLiveStreamingPKServices {
   void listenPKUserChanged() {
     ZegoLoggerService.logInfo(
       'listenPKUserChanged',
-      tag: 'live-streaming-pk',
+      tag: 'live.streaming.pk.services',
       subTag: 'service, connect-users',
     );
 
@@ -114,7 +114,7 @@ extension PKServiceConnectedUsers on ZegoUIKitPrebuiltLiveStreamingPKServices {
   void removeListenPKUserChanged() {
     ZegoLoggerService.logInfo(
       'removeListenPKUserChanged',
-      tag: 'live-streaming-pk',
+      tag: 'live.streaming.pk.services',
       subTag: 'service, connect-users',
     );
 
@@ -125,7 +125,7 @@ extension PKServiceConnectedUsers on ZegoUIKitPrebuiltLiveStreamingPKServices {
   void onConnectingPKUsersChanged() {
     ZegoLoggerService.logInfo(
       'onConnectingPKUsersChanged:${_coreData.connectingPKUsers.value}',
-      tag: 'live-streaming-pk',
+      tag: 'live.streaming.pk.services',
       subTag: 'service, connect-users',
     );
   }
@@ -135,7 +135,7 @@ extension PKServiceConnectedUsers on ZegoUIKitPrebuiltLiveStreamingPKServices {
       'onPKUsersChanged, '
       'pk users:${_coreData.currentPKUsers.value}, '
       'isLiving;$isLiving, ',
-      tag: 'live-streaming-pk',
+      tag: 'live.streaming.pk.services',
       subTag: 'service, connect-users',
     );
 
@@ -160,7 +160,7 @@ extension PKServiceConnectedUsers on ZegoUIKitPrebuiltLiveStreamingPKServices {
       'hostOnPKUsersChanged,'
       'isLocalHostInPK:$isLocalHostInPK, '
       'pk users:${_coreData.currentPKUsers.value}',
-      tag: 'live-streaming-pk',
+      tag: 'live.streaming.pk.services',
       subTag: 'service, connect-users',
     );
 
@@ -181,7 +181,7 @@ extension PKServiceConnectedUsers on ZegoUIKitPrebuiltLiveStreamingPKServices {
       'addedPKUsersCompareCurrent:$addedPKUsersCompareCurrent, '
       'removedPKUsersCompareCurrent:$removedPKUsersCompareCurrent, '
       'playing user id:${_coreData.playingHostIDs}',
-      tag: 'live-streaming-pk',
+      tag: 'live.streaming.pk.services',
       subTag: 'service, connect-users, connectedHostOnPKUsersChanged',
     );
 
@@ -208,7 +208,7 @@ extension PKServiceConnectedUsers on ZegoUIKitPrebuiltLiveStreamingPKServices {
     /// start play other room user stream
     ZegoLoggerService.logInfo(
       'try play ${_coreData.currentPKUsers.value}\'s stream',
-      tag: 'live-streaming-pk',
+      tag: 'live.streaming.pk.services',
       subTag: 'service, connect-users, connectedHostOnPKUsersChanged',
     );
     for (var user in _coreData.currentPKUsers.value) {
@@ -219,7 +219,7 @@ extension PKServiceConnectedUsers on ZegoUIKitPrebuiltLiveStreamingPKServices {
       if (_coreData.playingHostIDs.contains(user.userInfo.id)) {
         ZegoLoggerService.logInfo(
           '${user.userInfo.id} is playing, ignore',
-          tag: 'live-streaming-pk',
+          tag: 'live.streaming.pk.services',
           subTag: 'service, connect-users, connectedHostOnPKUsersChanged',
         );
         continue;
@@ -227,7 +227,7 @@ extension PKServiceConnectedUsers on ZegoUIKitPrebuiltLiveStreamingPKServices {
 
       ZegoLoggerService.logInfo(
         'start play ${user.userInfo.id}',
-        tag: 'live-streaming-pk',
+        tag: 'live.streaming.pk.services',
         subTag: 'service, connect-users, connectedHostOnPKUsersChanged',
       );
       _coreData.playingHostIDs.add(user.userInfo.id);
@@ -273,14 +273,14 @@ extension PKServiceConnectedUsers on ZegoUIKitPrebuiltLiveStreamingPKServices {
     /// stop play other room user stream
     ZegoLoggerService.logInfo(
       'try stop $removedPKUsersCompareCurrent\'s stream',
-      tag: 'live-streaming-pk',
+      tag: 'live.streaming.pk.services',
       subTag: 'service, connect-users, connectedHostOnPKUsersChanged',
     );
     for (var user in removedPKUsersCompareCurrent) {
       if (!_coreData.playingHostIDs.contains(user.userInfo.id)) {
         ZegoLoggerService.logInfo(
           '${user.userInfo.id} is not playing, ignore',
-          tag: 'live-streaming-pk',
+          tag: 'live.streaming.pk.services',
           subTag: 'service, connect-users, connectedHostOnPKUsersChanged',
         );
         continue;
@@ -288,7 +288,7 @@ extension PKServiceConnectedUsers on ZegoUIKitPrebuiltLiveStreamingPKServices {
 
       ZegoLoggerService.logInfo(
         'stop play ${user.userInfo.id}',
-        tag: 'live-streaming-pk',
+        tag: 'live.streaming.pk.services',
         subTag: 'service, connect-users, connectedHostOnPKUsersChanged',
       );
       _coreData.playingHostIDs.remove(user.userInfo.id);
@@ -321,7 +321,7 @@ extension PKServiceConnectedUsers on ZegoUIKitPrebuiltLiveStreamingPKServices {
   Future<void> disconnectedHostOnPKUsersChanged() async {
     ZegoLoggerService.logInfo(
       'pk users:${_coreData.currentPKUsers.value}',
-      tag: 'live-streaming-pk',
+      tag: 'live.streaming.pk.services',
       subTag: 'service, connect-users, hostDisconnectedOnPKUsersChanged',
     );
 
@@ -370,7 +370,7 @@ extension PKServiceConnectedUsers on ZegoUIKitPrebuiltLiveStreamingPKServices {
   Future<void> audienceOnPKUsersChanged() async {
     ZegoLoggerService.logInfo(
       'pk users:${_coreData.currentPKUsers.value}',
-      tag: 'live-streaming-pk',
+      tag: 'live.streaming.pk.services',
       subTag: 'service, connect-users, audienceOnPKUsersChanged',
     );
 
@@ -386,7 +386,7 @@ extension PKServiceConnectedUsers on ZegoUIKitPrebuiltLiveStreamingPKServices {
       ZegoLoggerService.logInfo(
         'pk users is empty or only local room host, not in pk, '
         'onlyLocalHostInPK:$onlyLocalHostInPK, ',
-        tag: 'live-streaming-pk',
+        tag: 'live.streaming.pk.services',
         subTag: 'service, connect-users, audienceOnPKUsersChanged',
       );
       return;

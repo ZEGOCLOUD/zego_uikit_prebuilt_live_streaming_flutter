@@ -74,7 +74,7 @@ mixin ZegoUIKitPrebuiltLiveStreamingPKServices {
 
     ZegoLoggerService.logInfo(
       'update pk state, from ${pkStateNotifier.value} to $value',
-      tag: 'live-streaming-pk',
+      tag: 'live.streaming.pk.services',
       subTag: 'service',
     );
     pkStateNotifier.value = value;
@@ -111,7 +111,7 @@ mixin ZegoUIKitPrebuiltLiveStreamingPKServices {
     if (_serviceInitialized) {
       ZegoLoggerService.logInfo(
         'had already init',
-        tag: 'live-streaming-pk',
+        tag: 'live.streaming.pk.services',
         subTag: 'service',
       );
 
@@ -131,7 +131,7 @@ mixin ZegoUIKitPrebuiltLiveStreamingPKServices {
 
     ZegoLoggerService.logInfo(
       'init',
-      tag: 'live-streaming-pk',
+      tag: 'live.streaming.pk.services',
       subTag: 'service',
     );
   }
@@ -140,7 +140,7 @@ mixin ZegoUIKitPrebuiltLiveStreamingPKServices {
     if (!_serviceInitialized) {
       ZegoLoggerService.logInfo(
         'not init before',
-        tag: 'live-streaming-pk',
+        tag: 'live.streaming.pk.services',
         subTag: 'service',
       );
 
@@ -149,7 +149,7 @@ mixin ZegoUIKitPrebuiltLiveStreamingPKServices {
 
     ZegoLoggerService.logInfo(
       'uninit',
-      tag: 'live-streaming-pk',
+      tag: 'live.streaming.pk.services',
       subTag: 'service',
     );
 
@@ -172,7 +172,7 @@ mixin ZegoUIKitPrebuiltLiveStreamingPKServices {
   }) async {
     ZegoLoggerService.logInfo(
       'targetHostIDs:$targetHostIDs, isMute:$isMute, ',
-      tag: 'live-streaming-pk',
+      tag: 'live.streaming.pk.services',
       subTag: 'service, muteUserAudio',
     );
 

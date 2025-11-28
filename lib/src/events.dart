@@ -1,5 +1,6 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
+
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
 
@@ -176,7 +177,7 @@ class ZegoLiveStreamingRoomEvents {
 
   @override
   String toString() {
-    return 'ZegoLiveStreamingRoomEvents:{'
+    return '{'
         'onStateChanged:$onStateChanged, '
         'onTokenExpired:$onTokenExpired, '
         '}';
