@@ -10,8 +10,8 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
 
 /// @nodoc
-class ZegoLiveStreamingMinimizingButton extends StatefulWidget {
-  const ZegoLiveStreamingMinimizingButton({
+class ZegoLiveStreamingMinimizationButton extends StatefulWidget {
+  const ZegoLiveStreamingMinimizationButton({
     super.key,
     this.afterClicked,
     this.icon,
@@ -31,13 +31,13 @@ class ZegoLiveStreamingMinimizingButton extends StatefulWidget {
   final Size? buttonSize;
 
   @override
-  State<ZegoLiveStreamingMinimizingButton> createState() =>
-      _ZegoLiveStreamingMinimizingButtonState();
+  State<ZegoLiveStreamingMinimizationButton> createState() =>
+      _ZegoLiveStreamingMinimizationButtonState();
 }
 
 /// @nodoc
-class _ZegoLiveStreamingMinimizingButtonState
-    extends State<ZegoLiveStreamingMinimizingButton> {
+class _ZegoLiveStreamingMinimizationButtonState
+    extends State<ZegoLiveStreamingMinimizationButton> {
   @override
   void initState() {
     super.initState();
@@ -53,7 +53,7 @@ class _ZegoLiveStreamingMinimizingButtonState
         if (ZegoUIKitPrebuiltLiveStreamingController().minimize.isMinimizing) {
           ZegoLoggerService.logInfo(
             'is minimizing, ignore',
-            tag: 'live.streaming.minimize.button',
+            tag: 'live.streaming. minimization.button',
             subTag: 'onTap',
           );
 

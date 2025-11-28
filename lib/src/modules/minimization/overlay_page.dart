@@ -16,7 +16,7 @@ import 'data.dart';
 import 'defines.dart';
 import 'overlay_machine.dart';
 
-/// The page can be minimized within the app
+/// The page can be minimization within the app
 ///
 /// To support the minimize functionality in the app:
 ///
@@ -144,7 +144,7 @@ class _ZegoUIKitPrebuiltLiveStreamingMiniOverlayPageState
   bool visibility = true;
   late Offset topLeft;
 
-  ZegoLiveStreamingMinimizeData? get prebuiltData =>
+  ZegoLiveStreamingMinimizationData? get prebuiltData =>
       ZegoUIKitPrebuiltLiveStreamingController().minimize.private.minimizeData;
 
   @override
@@ -186,7 +186,7 @@ class _ZegoUIKitPrebuiltLiveStreamingMiniOverlayPageState
                 return;
               }
 
-              // Prevent the default pop-up behavior in the minimized state
+              // Prevent the default pop-up behavior in the minimization state
               // Prevent popping by not calling Navigator.pop()
             },
             child: Visibility(
@@ -250,7 +250,7 @@ class _ZegoUIKitPrebuiltLiveStreamingMiniOverlayPageState
       case ZegoLiveStreamingMiniOverlayPageState.minimizing:
         ZegoLoggerService.logInfo(
           'live id:${ZegoUIKitPrebuiltLiveStreamingController().private.liveID}, ',
-          tag: 'live.streaming.minimize.page',
+          tag: 'live.streaming. minimization.page',
           subTag: 'build page',
         );
 
@@ -259,7 +259,7 @@ class _ZegoUIKitPrebuiltLiveStreamingMiniOverlayPageState
             ZegoLoggerService.logInfo(
               'currentState:$currentState, '
               'visibility:$visibility, ',
-              tag: 'live.streaming.minimize.page',
+              tag: 'live.streaming. minimization.page',
               subTag: 'onTap',
             );
 
@@ -309,7 +309,7 @@ class _ZegoUIKitPrebuiltLiveStreamingMiniOverlayPageState
       ZegoLoggerService.logInfo(
         'currentState:$currentState, '
         'visibility:$visibility, ',
-        tag: 'live.streaming.minimize.page',
+        tag: 'live.streaming. minimization.page',
         subTag: 'syncState',
       );
     });

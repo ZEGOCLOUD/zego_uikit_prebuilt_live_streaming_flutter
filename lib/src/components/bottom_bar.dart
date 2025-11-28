@@ -23,7 +23,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/events.defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/pk_combine_notifier.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/lifecycle.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/modules/minimizing/mini_button.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/modules/minimization/mini_button.dart';
 
 /// @nodoc
 class ZegoLiveStreamingBottomBar extends StatefulWidget {
@@ -720,7 +720,7 @@ class _ZegoLiveStreamingBottomBarState
       case ZegoLiveStreamingMenuBarButtonName.expanding:
         return Expanded(child: Container());
       case ZegoLiveStreamingMenuBarButtonName.minimizingButton:
-        return const ZegoLiveStreamingMinimizingButton();
+        return const ZegoLiveStreamingMinimizationButton();
       case ZegoLiveStreamingMenuBarButtonName.pipButton:
         return ZegoLiveStreamingPIPButton(
           liveID: widget.liveID,

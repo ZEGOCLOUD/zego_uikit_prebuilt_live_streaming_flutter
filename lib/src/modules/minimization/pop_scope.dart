@@ -54,11 +54,11 @@ class ZegoUIKitPrebuiltLiveStreamingMiniPopScopeState
                 onPopInvoked(isMinimizing);
               }
 
-              // Prevent the default pop-up behavior in the minimized state
+              // Prevent the default pop-up behavior in the minimization state
               // Prevent popping by not calling Navigator.pop()
             } else {
               onPopInvoked(isMinimizing);
-              // Allows pop-up when not in minimized state
+              // Allows pop-up when not in minimization state
             }
           },
           child: widget.child,

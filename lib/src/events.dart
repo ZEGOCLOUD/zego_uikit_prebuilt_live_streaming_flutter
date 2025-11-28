@@ -83,9 +83,9 @@ class ZegoUIKitPrebuiltLiveStreamingEvents {
   /// otherwise the user will remain on the live streaming page.
   /// the easy way is call `defaultAction.call()`
   ///
-  /// The [ZegoLiveStreamingEndEvent.isFromMinimizing] it means that the user left the chat room while it was in a minimized state.
-  /// You **can not** return to the previous page while it was **in a minimized state**!!!
-  /// On the other hand, if the value of the parameter is false, it means that the user left the chat room while it was in a normal state (i.e., not minimized).
+  /// The [ZegoLiveStreamingEndEvent.isFromMinimizing] it means that the user left the chat room while it was in a minimization state.
+  /// You **can not** return to the previous page while it was **in a minimization state**!!!
+  /// On the other hand, if the value of the parameter is false, it means that the user left the chat room while it was in a normal state (i.e., not minimization).
   ///
   /// Sample Code:
   ///

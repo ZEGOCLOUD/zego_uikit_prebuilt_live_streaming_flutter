@@ -9,7 +9,7 @@ export 'src/events.defines.dart';
 export 'src/inner_text.dart';
 export 'src/live_streaming.dart';
 
-export 'src/modules/minimizing/minimizing.dart';
+export 'src/modules/minimization/minimization.dart';
 export 'src/modules/pk/pk.dart';
 export 'src/modules/swiping/swiping.dart';
 export 'src/modules/hall/hall.dart';

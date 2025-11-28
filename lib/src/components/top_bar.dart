@@ -15,7 +15,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/inner_text.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/lifecycle.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/modules/minimizing/mini_button.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/modules/minimization/mini_button.dart';
 
 /// @nodoc
 class ZegoLiveStreamingTopBar extends StatefulWidget {
@@ -140,7 +140,7 @@ class _ZegoLiveStreamingTopBarState extends State<ZegoLiveStreamingTopBar> {
     return widget.config.topMenuBar.buttons
             .contains(ZegoLiveStreamingMenuBarButtonName.minimizingButton)
         ? [
-            ZegoLiveStreamingMinimizingButton(
+            ZegoLiveStreamingMinimizationButton(
               buttonSize: Size(78.zR, 78.zR),
               iconSize: Size(56.zR, 56.zR),
             ),

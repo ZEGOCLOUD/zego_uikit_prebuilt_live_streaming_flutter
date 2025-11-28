@@ -11,7 +11,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/lifecycle.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/modules/minimizing/defines.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/modules/minimization/defines.dart';
 
 /// @nodoc
 class ZegoLiveStreamingLeaveButton extends StatefulWidget {

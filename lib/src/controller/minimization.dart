@@ -8,12 +8,12 @@ mixin ZegoLiveStreamingControllerMinimizing {
 
 /// Here are the APIs related to screen sharing.
 class ZegoLiveStreamingControllerMinimizingImpl
-    with ZegoLiveStreamingControllerMinimizingPrivate {
+    with ZegoLiveStreamingControllerMinimizationPrivate {
   /// current minimize state
   ZegoLiveStreamingMiniOverlayPageState get state =>
       ZegoLiveStreamingMiniOverlayMachine().state;
 
-  /// Is it currently in the minimized state or not
+  /// Is it currently in the minimization state or not
   bool get isMinimizing => isMinimizingNotifier.value;
 
   ValueNotifier<bool> get isMinimizingNotifier => _private.isMinimizingNotifier;
@@ -98,7 +98,7 @@ class ZegoLiveStreamingControllerMinimizingImpl
       ZegoLoggerService.logInfo(
         'is minimizing, ignore',
         tag: 'live-streaming',
-        subTag: 'minimize',
+        subTag: 'minimization',
       );
 
       return false;
@@ -108,7 +108,7 @@ class ZegoLiveStreamingControllerMinimizingImpl
       ZegoLoggerService.logInfo(
         'is not living, ignore',
         tag: 'live-streaming',
-        subTag: 'minimize',
+        subTag: 'minimization',
       );
 
       return false;
@@ -128,7 +128,7 @@ class ZegoLiveStreamingControllerMinimizingImpl
       ZegoLoggerService.logError(
         'navigator pop exception:$e',
         tag: 'live-streaming',
-        subTag: 'minimize',
+        subTag: 'minimization',
       );
 
       return false;

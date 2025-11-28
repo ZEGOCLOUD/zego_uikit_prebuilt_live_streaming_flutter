@@ -17,7 +17,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/inner_text.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/reporter.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/lifecycle.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/modules/minimizing/overlay_machine.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/modules/minimization/overlay_machine.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/core/core.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/core/data.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/core/defines.dart';

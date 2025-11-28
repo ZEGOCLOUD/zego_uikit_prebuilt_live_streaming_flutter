@@ -34,7 +34,7 @@ class ZegoLiveStreamingControllerPrivateImpl {
   void initByPrebuilt({
     required ZegoUIKitPrebuiltLiveStreamingConfig? config,
     required ZegoUIKitPrebuiltLiveStreamingEvents? events,
-    required ZegoLiveStreamingMinimizeData minimizeData,
+    required ZegoLiveStreamingMinimizationData minimizeData,
   }) {
     ZegoLoggerService.logInfo(
       'init by prebuilt, '

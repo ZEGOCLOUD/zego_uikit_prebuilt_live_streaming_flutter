@@ -36,7 +36,7 @@ class ZegoLiveStreamingMiniOverlayMachine {
 
     ZegoLoggerService.logInfo(
       'add listener:$listener, size:${_onStateChangedListeners.length}',
-      tag: 'live.streaming.minimize.machine',
+      tag: 'live.streaming. minimization.machine',
       subTag: 'overlay machine',
     );
   }
@@ -48,7 +48,7 @@ class ZegoLiveStreamingMiniOverlayMachine {
 
     ZegoLoggerService.logInfo(
       'remove listener:$listener, size:${_onStateChangedListeners.length}',
-      tag: 'live.streaming.minimize.machine',
+      tag: 'live.streaming. minimization.machine',
       subTag: 'overlay machine',
     );
   }
@@ -58,7 +58,7 @@ class ZegoLiveStreamingMiniOverlayMachine {
   ) {
     ZegoLoggerService.logInfo(
       'change state outside to $state',
-      tag: 'live.streaming.minimize.machine',
+      tag: 'live.streaming. minimization.machine',
       subTag: 'changeState',
     );
 
@@ -89,14 +89,14 @@ class ZegoLiveStreamingMiniOverlayMachine {
   void _init() {
     ZegoLoggerService.logInfo(
       '',
-      tag: 'live.streaming.minimize.machine',
+      tag: 'live.streaming. minimization.machine',
       subTag: 'init',
     );
 
     _machine.onAfterTransition.listen((event) {
       ZegoLoggerService.logInfo(
         'from ${event.source} to ${event.target}',
-        tag: 'live.streaming.minimize.machine',
+        tag: 'live.streaming. minimization.machine',
         subTag: 'onAfterTransition',
       );
 
@@ -116,7 +116,7 @@ class ZegoLiveStreamingMiniOverlayMachine {
   Future<void> _onMeRemovedFromRoom(String fromUserID) async {
     ZegoLoggerService.logInfo(
       'local user removed by $fromUserID',
-      tag: 'live.streaming.minimize.machine',
+      tag: 'live.streaming. minimization.machine',
       subTag: 'onMeRemovedFromRoom',
     );
     changeState(ZegoLiveStreamingMiniOverlayPageState.idle);

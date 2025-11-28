@@ -16,8 +16,8 @@ import 'events.dart';
 import 'internal/reporter.dart';
 import 'lifecycle/defines.dart';
 import 'lifecycle/lifecycle.dart';
-import 'modules/minimizing/defines.dart';
-import 'modules/minimizing/overlay_machine.dart';
+import 'modules/minimization/defines.dart';
+import 'modules/minimization/overlay_machine.dart';
 import 'modules/swiping/page.dart';
 
 /// Live Streaming Widget.

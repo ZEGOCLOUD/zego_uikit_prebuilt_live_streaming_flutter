@@ -4,16 +4,15 @@ import 'dart:async';
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
-
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/core_managers.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/swiping/swiping.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/modules/minimizing/data.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/modules/minimization/data.dart';
+
 import 'defines.dart';
 import 'normal/normal.dart';
 
@@ -84,7 +83,7 @@ class ZegoLiveStreamingPageLifeCycle {
     ZegoUIKitPrebuiltLiveStreamingController().private.initByPrebuilt(
           config: contextData.config,
           events: contextData.events,
-          minimizeData: ZegoLiveStreamingMinimizeData(
+          minimizeData: ZegoLiveStreamingMinimizationData(
             appID: contextData.appID,
             appSign: contextData.appSign,
             liveID: targetLiveID,

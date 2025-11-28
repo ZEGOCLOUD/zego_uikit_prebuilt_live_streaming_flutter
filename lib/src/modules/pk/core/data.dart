@@ -32,7 +32,7 @@ class ZegoUIKitPrebuiltLiveStreamingPKData
   final currentPKUsers = ValueNotifier<List<ZegoLiveStreamingPKUser>>([]);
   final previousPKUsers = ValueNotifier<List<ZegoLiveStreamingPKUser>>([]);
 
-  /// When the UI is minimized, and the host receives a pk battle request.
+  /// When the UI is minimization, and the host receives a pk battle request.
   final _pkBattleRequestReceivedEventInMinimizingNotifier =
       ValueNotifier<ZegoLiveStreamingIncomingPKBattleRequestReceivedEvent?>(
           null);

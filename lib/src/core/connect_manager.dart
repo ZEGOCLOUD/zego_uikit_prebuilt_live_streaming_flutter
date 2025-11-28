@@ -22,7 +22,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/inner_text.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/reporter.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/lifecycle.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/modules/minimizing/overlay_machine.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/modules/minimization/overlay_machine.dart';
 
 /// @nodoc
 class ZegoLiveStreamingConnectManager {
@@ -42,7 +42,7 @@ class ZegoLiveStreamingConnectManager {
   /// for host: current requesting co-host's users
   final requestCoHostUsersNotifier = ValueNotifier<List<ZegoUIKitUser>>([]);
 
-  /// When the UI is minimized, and the audience receives a co-hosting invitation.
+  /// When the UI is minimization, and the audience receives a co-hosting invitation.
   final dataOfInvitedToJoinCoHostInMinimizingNotifier =
       ValueNotifier<ZegoLiveStreamingCoHostAudienceEventRequestReceivedData?>(
           null);

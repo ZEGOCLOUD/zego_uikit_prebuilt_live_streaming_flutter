@@ -32,9 +32,9 @@ import 'internal/reporter.dart';
 import 'lifecycle/lifecycle.dart';
 import 'live_streaming.dart';
 import 'modules/hall/controller.dart';
-import 'modules/minimizing/data.dart';
-import 'modules/minimizing/defines.dart';
-import 'modules/minimizing/overlay_machine.dart';
+import 'modules/minimization/data.dart';
+import 'modules/minimization/defines.dart';
+import 'modules/minimization/overlay_machine.dart';
 import 'modules/pk/core/core.dart';
 import 'modules/pk/core/defines.dart';
 import 'modules/pk/core/service/defines.dart';
@@ -52,7 +52,7 @@ part 'controller/media.dart';
 
 part 'controller/message.dart';
 
-part 'controller/minimize.dart';
+part 'controller/minimization.dart';
 
 part 'controller/pip.dart';
 
@@ -68,7 +68,7 @@ part 'controller/private/media.dart';
 
 part 'controller/private/message.dart';
 
-part 'controller/private/minimize.dart';
+part 'controller/private/minimization.dart';
 
 part 'controller/private/pip.dart';
 

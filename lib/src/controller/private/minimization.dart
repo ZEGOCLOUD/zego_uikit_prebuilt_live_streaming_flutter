@@ -1,17 +1,18 @@
 part of 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 
 /// @nodoc
-mixin ZegoLiveStreamingControllerMinimizingPrivate {
-  final _private = ZegoLiveStreamingControllerMinimizingPrivateImpl();
+mixin ZegoLiveStreamingControllerMinimizationPrivate {
+  final _private = ZegoLiveStreamingControllerMinimizationPrivateImpl();
 
   /// Don't call that
-  ZegoLiveStreamingControllerMinimizingPrivateImpl get private => _private;
+  ZegoLiveStreamingControllerMinimizationPrivateImpl get private => _private;
 }
 
 /// @nodoc
 /// Here are the APIs related to invitation.
-class ZegoLiveStreamingControllerMinimizingPrivateImpl {
-  ZegoLiveStreamingMinimizeData? get minimizeData => _minimizeData;
+class ZegoLiveStreamingControllerMinimizationPrivateImpl {
+  ZegoLiveStreamingMinimizationData? get minimizeData => _minimizeData;
+
   bool get isLiving =>
       ZegoLiveStreamingPageLifeCycle()
           .currentManagers
@@ -20,7 +21,7 @@ class ZegoLiveStreamingControllerMinimizingPrivateImpl {
           .value ==
       LiveStatus.living;
 
-  ZegoLiveStreamingMinimizeData? _minimizeData;
+  ZegoLiveStreamingMinimizationData? _minimizeData;
   ZegoUIKitPrebuiltLiveStreamingConfig? config;
   final activeUser = ZegoLiveStreamingControllerMinimizePrivateActiveUser();
 
@@ -28,13 +29,13 @@ class ZegoLiveStreamingControllerMinimizingPrivateImpl {
 
   /// Please do not call this interface. It is the internal logic of Prebuilt.
   void initByPrebuilt({
-    required ZegoLiveStreamingMinimizeData minimizeData,
+    required ZegoLiveStreamingMinimizationData minimizeData,
     required ZegoUIKitPrebuiltLiveStreamingConfig? config,
   }) {
     ZegoLoggerService.logInfo(
       'init by prebuilt',
-      tag: 'live.streaming.controller.minimized',
-      subTag: 'controller.minimize.p',
+      tag: 'live.streaming.controller.minimization',
+      subTag: 'controller.minimization.p',
     );
 
     _minimizeData = minimizeData;
@@ -51,8 +52,8 @@ class ZegoLiveStreamingControllerMinimizingPrivateImpl {
   void uninitByPrebuilt() {
     ZegoLoggerService.logInfo(
       'un-init by prebuilt',
-      tag: 'live.streaming.controller.minimized',
-      subTag: 'controller.minimize.p',
+      tag: 'live.streaming.controller.minimization',
+      subTag: 'controller.minimization.p',
     );
 
     _minimizeData = null;
@@ -108,8 +109,8 @@ class ZegoLiveStreamingControllerMinimizePrivateActiveUser {
     if (isStarted) {
       ZegoLoggerService.logInfo(
         'start, but already start',
-        tag: 'live.streaming.controller.minimized',
-        subTag: 'controller.minimize.active_user',
+        tag: 'live.streaming.controller.minimization',
+        subTag: 'controller.minimization.active_user',
       );
 
       return;
@@ -118,8 +119,8 @@ class ZegoLiveStreamingControllerMinimizePrivateActiveUser {
 
     ZegoLoggerService.logInfo(
       'start',
-      tag: 'live.streaming.controller.minimized',
-      subTag: 'controller.minimize.active_user',
+      tag: 'live.streaming.controller.minimization',
+      subTag: 'controller.minimization.active_user',
     );
 
     listenAudioVideoList();
@@ -132,8 +133,8 @@ class ZegoLiveStreamingControllerMinimizePrivateActiveUser {
     if (!isStarted) {
       ZegoLoggerService.logInfo(
         'stop, but not start',
-        tag: 'live.streaming.controller.minimized',
-        subTag: 'controller.minimize.active_user',
+        tag: 'live.streaming.controller.minimization',
+        subTag: 'controller.minimization.active_user',
       );
 
       return;
@@ -142,8 +143,8 @@ class ZegoLiveStreamingControllerMinimizePrivateActiveUser {
 
     ZegoLoggerService.logInfo(
       'stop',
-      tag: 'live.streaming.controller.minimized',
-      subTag: 'controller.minimize.active_user',
+      tag: 'live.streaming.controller.minimization',
+      subTag: 'controller.minimization.active_user',
     );
 
     audioVideoListSubscription?.cancel();
@@ -217,8 +218,8 @@ class ZegoLiveStreamingControllerMinimizePrivateActiveUser {
     if (activeUserID != activeUserIDNotifier.value) {
       ZegoLoggerService.logInfo(
         'update active user:$activeUserID',
-      tag: 'live.streaming.controller.minimized',
-        subTag: 'controller.minimize.active_user',
+        tag: 'live.streaming.controller.minimization',
+        subTag: 'controller.minimization.active_user',
       );
     }
 
@@ -249,8 +250,8 @@ class ZegoLiveStreamingControllerMinimizePrivateActiveUser {
       if (audioVideoUser.id != activeUserIDNotifier.value) {
         ZegoLoggerService.logInfo(
           'switch remote active user:${audioVideoUser.id}',
-      tag: 'live.streaming.controller.minimized',
-          subTag: 'controller.minimize.active_user',
+          tag: 'live.streaming.controller.minimization',
+          subTag: 'controller.minimization.active_user',
         );
       }
 
