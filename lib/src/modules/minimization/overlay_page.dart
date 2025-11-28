@@ -250,7 +250,7 @@ class _ZegoUIKitPrebuiltLiveStreamingMiniOverlayPageState
       case ZegoLiveStreamingMiniOverlayPageState.minimizing:
         ZegoLoggerService.logInfo(
           'live id:${ZegoUIKitPrebuiltLiveStreamingController().private.liveID}, ',
-          tag: 'live.streaming. minimization.page',
+          tag: 'live.streaming.minimization.page',
           subTag: 'build page',
         );
 
@@ -259,7 +259,7 @@ class _ZegoUIKitPrebuiltLiveStreamingMiniOverlayPageState
             ZegoLoggerService.logInfo(
               'currentState:$currentState, '
               'visibility:$visibility, ',
-              tag: 'live.streaming. minimization.page',
+              tag: 'live.streaming.minimization.page',
               subTag: 'onTap',
             );
 
@@ -309,7 +309,7 @@ class _ZegoUIKitPrebuiltLiveStreamingMiniOverlayPageState
       ZegoLoggerService.logInfo(
         'currentState:$currentState, '
         'visibility:$visibility, ',
-        tag: 'live.streaming. minimization.page',
+        tag: 'live.streaming.minimization.page',
         subTag: 'syncState',
       );
     });

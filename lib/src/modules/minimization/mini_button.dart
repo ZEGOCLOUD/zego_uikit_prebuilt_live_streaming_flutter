@@ -53,7 +53,7 @@ class _ZegoLiveStreamingMinimizationButtonState
         if (ZegoUIKitPrebuiltLiveStreamingController().minimize.isMinimizing) {
           ZegoLoggerService.logInfo(
             'is minimizing, ignore',
-            tag: 'live.streaming. minimization.button',
+            tag: 'live.streaming.minimization.button',
             subTag: 'onTap',
           );
 
