@@ -1,11 +1,10 @@
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
-
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/defines.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/lifecycle.dart';
+
 import 'stream_context.dart';
 
 class ZegoLiveStreamingSwipingLifeCycle {
@@ -37,6 +36,16 @@ class ZegoLiveStreamingSwipingLifeCycle {
     currentLiveID = liveID;
     this.hallConfig = hallConfig;
 
+    if (!usingRoomSwiping) {
+      ZegoLoggerService.logInfo(
+        'not using swiping, ignore',
+        tag: 'live.streaming.lifecyle-swiping',
+        subTag: 'initFromPreview',
+      );
+
+      return;
+    }
+
     /// If entered from live hall, use live hall's enter live flow, which has optimizations
     await ZegoUIKitPrebuiltLiveStreamingController()
         .hall
@@ -59,26 +68,8 @@ class ZegoLiveStreamingSwipingLifeCycle {
         needUninitSDK: false,
       );
 
-    if (usingRoomSwiping) {
-      /// Initialize initial live streaming swiping context data
-      await streamContext.init(token: token, swipingConfig: swipingConfig);
-    }
-
-    await ZegoUIKit().turnCameraOn(
-      targetRoomID: liveID,
-      contextData.config.turnOnCameraWhenJoining,
-    );
-    await ZegoUIKit().turnMicrophoneOn(
-      targetRoomID: liveID,
-      contextData.config.turnOnMicrophoneWhenJoining,
-    );
-
-    await ZegoLiveStreamingPageLifeCycle()
-        .currentManagers
-        .liveStatusManager
-        .checkShouldStopPlayAllAudioVideo(
-          isPrebuiltFromHall: isPrebuiltFromHall,
-        );
+    /// Initialize initial live streaming swiping context data
+    await streamContext.init(token: token, swipingConfig: swipingConfig);
 
     await ZegoUIKit().enableSwitchRoomNotStopPlay(true);
 
@@ -91,10 +82,6 @@ class ZegoLiveStreamingSwipingLifeCycle {
   Future<void> uninitFromPreview({
     required bool isPrebuiltFromHall,
   }) async {
-    if (ZegoUIKit().getScreenSharingStateNotifier().value) {
-      ZegoUIKit().stopSharingScreen(targetRoomID: currentLiveID);
-    }
-
     streamContext.uninit();
 
     config = null;

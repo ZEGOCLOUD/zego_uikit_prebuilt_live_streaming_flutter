@@ -96,6 +96,22 @@ class ZegoLiveStreamingPageLifeCycle {
           ),
         );
 
+    await ZegoUIKit().turnCameraOn(
+      targetRoomID: targetLiveID,
+      contextData.config.turnOnCameraWhenJoining,
+    );
+    await ZegoUIKit().turnMicrophoneOn(
+      targetRoomID: targetLiveID,
+      contextData.config.turnOnMicrophoneWhenJoining,
+    );
+
+    await ZegoLiveStreamingPageLifeCycle()
+        .currentManagers
+        .liveStatusManager
+        .checkShouldStopPlayAllAudioVideo(
+          isPrebuiltFromHall: isPrebuiltFromHall,
+        );
+
     swiping.initFromPreview(
       token: contextData.token,
       liveID: targetLiveID,
@@ -178,6 +194,10 @@ class ZegoLiveStreamingPageLifeCycle {
         data: currentContextData!,
         canLeaveRoom: !isPrebuiltFromHall,
       );
+    }
+
+    if (ZegoUIKit().getScreenSharingStateNotifier().value) {
+      ZegoUIKit().stopSharingScreen(targetRoomID: currentLiveID);
     }
 
     /// Handle live hall scenario
