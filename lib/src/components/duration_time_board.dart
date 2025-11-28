@@ -88,8 +88,6 @@ class _ZegoLiveStreamingDurationTimeBoardState
           return Container();
         }
 
-        debugPrint('1111 update ${durationFormatString(elapsedTime)}');
-
         return elapsedTime.inSeconds <= 0
             ? Container()
             : Text(
