@@ -3,9 +3,11 @@ import 'dart:async';
 
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
+
 // Package imports:
 import 'package:permission_handler/permission_handler.dart';
 import 'package:zego_uikit/zego_uikit.dart';
+
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/dialogs.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/permissions.dart';
@@ -180,6 +182,10 @@ class ZegoLiveStreamingConnectManager {
   }
 
   void unregisterRTCRoom(String liveID) {
+    removeRTCUsersDeviceListeners(
+      ZegoUIKit().getRemoteUsers(targetRoomID: liveID),
+    );
+
     ZegoUIKit()
         .getRoomStateStream(targetRoomID: liveID)
         .removeListener(onRTCRoomStateUpdated);
@@ -191,6 +197,8 @@ class ZegoLiveStreamingConnectManager {
 
   void registerRTCRoom(String liveID) {
     listenRTCCoHostEvents();
+
+    onUserListUpdated(ZegoUIKit().getAllUsers(targetRoomID: liveID));
 
     onRTCRoomStateUpdated();
     ZegoUIKit()
@@ -205,6 +213,10 @@ class ZegoLiveStreamingConnectManager {
       'from ${this.liveID} to $liveID, ',
       tag: 'live.streaming.connect-mgr',
       subTag: 'onRoomWillSwitch',
+    );
+
+    removeRTCUsersDeviceListeners(
+      ZegoUIKit().getRemoteUsers(targetRoomID: liveID),
     );
 
     if (ZegoLiveStreamingAudienceConnectState.idle !=
@@ -1168,6 +1180,13 @@ class ZegoLiveStreamingConnectManager {
       updateAudienceConnectState(ZegoLiveStreamingAudienceConnectState.idle);
     }
   }
+
+  void removeRTCUsersDeviceListeners(List<ZegoUIKitUser> users) {
+    for (final user in ZegoUIKit().getRemoteUsers(targetRoomID: liveID)) {
+      user.camera.removeListener(onUserCameraStateChanged);
+      user.microphone.removeListener(onUserMicrophoneStateChanged);
+    }
+  }
 }
 
 extension ZegoLiveConnectManagerCoHostCount on ZegoLiveStreamingConnectManager {
@@ -1231,7 +1250,7 @@ extension ZegoLiveConnectManagerCoHostCount on ZegoLiveStreamingConnectManager {
   }
 
   void onUserListUpdated(List<ZegoUIKitUser> users) {
-    coHostCount.value = users.where((user) => isCoHost(user)).length;
+    syncCoHostCount(users);
 
     ZegoLoggerService.logInfo(
       'user list changed, co-host count changed to ${coHostCount.value}',
@@ -1241,6 +1260,8 @@ extension ZegoLiveConnectManagerCoHostCount on ZegoLiveStreamingConnectManager {
   }
 
   void onUserJoinUpdated(List<ZegoUIKitUser> users) {
+    removeRTCUsersDeviceListeners(users);
+
     for (final user in users) {
       user.camera.addListener(onUserCameraStateChanged);
       user.microphone.addListener(onUserMicrophoneStateChanged);
@@ -1248,10 +1269,7 @@ extension ZegoLiveConnectManagerCoHostCount on ZegoLiveStreamingConnectManager {
   }
 
   void onUserLeaveUpdated(List<ZegoUIKitUser> users) {
-    for (final user in users) {
-      user.camera.removeListener(onUserCameraStateChanged);
-      user.microphone.removeListener(onUserMicrophoneStateChanged);
-    }
+    removeRTCUsersDeviceListeners(users);
 
     for (var requestCoHostUser in requestCoHostUsersNotifier.value) {
       events?.coHost.host.onRequestCanceled?.call(
@@ -1271,10 +1289,11 @@ extension ZegoLiveConnectManagerCoHostCount on ZegoLiveStreamingConnectManager {
   }
 
   void onUserCameraStateChanged() {
-    coHostCount.value = ZegoUIKit()
-        .getAllUsers(targetRoomID: liveID)
-        .where((user) => isCoHost(user))
-        .length;
+    if (!_initialized) {
+      return;
+    }
+
+    syncCoHostCount(ZegoUIKit().getAllUsers(targetRoomID: liveID));
 
     ZegoLoggerService.logInfo(
       'user camera state changed, co-host count changed to ${coHostCount.value}',
@@ -1284,15 +1303,26 @@ extension ZegoLiveConnectManagerCoHostCount on ZegoLiveStreamingConnectManager {
   }
 
   void onUserMicrophoneStateChanged() {
-    coHostCount.value = ZegoUIKit()
-        .getAllUsers(targetRoomID: liveID)
-        .where((user) => isCoHost(user))
-        .length;
+    if (!_initialized) {
+      return;
+    }
+
+    syncCoHostCount(ZegoUIKit().getAllUsers(targetRoomID: liveID));
 
     ZegoLoggerService.logInfo(
       'user microphone state changed, co-host count changed to ${coHostCount.value}',
       tag: 'live.streaming.connect-mgr',
       subTag: 'onUserMicrophoneStateChanged',
+    );
+  }
+
+  void syncCoHostCount(List<ZegoUIKitUser> users) {
+    coHostCount.value = users.where((user) => isCoHost(user)).length;
+
+    ZegoLoggerService.logInfo(
+      'co-host count changed to ${coHostCount.value}',
+      tag: 'live.streaming.connect-mgr',
+      subTag: 'syncCoHostCount',
     );
   }
 }

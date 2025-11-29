@@ -195,9 +195,6 @@ class ZegoLiveStreamingPageLifeCycle {
       await ZegoUIKit().enableSwitchRoomNotStopPlay(false);
     }
 
-    final hostID = currentManagers.hostManager.notifier.value?.id;
-
-    /// host id
     if (swiping.usingRoomSwiping) {
       /// Using live streaming swiping
       /// 1. Need to leave room: If not from live hall, need to leave room because entire ZegoUIKitPrebuiltLiveStreaming is exiting

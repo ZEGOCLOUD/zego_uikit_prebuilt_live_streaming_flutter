@@ -430,6 +430,13 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
         } else {
           try {
             if (widget.isPrebuiltFromHall) {
+              ZegoLiveStreamingPageLifeCycle()
+                  .currentManagers
+                  .connectManager
+                  .removeRTCUsersDeviceListeners(
+                    ZegoUIKit().getRemoteUsers(targetRoomID: widget.liveID),
+                  );
+
               ZegoUIKit().stopPublishingAllStream(targetRoomID: widget.liveID);
               final hostStreamID = ZegoLiveStreamingPageLifeCycle()
                       .currentManagers

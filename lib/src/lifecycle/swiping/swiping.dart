@@ -76,7 +76,8 @@ class ZegoLiveStreamingSwipingLifeCycle {
     if (isPrebuiltFromHall) {
       hallRoomID = ZegoUIKit().getCurrentRoom().id;
 
-      /// 这里不需要停止推拉流，因为hall都是拉的host流
+      /// here's no need to stop the push and pull streams here,
+      /// because hall pulls the host stream, and swiping to navigate to the live stream page requires this.
       await ZegoUIKit().switchRoom(
         toRoomID: liveID,
         stopPublishAllStream: false,
