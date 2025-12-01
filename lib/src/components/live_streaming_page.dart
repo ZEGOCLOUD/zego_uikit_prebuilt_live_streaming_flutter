@@ -4,11 +4,13 @@ import 'dart:core';
 import 'dart:io' show Platform;
 import 'dart:ui';
 
-// Package imports:
-import 'package:floating/floating.dart';
 // Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:floating/floating.dart';
 import 'package:zego_uikit/zego_uikit.dart';
+
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
@@ -21,7 +23,6 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/internal/events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/lifecycle.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/minimization/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/minimization/overlay_machine.dart';
-
 import 'live_page.dart';
 import 'mini_live.dart';
 import 'preview_page.dart';

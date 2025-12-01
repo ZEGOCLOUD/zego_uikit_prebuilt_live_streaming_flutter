@@ -644,6 +644,13 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
       (pkUser) => pkUser.userInfo.id == event.senderID,
     );
     if (-1 == pkUserIndex) {
+      ZegoLoggerService.logWarn(
+        'event user:${event.senderID}, '
+        'pk user not exist',
+        tag: 'live.streaming.pk.events',
+        subTag: 'onReceiveSEIEvent',
+      );
+
       return;
     }
 
