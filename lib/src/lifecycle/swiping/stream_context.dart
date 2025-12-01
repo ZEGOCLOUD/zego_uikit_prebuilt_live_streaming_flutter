@@ -179,7 +179,7 @@ class LiveStreamingSwipingStreamContext {
         targetRoomID: currentSwipingHost.roomID,
         host.roomID,
         host.user.id,
-        userName: host.user.name,
+        anotherUserName: host.user.name,
 
         /// Render in other live page
         playOnAnotherRoom: true,

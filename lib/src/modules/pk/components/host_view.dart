@@ -40,19 +40,19 @@ class ZegoLiveStreamingPKHostViewState
     extends State<ZegoLiveStreamingPKHostView> {
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, constraints) {
-      final mixerLayoutResolution = widget.mixerLayout.getResolution();
-      final rectList = widget.mixerLayout.getRectList(
-        widget.hosts.length,
-        scale: constraints.maxWidth / mixerLayoutResolution.width,
-      );
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final mixerLayoutResolution = widget.mixerLayout.getResolution();
+        final rectList = widget.mixerLayout.getRectList(
+          widget.hosts.length,
+          scale: constraints.maxWidth / mixerLayoutResolution.width,
+        );
 
-      return Stack(
-        children: [
-          ...hostAudioVideoViews(rectList, constraints),
-        ],
-      );
-    });
+        return Stack(
+          children: hostAudioVideoViews(rectList, constraints),
+        );
+      },
+    );
   }
 
   List<Widget> hostAudioVideoViews(
@@ -80,48 +80,12 @@ class ZegoLiveStreamingPKHostViewState
                   ZegoUIKitUser? user,
                   Map<String, dynamic> extraInfo,
                 ) {
-                  return ValueListenableBuilder<bool>(
-                    valueListenable: host.heartbeatBrokenNotifier,
-                    builder: (context, isHeartbeatBroken, _) {
-                      final updatedUser = ZegoUIKit().getUserInMixerStream(
-                        targetRoomID: widget.liveID,
-                        host.userInfo.id,
-                      );
-                      return isHeartbeatBroken
-                          ? Stack(
-                              children: [
-                                Container(
-                                  color: Colors.black,
-                                ),
-                                widget.config.audioVideoView.foregroundBuilder
-                                        ?.call(
-                                      context,
-                                      size,
-                                      user,
-                                      extraInfo,
-                                    ) ??
-                                    Container(color: Colors.transparent),
-                                Center(
-                                  child: widget.config.pkBattle
-                                          .hostReconnectingBuilder
-                                          ?.call(
-                                        context,
-                                        updatedUser,
-                                        {},
-                                      ) ??
-                                      const CircularProgressIndicator(),
-                                ),
-                              ],
-                            )
-                          : widget.config.audioVideoView.foregroundBuilder
-                                  ?.call(
-                                context,
-                                size,
-                                user,
-                                extraInfo,
-                              ) ??
-                              Container(color: Colors.transparent);
-                    },
+                  return foregroundBuilder(
+                    host,
+                    context,
+                    size,
+                    user,
+                    extraInfo,
                   );
                 },
                 backgroundBuilder:
@@ -143,5 +107,61 @@ class ZegoLiveStreamingPKHostViewState
     }
 
     return widgets;
+  }
+
+  Widget foregroundBuilder(
+    ZegoLiveStreamingPKUser host,
+    BuildContext context,
+    Size size,
+    ZegoUIKitUser? user,
+    Map<String, dynamic> extraInfo,
+  ) {
+    return ValueListenableBuilder<bool>(
+      valueListenable: host.heartbeatBrokenNotifier,
+      builder: (context, isHeartbeatBroken, _) {
+        final updatedUser = ZegoUIKit().getUserInMixerStream(
+          targetRoomID: widget.liveID,
+          host.userInfo.id,
+        );
+        if (isHeartbeatBroken && ZegoUIKit().useDebugMode) {
+          ZegoLoggerService.logInfo(
+            'heartbeat broken, '
+            'user:$updatedUser, ',
+            tag: 'live.streaming.pk.host-view',
+            subTag: 'mixer',
+          );
+        }
+        return isHeartbeatBroken
+            ? Stack(
+                children: [
+                  Container(
+                    color: Colors.black,
+                  ),
+                  widget.config.audioVideoView.foregroundBuilder?.call(
+                        context,
+                        size,
+                        user,
+                        extraInfo,
+                      ) ??
+                      Container(color: Colors.transparent),
+                  Center(
+                    child: widget.config.pkBattle.hostReconnectingBuilder?.call(
+                          context,
+                          updatedUser,
+                          {},
+                        ) ??
+                        const CircularProgressIndicator(),
+                  ),
+                ],
+              )
+            : widget.config.audioVideoView.foregroundBuilder?.call(
+                  context,
+                  size,
+                  user,
+                  extraInfo,
+                ) ??
+                Container(color: Colors.transparent);
+      },
+    );
   }
 }
