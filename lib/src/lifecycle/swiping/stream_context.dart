@@ -118,18 +118,6 @@ class LiveStreamingSwipingStreamContext {
         /// Not in pull stream queue now, need to stop
         stopPlayingHosts.add(playingHost);
       }
-      // else {
-      //   /// Still in pull stream queue, copy over
-      //   ZegoUIKit().copyToAnotherRoom(
-      //     fromRoomID: playingHost.roomID,
-      //     fromStreamID: playingHost.streamID,
-      //     toRoomID: currentHost.roomID,
-      //     isFromAnotherRoom: currentHost.roomID != playingHost.roomID,
-      //
-      //     /// Only copy, current live streaming still needs it
-      //     deleteAfterCopy: false,
-      //   );
-      // }
     }
 
     /// Stop streams that are not in current context

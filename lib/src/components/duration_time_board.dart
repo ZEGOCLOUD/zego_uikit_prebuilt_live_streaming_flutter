@@ -54,17 +54,7 @@ class _ZegoLiveStreamingDurationTimeBoardState
         subTag: 'prebuilt',
       );
 
-      if (manager.liveID == widget.liveID && manager.isValid) {
-        startDurationTimerByNetworkTime();
-      } else {
-        ZegoLoggerService.logInfo(
-          'manager notifier value is null, wait...',
-          tag: 'live.streaming.duration-board',
-          subTag: 'duration time board',
-        );
-
-        manager.notifier.addListener(startDurationTimerByNetworkTime);
-      }
+      manager.notifier.addListener(startDurationTimerByNetworkTime);
     }
   }
 
@@ -72,6 +62,7 @@ class _ZegoLiveStreamingDurationTimeBoardState
   void dispose() {
     super.dispose();
 
+    manager.notifier.removeListener(startDurationTimerByNetworkTime);
     durationTimer?.cancel();
   }
 
@@ -117,8 +108,6 @@ class _ZegoLiveStreamingDurationTimeBoardState
 
   void startDurationTimerByNetworkTime() {
     if (manager.liveID == widget.liveID && manager.isValid) {
-      manager.notifier.removeListener(startDurationTimerByNetworkTime);
-
       final networkTimeNow = ZegoUIKit().getNetworkTime();
       if (null == networkTimeNow.value) {
         ZegoLoggerService.logInfo(
