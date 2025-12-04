@@ -1,10 +1,8 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:loop_page_view/loop_page_view.dart';
 import 'package:zego_uikit/zego_uikit.dart';
-
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/live_streaming_page.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/pop_up_manager.dart';
@@ -15,6 +13,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/lifecycle.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/swiping/page_room_switcher.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/swiping/room_login_checker.dart';
+
 import 'defines.dart';
 
 /// The encapsulation layer of the "Live Streaming Widget" includes the
@@ -88,6 +87,16 @@ class _ZegoLiveStreamingSwipingPageState
   late ZegoLiveStreamingRoomLoginChecker roomLoginChecker;
   late final LoopPageController pageController;
   late final ZegoLiveStreamingSwipingPageRoomSwitcher roomSwitchManager;
+
+  // Track mute state for previous/next pages during scrolling
+  bool _isPreviousUnmuted = false;
+  bool _isNextUnmuted = false;
+
+  // Track last pixels value to calculate scroll direction
+  double? _lastPixels;
+
+  // Accumulated offset from current page
+  double _accumulatedOffset = 0.0;
 
   int get startIndex => 0;
 
@@ -186,80 +195,213 @@ class _ZegoLiveStreamingSwipingPageState
     return ValueListenableBuilder<bool>(
       valueListenable: _canScrollNotifier,
       builder: (context, canScroll, _) {
-        return LoopPageView.builder(
-          controller: pageController,
-          scrollDirection: Axis.vertical,
+        return NotificationListener<ScrollNotification>(
+          onNotification: onScrollNotification,
+          child: LoopPageView.builder(
+            controller: pageController,
+            scrollDirection: Axis.vertical,
 
-          /// Must wait for first room to join before scrolling, otherwise switch will fail
-          physics: canScroll ? null : NeverScrollableScrollPhysics(),
+            /// Must wait for first room to join before scrolling, otherwise switch will fail
+            physics: canScroll ? null : NeverScrollableScrollPhysics(),
 
-          // allowImplicitScrolling: true,
-          onPageChanged: onPageChanged,
-          itemCount: pageCount,
-          itemBuilder: (context, pageIndex) {
-            ZegoLiveStreamingSwipingHost? itemHost;
+            // allowImplicitScrolling: true,
+            onPageChanged: onPageChanged,
+            itemCount: pageCount,
+            itemBuilder: (context, pageIndex) {
+              ZegoLiveStreamingSwipingHost? itemHost;
 
-            if (pageIndex == currentPageIndex) {
-              itemHost = currentHost;
-            } else {
-              bool toNext = false;
-              if (currentPageIndex == startIndex && pageIndex == endIndex) {
-                toNext = false;
-              } else if (currentPageIndex == endIndex &&
-                  pageIndex == startIndex) {
-                toNext = true;
+              if (pageIndex == currentPageIndex) {
+                itemHost = currentHost;
               } else {
-                toNext = pageIndex > currentPageIndex;
+                bool toNext = false;
+                if (currentPageIndex == startIndex && pageIndex == endIndex) {
+                  toNext = false;
+                } else if (currentPageIndex == endIndex &&
+                    pageIndex == startIndex) {
+                  toNext = true;
+                } else {
+                  toNext = pageIndex > currentPageIndex;
+                }
+
+                itemHost = toNext ? nextHost : previousHost;
               }
 
-              itemHost = toNext ? nextHost : previousHost;
-            }
+              itemHost ??= ZegoLiveStreamingSwipingHost.empty();
 
-            itemHost ??= ZegoLiveStreamingSwipingHost.empty();
+              ZegoLoggerService.logInfo(
+                'pageIndex:$pageIndex, '
+                'item host:$itemHost, ',
+                tag: 'live.streaming.swiping.page',
+                subTag: 'itemBuilder',
+              );
 
-            ZegoLoggerService.logInfo(
-              'pageIndex:$pageIndex, '
-              'item host:$itemHost, ',
-              tag: 'live.streaming.swiping.page',
-              subTag: 'itemBuilder',
-            );
-
-            return Stack(
-              children: [
-                ZegoLiveStreamingPage(
-                  liveID: itemHost.roomID,
-                  appID: widget.appID,
-                  appSign: widget.appSign,
-                  token: widget.token,
-                  userID: widget.userID,
-                  userName: widget.userName,
-                  events: widget.events,
-                  config: widget.config,
-                  popUpManager: widget.popUpManager,
-                  isPrebuiltFromMinimizing: widget.isPrebuiltFromMinimizing,
-                  isPrebuiltFromHall: widget.isPrebuiltFromHall,
-                ),
-                if (ZegoUIKit().useDebugMode)
-                  Positioned(
-                    bottom: 100,
-                    left: 0,
-                    right: 0,
-                    child: Text(
-                      'Page '
-                      '$pageIndex, '
-                      'live id:${itemHost.roomID}',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.red,
-                        decoration: TextDecoration.none,
+              return Stack(
+                children: [
+                  ZegoLiveStreamingPage(
+                    liveID: itemHost.roomID,
+                    appID: widget.appID,
+                    appSign: widget.appSign,
+                    token: widget.token,
+                    userID: widget.userID,
+                    userName: widget.userName,
+                    events: widget.events,
+                    config: widget.config,
+                    popUpManager: widget.popUpManager,
+                    isPrebuiltFromMinimizing: widget.isPrebuiltFromMinimizing,
+                    isPrebuiltFromHall: widget.isPrebuiltFromHall,
+                  ),
+                  if (ZegoUIKit().useDebugMode)
+                    Positioned(
+                      bottom: 100,
+                      left: 0,
+                      right: 0,
+                      child: Text(
+                        'Page '
+                        '$pageIndex, '
+                        'live id:${itemHost.roomID}',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.red,
+                          decoration: TextDecoration.none,
+                        ),
                       ),
                     ),
-                  ),
-              ],
-            );
-          },
+                ],
+              );
+            },
+          ),
         );
       },
+    );
+  }
+
+  bool onScrollNotification(ScrollNotification notification) {
+    if (notification is ScrollUpdateNotification) {
+      _handleScrollUpdate(notification);
+    } else if (notification is ScrollEndNotification) {
+      _handleScrollEnd();
+    }
+    return false;
+  }
+
+  void _handleScrollUpdate(ScrollNotification notification) {
+    final metrics = notification.metrics;
+    // Check if metrics has pixels and viewport dimension
+    if (!metrics.hasPixels || !metrics.hasContentDimensions) {
+      return;
+    }
+
+    final currentPixels = metrics.pixels;
+
+    // Initialize lastPixels if not set
+    if (_lastPixels == null) {
+      _lastPixels = currentPixels;
+      return;
+    }
+
+    // Calculate offset based on pixels change relative to viewport
+    // For LoopPageView, pixels can be very large, so we calculate relative offset
+    final pixelsDelta = currentPixels - _lastPixels!;
+    final incrementalOffset = pixelsDelta / metrics.viewportDimension;
+
+    // Accumulate offset to track total scroll distance from current page
+    _accumulatedOffset += incrementalOffset;
+
+    // Update lastPixels for next calculation
+    _lastPixels = currentPixels;
+
+    // Calculate if previous/next page is visible
+    // When accumulatedOffset > 0, scrolling down (next page visible)
+    // When accumulatedOffset < 0, scrolling up (previous page visible)
+    // Threshold: if accumulatedOffset > 0.01, next page is visible; if accumulatedOffset < -0.01, previous page is visible
+    const threshold = 0.01;
+
+    final isNextVisible = _accumulatedOffset > threshold;
+    final isPreviousVisible = _accumulatedOffset < -threshold;
+
+    // Unmute next page if visible and not already unmuted
+    if (isNextVisible && !_isNextUnmuted && nextHost != null) {
+      _unmuteHost(nextHost!);
+      _isNextUnmuted = true;
+      ZegoLoggerService.logInfo(
+        'unmute next page during scroll, accumulatedOffset:$_accumulatedOffset',
+        tag: 'live.streaming.swiping.page',
+        subTag: 'scroll',
+      );
+    } else if (!isNextVisible && _isNextUnmuted && nextHost != null) {
+      // Mute next page if not visible and currently unmuted
+      _muteHost(nextHost!);
+      _isNextUnmuted = false;
+      ZegoLoggerService.logInfo(
+        'mute next page during scroll, accumulatedOffset:$_accumulatedOffset',
+        tag: 'live.streaming.swiping.page',
+        subTag: 'scroll',
+      );
+    }
+
+    // Unmute previous page if visible and not already unmuted
+    if (isPreviousVisible && !_isPreviousUnmuted && previousHost != null) {
+      _unmuteHost(previousHost!);
+      _isPreviousUnmuted = true;
+      ZegoLoggerService.logInfo(
+        'unmute previous page during scroll, accumulatedOffset:$_accumulatedOffset',
+        tag: 'live.streaming.swiping.page',
+        subTag: 'scroll',
+      );
+    } else if (!isPreviousVisible &&
+        _isPreviousUnmuted &&
+        previousHost != null) {
+      // Mute previous page if not visible and currently unmuted
+      _muteHost(previousHost!);
+      _isPreviousUnmuted = false;
+      ZegoLoggerService.logInfo(
+        'mute previous page during scroll, accumulatedOffset:$_accumulatedOffset',
+        tag: 'live.streaming.swiping.page',
+        subTag: 'scroll',
+      );
+    }
+  }
+
+  void _handleScrollEnd() {
+    // Reset tracking variables when scroll ends
+    _lastPixels = null;
+    _accumulatedOffset = 0.0;
+
+    // When scroll ends (user releases finger), re-mute any unmuted pages
+    // that are not the current page
+    if (_isNextUnmuted && nextHost != null) {
+      _muteHost(nextHost!);
+      _isNextUnmuted = false;
+      ZegoLoggerService.logInfo(
+        'mute next page on scroll end',
+        tag: 'live.streaming.swiping.page',
+        subTag: 'scroll',
+      );
+    }
+    if (_isPreviousUnmuted && previousHost != null) {
+      _muteHost(previousHost!);
+      _isPreviousUnmuted = false;
+      ZegoLoggerService.logInfo(
+        'mute previous page on scroll end',
+        tag: 'live.streaming.swiping.page',
+        subTag: 'scroll',
+      );
+    }
+  }
+
+  Future<void> _muteHost(ZegoLiveStreamingSwipingHost host) async {
+    await ZegoUIKit().muteUserAudioVideo(
+      host.user.id,
+      true, // mute
+      targetRoomID: host.roomID,
+    );
+  }
+
+  Future<void> _unmuteHost(ZegoLiveStreamingSwipingHost host) async {
+    await ZegoUIKit().muteUserAudioVideo(
+      host.user.id,
+      false, // unmute
+      targetRoomID: host.roomID,
     );
   }
 
@@ -329,6 +471,14 @@ class _ZegoLiveStreamingSwipingPageState
 
     final oldCurrentPageIndex = currentPageIndex;
     currentPageIndex = pageIndex;
+
+    // Reset scroll mute state when page actually changes
+    _isPreviousUnmuted = false;
+    _isNextUnmuted = false;
+    _accumulatedOffset = 0.0;
+    _lastPixels = null;
+    _accumulatedOffset = 0.0;
+    _lastPixels = null;
 
     if (toNext) {
       widget.swipingModel?.next();
