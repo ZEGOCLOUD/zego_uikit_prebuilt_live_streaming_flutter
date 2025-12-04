@@ -398,7 +398,9 @@ class _ZegoLiveStreamingSwipingPageState
   }
 
   Future<void> _unmuteHost(ZegoLiveStreamingSwipingHost host) async {
-    await ZegoUIKit().muteUserAudioVideo(
+    /// Only enable video;
+    /// audio should only be enabled when the page is actually switched to onPageChanged.
+    await ZegoUIKit().muteUserVideo(
       host.user.id,
       false, // unmute
       targetRoomID: host.roomID,
