@@ -769,7 +769,7 @@ class ZegoLiveStreamingBottomMenuBarConfig {
 /// Configuration for the member button of top bar.
 class ZegoLiveStreamingMemberButtonConfig {
   /// If you want to redefine the entire button, you can return your own Widget through [builder].
-  Widget Function(int memberCount)? builder;
+  ZegoLiveStreamingMemberButtonBuilder? builder;
 
   /// Customize the icon through [icon], with Icons.person being the default if not set.
   Widget? icon;

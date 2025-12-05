@@ -7,6 +7,8 @@ import 'package:zego_uikit/zego_uikit.dart';
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/defines.dart';
 
+typedef ZegoLiveStreamingMemberButtonBuilder = Widget Function(int count);
+
 typedef ZegoPlayCoHostAudioVideoCallback = bool Function(
   ZegoUIKitUser localUser,
   ZegoLiveStreamingRole localRole,

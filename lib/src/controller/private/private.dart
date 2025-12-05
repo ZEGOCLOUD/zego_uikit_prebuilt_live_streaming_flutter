@@ -120,4 +120,17 @@ class ZegoLiveStreamingControllerPrivateImpl {
 
     _liveID = '';
   }
+
+  void onRoomSwitched({
+    required String liveID,
+    required ZegoUIKitPrebuiltLiveStreamingConfig config,
+    required ZegoUIKitPrebuiltLiveStreamingEvents? events,
+    required ZegoLiveStreamingMinimizationData minimizeData,
+  }) {
+    uninitByPrebuilt();
+
+    _liveID = liveID;
+
+    initByPrebuilt(config: config, events: events, minimizeData: minimizeData);
+  }
 }

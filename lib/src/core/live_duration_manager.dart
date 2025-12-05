@@ -69,6 +69,8 @@ class ZegoLiveStreamingDurationManager {
       subTag: 'uninit',
     );
 
+    notifier.value = DateTime(0);
+
     unregisterRoomEvents(liveID);
 
     liveID = '';
@@ -108,6 +110,8 @@ class ZegoLiveStreamingDurationManager {
 
     /// Cancel the event listener for the previous LIVE broadcast room
     unregisterRoomEvents(this.liveID);
+
+    notifier.value = DateTime(0);
 
     this.liveID = liveID;
 

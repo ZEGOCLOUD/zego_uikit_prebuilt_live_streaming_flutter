@@ -8,6 +8,7 @@ import 'package:zego_uikit/zego_uikit.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/member/list_sheet.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/config.defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/inner_text.dart';
@@ -33,7 +34,7 @@ class ZegoLiveStreamingMemberButton extends StatefulWidget {
   });
 
   /// If you want to redefine the entire button, you can return your own Widget through [builder].
-  final Widget Function(int)? builder;
+  final ZegoLiveStreamingMemberButtonBuilder? builder;
 
   /// Customize the icon through [icon], with Icons.person being the default if not set.
   final Widget? icon;

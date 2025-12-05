@@ -180,6 +180,8 @@ class ZegoLiveStreamingStatusManager {
 
     unregisterRoomEvents(this.liveID);
 
+    notifier.value = LiveStatus.notStart;
+
     this.liveID = liveID;
 
     registerRoomEvents(this.liveID);

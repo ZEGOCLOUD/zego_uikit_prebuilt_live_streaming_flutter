@@ -3,11 +3,9 @@ import 'dart:async';
 
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
-
 // Package imports:
 import 'package:permission_handler/permission_handler.dart';
 import 'package:zego_uikit/zego_uikit.dart';
-
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/dialogs.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/permissions.dart';
@@ -170,6 +168,8 @@ class ZegoLiveStreamingConnectManager {
     dataOfInvitedToJoinCoHostInMinimizingNotifier.value = null;
     isInvitedToJoinCoHostDlgVisible = false;
     isEndCoHostDialogVisible = false;
+    coHostCount.value = 0;
+
     audienceIDsOfInvitingConnect.clear();
 
     unregisterRTCRoom(liveID);
@@ -238,6 +238,17 @@ class ZegoLiveStreamingConnectManager {
     );
 
     unregisterRTCRoom(this.liveID);
+
+    audienceLocalConnectStateNotifier.value =
+        ZegoLiveStreamingAudienceConnectState.idle;
+
+    requestCoHostUsersNotifier.value = [];
+    dataOfInvitedToJoinCoHostInMinimizingNotifier.value = null;
+    isInvitedToJoinCoHostDlgVisible = false;
+    isEndCoHostDialogVisible = false;
+    coHostCount.value = 0;
+
+    audienceIDsOfInvitingConnect.clear();
 
     this.liveID = liveID;
     this.config = config;

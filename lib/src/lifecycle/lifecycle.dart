@@ -4,10 +4,8 @@ import 'dart:async';
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
-
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
@@ -15,6 +13,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/core/core_managers.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/swiping/swiping.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/minimization/data.dart';
+
 import 'defines.dart';
 import 'normal/normal.dart';
 
@@ -309,12 +308,32 @@ class ZegoLiveStreamingPageLifeCycle {
     required String liveID,
     required ZegoUIKitPrebuiltLiveStreamingConfig config,
     required ZegoUIKitPrebuiltLiveStreamingEvents? events,
+    required ZegoLiveStreamingPageLifeCycleContextData contextData,
+    required bool isPrebuiltFromMinimizing,
+    required bool isPrebuiltFromHall,
   }) {
     currentManagers.onRoomSwitched(
       liveID: liveID,
       config: config,
       events: events,
     );
+
+    ZegoUIKitPrebuiltLiveStreamingController().private.onRoomSwitched(
+          liveID: liveID,
+          config: config,
+          events: events,
+          minimizeData: ZegoLiveStreamingMinimizationData(
+            appID: contextData.appID,
+            appSign: contextData.appSign,
+            liveID: liveID,
+            userID: contextData.userID,
+            userName: contextData.userName,
+            config: contextData.config,
+            events: contextData.events,
+            isPrebuiltFromMinimizing: isPrebuiltFromMinimizing,
+            isPrebuiltFromHall: isPrebuiltFromHall,
+          ),
+        );
   }
 
   void updateContextQuery(

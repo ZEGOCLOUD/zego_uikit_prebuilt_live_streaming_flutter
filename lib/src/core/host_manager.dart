@@ -108,6 +108,7 @@ class ZegoLiveStreamingHostManager {
     hostUpdateEnabledNotifier.value = true;
     notifier.value = null;
     pendingHostID = '';
+    localHostPropertyUpdateTime = 0;
 
     liveID = '';
   }
@@ -152,6 +153,11 @@ class ZegoLiveStreamingHostManager {
     );
 
     unregisterRoomEvents(this.liveID);
+
+    hostUpdateEnabledNotifier.value = true;
+    notifier.value = null;
+    pendingHostID = '';
+    localHostPropertyUpdateTime = 0;
 
     this.liveID = liveID;
     this.config = config;
