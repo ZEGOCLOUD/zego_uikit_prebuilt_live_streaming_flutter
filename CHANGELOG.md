@@ -1,38 +1,46 @@
+## 4.0.0
+
+- Features
+    - 优化直播间滑动效果
+    - 增加直播大厅控件
+- Migrate
+
 ## 3.15.2
 
 - Features
-  - Support beauty plugin face detection data on `ZegoUIKitPrebuiltLiveStreamingEvents.beauty.onFaceDetection`
-  - move `ZegoUIKitPrebuiltLiveStreamingEvents.onBeautyError` to `ZegoUIKitPrebuiltLiveStreamingEvents.beauty.onError`
-     ``` dart
-    ZegoUIKitPrebuiltLiveStreaming(
-      ...
-      events: ZegoUIKitPrebuiltLiveStreamingEvents(
-        beauty: ZegoLiveStreamingBeautyEvents(
-          onError: (ZegoBeautyError error) {
-            //
-          },
-          onFaceDetection: (ZegoBeautyPluginFaceDetectionData faceDetectionData) {
-            //
-          },
+    - Support beauty plugin face detection data on `ZegoUIKitPrebuiltLiveStreamingEvents.beauty.onFaceDetection`
+    - move `ZegoUIKitPrebuiltLiveStreamingEvents.onBeautyError` to `ZegoUIKitPrebuiltLiveStreamingEvents.beauty.onError`
+       ``` dart
+      ZegoUIKitPrebuiltLiveStreaming(
+        ...
+        events: ZegoUIKitPrebuiltLiveStreamingEvents(
+          beauty: ZegoLiveStreamingBeautyEvents(
+            onError: (ZegoBeautyError error) {
+              //
+            },
+            onFaceDetection: (ZegoBeautyPluginFaceDetectionData faceDetectionData) {
+              //
+            },
+          ),
         ),
-      ),
-    );
-     ```
+      );
+       ```
 
 ## 3.15.1
 
 - Features
-  - Support beauty plugin error on `ZegoUIKitPrebuiltLiveStreamingEvents.onBeautyError`
+    - Support beauty plugin error on `ZegoUIKitPrebuiltLiveStreamingEvents.onBeautyError`
 
 ## 3.15.0
 
 - Features
-  - Update beauty to v2.x, please update new resources according to [official website document](https://www.zegocloud.com/docs/uikit/callkit-flutter/advanced-features/beauty-effects#download-resources)
+    - Update beauty to v2.x, please update new resources according
+      to [official website document](https://www.zegocloud.com/docs/uikit/callkit-flutter/advanced-features/beauty-effects#download-resources)
 
 ## 3.14.7
 
 - Features
-  - Support export log by `ZegoUIKitPrebuiltLiveStreamingController().log.export()`
+    - Support export log by `ZegoUIKitPrebuiltLiveStreamingController().log.export()`
 
 ## 3.14.6
 
@@ -49,89 +57,89 @@
 ## 3.14.3
 
 - Features
-  - The location for generating iOS logs has been changed to the same directory as the Zego SDK, and the folder name has been changed to ZegoUIKits 
+    - The location for generating iOS logs has been changed to the same directory as the Zego SDK, and the folder name has been changed to ZegoUIKits
 - Update dependency
 
 ## 3.14.2
 
 - Bugs
-  - Fixed the issue where the menu was obscured when the navigation bar was enabled on some Android devices
+    - Fixed the issue where the menu was obscured when the navigation bar was enabled on some Android devices
 
 ## 3.14.1
 
 - Update dependency
-  
+
 ## 3.14.0
 
 - Features
-  - Support playing multimedia (video/audio) directly.
-    - API: Add **defaultPlayer** in **ZegoUIKitPrebuiltLiveStreamingController().media**. play on default player through **sharing/show/hide** API
-    - Config: Add **ZegoLiveStreamingMediaPlayerDefaultPlayerConfig** in **ZegoLiveStreamingMediaPlayerConfig**
-  - Support PIP in iOS, default is open, you can set **ZegoLiveStreamingPIPIOSConfig.pip.iOS.support** to false to turn off
-  - support show screen sharing button on top bar
-  - add autoStart param in controller.media.play
-  - Support for hiding microphone icons for audio & video widgets by `audioVideoView.showMicrophoneStateOnView`
-  - Modify the in-app minimization interface
+    - Support playing multimedia (video/audio) directly.
+        - API: Add **defaultPlayer** in **ZegoUIKitPrebuiltLiveStreamingController().media**. play on default player through **sharing/show/hide** API
+        - Config: Add **ZegoLiveStreamingMediaPlayerDefaultPlayerConfig** in **ZegoLiveStreamingMediaPlayerConfig**
+    - Support PIP in iOS, default is open, you can set **ZegoLiveStreamingPIPIOSConfig.pip.iOS.support** to false to turn off
+    - support show screen sharing button on top bar
+    - add autoStart param in controller.media.play
+    - Support for hiding microphone icons for audio & video widgets by `audioVideoView.showMicrophoneStateOnView`
+    - Modify the in-app minimization interface
 - Bugs
-  - After the kit ends, need to uninstall the plugins installed before.
-  - Fix enableCustomVideoProcessing Occasional Failure
-  - Fix the issue that some variables were not updated in a timely manner in pk
-  - Fix the video black screen problem caused by kits mix use
+    - After the kit ends, need to uninstall the plugins installed before.
+    - Fix enableCustomVideoProcessing Occasional Failure
+    - Fix the issue that some variables were not updated in a timely manner in pk
+    - Fix the video black screen problem caused by kits mix use
 
 ## 3.13.16
 
 - Bugs
-  - Update dependency
+    - Update dependency
 
 ## 3.13.15
 
 - Bugs
-  - Fix the video black screen problem in preview
+    - Fix the video black screen problem in preview
 
 ## 3.13.14
 
 - Bugs
-  - Fix the video black screen problem caused by kits mix use
+    - Fix the video black screen problem caused by kits mix use
 
 ## 3.13.13
 
 - Bugs
-  - Flutter version 3.29.0 Adaptation
-  
+    - Flutter version 3.29.0 Adaptation
+
 ## 3.13.12
 
 - Bugs
-  - Fix the issue of video not rendering when Enter LIVE from live-list and then exit LIVE
+    - Fix the issue of video not rendering when Enter LIVE from live-list and then exit LIVE
 
 ## 3.13.11
 
 - Bugs
-  - PK
-    - Fix the issue of receiving multiple PK invitations when mixing multiple Kits (multiple subscription events cause by multiple Kits mixed).
-    - Fix the issue that the host video is not rendered during PK (after cross-room pull-based streaming, the data drive is invalid, causing the interface to not refresh).
-  - live-list
-    - Add new configs in **style**; you can set **scrollAxisCount** to support multi-row and multi-column masonry layout, and set the AspectRatio of item through **itemAspectRatio**.
-    - Fix the issue of video not rendering on multiple scene
-      - If the AppID use cdn resource mode to play streaming when not publish streaming, there is no device state callback to trigger rendering.
-      - Switch the live-list to another widget and switch back
-      - Enter LIVE from live-list and then exit LIVE
-      - When scrolling through the list
-    - Fixed the issue where the host audio was played (should only play the video, not the audio).
-    - Fixed flicker issue
-  - Add **signalingPlugin** to **config** to fix the issue of not receiving invitations again when exiting LIVE(please set **uninitOnDispose** to false) if using LIVE and call-invitation at the same time.
-
+    - PK
+        - Fix the issue of receiving multiple PK invitations when mixing multiple Kits (multiple subscription events cause by multiple Kits mixed).
+        - Fix the issue that the host video is not rendered during PK (after cross-room pull-based streaming, the data drive is invalid, causing the interface to not refresh).
+    - live-list
+        - Add new configs in **style**; you can set **scrollAxisCount** to support multi-row and multi-column masonry layout, and set the AspectRatio of item through **itemAspectRatio**.
+        - Fix the issue of video not rendering on multiple scene
+            - If the AppID use cdn resource mode to play streaming when not publish streaming, there is no device state callback to trigger rendering.
+            - Switch the live-list to another widget and switch back
+            - Enter LIVE from live-list and then exit LIVE
+            - When scrolling through the list
+        - Fixed the issue where the host audio was played (should only play the video, not the audio).
+        - Fixed flicker issue
+    - Add **signalingPlugin** to **config** to fix the issue of not receiving invitations again when exiting LIVE(please set **uninitOnDispose** to false) if using LIVE and call-invitation at the same
+      time.
 
 ## 3.13.10
 
 - Bugs
-  - Fix screen-sharing outside the app, remote pull-based streaming has no sound
-  - Fix the occasional issue of not playing stream when enter LIVE
+    - Fix screen-sharing outside the app, remote pull-based streaming has no sound
+    - Fix the occasional issue of not playing stream when enter LIVE
 
 ## 3.13.9
 
 - Update dependency
 - Features
-  - **ZegoUIKitPrebuiltLiveStreamingConfig** adds **showToast**, default is **false**, if you want the default toast tips, please set it to true.
+    - **ZegoUIKitPrebuiltLiveStreamingConfig** adds **showToast**, default is **false**, if you want the default toast tips, please set it to true.
 
 ## 3.13.8
 
@@ -144,23 +152,23 @@
 ## 3.13.6
 
 - Bugs
-  - `ZegoUIKitPrebuiltLiveStreamingController().message.send` will take `ZegoUIKitPrebuiltLiveStreamingConfig.inRoomMessage.attributes` if set
+    - `ZegoUIKitPrebuiltLiveStreamingController().message.send` will take `ZegoUIKitPrebuiltLiveStreamingConfig.inRoomMessage.attributes` if set
 
 ## 3.13.5
 
 - Bugs
-  - Catch and log crashes in certain scenes
+    - Catch and log crashes in certain scenes
 
 ## 3.13.4
 
 - Bugs
-  - Fix the issue of screen sharing window not auto closed after the system ends screen sharing on iOS
+    - Fix the issue of screen sharing window not auto closed after the system ends screen sharing on iOS
 
 ## 3.13.3
 
 - Bugs
-  - Fix the occasional crash of pip on some android machines
-  - Fix screen sharing crash issue on android 14
+    - Fix the occasional crash of pip on some android machines
+    - Fix screen sharing crash issue on android 14
 
 ## 3.13.2
 
@@ -169,13 +177,12 @@
 ## 3.13.1
 
 - Bugs
-  - hide pip logic in iOS, or an exception will occur
+    - hide pip logic in iOS, or an exception will occur
 
 ## 3.13.0
 
 - Features
-  - Support PIP(android only)
-
+    - Support PIP(android only)
 
 ## 3.12.8
 
@@ -184,14 +191,14 @@
 ## 3.12.7
 
 - Bugs
-  - Fix the issue that occasionally failing to enter the LIVE call by controler.swiping
-  - Fix the issue that the screen video window on this side occasionally appears not closed after remote screen-sharing is closed
+    - Fix the issue that occasionally failing to enter the LIVE call by controler.swiping
+    - Fix the issue that the screen video window on this side occasionally appears not closed after remote screen-sharing is closed
 
 ## 3.12.6
 
 - Bugs
-  - Fix the issue where the stop button cannot be clicked in the screen sharing window
-  - Fix the issue that cannot exit the system sharing process of screen sharing in iOS when quit live-streaming
+    - Fix the issue where the stop button cannot be clicked in the screen sharing window
+    - Fix the issue that cannot exit the system sharing process of screen sharing in iOS when quit live-streaming
 
 ## 3.12.5
 
@@ -200,20 +207,20 @@
 ## 3.12.4
 
 - Bugs
-  - Fixed the issue when swiping
+    - Fixed the issue when swiping
 
 ## 3.12.3
 
 - Bugs
-  - Fixed the issue where the audience received a co-host invitation when minimized, and the red dot prompt was not displayed
-  - Fixed the preview page crashing when using beauty
-  - Fixed the black screen problem of host preview when running the app for the first time
-  
+    - Fixed the issue where the audience received a co-host invitation when minimized, and the red dot prompt was not displayed
+    - Fixed the preview page crashing when using beauty
+    - Fixed the black screen problem of host preview when running the app for the first time
+
 ## 3.12.2
 
 - Optimize live stream list
-  - Add resolution configuration, default is 180p
-  - Optimize the automatic play live stream strategy, only play the live in the visible area.
+    - Add resolution configuration, default is 180p
+    - Optimize the automatic play live stream strategy, only play the live in the visible area.
 
 ## 3.12.1
 
@@ -222,36 +229,35 @@
 ## 3.12.0
 
 - Features:
-  - Support [live stream list](https://www.zegocloud.com/docs/uikit/live-streaming-kit-flutter/enhance-the-livestream/live-list). 
+    - Support [live stream list](https://www.zegocloud.com/docs/uikit/live-streaming-kit-flutter/enhance-the-livestream/live-list).
 
 - Bugs:
-  - Fixed the issue where the preview page did not try to obtain camera/microphone permissions
-  - Fixed the potential issue of non play audio-video when used with other prebuilt of zego_uikit
-  
+    - Fixed the issue where the preview page did not try to obtain camera/microphone permissions
+    - Fixed the potential issue of non play audio-video when used with other prebuilt of zego_uikit
+
 ## 3.11.0
 
 - Features:
-  - When the host does not start in the preview interface, it will not enter the LIVE and will not cause the server to start recording.
+    - When the host does not start in the preview interface, it will not enter the LIVE and will not cause the server to start recording.
 
 ## 3.10.1
 
 - Update dependency
-  
 
 ## 3.10.0
 
 - Features
-  - Added `ZegoUIKitPrebuiltLiveStreamingMiniPopScope` to protect the interface from being destroyed when minimized
-  - Added `license` in `ZegoBeautyPluginConfig` to setting license to beauty
+    - Added `ZegoUIKitPrebuiltLiveStreamingMiniPopScope` to protect the interface from being destroyed when minimized
+    - Added `license` in `ZegoBeautyPluginConfig` to setting license to beauty
 
 ## 3.9.1
 
 - Update dependency
-  
+
 ## 3.9.0
 
 - Features
-  - Support login by token
+    - Support login by token
 
 ## 3.8.10
 
@@ -260,7 +266,7 @@
 ## 3.8.9
 
 - Update dependency.
-  
+
 ## 3.8.6~3.8.8
 
 - Update document.
@@ -268,7 +274,8 @@
 ## 3.8.5
 
 - Update dependency.
-- ZegoInRoomMessage: The type of `messageID` is changed from **int** to **String**.💥 [breaking changes](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/topics/Migration_v3.x-topic.html#385)
+- ZegoInRoomMessage: The type of `messageID` is changed from **int** to **String**
+  .💥 [breaking changes](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/topics/Migration_v3.x-topic.html#385)
 
 ## 3.8.4
 
@@ -289,35 +296,37 @@
 ## 3.8.0
 
 - Features
-  - Support `customData` parameter in **ZegoUIKitPrebuiltLiveStreamingController().co-host** APIs.
-  - In order to support the above parameters, the corresponding callback has added the `customData` in the **ZegoUIKitPrebuiltLiveStreamingEvents.coHost** event. 💥 [breaking changes](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/topics/Migration_v3.x-topic.html#380)
+    - Support `customData` parameter in **ZegoUIKitPrebuiltLiveStreamingController().co-host** APIs.
+    - In order to support the above parameters, the corresponding callback has added the `customData` in the **ZegoUIKitPrebuiltLiveStreamingEvents.coHost** event.
+      💥 [breaking changes](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/topics/Migration_v3.x-topic.html#380)
 
 ## 3.7.0
 
 - Features
-  - Add **topBar** and **bottomBar** in `ZegoLiveStreamingPreviewConfig`.
+    - Add **topBar** and **bottomBar** in `ZegoLiveStreamingPreviewConfig`.
 
 ## 3.6.0
 
 - Features
-  - Support **useFrontFacingCamera** in config
+    - Support **useFrontFacingCamera** in config
 
 ## 3.5.4
 
 - Bugs
-  - Fix the problem that some scenes of live status are not call in `ZegoUIKitPrebuiltLiveStreamingEvents onStateUpdated`
+    - Fix the problem that some scenes of live status are not call in `ZegoUIKitPrebuiltLiveStreamingEvents onStateUpdated`
 
 ## 3.5.3
 
 - Bugs
-  - Fix the issue where `ZegoUIKitPrebuiltLiveStreamingController().message.stream` not include fake message
+    - Fix the issue where `ZegoUIKitPrebuiltLiveStreamingController().message.stream` not include fake message
 - Features
-  - Add a parameter `includeFakeUser` to `ZegoUIKitPrebuiltLiveStreamingController().user.stream`.
-  - Add a parameter `includeFakeMessage` to `ZegoUIKitPrebuiltLiveStreamingController().message.stream`.
-  - Add `showFakeUser` to `ZegoLiveStreamingMemberListConfig`.
-  - Add `showFakeMessage` to `ZegoLiveStreamingInRoomMessageConfig`.
+    - Add a parameter `includeFakeUser` to `ZegoUIKitPrebuiltLiveStreamingController().user.stream`.
+    - Add a parameter `includeFakeMessage` to `ZegoUIKitPrebuiltLiveStreamingController().message.stream`.
+    - Add `showFakeUser` to `ZegoLiveStreamingMemberListConfig`.
+    - Add `showFakeMessage` to `ZegoLiveStreamingInRoomMessageConfig`.
 - Migrate
-  - rename `addFake`&&`removeFake` to `addFakeUser`&&`removeFakeUser` in `ZegoUIKitPrebuiltLiveStreamingController().user`.[migrate guide](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/topics/Migration_v3.x-topic.html#353)
+    - rename `addFake`&&`removeFake` to `addFakeUser`&&`removeFakeUser`
+      in `ZegoUIKitPrebuiltLiveStreamingController().user`.[migrate guide](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/topics/Migration_v3.x-topic.html#353)
 
 ## 3.5.2
 
@@ -327,12 +336,12 @@
 
 - Update dependency.
 
-
 ## 3.5.0
 
 - Support set audio video resource mode for audience by `ZegoUIKitPrebuiltLiveStreamingConfig.audienceAudioVideoResourceMode`
-- move `addFakeUser`, `removeFakeUser` from `ZegoUIKitPrebuiltLiveStreamingController().room` to `ZegoUIKitPrebuiltLiveStreamingController().user`. [migrate guide](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/topics/Migration_v3.x-topic.html#350)
-- Update dependency. 
+- move `addFakeUser`, `removeFakeUser` from `ZegoUIKitPrebuiltLiveStreamingController().room`
+  to `ZegoUIKitPrebuiltLiveStreamingController().user`. [migrate guide](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/topics/Migration_v3.x-topic.html#350)
+- Update dependency.
 
 ## 3.4.1
 
@@ -341,7 +350,8 @@
 ## 3.4.0
 
 - Add `coHost(ZegoLiveStreamingCoHostConfig)` in `ZegoUIKitPrebuiltLiveStreamingConfig`, and support set `inviteTimeoutSecond` in it.
-- move `maxCoHostCount`, `stopCoHostingWhenMicCameraOff`, `disableCoHostInvitationReceivedDialog` and `turnOnCameraWhenCohosted` to `coHost` in `ZegoUIKitPrebuiltLiveStreamingConfig`. [migrate guide](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/topics/Migration_v3.x-topic.html#340)
+- move `maxCoHostCount`, `stopCoHostingWhenMicCameraOff`, `disableCoHostInvitationReceivedDialog` and `turnOnCameraWhenCohosted` to `coHost`
+  in `ZegoUIKitPrebuiltLiveStreamingConfig`. [migrate guide](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/topics/Migration_v3.x-topic.html#340)
 - Support `sendFakeMessage` in `ZegoUIKitPrebuiltLiveStreamingController().message`
 - Support `addFakeUser` and `removeFakeUser` in `ZegoUIKitPrebuiltLiveStreamingController().room`
 
@@ -351,7 +361,8 @@
 
 ## 3.3.0
 
-- Support fully customizable audio & video large window by `containerRect` and `containerBuilder` in `ZegoUIKitPrebuiltLiveStreamingConfig.audioVideoView`.[document](https://docs.zegocloud.com/article/16484)
+- Support fully customizable audio & video large window by `containerRect` and `containerBuilder`
+  in `ZegoUIKitPrebuiltLiveStreamingConfig.audioVideoView`.[document](https://docs.zegocloud.com/article/16484)
 - rename some variables. [migrate guide](https://pub.dev/documentation/zego_uikit_prebuilt_live_streaming/latest/topics/Migration_v3.x-topic.html#330)
 
 ## 3.2.0

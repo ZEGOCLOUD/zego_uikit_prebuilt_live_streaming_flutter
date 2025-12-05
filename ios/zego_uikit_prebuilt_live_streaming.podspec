@@ -4,7 +4,8 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'zego_uikit_prebuilt_live_streaming'
-  s.version          = '3.15.2' # zego_uikit_prebuilt_live_streaming:
+  # zego_uikit_prebuilt_live_streaming:
+  s.version          = '4.0.0'
   s.summary          = 'A new Flutter project.'
   s.description      = <<-DESC
 A new Flutter project.
