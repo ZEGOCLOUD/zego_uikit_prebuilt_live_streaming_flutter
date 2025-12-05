@@ -1446,6 +1446,7 @@ class ZegoLiveStreamingSwipingConfig {
     return '{'
         'model:$model, '
         'model delegate:$modelDelegate, '
+        'streamMode:$streamMode, '
         '}';
   }
 }

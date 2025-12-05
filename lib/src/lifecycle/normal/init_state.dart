@@ -4,11 +4,9 @@ import 'dart:io';
 
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
-
 // Package imports:
 import 'package:permission_handler/permission_handler.dart';
 import 'package:zego_uikit/zego_uikit.dart';
-
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/permissions.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
@@ -339,34 +337,28 @@ class ZegoLiveStreamingPageLifeCycleInitState {
       subTag: 'joinRoom',
     );
 
-    ZegoUIKit()
-        .joinRoom(
-      liveID,
-      token: contextData?.token ?? '',
-      markAsLargeRoom: contextData?.config.markAsLargeRoom ?? false,
-    )
-        .then((result) {
-      onRoomLogin(result);
-    });
+    if (isPrebuiltFromHall) {
+      onRoomLogin();
+    } else {
+      ZegoUIKit()
+          .joinRoom(
+        liveID,
+        token: contextData?.token ?? '',
+        markAsLargeRoom: contextData?.config.markAsLargeRoom ?? false,
+      )
+          .then((result) {
+        onRoomLogin();
+      });
+    }
   }
 
-  Future<void> onRoomLogin(ZegoUIKitRoomLoginResult result) async {
-    if (result.errorCode != 0) {
-      ZegoLoggerService.logError(
-        'hashcode:$hashCode, '
-        'failed to login room:${result.errorCode},${result.extendedData}',
-        tag: 'live.streaming.lifecyle-initState',
-        subTag: 'onRoomLogin',
-      );
-    }
-
+  Future<void> onRoomLogin() async {
     ZegoLoggerService.logInfo(
-      'login room done:${result.errorCode},${result.extendedData}, '
+      'login room done, '
       'room id:$liveID',
       tag: 'live.streaming.lifecyle-initState',
       subTag: 'onRoomLogin',
     );
-    assert(result.errorCode == 0);
 
     notifyUserJoinByMessage();
 
