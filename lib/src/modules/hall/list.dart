@@ -1,14 +1,13 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
-
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming.dart';
+
 import 'controller.dart';
 import 'defines.dart';
 import 'foreground/foreground.dart';
@@ -102,6 +101,20 @@ class _ZegoUIKitLiveStreamingHallListState
   @override
   void initState() {
     super.initState();
+
+    ZegoLoggerService.logInfo(
+      'appID:${widget.appID}, '
+      'userID:${widget.userID}, '
+      'userName:${widget.userName}, '
+      'eventsQuery:${widget.eventsQuery}, '
+      'hallController:${widget.hallController}, '
+      'hallModel:${widget.hallModel}, '
+      'hallModelDelegate:${widget.hallModelDelegate}, '
+      'hallStyle:${widget.hallStyle}, '
+      'hallConfig:${widget.hallConfig}, ',
+      tag: 'live.streaming.prebuilt',
+      subTag: 'initState',
+    );
 
     ZegoUIKitPrebuiltLiveStreamingController()
         .hall

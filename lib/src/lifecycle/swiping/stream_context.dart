@@ -28,7 +28,6 @@ class LiveStreamingSwipingStreamContext {
     required ZegoLiveStreamingSwipingConfig? swipingConfig,
   }) async {
     ZegoLoggerService.logInfo(
-      ','
       'swipingConfig:$swipingConfig, ',
       tag: 'live.swiping.stream-context',
       subTag: 'init',
@@ -182,17 +181,30 @@ class LiveStreamingSwipingStreamContext {
   }
 
   Future<void> syncUserAudioVideoMuteState() async {
-    await ZegoUIKit().muteUserAudioVideo(
-      currentSwipingHost.user.id,
-      false,
-      targetRoomID: currentSwipingHost.roomID,
-    );
-    for (var muteStreamUser in [previousSwipingHost, nextSwipingHost]) {
+    final mode = config?.streamMode ?? ZegoLiveStreamingStreamMode.preloaded;
+
+    if (mode == ZegoLiveStreamingStreamMode.preloaded) {
+      /// use mute/unmute
       await ZegoUIKit().muteUserAudioVideo(
-        muteStreamUser.user.id,
-        true,
-        targetRoomID: muteStreamUser.roomID,
+        currentSwipingHost.user.id,
+        false,
+        targetRoomID: currentSwipingHost.roomID,
       );
+      for (var muteStreamUser in [previousSwipingHost, nextSwipingHost]) {
+        await ZegoUIKit().muteUserAudioVideo(
+          muteStreamUser.user.id,
+          true,
+          targetRoomID: muteStreamUser.roomID,
+        );
+      }
+    } else {
+      /// stop playing streams for previous/next hosts
+      for (var muteStreamUser in [previousSwipingHost, nextSwipingHost]) {
+        await ZegoUIKit().stopPlayingStream(
+          muteStreamUser.streamID,
+          targetRoomID: muteStreamUser.roomID,
+        );
+      }
     }
   }
 

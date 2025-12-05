@@ -98,6 +98,9 @@ class _ZegoLiveStreamingSwipingPageState
   // Accumulated offset from current page
   double _accumulatedOffset = 0.0;
 
+  // Track if page has changed via onPageChanged to filter stale scroll updates
+  bool _pageChangedFlag = false;
+
   int get startIndex => 0;
 
   int get endIndex => 2;
@@ -115,6 +118,10 @@ class _ZegoLiveStreamingSwipingPageState
   ZegoLiveStreamingSwipingHost? get nextHost =>
       widget.swipingModel?.activeContext?.next ??
       widget.swipingModelDelegate?.activeContext.next;
+
+  ZegoLiveStreamingStreamMode get streamMode =>
+      widget.config.swiping?.streamMode ??
+      ZegoLiveStreamingStreamMode.preloaded;
 
   @override
   void initState() {
@@ -304,7 +311,18 @@ class _ZegoLiveStreamingSwipingPageState
     final pixelsDelta = currentPixels - _lastPixels!;
     final incrementalOffset = pixelsDelta / metrics.viewportDimension;
 
+    // Check if page has changed via onPageChanged to filter stale scroll updates
+    // If onPageChanged has already triggered, skip this stale update
+    if (_pageChangedFlag) {
+      // Reset tracking variables and clear the flag
+      _lastPixels = null;
+      _pageChangedFlag = false;
+      return;
+    }
+
     // Accumulate offset to track total scroll distance from current page
+    // >0.5 next page&onPageChanged happened
+    // <-0.5 previous page&onPageChanged happened
     _accumulatedOffset += incrementalOffset;
 
     // Update lastPixels for next calculation
@@ -390,21 +408,39 @@ class _ZegoLiveStreamingSwipingPageState
   }
 
   Future<void> _muteHost(ZegoLiveStreamingSwipingHost host) async {
-    await ZegoUIKit().muteUserAudioVideo(
-      host.user.id,
-      true, // mute
-      targetRoomID: host.roomID,
-    );
+    if (streamMode == ZegoLiveStreamingStreamMode.preloaded) {
+      /// Quick mode: use mute/unmute
+      await ZegoUIKit().muteUserAudioVideo(
+        host.user.id,
+        true, // mute
+        targetRoomID: host.roomID,
+      );
+    } else {
+      /// Normal mode: stop playing stream to avoid extra costs
+      await ZegoUIKit().stopPlayingStream(
+        host.streamID,
+        targetRoomID: host.roomID,
+      );
+    }
   }
 
   Future<void> _unmuteHost(ZegoLiveStreamingSwipingHost host) async {
-    /// Only enable video;
-    /// audio should only be enabled when the page is actually switched to onPageChanged.
-    await ZegoUIKit().muteUserVideo(
-      host.user.id,
-      false, // unmute
-      targetRoomID: host.roomID,
-    );
+    if (streamMode == ZegoLiveStreamingStreamMode.preloaded) {
+      /// Quick mode: only enable video;
+      /// audio should only be enabled when the page is actually switched to onPageChanged.
+      await ZegoUIKit().muteUserVideo(
+        host.user.id,
+        false, // unmute
+        targetRoomID: host.roomID,
+      );
+    } else {
+      /// Normal mode: start playing stream
+      await ZegoUIKit().startPlayingStream(
+        host.streamID,
+        host.user.id,
+        targetRoomID: host.roomID,
+      );
+    }
   }
 
   void syncRoomLoginChecker(String liveID) {
@@ -475,12 +511,10 @@ class _ZegoLiveStreamingSwipingPageState
     currentPageIndex = pageIndex;
 
     // Reset scroll mute state when page actually changes
-    _isPreviousUnmuted = false;
-    _isNextUnmuted = false;
-    _accumulatedOffset = 0.0;
     _lastPixels = null;
-    _accumulatedOffset = 0.0;
-    _lastPixels = null;
+
+    // Set flag to filter stale scroll updates that may arrive after onPageChanged
+    _pageChangedFlag = true;
 
     if (toNext) {
       widget.swipingModel?.next();

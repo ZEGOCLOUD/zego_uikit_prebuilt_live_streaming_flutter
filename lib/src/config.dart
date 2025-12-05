@@ -3,7 +3,6 @@ import 'dart:math';
 
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
-
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
 
@@ -1424,6 +1423,8 @@ class ZegoLiveStreamingHallConfig {
 ///
 /// If you use **ZegoLiveStreamingHallList**, this setting will be invalid because **ZegoLiveStreamingHallList** will reset it
 class ZegoLiveStreamingSwipingConfig {
+  ZegoLiveStreamingStreamMode streamMode;
+
   /// swiping model
   /// list of [live id]
   /// When swiping up or down, the corresponding LIVE ID will be returned via this [model]
@@ -1434,6 +1435,7 @@ class ZegoLiveStreamingSwipingConfig {
   final ZegoLiveStreamingSwipingModelDelegate? modelDelegate;
 
   ZegoLiveStreamingSwipingConfig({
+    this.streamMode = ZegoLiveStreamingStreamMode.preloaded,
     this.model,
     this.modelDelegate,
   });
