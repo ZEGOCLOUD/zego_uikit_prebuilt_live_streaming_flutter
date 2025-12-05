@@ -293,6 +293,8 @@ class _ZegoUIKitLiveStreamingHallListState
         /// swiping config
         configs.swiping = ZegoLiveStreamingSwipingConfig(
           model: widget.hallModel,
+          modelDelegate: widget.hallModelDelegate,
+          streamMode: widget.hallConfig.streamMode,
         );
 
         /// ZegoUIKitHallRoomList dispose不退房和清数据

@@ -1,10 +1,10 @@
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
-
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/defines.dart';
+
 import 'stream_context.dart';
 
 class ZegoLiveStreamingSwipingLifeCycle {
@@ -67,9 +67,6 @@ class ZegoLiveStreamingSwipingLifeCycle {
         needLeaveRoom: false,
         needUninitSDK: false,
       );
-
-    /// Initialize initial live streaming swiping context data
-    await streamContext.init(token: token, swipingConfig: swipingConfig);
 
     await ZegoUIKit().enableSwitchRoomNotStopPlay(true);
 

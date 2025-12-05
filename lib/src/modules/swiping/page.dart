@@ -168,11 +168,19 @@ class _ZegoLiveStreamingSwipingPageState
     roomLoginChecker.notifier.addListener(onPageRoomLoginChanged);
     syncRoomLoginChecker(currentHost!.roomID);
 
-    ZegoLiveStreamingPageLifeCycle().swiping.streamContext.updateContext(
-          previousHost: previousHost ?? ZegoLiveStreamingSwipingHost.empty(),
-          currentHost: currentHost ?? ZegoLiveStreamingSwipingHost.empty(),
-          nextHost: nextHost ?? ZegoLiveStreamingSwipingHost.empty(),
+    /// Initialize initial live streaming swiping context data
+    ZegoLiveStreamingPageLifeCycle().swiping.streamContext.init(
+          token: widget.token,
+          swipingConfig: widget.config.swiping,
         );
+    // Defer updateContext to after build phase to avoid setState during build
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ZegoLiveStreamingPageLifeCycle().swiping.streamContext.updateContext(
+            previousHost: previousHost ?? ZegoLiveStreamingSwipingHost.empty(),
+            currentHost: currentHost ?? ZegoLiveStreamingSwipingHost.empty(),
+            nextHost: nextHost ?? ZegoLiveStreamingSwipingHost.empty(),
+          );
+    });
 
     ZegoLiveStreamingPageLifeCycle()
         .currentManagers
@@ -338,6 +346,7 @@ class _ZegoLiveStreamingSwipingPageState
     final isPreviousVisible = _accumulatedOffset < -threshold;
 
     // Unmute next page if visible and not already unmuted
+    final _nextHost = nextHost;
     if (isNextVisible && !_isNextUnmuted && nextHost != null) {
       _unmuteHost(nextHost!);
       _isNextUnmuted = true;
@@ -409,24 +418,24 @@ class _ZegoLiveStreamingSwipingPageState
 
   Future<void> _muteHost(ZegoLiveStreamingSwipingHost host) async {
     if (streamMode == ZegoLiveStreamingStreamMode.preloaded) {
-      /// Quick mode: use mute/unmute
+      /// use mute/unmute
       await ZegoUIKit().muteUserAudioVideo(
         host.user.id,
         true, // mute
         targetRoomID: host.roomID,
       );
     } else {
-      /// Normal mode: stop playing stream to avoid extra costs
-      await ZegoUIKit().stopPlayingStream(
-        host.streamID,
+      /// stop playing stream to avoid extra costs
+      await ZegoUIKit().stopPlayAnotherRoomAudioVideo(
         targetRoomID: host.roomID,
+        host.user.id,
       );
     }
   }
 
   Future<void> _unmuteHost(ZegoLiveStreamingSwipingHost host) async {
     if (streamMode == ZegoLiveStreamingStreamMode.preloaded) {
-      /// Quick mode: only enable video;
+      /// only enable video;
       /// audio should only be enabled when the page is actually switched to onPageChanged.
       await ZegoUIKit().muteUserVideo(
         host.user.id,
@@ -434,10 +443,19 @@ class _ZegoLiveStreamingSwipingPageState
         targetRoomID: host.roomID,
       );
     } else {
-      /// Normal mode: start playing stream
-      await ZegoUIKit().startPlayingStream(
-        host.streamID,
+      /// start playing stream
+      await ZegoUIKit().startPlayAnotherRoomAudioVideo(
+        targetRoomID: host.roomID,
+        host.roomID,
         host.user.id,
+        anotherUserName: host.user.name,
+
+        /// Render in other live page
+        playOnAnotherRoom: true,
+      );
+      await ZegoUIKit().muteUserAudio(
+        host.user.id,
+        true,
         targetRoomID: host.roomID,
       );
     }

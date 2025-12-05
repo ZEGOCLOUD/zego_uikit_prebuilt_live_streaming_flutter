@@ -3,7 +3,6 @@ import 'dart:async';
 
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
-
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/swiping/defines.dart';
@@ -21,7 +20,6 @@ class LiveStreamingSwipingStreamContext {
   ZegoLiveStreamingSwipingHost nextSwipingHost =
       ZegoLiveStreamingSwipingHost.empty();
   List<ZegoLiveStreamingSwipingHost> pendingPlayHosts = [];
-  List<StreamSubscription<dynamic>?> audioVideoStreamSubscriptions = [];
 
   Future<void> init({
     required String token,
@@ -87,59 +85,91 @@ class LiveStreamingSwipingStreamContext {
     currentHost.syncPlayingState();
     nextHost.syncPlayingState();
 
-    for (var e in audioVideoStreamSubscriptions) {
-      e?.cancel();
-    }
+    /// Apply mute/unmute or stop/start based on stream mode
+    final streamMode =
+        config?.streamMode ?? ZegoLiveStreamingStreamMode.preloaded;
+    if (streamMode == ZegoUIKitHallRoomStreamMode.preloaded) {
+      /// Streams to pull
+      List<ZegoLiveStreamingSwipingHost> startPlayingHosts = [
+        currentHost,
+        previousHost,
+        nextHost
+      ];
+      startPlayingHosts.removeWhere((e) {
+        return
+            // Current host
+            e.isEqual(currentSwipingHost) ||
+                e.isEqual(previousSwipingHost) ||
+                e.isEqual(nextSwipingHost);
+      });
 
-    /// Streams to pull
-    List<ZegoLiveStreamingSwipingHost> startPlayingHosts = [
-      currentHost,
-      previousHost,
-      nextHost
-    ];
-    startPlayingHosts.removeWhere((e) {
-      return
-          // Current host
-          e.isEqual(currentSwipingHost) ||
-              e.isEqual(previousSwipingHost) ||
-              e.isEqual(nextSwipingHost);
-    });
+      List<ZegoLiveStreamingSwipingHost> stopPlayingHosts = [];
+      for (var playingHost in
+          // Previously pulled host streams
+          [currentSwipingHost, previousSwipingHost, nextSwipingHost]) {
+        if (
+            // Not target host
+            !currentHost.isEqual(playingHost) &&
+                !previousHost.isEqual(playingHost) &&
+                !nextHost.isEqual(playingHost)) {
+          /// Not in pull stream queue now, need to stop
+          stopPlayingHosts.add(playingHost);
+        }
+      }
 
-    List<ZegoLiveStreamingSwipingHost> stopPlayingHosts = [];
-    for (var playingHost in
-        // Previously pulled host streams
-        [currentSwipingHost, previousSwipingHost, nextSwipingHost]) {
-      if (
-          // Not target host
-          !currentHost.isEqual(playingHost) &&
-              !previousHost.isEqual(playingHost) &&
-              !nextHost.isEqual(playingHost)) {
-        /// Not in pull stream queue now, need to stop
-        stopPlayingHosts.add(playingHost);
+      /// Stop streams that are not in current context
+      for (var host in stopPlayingHosts) {
+        if (host.isEmpty) {
+          continue;
+        }
+        await ZegoUIKit().stopPlayAnotherRoomAudioVideo(
+          targetRoomID: host.roomID,
+          host.user.id,
+        );
+      }
+
+      currentSwipingHost = currentHost;
+      previousSwipingHost = previousHost;
+      nextSwipingHost = nextHost;
+
+      pendingPlayHosts = List.from(startPlayingHosts);
+      pendingPlayHosts.removeWhere((e) {
+        e.syncPlayingState();
+        return e.isPlaying;
+      });
+
+      await syncUserAudioVideoMuteState();
+
+      tryPlayPendingHost();
+    } else {
+      currentSwipingHost = currentHost;
+      previousSwipingHost = previousHost;
+      nextSwipingHost = nextHost;
+
+      /// stop/start streams for non-current pages
+      for (var host in [currentSwipingHost]) {
+        await ZegoUIKit().startPlayAnotherRoomAudioVideo(
+          targetRoomID: host.roomID,
+          host.roomID,
+          host.user.id,
+          anotherUserName: host.user.name,
+
+          /// Render in other live page
+          playOnAnotherRoom: true,
+        );
+        await ZegoUIKit().muteUserAudio(
+          host.user.id,
+          false,
+          targetRoomID: host.roomID,
+        );
+      }
+      for (var host in [previousSwipingHost, nextSwipingHost]) {
+        await ZegoUIKit().stopPlayAnotherRoomAudioVideo(
+          targetRoomID: host.roomID,
+          host.user.id,
+        );
       }
     }
-
-    /// Stop streams that are not in current context
-    for (var host in stopPlayingHosts) {
-      await ZegoUIKit().stopPlayAnotherRoomAudioVideo(
-        targetRoomID: host.roomID,
-        host.user.id,
-      );
-    }
-
-    currentSwipingHost = currentHost;
-    previousSwipingHost = previousHost;
-    nextSwipingHost = nextHost;
-
-    pendingPlayHosts = List.from(startPlayingHosts);
-    pendingPlayHosts.removeWhere((e) {
-      e.syncPlayingState();
-      return e.isPlaying;
-    });
-
-    await syncUserAudioVideoMuteState();
-
-    tryPlayPendingHost();
   }
 
   Future<void> tryPlayPendingHost() async {
