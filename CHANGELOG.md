@@ -1,3 +1,8 @@
+
+## 3.15.4
+
+- Update dependency
+
 ## 3.15.3
 
 - Bugs
