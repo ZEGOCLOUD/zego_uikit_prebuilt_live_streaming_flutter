@@ -434,6 +434,11 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
 
             tempBrokenIDs.add(pkUser.userInfo.id);
             pkUser.heartbeatBrokenNotifier.value = true;
+            ZegoLoggerService.logInfo(
+              'user is broken:$pkUser, ',
+              tag: 'live.streaming.pk.events',
+              subTag: 'heartbeat timer',
+            );
 
             _coreData.events?.pk.onUserReconnecting?.call(
               pkUser.toUIKitUser,
@@ -674,7 +679,14 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
         pkUser.toUIKitUser,
       );
     }
-    pkUser.heartbeatBrokenNotifier.value = false;
+    if( pkUser.heartbeatBrokenNotifier.value) {
+      pkUser.heartbeatBrokenNotifier.value = false;
+      ZegoLoggerService.logInfo(
+        'user is not broken:$pkUser, ',
+        tag: 'live.streaming.pk.events',
+        subTag: 'heartbeat timer',
+      );
+    }
 
     // debugPrint('_onReceiveSEIEvent $event');
   }

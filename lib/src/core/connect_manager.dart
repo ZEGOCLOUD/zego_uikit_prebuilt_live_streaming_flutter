@@ -85,6 +85,11 @@ class ZegoLiveStreamingConnectManager {
       !isCoHost(ZegoUIKit().getLocalUser());
 
   bool isCoHost(ZegoUIKitUser user) {
+
+    if(user.isEmpty()) {
+      return false;
+    }
+
     if (ZegoLiveStreamingPageLifeCycle()
             .currentManagers
             .hostManager

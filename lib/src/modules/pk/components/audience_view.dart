@@ -150,7 +150,7 @@ class ZegoLiveStreamingPKAudienceViewState
                 valueListenable: host.heartbeatBrokenNotifier,
                 builder: (context, isHeartbeatBroken, _) {
                   return isHeartbeatBroken
-                      ? Container(color: Colors.black)
+                      ? Container(color: Colors.black.withAlpha(50))
                       : Container(color: Colors.transparent);
                 },
               ),
