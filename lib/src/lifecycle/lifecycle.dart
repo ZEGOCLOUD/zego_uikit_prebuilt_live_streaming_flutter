@@ -317,6 +317,7 @@ class ZegoLiveStreamingPageLifeCycle {
       liveID: liveID,
       config: config,
       events: events,
+      contextQuery: contextQuery,
     );
 
     ZegoUIKitPrebuiltLiveStreamingController().private.onRoomSwitched(

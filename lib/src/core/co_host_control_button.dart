@@ -2,10 +2,8 @@
 
 // Flutter imports:
 import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
-
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/toast.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/defines.dart';
@@ -14,7 +12,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/inner_text.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/reporter.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/lifecycle.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/core/pk_combine_notifier.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/core/core.dart';
 
 /// @nodoc
 class ZegoLiveStreamingCoHostControlButton extends StatefulWidget {
@@ -93,8 +91,11 @@ class _ZegoLiveStreamingCoHostControlButtonState
   Widget build(BuildContext context) {
     return ValueListenableBuilder<bool>(
       valueListenable:
-          ZegoLiveStreamingPKBattleStateCombineNotifier.instance.state,
-      builder: (context, isInPK, _) {
+          ZegoUIKitPrebuiltLiveStreamingPK.instance.combineNotifier.state,
+      builder: (context, _isInPK, _) {
+        final isInPK =
+            ZegoUIKitPrebuiltLiveStreamingPK.instance.liveID == widget.liveID &&
+                _isInPK;
         if (isInPK) {
           return const SizedBox.shrink();
         } else {

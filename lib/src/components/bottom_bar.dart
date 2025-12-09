@@ -1,9 +1,7 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
-
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/effects/beauty_effect_button.dart';
@@ -23,7 +21,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/events.defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/lifecycle.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/minimization/mini_button.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/core/pk_combine_notifier.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/core/core.dart';
 
 /// @nodoc
 class ZegoLiveStreamingBottomBar extends StatefulWidget {
@@ -508,8 +506,11 @@ class _ZegoLiveStreamingBottomBarState
       case ZegoLiveStreamingMenuBarButtonName.toggleMicrophoneButton:
         return ValueListenableBuilder<bool>(
           valueListenable:
-              ZegoLiveStreamingPKBattleStateCombineNotifier.instance.state,
-          builder: (context, isInPK, _) {
+              ZegoUIKitPrebuiltLiveStreamingPK.instance.combineNotifier.state,
+          builder: (context, _isInPK, _) {
+            final isInPK = ZegoUIKitPrebuiltLiveStreamingPK.instance.liveID ==
+                    widget.liveID &&
+                _isInPK;
             final needUserMuteMode =
                 (!widget.config.coHost.stopCoHostingWhenMicCameraOff) || isInPK;
             return ZegoToggleMicrophoneButton(

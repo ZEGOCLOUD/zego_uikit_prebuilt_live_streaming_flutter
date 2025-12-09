@@ -16,7 +16,6 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/core/live_duration_manage
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/live_status_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/plugins.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/internal/pk_combine_notifier.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/core/core.dart';
 
 part 'core_manager.audio_video.dart';
@@ -79,12 +78,6 @@ class ZegoLiveStreamingManagers {
       events: events,
       contextQuery: contextQuery,
     );
-    ZegoLiveStreamingPKBattleStateCombineNotifier().init(
-      v2StateNotifier: ZegoUIKitPrebuiltLiveStreamingPK().pkStateNotifier,
-      v2RequestReceivedEventInMinimizingNotifier:
-          ZegoUIKitPrebuiltLiveStreamingPK()
-              .pkBattleRequestReceivedEventInMinimizingNotifier,
-    );
 
     initAudioVideoManagers();
 
@@ -119,7 +112,6 @@ class ZegoLiveStreamingManagers {
 
     uninitAudioVideoManagers();
     await ZegoUIKitPrebuiltLiveStreamingPK().uninit();
-    ZegoLiveStreamingPKBattleStateCombineNotifier().uninit();
 
     /// Even if from live hall, still need to uninit plugins, probably won't be used
     await plugins.uninit();
@@ -141,6 +133,7 @@ class ZegoLiveStreamingManagers {
       subTag: 'onRoomWillSwitch',
     );
 
+    ZegoUIKitPrebuiltLiveStreamingPK().uninit();
     connectManager.onRoomWillSwitch(liveID: liveID);
   }
 
@@ -148,6 +141,7 @@ class ZegoLiveStreamingManagers {
     required String liveID,
     required ZegoUIKitPrebuiltLiveStreamingConfig config,
     required ZegoUIKitPrebuiltLiveStreamingEvents? events,
+    required BuildContext Function()? contextQuery,
   }) {
     ZegoLoggerService.logInfo(
       'live id:$liveID, ',
@@ -164,6 +158,12 @@ class ZegoLiveStreamingManagers {
       liveID: liveID,
       config: config,
       events: events,
+    );
+    ZegoUIKitPrebuiltLiveStreamingPK().init(
+      liveID: liveID,
+      config: config,
+      events: events,
+      contextQuery: contextQuery,
     );
   }
 

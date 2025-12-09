@@ -3,10 +3,8 @@ import 'dart:io' show Platform;
 
 // Flutter imports:
 import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
-
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/duration_time_board.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
@@ -19,7 +17,6 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/lifecycle.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/components/view.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/core/core.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/core/pk_combine_notifier.dart';
 
 class ZegoMinimizingStreamingPage extends StatefulWidget {
   const ZegoMinimizingStreamingPage({
@@ -135,8 +132,8 @@ class ZegoMinimizingStreamingPageState
       builder: (context, constraints) {
         final page = Scaffold(
           resizeToAvoidBottomInset: false,
-          body: ZegoLiveStreamingPKBattleStateCombineNotifier
-                  .instance.state.value
+          body: ZegoUIKitPrebuiltLiveStreamingPK
+                  .instance.combineNotifier.state.value
               ? minimizingPKUsersWidget(constraints)
               : ValueListenableBuilder<String?>(
                   valueListenable: ZegoUIKitPrebuiltLiveStreamingController()
@@ -257,7 +254,10 @@ class ZegoMinimizingStreamingPageState
     );
 
     /// new pk
-    if (ZegoUIKitPrebuiltLiveStreamingPK.instance.isInPK) {
+    final isInPK =
+        ZegoUIKitPrebuiltLiveStreamingPK.instance.liveID == widget.liveID &&
+            ZegoUIKitPrebuiltLiveStreamingPK.instance.isInPK;
+    if (isInPK) {
       pkView = ZegoLiveStreamingPKV2View(
         liveID: widget.liveID,
         constraints: constraints,
@@ -461,8 +461,8 @@ class ZegoMinimizingStreamingPageState
       right: 3,
       top: 3,
       child: ValueListenableBuilder<bool>(
-          valueListenable: ZegoLiveStreamingPKBattleStateCombineNotifier
-              .instance.hasRequestEvent,
+          valueListenable: ZegoUIKitPrebuiltLiveStreamingPK
+              .instance.combineNotifier.hasRequestEvent,
           builder: (context, hasPKRequestEvent, _) {
             final redPointWidget = Container(
               decoration: const BoxDecoration(

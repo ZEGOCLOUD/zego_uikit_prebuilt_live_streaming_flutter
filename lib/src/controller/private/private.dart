@@ -13,7 +13,6 @@ class ZegoLiveStreamingControllerPrivateImpl {
   String _liveID = '';
 
   String get liveID {
-    assert(_liveID.isNotEmpty);
     return _liveID;
   }
 

@@ -1,20 +1,12 @@
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
-
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
-
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/core/event/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/core/service/defines.dart';
 
 class ZegoLiveStreamingPKBattleStateCombineNotifier {
-  factory ZegoLiveStreamingPKBattleStateCombineNotifier() => instance;
-  static final ZegoLiveStreamingPKBattleStateCombineNotifier instance =
-      ZegoLiveStreamingPKBattleStateCombineNotifier._();
-
-  ZegoLiveStreamingPKBattleStateCombineNotifier._();
-
   final state = ValueNotifier<bool>(false);
   ValueNotifier<ZegoLiveStreamingPKBattleState>? _v2StateNotifier;
 

@@ -3,11 +3,8 @@ import 'dart:async';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
-
-// Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/pop_up_sheet_menu.dart';
@@ -17,7 +14,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/inner_text.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/internal.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/lifecycle.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/core/pk_combine_notifier.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/core/core.dart';
 
 /// @nodoc
 class ZegoLiveStreamingMemberListSheet extends StatefulWidget {
@@ -319,8 +316,12 @@ class _ZegoLiveStreamingMemberListSheetState
   Widget controlsItem(ZegoUIKitUser user) {
     return ValueListenableBuilder<bool>(
       valueListenable:
-          ZegoLiveStreamingPKBattleStateCombineNotifier.instance.state,
-      builder: (context, isInPK, _) {
+          ZegoUIKitPrebuiltLiveStreamingPK.instance.combineNotifier.state,
+      builder: (context, _isInPK, _) {
+        final isInPK =
+            ZegoUIKitPrebuiltLiveStreamingPK.instance.liveID == widget.liveID &&
+                _isInPK;
+
         final needHideCoHostWidget = isInPK;
         if (needHideCoHostWidget) {
           if (ZegoLiveStreamingPageLifeCycle()
@@ -390,7 +391,7 @@ class _ZegoLiveStreamingMemberListSheetState
   Widget hostControlItem(ZegoUIKitUser user) {
     return ValueListenableBuilder<bool>(
       valueListenable:
-          ZegoLiveStreamingPKBattleStateCombineNotifier.instance.state,
+          ZegoUIKitPrebuiltLiveStreamingPK.instance.combineNotifier.state,
       builder: (context, isInPK, _) {
         final needHideCoHostWidget = isInPK;
 
