@@ -1,13 +1,12 @@
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
-
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
-
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/inner_text.dart';
+
 import 'defines.dart';
 import 'event/defines.dart';
 
@@ -189,7 +188,7 @@ mixin ZegoUIKitPrebuiltLiveStreamingPKServiceData {
 mixin ZegoUIKitPrebuiltLiveStreamingPKEventData {
   String propertyHostID = '';
 
-  void updatePropertyHostID(
+  void updatePropertyHostIDByUpdated(
     ZegoSignalingPluginRoomPropertiesUpdatedEvent event,
   ) {
     if (event.setProperties.containsKey(roomPropKeyHost)) {
@@ -198,6 +197,14 @@ mixin ZegoUIKitPrebuiltLiveStreamingPKEventData {
 
     if (event.deleteProperties.containsKey(roomPropKeyHost)) {
       propertyHostID = '';
+    }
+  }
+
+  void updatePropertyHostIDByQuery(
+    ZegoSignalingPluginQueryRoomPropertiesResult event,
+  ) {
+    if (event.properties.containsKey(roomPropKeyHost)) {
+      propertyHostID = event.properties[roomPropKeyHost] ?? '';
     }
   }
 }

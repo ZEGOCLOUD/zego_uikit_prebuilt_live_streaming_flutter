@@ -94,28 +94,37 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
           subTag: 'queryRoomProperties',
         );
 
-        if (result.properties.containsKey(roomPropKeyRequestID)) {
-          /// After entering the room, if found that there was a PK going on,
-          /// which indicates that the app was killed earlier.
-          /// At this time, It cannot re-enter the PK.
+        if (isHost) {
+          /// Enter the room to discover PK attributes, exit PK to clear attributes
+          if (result.properties.containsKey(roomPropKeyRequestID)) {
+            /// After entering the room, if found that there was a PK going on,
+            /// which indicates that the app was killed earlier.
+            /// At this time, It cannot re-enter the PK.
 
-          ZegoLoggerService.logInfo(
-            'room property contain pk keys, quit pk',
-            tag: 'live.streaming.pk.events',
-            subTag: 'queryRoomProperties',
-          );
-
-          quitPKBattle(
-            requestID: result.properties[roomPropKeyRequestID] ?? '',
-            force: true,
-          );
-        }
-
-        await ZegoUIKit().getSignalingPlugin().deleteRoomProperties(
-              roomID: ZegoUIKit().getSignalingPlugin().getRoomID(),
-              keys: [roomPropKeyRequestID, roomPropKeyHost, roomPropKeyPKUsers],
-              showErrorLog: false,
+            ZegoLoggerService.logInfo(
+              'room property contain pk keys, quit pk',
+              tag: 'live.streaming.pk.events',
+              subTag: 'queryRoomProperties',
             );
+
+            quitPKBattle(
+              requestID: result.properties[roomPropKeyRequestID] ?? '',
+              force: true,
+            );
+          }
+
+          await ZegoUIKit().getSignalingPlugin().deleteRoomProperties(
+                roomID: ZegoUIKit().getSignalingPlugin().getRoomID(),
+                keys: [
+                  roomPropKeyRequestID,
+                  roomPropKeyHost,
+                  roomPropKeyPKUsers
+                ],
+                showErrorLog: false,
+              );
+        } else {
+          _onRoomAttributesQueried(result);
+        }
       });
     }
   }
@@ -691,6 +700,23 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
     // debugPrint('_onReceiveSEIEvent $event');
   }
 
+  void _onRoomAttributesQueried(
+    ZegoSignalingPluginQueryRoomPropertiesResult event,
+  ) {
+    ZegoLoggerService.logInfo(
+      'event:$event, ',
+      tag: 'live.streaming.pk.events',
+      subTag: 'onRoomAttributesQueried',
+    );
+    _coreData.updatePropertyHostIDByQuery(event);
+
+    if (event.properties.containsKey(roomPropKeyPKUsers)) {
+      _onRoomAttributeUpdatedPKUsers(
+        event.properties[roomPropKeyPKUsers] ?? '',
+      );
+    }
+  }
+
   void _onRoomAttributesUpdated(
     ZegoSignalingPluginRoomPropertiesUpdatedEvent event,
   ) async {
@@ -699,122 +725,130 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
       tag: 'live.streaming.pk.events',
       subTag: 'onRoomAttributesUpdated',
     );
-    _coreData.updatePropertyHostID(event);
+    _coreData.updatePropertyHostIDByUpdated(event);
 
     if (event.deleteProperties.containsKey(roomPropKeyPKUsers)) {
-      if (!isHost) {
-        await ZegoUIKit().muteUserAudioVideo(
-          targetRoomID: _liveID,
+      _onRoomAttributeDeletePKUsers(
+        event.deleteProperties[roomPropKeyPKUsers] ?? '',
+      );
+    }
+
+    if (event.setProperties.containsKey(roomPropKeyPKUsers)) {
+      _onRoomAttributeUpdatedPKUsers(
+        event.setProperties[roomPropKeyPKUsers] ?? '',
+      );
+    }
+  }
+
+  Future<void> _onRoomAttributeDeletePKUsers(String property) async {
+    if (!isHost) {
+      await ZegoUIKit().muteUserAudioVideo(
+        targetRoomID: _liveID,
+        ZegoLiveStreamingPageLifeCycle()
+                .currentManagers
+                .hostManager
+                .notifier
+                .value
+                ?.id ??
+            '',
+        false,
+      );
+      await _mixer.stopPlayStream();
+
+      updatePKUsers([]);
+      updatePKState(ZegoLiveStreamingPKBattleState.idle);
+
+      _coreData.events?.onStateUpdated?.call(
+        isLiving ? ZegoLiveStreamingState.living : ZegoLiveStreamingState.idle,
+      );
+    }
+  }
+
+  Future<void> _onRoomAttributeUpdatedPKUsers(String property) async {
+    if (isHost) {
+      /// wait start
+      if (ZegoLiveStreamingPageLifeCycle()
+          .previewPageVisibilityNotifier
+          .value) {
+        final completer = Completer<void>();
+        void onLiveStartedByLocal() {
+          if (!ZegoLiveStreamingPageLifeCycle()
+              .previewPageVisibilityNotifier
+              .value) {
+            completer.complete();
+          }
           ZegoLiveStreamingPageLifeCycle()
-                  .currentManagers
-                  .hostManager
-                  .notifier
-                  .value
-                  ?.id ??
-              '',
-          false,
+              .previewPageVisibilityNotifier
+              .removeListener(onLiveStartedByLocal);
+        }
+
+        ZegoLiveStreamingPageLifeCycle()
+            .previewPageVisibilityNotifier
+            .addListener(onLiveStartedByLocal);
+        ZegoLoggerService.logInfo(
+          'waiting for startedByLocalNotifier',
+          tag: 'live.streaming.pk.events',
+          subTag: 'onRoomAttributesUpdated',
         );
-        await _mixer.stopPlayStream();
-
-        updatePKUsers([]);
-        updatePKState(ZegoLiveStreamingPKBattleState.idle);
-
-        _coreData.events?.onStateUpdated?.call(
-          isLiving
-              ? ZegoLiveStreamingState.living
-              : ZegoLiveStreamingState.idle,
+        await completer.future;
+        ZegoLoggerService.logInfo(
+          'startedByLocalNotifier change to true, check liveStatusNotifier',
+          tag: 'live.streaming.pk.events',
+          subTag: 'onRoomAttributesUpdated',
         );
       }
     }
 
-    if (event.setProperties.containsKey(roomPropKeyPKUsers)) {
-      if (isHost) {
-        /// wait start
+    /// wait living
+    if (ZegoLiveStreamingPageLifeCycle()
+            .currentManagers
+            .liveStatusManager
+            .notifier
+            .value !=
+        LiveStatus.living) {
+      final completer = Completer<void>();
+      void onLiveStatusChanged() {
         if (ZegoLiveStreamingPageLifeCycle()
-            .previewPageVisibilityNotifier
-            .value) {
-          final completer = Completer<void>();
-          void onLiveStartedByLocal() {
-            if (!ZegoLiveStreamingPageLifeCycle()
-                .previewPageVisibilityNotifier
-                .value) {
-              completer.complete();
-            }
-            ZegoLiveStreamingPageLifeCycle()
-                .previewPageVisibilityNotifier
-                .removeListener(onLiveStartedByLocal);
-          }
-
-          ZegoLiveStreamingPageLifeCycle()
-              .previewPageVisibilityNotifier
-              .addListener(onLiveStartedByLocal);
-          ZegoLoggerService.logInfo(
-            'waiting for startedByLocalNotifier',
-            tag: 'live.streaming.pk.events',
-            subTag: 'onRoomAttributesUpdated',
-          );
-          await completer.future;
-          ZegoLoggerService.logInfo(
-            'startedByLocalNotifier change to true, check liveStatusNotifier',
-            tag: 'live.streaming.pk.events',
-            subTag: 'onRoomAttributesUpdated',
-          );
+                .currentManagers
+                .liveStatusManager
+                .notifier
+                .value ==
+            LiveStatus.living) {
+          completer.complete();
         }
-      }
-
-      /// wait living
-      if (ZegoLiveStreamingPageLifeCycle()
-              .currentManagers
-              .liveStatusManager
-              .notifier
-              .value !=
-          LiveStatus.living) {
-        final completer = Completer<void>();
-        void onLiveStatusChanged() {
-          if (ZegoLiveStreamingPageLifeCycle()
-                  .currentManagers
-                  .liveStatusManager
-                  .notifier
-                  .value ==
-              LiveStatus.living) {
-            completer.complete();
-          }
-          ZegoLiveStreamingPageLifeCycle()
-              .currentManagers
-              .liveStatusManager
-              .notifier
-              .removeListener(onLiveStatusChanged);
-        }
-
         ZegoLiveStreamingPageLifeCycle()
             .currentManagers
             .liveStatusManager
             .notifier
-            .addListener(onLiveStatusChanged);
-        ZegoLoggerService.logInfo(
-          'waiting for liveStatusNotifier',
-          tag: 'live.streaming.pk.events',
-          subTag: 'onRoomAttributesUpdated',
-        );
-
-        await completer.future;
-        ZegoLoggerService.logInfo(
-          'liveStatusNotifier change to living, startPK',
-          tag: 'live.streaming.pk.events',
-          subTag: 'onRoomAttributesUpdated',
-        );
+            .removeListener(onLiveStatusChanged);
       }
 
-      if (!isHost) {
-        final updatedPKUsers =
-            (jsonDecode(event.setProperties[roomPropKeyPKUsers] ?? '')
-                    as List<dynamic>)
-                .map(
-                  (userJson) => ZegoLiveStreamingPKUser.fromJson(userJson),
-                )
-                .toList();
-        updatePKUsers(updatedPKUsers);
-      }
+      ZegoLiveStreamingPageLifeCycle()
+          .currentManagers
+          .liveStatusManager
+          .notifier
+          .addListener(onLiveStatusChanged);
+      ZegoLoggerService.logInfo(
+        'waiting for liveStatusNotifier',
+        tag: 'live.streaming.pk.events',
+        subTag: 'onRoomAttributesUpdated',
+      );
+
+      await completer.future;
+      ZegoLoggerService.logInfo(
+        'liveStatusNotifier change to living, startPK',
+        tag: 'live.streaming.pk.events',
+        subTag: 'onRoomAttributesUpdated',
+      );
+    }
+
+    if (!isHost) {
+      final updatedPKUsers = (jsonDecode(property) as List<dynamic>)
+          .map(
+            (userJson) => ZegoLiveStreamingPKUser.fromJson(userJson),
+          )
+          .toList();
+      updatePKUsers(updatedPKUsers);
     }
   }
 

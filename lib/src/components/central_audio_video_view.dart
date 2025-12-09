@@ -237,23 +237,6 @@ class ZegoLiveStreamingCentralAudioVideoViewState
   }
 
   Widget audioVideoContainer(bool withScreenSharing) {
-    audioVideoViewCreator(ZegoUIKitUser user) {
-      return ZegoAudioVideoView(
-        roomID: widget.liveID,
-        user: user,
-        borderRadius: 18.0.zW,
-        borderColor: Colors.transparent,
-        backgroundBuilder: audioVideoViewBackground,
-        foregroundBuilder: audioVideoViewForeground,
-        avatarConfig: ZegoAvatarConfig(
-          showInAudioMode: widget.config.audioVideoView.showAvatarInAudioMode,
-          showSoundWavesInAudioMode:
-              widget.config.audioVideoView.showSoundWavesInAudioMode,
-          builder: widget.config.avatarBuilder,
-        ),
-      );
-    }
-
     return null != widget.config.audioVideoView.containerBuilder
         ? StreamBuilder<List<ZegoUIKitUser>>(
             stream: ZegoUIKit().getUserListStream(
@@ -268,6 +251,24 @@ class ZegoLiveStreamingCentralAudioVideoViewState
                   targetRoomID: widget.liveID,
                 ),
                 builder: (context, snapshot) {
+                  audioVideoViewCreator(ZegoUIKitUser user) {
+                    return ZegoAudioVideoView(
+                      roomID: widget.liveID,
+                      user: user,
+                      borderRadius: 18.0.zW,
+                      borderColor: Colors.transparent,
+                      backgroundBuilder: audioVideoViewBackground,
+                      foregroundBuilder: audioVideoViewForeground,
+                      avatarConfig: ZegoAvatarConfig(
+                        showInAudioMode:
+                            widget.config.audioVideoView.showAvatarInAudioMode,
+                        showSoundWavesInAudioMode: widget
+                            .config.audioVideoView.showSoundWavesInAudioMode,
+                        builder: widget.config.avatarBuilder,
+                      ),
+                    );
+                  }
+
                   return widget.config.audioVideoView.containerBuilder?.call(
                         context,
                         allUsers,
