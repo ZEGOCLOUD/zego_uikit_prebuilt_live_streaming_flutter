@@ -262,16 +262,19 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
     );
 
     var extendedDataMap = <String, dynamic>{};
-    try {
-      extendedDataMap =
-          jsonDecode(remoteUserInfo.extendedData) as Map<String, dynamic>? ??
-              {};
-    } catch (e) {
-      ZegoLoggerService.logError(
-        'extendedData is not a json:${remoteUserInfo.extendedData}',
-        tag: 'live.streaming.pk.events',
-        subTag: 'onRemoteInvitationUserStateChanged',
-      );
+    if (remoteUserInfo.extendedData.isNotEmpty) {
+      try {
+        extendedDataMap =
+            jsonDecode(remoteUserInfo.extendedData) as Map<String, dynamic>? ??
+                {};
+      } catch (e) {
+        ZegoLoggerService.logError(
+          'extendedData is not a json:${remoteUserInfo.extendedData}, '
+          'e:$e, ',
+          tag: 'live.streaming.pk.events',
+          subTag: 'onRemoteInvitationUserStateChanged',
+        );
+      }
     }
 
     switch (remoteUserInfo.state) {
@@ -907,11 +910,11 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
       await ZegoUIKit().getSignalingPlugin().refuseAdvanceInvitation(
           invitationID: event.requestID,
           inviterID: event.fromHost.id,
-          data: jsonEncode({
-            'code': ZegoLiveStreamingPKBattleRejectCode.hostStateError.index,
-            'invitation_id': event.requestID,
-            'invitee_name': ZegoUIKit().getLocalUser().name,
-          }));
+          data: jsonEncode(PKServiceRejectData(
+            code: ZegoLiveStreamingPKBattleRejectCode.hostStateError.index,
+            inviterID: event.fromHost.id,
+            inviteeName: ZegoUIKit().getLocalUser().name,
+          ).toJson()));
 
       return;
     }
@@ -921,11 +924,11 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
           await ZegoUIKit().getSignalingPlugin().refuseAdvanceInvitation(
                 invitationID: event.requestID,
                 inviterID: event.fromHost.id,
-                data: jsonEncode({
-                  'code': ZegoLiveStreamingPKBattleRejectCode.busy.index,
-                  'invitation_id': event.requestID,
-                  'invitee_name': ZegoUIKit().getLocalUser().name,
-                }),
+                data: jsonEncode(PKServiceRejectData(
+                  code: ZegoLiveStreamingPKBattleRejectCode.busy.index,
+                  inviterID: event.fromHost.id,
+                  inviteeName: ZegoUIKit().getLocalUser().name,
+                ).toJson()),
               );
 
       ((ret.error != null)
