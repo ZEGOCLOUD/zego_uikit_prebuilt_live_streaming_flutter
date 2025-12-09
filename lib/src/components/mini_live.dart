@@ -16,10 +16,10 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/internal/pk_combine_notifier.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/lifecycle.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/components/view.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/core/core.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/core/pk_combine_notifier.dart';
 
 class ZegoMinimizingStreamingPage extends StatefulWidget {
   const ZegoMinimizingStreamingPage({

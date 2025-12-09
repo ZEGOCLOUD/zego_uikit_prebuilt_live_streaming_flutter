@@ -12,7 +12,7 @@ Widget defaultPKBackgroundBuilder(
 ) {
   return Container(
     decoration: BoxDecoration(
-      color: Colors.black.withAlpha(50),
+      color: Colors.black,
       border: Border.all(
         color: Colors.white.withValues(alpha: 0.1),
       ),

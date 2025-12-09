@@ -155,7 +155,6 @@ extension PKServiceConnectedUsers on ZegoUIKitPrebuiltLiveStreamingPKServices {
       return;
     }
 
-
     // 注意：不能直接简化为 isHost ? await hostOnPKUsersChanged() : await audienceOnPKUsersChanged();
     // 原因：waitCompleter 和 completeCompleter 提供了同步机制，确保同一时间只有一个 onPKUsersChanged 在执行
     // 1. waitCompleter('onPKUsersChanged'): 等待上一次 onPKUsersChanged 调用完成（如果存在），然后创建新的 Completer

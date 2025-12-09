@@ -12,7 +12,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/components/mini_live.dart
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/internal/pk_combine_notifier.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/core/pk_combine_notifier.dart';
 import 'data.dart';
 import 'defines.dart';
 import 'overlay_machine.dart';

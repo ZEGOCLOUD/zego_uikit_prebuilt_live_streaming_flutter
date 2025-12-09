@@ -27,7 +27,6 @@ import 'defines.dart';
 import 'events.dart';
 import 'events.defines.dart';
 import 'internal/defines.dart';
-import 'internal/pk_combine_notifier.dart';
 import 'internal/reporter.dart';
 import 'lifecycle/lifecycle.dart';
 import 'live_streaming.dart';
@@ -37,59 +36,35 @@ import 'modules/minimization/defines.dart';
 import 'modules/minimization/overlay_machine.dart';
 import 'modules/pk/core/core.dart';
 import 'modules/pk/core/defines.dart';
+import 'modules/pk/core/pk_combine_notifier.dart';
 import 'modules/pk/core/service/defines.dart';
 import 'modules/pk/core/service/services.dart';
 
 part 'controller/audio_video.dart';
-
 part 'controller/co.host.dart';
-
 part 'controller/hall.dart';
-
 part 'controller/log.dart';
-
 part 'controller/media.dart';
-
 part 'controller/message.dart';
-
 part 'controller/minimization.dart';
-
 part 'controller/pip.dart';
-
 part 'controller/pk.dart';
-
 part 'controller/private/audio_video.dart';
-
 part 'controller/private/co.host.dart';
-
 part 'controller/private/hall.dart';
-
 part 'controller/private/media.dart';
-
 part 'controller/private/message.dart';
-
 part 'controller/private/minimization.dart';
-
 part 'controller/private/pip.dart';
-
 part 'controller/private/pk.dart';
-
 part 'controller/private/private.dart';
-
 part 'controller/private/room.dart';
-
 part 'controller/private/screen.dart';
-
 part 'controller/private/swiping.dart';
-
 part 'controller/private/user.dart';
-
 part 'controller/room.dart';
-
 part 'controller/screen.dart';
-
 part 'controller/swiping.dart';
-
 part 'controller/user.dart';
 
 /// Used to control the live streaming functionality.

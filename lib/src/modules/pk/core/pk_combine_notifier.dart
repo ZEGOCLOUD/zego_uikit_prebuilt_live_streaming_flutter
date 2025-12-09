@@ -55,6 +55,7 @@ class ZegoLiveStreamingPKBattleStateCombineNotifier {
 
     _v2StateNotifier?.removeListener(_onV2StateChanged);
     _v2StateNotifier = null;
+    state.value = false;
 
     _v2RequestReceivedEventInMinimizingNotifier
         ?.removeListener(onV2RequestReceivedEventInMinimizingChanged);

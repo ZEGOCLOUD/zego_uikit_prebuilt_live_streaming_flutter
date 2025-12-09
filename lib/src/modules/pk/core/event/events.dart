@@ -679,7 +679,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
         pkUser.toUIKitUser,
       );
     }
-    if( pkUser.heartbeatBrokenNotifier.value) {
+    if (pkUser.heartbeatBrokenNotifier.value) {
       pkUser.heartbeatBrokenNotifier.value = false;
       ZegoLoggerService.logInfo(
         'user is not broken:$pkUser, ',
