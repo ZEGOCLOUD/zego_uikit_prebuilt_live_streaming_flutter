@@ -95,6 +95,14 @@ extension PKServiceConnectedUsers on ZegoUIKitPrebuiltLiveStreamingPKServices {
         subTag: 'updatePKUsers',
       );
       _coreData.currentPKUsers.value = updatedPKUsers;
+    } else {
+      ZegoLoggerService.logInfo(
+        'user is same, ignore, '
+        'current:${_coreData.currentPKUsers}, '
+        'target:$updatedPKUsers, ',
+        tag: 'live.streaming.pk.services.users',
+        subTag: 'updatePKUsers',
+      );
     }
   }
 

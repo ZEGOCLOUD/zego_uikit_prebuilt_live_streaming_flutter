@@ -8,7 +8,11 @@ extension PKServiceHost on ZegoUIKitPrebuiltLiveStreamingPKServices {
     required String requestID,
     bool force = false,
   }) async {
-    if (!force && (!_serviceInitialized || !isLiving || !isHost || !isInPK)) {
+    if (!force &&
+        (!_serviceInitialized ||
+            !isLiving ||
+            !isHost ||
+            ZegoLiveStreamingPKBattleState.idle == pkStateNotifier.value)) {
       ZegoLoggerService.logInfo(
         'could not quit pk battle, '
         'init:$_serviceInitialized, '
@@ -75,7 +79,9 @@ extension PKServiceHost on ZegoUIKitPrebuiltLiveStreamingPKServices {
     if (!_serviceInitialized ||
         !isLiving ||
         !isHost ||
-        !isInPK ||
+
+        /// loading also can stop/quit
+        ZegoLiveStreamingPKBattleState.idle == pkStateNotifier.value ||
         !isRequestFromLocal) {
       ZegoLoggerService.logInfo(
         'could not stop pk battle, '

@@ -397,6 +397,11 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
     _heartBeatTimer = Timer.periodic(
       const Duration(milliseconds: 2500),
       (timer) {
+        final userDisconnectedSecond =
+            _coreData.prebuiltConfig?.pkBattle.userDisconnectedSecond ?? 60;
+        final userReconnectingSecond =
+            _coreData.prebuiltConfig?.pkBattle.userReconnectingSecond ?? 5;
+
         final now = DateTime.now();
         final tempBrokenIDs = <String>[];
         final alreadyBrokenIDs = <String>[];
@@ -407,17 +412,11 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
           }
 
           final offlineSeconds = now.difference(pkUser.heartbeat!).inSeconds;
-          if (offlineSeconds >
-              (_coreData.prebuiltConfig?.pkBattle.userDisconnectedSecond ??
-                  60)) {
+          if (offlineSeconds > userDisconnectedSecond) {
             alreadyBrokenIDs.add(pkUser.userInfo.id);
 
-            _coreData.events?.pk.onUserDisconnected?.call(
-              pkUser.toUIKitUser,
-            );
-          } else if (offlineSeconds >
-                  (_coreData.prebuiltConfig?.pkBattle.userReconnectingSecond ??
-                      5) &&
+            _coreData.events?.pk.onUserDisconnected?.call(pkUser.toUIKitUser);
+          } else if (offlineSeconds > userReconnectingSecond &&
               !(pkUser.heartbeatBrokenNotifier.value)) {
             ZegoLoggerService.logInfo(
               '${pkUser.userInfo.id} heartbeat had broken,'
@@ -994,14 +993,14 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
     ZegoLiveStreamingOutgoingPKBattleRequestAcceptedEvent event,
   ) async {
     ZegoLoggerService.logInfo(
-      'event:$event, ',
+      'event:$event, '
+      'now pk state:${ZegoUIKitPrebuiltLiveStreamingPK.instance.pkStateNotifier.value}, ',
       tag: 'live.streaming.pk.events',
       subTag: 'onInvitationAccepted',
     );
 
     if (!ZegoUIKitPrebuiltLiveStreamingPK.instance.isInPK) {
       /// first invitee(other room's host) accept, start pk, update layout
-
       updatePKState(ZegoLiveStreamingPKBattleState.loading);
 
       updatePKUsers([

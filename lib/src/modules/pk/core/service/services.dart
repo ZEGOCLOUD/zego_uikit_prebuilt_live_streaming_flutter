@@ -2,14 +2,12 @@
 import 'dart:async';
 import 'dart:convert';
 
+// Package imports:
+import 'package:collection/collection.dart';
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-
-// Package imports:
-import 'package:collection/collection.dart';
 import 'package:zego_uikit/zego_uikit.dart';
-
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/dialogs.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
@@ -25,6 +23,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/core/data.dart
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/core/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/core/event/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/core/mixer.dart';
+
 import 'defines.dart';
 import 'protocol.dart';
 
@@ -64,6 +63,12 @@ mixin ZegoUIKitPrebuiltLiveStreamingPKServices {
 
   void updatePKState(ZegoLiveStreamingPKBattleState value) {
     if (pkStateNotifier.value == value) {
+      ZegoLoggerService.logInfo(
+        'current state(${pkStateNotifier.value}) is same',
+        tag: 'live.streaming.pk.services',
+        subTag: 'updatePKState',
+      );
+
       return;
     }
 
