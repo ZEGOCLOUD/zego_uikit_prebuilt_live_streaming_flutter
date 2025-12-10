@@ -95,34 +95,56 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
         );
 
         if (isHost) {
-          /// Enter the room to discover PK attributes, exit PK to clear attributes
-          if (result.properties.containsKey(roomPropKeyRequestID)) {
-            /// After entering the room, if found that there was a PK going on,
-            /// which indicates that the app was killed earlier.
-            /// At this time, It cannot re-enter the PK.
-
+          /// 检查是否有PK相关的属性，如果有则显示恢复PK对话框
+          if (result.properties.containsKey(roomPropKeyRequestID) ||
+              result.properties.containsKey(roomPropKeyPKUsers)) {
+            /// 恢复PK - 显示确认对话框
+            final shouldResume = await showHostResumePKConfirmDialog();
             ZegoLoggerService.logInfo(
-              'room property contain pk keys, quit pk',
+              'resume or not:$shouldResume, ',
               tag: 'live.streaming.pk.events',
               subTag: 'queryRoomProperties',
             );
 
-            quitPKBattle(
-              requestID: result.properties[roomPropKeyRequestID] ?? '',
-              force: true,
-            );
-          }
+            if (shouldResume) {
+              /// 用户选择恢复PK
+              _onRoomAttributesQueried(result);
+            } else {
+              /// 用户选择不恢复PK，退出
+              /// Enter the room to discover PK attributes, exit PK to clear attributes
+              if (result.properties.containsKey(roomPropKeyRequestID)) {
+                /// After entering the room, if found that there was a PK going on,
+                /// which indicates that the app was killed earlier.
+                /// At this time, It cannot re-enter the PK.
 
-          await ZegoUIKit().getSignalingPlugin().deleteRoomProperties(
-                roomID: ZegoUIKit().getSignalingPlugin().getRoomID(),
-                keys: [
-                  roomPropKeyRequestID,
-                  roomPropKeyHost,
-                  roomPropKeyPKUsers
-                ],
-                showErrorLog: false,
-              );
+                ZegoLoggerService.logInfo(
+                  'room property contain pk keys, quit pk',
+                  tag: 'live.streaming.pk.events',
+                  subTag: 'queryRoomProperties',
+                );
+
+                quitPKBattle(
+                  requestID: result.properties[roomPropKeyRequestID] ?? '',
+                  force: true,
+                );
+              }
+
+              await ZegoUIKit().getSignalingPlugin().deleteRoomProperties(
+                    roomID: ZegoUIKit().getSignalingPlugin().getRoomID(),
+                    keys: [
+                      roomPropKeyRequestID,
+                      roomPropKeyHost,
+                      roomPropKeyPKUsers
+                    ],
+                    showErrorLog: false,
+                  );
+            }
+          } else {
+            /// 没有PK相关的属性，直接继续
+            _onRoomAttributesQueried(result);
+          }
         } else {
+          /// 观众退出重启app，恢复PK状态
           _onRoomAttributesQueried(result);
         }
       });
@@ -716,6 +738,9 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
     if (event.properties.containsKey(roomPropKeyPKUsers)) {
       _onRoomAttributeUpdatedPKUsers(
         event.properties[roomPropKeyPKUsers] ?? '',
+
+        /// host也需要更新
+        hostCanUpdatePKUsers: true,
       );
     }
   }
@@ -739,6 +764,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
     if (event.setProperties.containsKey(roomPropKeyPKUsers)) {
       _onRoomAttributeUpdatedPKUsers(
         event.setProperties[roomPropKeyPKUsers] ?? '',
+        hostCanUpdatePKUsers: false,
       );
     }
   }
@@ -767,7 +793,10 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
     }
   }
 
-  Future<void> _onRoomAttributeUpdatedPKUsers(String property) async {
+  Future<void> _onRoomAttributeUpdatedPKUsers(
+    String property, {
+    required bool hostCanUpdatePKUsers,
+  }) async {
     if (isHost) {
       /// wait start
       if (ZegoLiveStreamingPageLifeCycle()
@@ -845,7 +874,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
       );
     }
 
-    if (!isHost) {
+    if (hostCanUpdatePKUsers || !isHost) {
       final updatedPKUsers = (jsonDecode(property) as List<dynamic>)
           .map(
             (userJson) => ZegoLiveStreamingPKUser.fromJson(userJson),

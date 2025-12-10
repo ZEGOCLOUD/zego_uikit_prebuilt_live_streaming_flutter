@@ -1236,6 +1236,8 @@ class ZegoLiveStreamingPKBattleConfig {
   /// To add custom components on the bottom edge of the PKBattleView.
   ZegoLiveStreamingPKBattleViewBuilder? bottomBuilder;
 
+  ZegoLiveStreamingDialogInfo? hostResumePKConfirmDialogInfo;
+
   ZegoLiveStreamingPKBattleConfig({
     this.userReconnectingSecond = 5,
     this.userDisconnectedSecond = 90,
@@ -1246,6 +1248,7 @@ class ZegoLiveStreamingPKBattleConfig {
     this.foregroundBuilder,
     this.topBuilder,
     this.bottomBuilder,
+    this.hostResumePKConfirmDialogInfo,
     @Deprecated('Use topPadding instead$deprecatedTipsV330')
     double? pKBattleViewTopPadding,
     @Deprecated('Use foregroundBuilder instead$deprecatedTipsV330')

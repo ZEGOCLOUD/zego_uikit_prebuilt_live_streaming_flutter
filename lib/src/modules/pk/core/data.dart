@@ -104,6 +104,7 @@ mixin ZegoUIKitPrebuiltLiveStreamingPKServiceData {
   bool showingRequestReceivedDialog = false;
   bool showingPKBattleEndedDialog = false;
   bool showOutgoingPKBattleRequestRejectedDialog = false;
+  bool showingHostResumePKConfirmDialog = false;
 
   List<String> playingHostIDs = [];
 

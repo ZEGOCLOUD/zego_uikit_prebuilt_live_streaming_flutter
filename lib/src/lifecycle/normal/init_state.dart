@@ -4,11 +4,9 @@ import 'dart:io';
 
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
-
 // Package imports:
 import 'package:permission_handler/permission_handler.dart';
 import 'package:zego_uikit/zego_uikit.dart';
-
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/permissions.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
@@ -367,6 +365,11 @@ class ZegoLiveStreamingPageLifeCycleInitState {
     ZegoLiveStreamingPageLifeCycle().currentManagers.muteCoHostAudioVideo(
           ZegoUIKit().getAudioVideoList(targetRoomID: liveID),
         );
+
+    ZegoLiveStreamingPageLifeCycle()
+        .currentManagers
+        .plugins
+        .joinRoom(liveID: liveID);
   }
 
   Future<void> notifyUserJoinByMessage() async {

@@ -146,4 +146,57 @@ extension PKServiceV2Dialogs on ZegoUIKitPrebuiltLiveStreamingPKServices {
       }
     }
   }
+
+  Future<bool> showHostResumePKConfirmDialog() async {
+    if (_coreData.showingHostResumePKConfirmDialog) {
+      popupHostResumePKConfirmDialog();
+    }
+
+    final dialogInfo =
+        _coreData.prebuiltConfig?.pkBattle.hostResumePKConfirmDialogInfo ??
+            innerText.hostResumePKConfirmDialogInfo;
+
+    if (context?.mounted ?? false) {
+      _coreData.showingHostResumePKConfirmDialog = true;
+      return showLiveDialog(
+        context: context,
+        rootNavigator: rootNavigator,
+        title: dialogInfo.title,
+        content: dialogInfo.message,
+        leftButtonText: dialogInfo.cancelButtonName,
+        leftButtonCallback: () {
+          Navigator.of(
+            context!,
+            rootNavigator: rootNavigator,
+          ).pop(false);
+        },
+        rightButtonText: dialogInfo.confirmButtonName,
+        rightButtonCallback: () {
+          Navigator.of(
+            context!,
+            rootNavigator: rootNavigator,
+          ).pop(true);
+        },
+      ).then((value) {
+        _coreData.showingHostResumePKConfirmDialog = false;
+
+        return value;
+      });
+    }
+
+    return false;
+  }
+
+  void popupHostResumePKConfirmDialog() {
+    if (_coreData.showingHostResumePKConfirmDialog) {
+      _coreData.showingHostResumePKConfirmDialog = false;
+
+      if (context?.mounted ?? false) {
+        Navigator.of(
+          context!,
+          rootNavigator: rootNavigator,
+        ).pop();
+      }
+    }
+  }
 }

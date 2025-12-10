@@ -181,6 +181,12 @@ class ZegoUIKitPrebuiltLiveStreamingInnerTextHi
             cancelButtonName: '',
             confirmButtonName: 'ठीक है',
           ),
+          hostResumePKConfirmDialogInfo: ZegoLiveStreamingDialogInfo(
+            title: 'लाइव स्ट्रीमिंग अप्रत्याशित रूप से बाधित हो गई',
+            message: 'लाइव स्ट्रीमिंग अप्रत्याशित रूप से बाधित हो गई',
+            cancelButtonName: 'रद्द करें',
+            confirmButtonName: 'लाइव स्ट्रीमिंग फिर से शुरू करें',
+          ),
 
           /// स्क्रीन शेयरिंग
           screenSharingTipText: 'आप स्क्रीन साझा कर रहे हैं',

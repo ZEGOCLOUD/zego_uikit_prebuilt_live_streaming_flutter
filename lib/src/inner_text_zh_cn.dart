@@ -174,6 +174,12 @@ class ZegoUIKitPrebuiltLiveStreamingInnerTextZhCN
             cancelButtonName: '',
             confirmButtonName: '确定',
           ),
+          hostResumePKConfirmDialogInfo: ZegoLiveStreamingDialogInfo(
+            title: '直播意外中断了',
+            message: '直播意外中断了',
+            cancelButtonName: '取消',
+            confirmButtonName: '恢复直播',
+          ),
 
           /// 屏幕共享
           screenSharingTipText: '你正在共享屏幕',

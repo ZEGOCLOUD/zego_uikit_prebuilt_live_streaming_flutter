@@ -3,10 +3,8 @@ import 'dart:async';
 
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
-
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
-
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.defines.dart';
@@ -60,7 +58,6 @@ class ZegoLiveStreamingManagers {
     hostManager.init(liveID: liveID, config: config);
     liveStatusManager.init(liveID: liveID, config: config, events: events);
     liveDurationManager.init(liveID: liveID);
-    connectManager.init(liveID: liveID, config: config, events: events);
 
     plugins.init(
       appID: appID,
@@ -71,6 +68,9 @@ class ZegoLiveStreamingManagers {
       config: config,
       events: events,
     );
+
+    /// plugins.init要先于connectManager.init,connectManager.init有依赖
+    connectManager.init(liveID: liveID, config: config, events: events);
 
     ZegoUIKitPrebuiltLiveStreamingPK().init(
       liveID: liveID,

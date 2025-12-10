@@ -318,6 +318,14 @@ class ZegoUIKitPrebuiltLiveStreamingInnerText {
   /// - Confirm button name: "OK"
   ZegoLiveStreamingDialogInfo outgoingPKBattleRequestRejectedCauseByReject;
 
+  /// The dialog info for the host to confirm resuming PK battle
+  /// The **default values** are:
+  /// - Title: "Live streaming unexpectedly interrupted"
+  /// - Message: "Live streaming unexpectedly interrupted"
+  /// - Cancel button name: "Cancel"
+  /// - Confirm button name: "Resume live streaming"
+  ZegoLiveStreamingDialogInfo hostResumePKConfirmDialogInfo;
+
   ///When sharing the screen, the text prompt on the sharing side.
   String screenSharingTipText;
 
@@ -404,6 +412,7 @@ class ZegoUIKitPrebuiltLiveStreamingInnerText {
     ZegoLiveStreamingDialogInfo?
         outgoingPKBattleRequestRejectedCauseByLocalHostStateError,
     ZegoLiveStreamingDialogInfo? outgoingPKBattleRequestRejectedCauseByReject,
+    ZegoLiveStreamingDialogInfo? hostResumePKConfirmDialogInfo,
     String? screenSharingTipText,
     String? stopScreenSharingButtonText,
     String? livingFlagText,
@@ -573,6 +582,13 @@ class ZegoUIKitPrebuiltLiveStreamingInnerText {
                   cancelButtonName: '',
                   confirmButtonName: 'OK',
                 ),
+        hostResumePKConfirmDialogInfo = hostResumePKConfirmDialogInfo ??
+            ZegoLiveStreamingDialogInfo(
+              title: 'Live streaming unexpectedly interrupted',
+              message: 'Live streaming unexpectedly interrupted',
+              cancelButtonName: 'Cancel',
+              confirmButtonName: 'Resume live streaming',
+            ),
         screenSharingTipText = 'You are sharing screen',
         stopScreenSharingButtonText = 'Stop sharing',
         livingFlagText = livingFlagText ?? 'Living',

@@ -1,8 +1,6 @@
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
 
-// Project imports:
-import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/lifecycle.dart';
 import 'dispose.dart';
 import 'init_state.dart';
 
@@ -72,10 +70,5 @@ class ZegoLiveStreamingNormalLifeCycle {
       tag: 'live.streaming.lifecyle',
       subTag: 'onRoomsStateUpdated',
     );
-    initStateDelegate.onRoomLogin();
-
-    ZegoLiveStreamingPageLifeCycle().currentManagers.plugins.joinRoom(
-          liveID: currentLiveID,
-        );
   }
 }
