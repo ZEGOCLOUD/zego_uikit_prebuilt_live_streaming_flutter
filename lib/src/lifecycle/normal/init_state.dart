@@ -365,11 +365,6 @@ class ZegoLiveStreamingPageLifeCycleInitState {
     ZegoLiveStreamingPageLifeCycle().currentManagers.muteCoHostAudioVideo(
           ZegoUIKit().getAudioVideoList(targetRoomID: liveID),
         );
-
-    ZegoLiveStreamingPageLifeCycle()
-        .currentManagers
-        .plugins
-        .joinRoom(liveID: liveID);
   }
 
   Future<void> notifyUserJoinByMessage() async {
