@@ -15,6 +15,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/core/live_status_manager.
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/plugins.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/core/core.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/core/service/services.dart';
 
 part 'core_manager.audio_video.dart';
 
@@ -59,6 +60,9 @@ class ZegoLiveStreamingManagers {
     liveStatusManager.init(liveID: liveID, config: config, events: events);
     liveDurationManager.init(liveID: liveID);
 
+    /// 插件登录前监听事件
+    ZegoUIKitPrebuiltLiveStreamingPK.instance.addEventListener();
+
     plugins.init(
       appID: appID,
       appSign: appSign,
@@ -72,7 +76,7 @@ class ZegoLiveStreamingManagers {
     /// plugins.init要先于connectManager.init,connectManager.init有依赖
     connectManager.init(liveID: liveID, config: config, events: events);
 
-    ZegoUIKitPrebuiltLiveStreamingPK().init(
+    ZegoUIKitPrebuiltLiveStreamingPK.instance.init(
       liveID: liveID,
       config: config,
       events: events,
@@ -111,7 +115,7 @@ class ZegoLiveStreamingManagers {
     await connectManager.audienceCancelCoHostIfRequesting();
 
     uninitAudioVideoManagers();
-    await ZegoUIKitPrebuiltLiveStreamingPK().uninit();
+    await ZegoUIKitPrebuiltLiveStreamingPK.instance.uninit();
 
     /// Even if from live hall, still need to uninit plugins, probably won't be used
     await plugins.uninit();
@@ -133,7 +137,10 @@ class ZegoLiveStreamingManagers {
       subTag: 'onRoomWillSwitch',
     );
 
-    ZegoUIKitPrebuiltLiveStreamingPK().uninit();
+    ZegoUIKitPrebuiltLiveStreamingPK.instance.uninit();
+
+    /// 切换房间前监听事件
+    ZegoUIKitPrebuiltLiveStreamingPK.instance.addEventListener();
     connectManager.onRoomWillSwitch(liveID: liveID);
   }
 
@@ -159,7 +166,7 @@ class ZegoLiveStreamingManagers {
       config: config,
       events: events,
     );
-    ZegoUIKitPrebuiltLiveStreamingPK().init(
+    ZegoUIKitPrebuiltLiveStreamingPK.instance.init(
       liveID: liveID,
       config: config,
       events: events,

@@ -4,10 +4,12 @@ import 'dart:convert';
 
 // Package imports:
 import 'package:collection/collection.dart';
+
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:zego_uikit/zego_uikit.dart';
+
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/dialogs.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
@@ -28,10 +30,15 @@ import 'defines.dart';
 import 'protocol.dart';
 
 part '../event/events.dart';
+
 part 'completer.dart';
+
 part 'dialogs.dart';
+
 part 'host.pk.dart';
+
 part 'host.request.dart';
+
 part 'pk_users.dart';
 
 mixin ZegoUIKitPrebuiltLiveStreamingPKServices {
@@ -40,6 +47,7 @@ mixin ZegoUIKitPrebuiltLiveStreamingPKServices {
   String _liveID = '';
 
   bool _eventInitialized = false;
+  bool _eventListened = false;
   final List<StreamSubscription<dynamic>?> _eventSubscriptions = [];
   Completer<void>? _completer;
 
@@ -129,6 +137,7 @@ mixin ZegoUIKitPrebuiltLiveStreamingPKServices {
       layout: _coreData.prebuiltConfig?.pkBattle.mixerLayout,
     );
     initEvents();
+    queryRoomProperties();
     listenPKUserChanged();
 
     ZegoLoggerService.logInfo(
