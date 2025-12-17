@@ -503,7 +503,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
               'heartbeat: ${pkUser.heartbeat}, '
               'now:$now, mute audio',
               tag: 'live.streaming.pk.events($hashCode)',
-              subTag: 'heartbeat timer',
+              subTag: 'heartbeat',
             );
 
             ZegoUIKit().muteUserAudio(
@@ -517,7 +517,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
             ZegoLoggerService.logInfo(
               'user is broken:$pkUser, ',
               tag: 'live.streaming.pk.events($hashCode)',
-              subTag: 'heartbeat timer',
+              subTag: 'heartbeat',
             );
 
             _coreData.events?.pk.onUserReconnecting?.call(
@@ -529,7 +529,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
           ZegoLoggerService.logInfo(
             'temp broken user:$tempBrokenIDs, ',
             tag: 'live.streaming.pk.events($hashCode)',
-            subTag: 'heartbeat timer',
+            subTag: 'heartbeat',
           );
         }
 
@@ -537,7 +537,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
           ZegoLoggerService.logInfo(
             '$alreadyBrokenIDs heartbeat had broken so long, remove from pk,',
             tag: 'live.streaming.pk.events($hashCode)',
-            subTag: 'heartbeat timer',
+            subTag: 'heartbeat',
           );
 
           updatePKUsers(
@@ -750,15 +750,19 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
       return;
     }
 
+    /// update heartbeat timestamp
     var pkUser = _coreData.currentPKUsers.value.elementAt(pkUserIndex);
     pkUser.heartbeat = DateTime.now();
 
     if (pkUser.heartbeatBrokenNotifier.value) {
-      /// user reconnected
+      /// heart broken before
+      /// user reconnected now
+      pkUser.heartbeatBrokenNotifier.value = false;
+
       ZegoLoggerService.logInfo(
         'received ${pkUser.userInfo.id} sei, un-mute audio',
         tag: 'live.streaming.pk.events($hashCode)',
-        subTag: 'onReceiveSEIEvent',
+        subTag: 'heartbeat',
       );
 
       ZegoUIKit().muteUserAudio(
@@ -771,16 +775,14 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
         pkUser.toUIKitUser,
       );
     }
-    if (pkUser.heartbeatBrokenNotifier.value) {
-      pkUser.heartbeatBrokenNotifier.value = false;
+
+    if (ZegoUIKit().useDebugMode) {
       ZegoLoggerService.logInfo(
-        'user is not broken:$pkUser, ',
+        '${pkUser.userInfo.id}, onReceiveSEIEvent $event',
         tag: 'live.streaming.pk.events($hashCode)',
-        subTag: 'heartbeat timer',
+        subTag: 'heartbeat',
       );
     }
-
-    // debugPrint('_onReceiveSEIEvent $event');
   }
 
   void _onRoomAttributesQueried(

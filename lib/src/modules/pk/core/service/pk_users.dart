@@ -88,7 +88,7 @@ extension PKServiceConnectedUsers on ZegoUIKitPrebuiltLiveStreamingPKServices {
         ZegoLoggerService.logInfo(
           'user is not broken:$pkUser, ',
           tag: 'live.streaming.pk.events',
-          subTag: 'heartbeat timer',
+          subTag: 'heartbeat',
         );
       }
 
