@@ -36,7 +36,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
         .notifier
         .addListener(_onHostUpdated);
 
-    addEventListener();
+    addEventListener(liveID: _liveID);
   }
 
   void _onHostUpdated() {
@@ -551,7 +551,9 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
     );
   }
 
-  void addEventListener() {
+  void addEventListener({
+    required String liveID,
+  }) {
     if (_eventListened) {
       ZegoLoggerService.logInfo(
         'had listen',
@@ -565,14 +567,15 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
     _eventListened = true;
 
     ZegoLoggerService.logInfo(
-      'listen',
+      'listen, '
+      'live id:$liveID, ',
       tag: 'live.streaming.pk.events($hashCode)',
       subTag: 'addEventListener',
     );
 
     _eventSubscriptions
       ..add(
-          ZegoUIKit().getReceiveSEIStream(targetRoomID: _liveID).where((event) {
+          ZegoUIKit().getReceiveSEIStream(targetRoomID: liveID).where((event) {
         return event.typeIdentifier ==
             ZegoUIKitInnerSEIType.mixerDeviceState.name;
       }).listen(_onReceiveSEIEvent))

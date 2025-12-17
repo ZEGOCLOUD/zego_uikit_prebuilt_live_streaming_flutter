@@ -61,7 +61,9 @@ class ZegoLiveStreamingManagers {
     liveDurationManager.init(liveID: liveID);
 
     /// 插件登录前监听事件
-    ZegoUIKitPrebuiltLiveStreamingPK.instance.addEventListener();
+    ZegoUIKitPrebuiltLiveStreamingPK.instance.addEventListener(
+      liveID: liveID,
+    );
 
     plugins.init(
       appID: appID,
@@ -140,7 +142,9 @@ class ZegoLiveStreamingManagers {
     ZegoUIKitPrebuiltLiveStreamingPK.instance.uninit();
 
     /// 切换房间前监听事件
-    ZegoUIKitPrebuiltLiveStreamingPK.instance.addEventListener();
+    ZegoUIKitPrebuiltLiveStreamingPK.instance.addEventListener(
+      liveID: liveID,
+    );
     connectManager.onRoomWillSwitch(liveID: liveID);
   }
 
