@@ -5,6 +5,15 @@
     - 增加直播大厅控件
 - Migrate
 
+## 3.15.4
+
+- Update dependency
+
+## 3.15.3
+
+- Bugs
+  - Fixed the black render issue when beauty open on iOS
+
 ## 3.15.2
 
 - Features
