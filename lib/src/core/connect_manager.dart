@@ -672,7 +672,7 @@ class ZegoLiveStreamingConnectManager {
       leftButtonText: translation.cancelButtonName,
       rootNavigator: config?.rootNavigator ?? false,
       leftButtonCallback: () {
-        isInvitedToJoinCoHostDlgVisible = false;
+        hideInvitedJoinCoHostDialog();
 
         if (LiveStatus.living ==
             ZegoLiveStreamingPageLifeCycle()
@@ -708,15 +708,10 @@ class ZegoLiveStreamingConnectManager {
             subTag: 'onAudienceReceivedCoHostInvitation',
           );
         }
-
-        Navigator.of(
-          ZegoLiveStreamingPageLifeCycle().contextQuery!(),
-          rootNavigator: config?.rootNavigator ?? false,
-        ).pop();
       },
       rightButtonText: translation.confirmButtonName,
       rightButtonCallback: () {
-        isInvitedToJoinCoHostDlgVisible = false;
+        hideInvitedJoinCoHostDialog();
 
         do {
           if (isMaxCoHostReached) {
@@ -795,11 +790,6 @@ class ZegoLiveStreamingConnectManager {
             );
           }
         } while (false);
-
-        Navigator.of(
-          ZegoLiveStreamingPageLifeCycle().contextQuery!(),
-          rootNavigator: config?.rootNavigator ?? false,
-        ).pop();
       },
     ).whenComplete(() {
       ZegoLiveStreamingPageLifeCycle()
@@ -984,14 +974,7 @@ class ZegoLiveStreamingConnectManager {
 
       dataOfInvitedToJoinCoHostInMinimizingNotifier.value = null;
 
-      /// hide invite join co-host dialog
-      if (isInvitedToJoinCoHostDlgVisible) {
-        isInvitedToJoinCoHostDlgVisible = false;
-        Navigator.of(
-          ZegoLiveStreamingPageLifeCycle().contextQuery!(),
-          rootNavigator: config?.rootNavigator ?? false,
-        ).pop();
-      }
+      hideInvitedJoinCoHostDialog();
     }
   }
 
@@ -1086,23 +1069,28 @@ class ZegoLiveStreamingConnectManager {
     });
   }
 
-  void updateAudienceConnectState(ZegoLiveStreamingAudienceConnectState state) {
-    if (state == audienceLocalConnectStateNotifier.value) {
+  void updateAudienceConnectState(
+    ZegoLiveStreamingAudienceConnectState targetState,
+  ) {
+    if (targetState == audienceLocalConnectStateNotifier.value) {
       ZegoLoggerService.logInfo(
-        'audience connect state is same: $state',
+        'audience connect state is same: $targetState',
         tag: 'live.streaming.connect-mgr',
         subTag: 'updateAudienceConnectState',
       );
+
+      hideInvitedJoinCoHostDialog();
+
       return;
     }
 
     ZegoLoggerService.logInfo(
-      'update audience connect state: $state',
+      'update audience connect state: $targetState',
       tag: 'live.streaming.connect-mgr',
       subTag: 'updateAudienceConnectState',
     );
 
-    switch (state) {
+    switch (targetState) {
       case ZegoLiveStreamingAudienceConnectState.idle:
         ZegoUIKit()
             .getLocalUser()
@@ -1119,14 +1107,7 @@ class ZegoLiveStreamingConnectManager {
         ZegoUIKit().turnCameraOn(targetRoomID: liveID, false);
         ZegoUIKit().turnMicrophoneOn(targetRoomID: liveID, false);
 
-        /// hide invite join co-host dialog
-        if (isInvitedToJoinCoHostDlgVisible) {
-          isInvitedToJoinCoHostDlgVisible = false;
-          Navigator.of(
-            ZegoLiveStreamingPageLifeCycle().contextQuery!(),
-            rootNavigator: config?.rootNavigator ?? false,
-          ).pop();
-        }
+        hideInvitedJoinCoHostDialog();
 
         /// hide co-host end request dialog
         if (isEndCoHostDialogVisible) {
@@ -1168,26 +1149,26 @@ class ZegoLiveStreamingConnectManager {
         break;
     }
 
-    events?.coHost.coHost.onLocalConnectStateUpdated?.call(state);
+    events?.coHost.coHost.onLocalConnectStateUpdated?.call(targetState);
 
     final localRequestConnected =
         ZegoLiveStreamingAudienceConnectState.connecting ==
                 audienceLocalConnectStateNotifier.value &&
-            ZegoLiveStreamingAudienceConnectState.connected == state;
+            ZegoLiveStreamingAudienceConnectState.connected == targetState;
     final hostInvitedConnected = ZegoLiveStreamingAudienceConnectState.idle ==
             audienceLocalConnectStateNotifier.value &&
-        ZegoLiveStreamingAudienceConnectState.connected == state;
+        ZegoLiveStreamingAudienceConnectState.connected == targetState;
     if (localRequestConnected || hostInvitedConnected) {
       /// idle|connecting -> connected
       events?.coHost.coHost.onLocalConnected?.call();
     } else if (ZegoLiveStreamingAudienceConnectState.connected ==
             audienceLocalConnectStateNotifier.value &&
-        ZegoLiveStreamingAudienceConnectState.idle == state) {
+        ZegoLiveStreamingAudienceConnectState.idle == targetState) {
       /// connected -> idle
       events?.coHost.coHost.onLocalDisconnected?.call();
     }
 
-    audienceLocalConnectStateNotifier.value = state;
+    audienceLocalConnectStateNotifier.value = targetState;
   }
 
   void onLocalCameraStateChanged() {
@@ -1357,6 +1338,17 @@ extension ZegoLiveConnectManagerCoHostCount on ZegoLiveStreamingConnectManager {
       tag: 'live.streaming.connect-mgr',
       subTag: 'onUserMicrophoneStateChanged',
     );
+  }
+
+  void hideInvitedJoinCoHostDialog() {
+    /// hide invite join co-host dialog
+    if (isInvitedToJoinCoHostDlgVisible) {
+      isInvitedToJoinCoHostDlgVisible = false;
+      Navigator.of(
+        ZegoLiveStreamingPageLifeCycle().contextQuery!(),
+        rootNavigator: config?.rootNavigator ?? false,
+      ).pop();
+    }
   }
 
   void syncCoHostCount(List<ZegoUIKitUser> users) {
