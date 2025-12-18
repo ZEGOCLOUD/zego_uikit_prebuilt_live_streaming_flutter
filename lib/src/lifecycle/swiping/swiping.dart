@@ -79,8 +79,8 @@ class ZegoLiveStreamingSwipingLifeCycle {
         toRoomID: liveID,
         stopPublishAllStream: false,
         stopPlayAllStream: false,
-        clearStreamData: false,
-        clearUserData: false,
+        clearStreamData: true,
+        clearUserData: true,
       );
     }
   }

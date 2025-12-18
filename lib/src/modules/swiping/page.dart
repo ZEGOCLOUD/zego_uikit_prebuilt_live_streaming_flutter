@@ -596,6 +596,18 @@ class _ZegoLiveStreamingSwipingPageState
         widget.token,
         shouldCheckCurrentRoom: false,
       );
+
+      final contextRoomIDs = [
+        previousHost ?? ZegoLiveStreamingSwipingHost.empty(),
+        currentHost ?? ZegoLiveStreamingSwipingHost.empty(),
+        nextHost ?? ZegoLiveStreamingSwipingHost.empty()
+      ].map((e) => e.roomID).toList();
+      for (var roomID in ZegoUIKit().getAllRoomIDs()) {
+        if (contextRoomIDs.contains(roomID)) {
+          continue;
+        }
+        ZegoUIKit().clearRoomData(targetRoomID: roomID);
+      }
     }
   }
 
