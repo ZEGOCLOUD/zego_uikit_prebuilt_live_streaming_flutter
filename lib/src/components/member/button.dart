@@ -1,9 +1,7 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
-
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/member/list_sheet.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/pop_up_manager.dart';
@@ -129,7 +127,7 @@ class _ZegoLiveStreamingMemberButtonState
               valueListenable:
                   ZegoUIKitPrebuiltLiveStreamingController().user.countNotifier,
               builder: (context, memberCount, _) {
-                return widget.builder!.call(memberCount);
+                return widget.builder!.call(memberCount, widget.liveID);
               },
             ),
     );
