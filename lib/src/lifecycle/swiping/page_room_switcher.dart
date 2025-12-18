@@ -207,6 +207,8 @@ class ZegoLiveStreamingSwipingPageRoomSwitcher {
         token: token,
         stopPublishAllStream: false,
         stopPlayAllStream: false,
+        clearStreamData: false,
+        clearUserData: false,
       );
       await ZegoLiveStreamingPageLifeCycle().currentManagers.plugins.switchRoom(
             targetLiveID: targetRoomID,
