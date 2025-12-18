@@ -8,6 +8,24 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
       _coreData.prebuiltConfig?.innerText ??
       ZegoUIKitPrebuiltLiveStreamingInnerText();
 
+  bool get hostExist =>
+      ZegoLiveStreamingPageLifeCycle()
+          .currentManagers
+          .hostManager
+          .notifier
+          .value
+          ?.id
+          .isNotEmpty ??
+      false;
+
+  bool get isLiving =>
+      ZegoLiveStreamingPageLifeCycle()
+          .currentManagers
+          .liveStatusManager
+          .notifier
+          .value ==
+      LiveStatus.living;
+
   void initEvents() {
     if (_eventInitialized) {
       ZegoLoggerService.logInfo(
@@ -809,8 +827,20 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
   }
 
   void _onRoomMemberLeft(ZegoSignalingPluginRoomMemberLeftEvent event) async {
+    final hostID = ZegoLiveStreamingPageLifeCycle()
+            .currentManagers
+            .hostManager
+            .notifier
+            .value
+            ?.id ??
+        '';
+
     ZegoLoggerService.logInfo(
-      'event:$event, ',
+      'event:$event, '
+      'isHost:$isHost, '
+      'hostID:$hostID, '
+      'liveID:$liveID, '
+      'hostExist:$hostExist, ',
       tag: 'live.streaming.pk.events($hashCode)',
       subTag: 'onRoomMemberLeft',
     );
@@ -819,15 +849,17 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
     } else {
       /// During the audience PK, the LIVE creator leaves, and the state reverts to non-PK
       if (ZegoUIKitPrebuiltLiveStreamingPK.instance.isInPK) {
-        final hostID = ZegoLiveStreamingPageLifeCycle()
-                .currentManagers
-                .hostManager
-                .notifier
-                .value
-                ?.id ??
-            '';
-        if (event.roomID == liveID && event.usersID.contains(hostID)) {
-          await audienceQuitPK();
+        if (event.roomID == liveID) {
+          final canQuitPK =
+
+              /// host quit
+              event.usersID.contains(hostID) ||
+
+                  /// not host
+                  !hostExist;
+          if (canQuitPK) {
+            await audienceQuitPK();
+          }
         }
       }
     }
@@ -870,6 +902,12 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
   }
 
   Future<void> audienceQuitPK() async {
+    ZegoLoggerService.logInfo(
+      'isHost:$isHost, ',
+      tag: 'live.streaming.pk.events($hashCode)',
+      subTag: 'audienceQuitPK',
+    );
+
     if (!isHost) {
       await ZegoUIKit().muteUserAudioVideo(
         targetRoomID: _liveID,

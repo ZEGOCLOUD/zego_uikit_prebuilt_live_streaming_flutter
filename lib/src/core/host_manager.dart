@@ -359,7 +359,8 @@ class ZegoLiveStreamingHostManager {
   void updateHostValue(ZegoUIKitUser? host) {
     if (hostUpdateEnabledNotifier.value) {
       ZegoLoggerService.logInfo(
-        'host updated, $host',
+        'host updated, '
+        'from ${notifier.value} to $host, ',
         tag: 'live.streaming.host-mgr',
         subTag: 'updateHostValue',
       );
