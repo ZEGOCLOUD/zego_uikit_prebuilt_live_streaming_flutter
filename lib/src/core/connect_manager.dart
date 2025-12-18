@@ -3,11 +3,9 @@ import 'dart:async';
 
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
-
 // Package imports:
 import 'package:permission_handler/permission_handler.dart';
 import 'package:zego_uikit/zego_uikit.dart';
-
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/dialogs.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/permissions.dart';
@@ -60,6 +58,24 @@ class ZegoLiveStreamingConnectManager {
   int get maxCoHostCount => config?.coHost.maxCoHostCount ?? 12;
 
   bool get isMaxCoHostReached => coHostCount.value >= maxCoHostCount;
+
+  bool get hostExist =>
+      ZegoLiveStreamingPageLifeCycle()
+          .currentManagers
+          .hostManager
+          .notifier
+          .value
+          ?.id
+          .isNotEmpty ??
+      false;
+
+  bool get isLiving =>
+      ZegoLiveStreamingPageLifeCycle()
+          .currentManagers
+          .liveStatusManager
+          .notifier
+          .value ==
+      LiveStatus.living;
 
   List<String> audienceIDsOfInvitingConnect = [];
   List<StreamSubscription<dynamic>?> signalingSubscriptions = [];
@@ -1124,20 +1140,30 @@ class ZegoLiveStreamingConnectManager {
       case ZegoLiveStreamingAudienceConnectState.connecting:
         break;
       case ZegoLiveStreamingAudienceConnectState.connected:
-        ZegoUIKit().turnCameraOn(
-          targetRoomID: liveID,
-          config?.coHost.turnOnCameraWhenCohosted?.call() ?? true,
-        );
-        ZegoUIKit().turnMicrophoneOn(targetRoomID: liveID, true);
+        if (hostExist && isLiving) {
+          ZegoUIKit().turnCameraOn(
+            targetRoomID: liveID,
+            config?.coHost.turnOnCameraWhenCohosted?.call() ?? true,
+          );
+          ZegoUIKit().turnMicrophoneOn(targetRoomID: liveID, true);
 
-        ZegoUIKit()
-            .getLocalUser()
-            .camera
-            .addListener(onLocalCameraStateChanged);
-        ZegoUIKit()
-            .getLocalUser()
-            .microphone
-            .addListener(onLocalMicrophoneStateChanged);
+          ZegoUIKit()
+              .getLocalUser()
+              .camera
+              .addListener(onLocalCameraStateChanged);
+          ZegoUIKit()
+              .getLocalUser()
+              .microphone
+              .addListener(onLocalMicrophoneStateChanged);
+        } else {
+          ZegoLoggerService.logInfo(
+            'host no exist or is not living, '
+            'hostExist:$hostExist, '
+            'isLiving:$isLiving, ',
+            tag: 'live.streaming.connect-mgr',
+            subTag: 'updateAudienceConnectState',
+          );
+        }
 
         break;
     }
