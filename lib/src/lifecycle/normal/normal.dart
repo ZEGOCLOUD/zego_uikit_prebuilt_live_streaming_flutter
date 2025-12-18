@@ -73,8 +73,6 @@ class ZegoLiveStreamingNormalLifeCycle {
       subTag: 'onRoomsStateUpdated',
     );
 
-    initStateDelegate.onRoomLogin();
-
     ZegoLiveStreamingPageLifeCycle().currentManagers.plugins.joinRoom(
           liveID: currentLiveID,
         );
