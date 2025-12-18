@@ -3,10 +3,8 @@ import 'dart:async';
 
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
-
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
-
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/defines.dart';
@@ -124,6 +122,9 @@ class ZegoLiveStreamingHostManager {
     subscriptions.add(ZegoUIKit()
         .getUserListStream(targetRoomID: liveID)
         .listen(onUserListUpdated));
+    subscriptions.add(ZegoUIKit()
+        .getUserLeaveStream(targetRoomID: liveID)
+        .listen(onUserLeaved));
 
     onRoomStateUpdated();
     ZegoUIKit()
@@ -201,6 +202,22 @@ class ZegoLiveStreamingHostManager {
           RoomPropertyKey.host.text,
           ZegoUIKit().getLocalUser().id,
         );
+      }
+    }
+  }
+
+  void onUserLeaved(List<ZegoUIKitUser> users) {
+    if (notifier.value?.id.isNotEmpty ?? false) {
+      final hostIndex = users.indexWhere((e) => e.id == notifier.value?.id);
+      if (-1 != hostIndex) {
+        ZegoLoggerService.logInfo(
+          'host leave',
+          tag: 'live.streaming.host-mgr',
+          subTag: 'onUserLeaved',
+        );
+
+        /// host leave
+        updateHostValue(null);
       }
     }
   }

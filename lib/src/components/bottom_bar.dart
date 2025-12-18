@@ -1,9 +1,7 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
-
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/effects/beauty_effect_button.dart';
@@ -484,24 +482,6 @@ class _ZegoLiveStreamingBottomBarState
     bool Function()? cameraDefaultValueFunc,
     bool Function()? microphoneDefaultValueFunc,
   }) {
-    var cameraDefaultOn = widget.config.turnOnCameraWhenJoining;
-    var microphoneDefaultOn = widget.config.turnOnMicrophoneWhenJoining;
-    if (widget.config.plugins.isNotEmpty &&
-        ZegoLiveStreamingAudienceConnectState.connected ==
-            ZegoLiveStreamingPageLifeCycle()
-                .currentManagers
-                .connectManager
-                .audienceLocalConnectStateNotifier
-                .value) {
-      cameraDefaultOn =
-          widget.config.coHost.turnOnCameraWhenCohosted?.call() ?? true;
-      microphoneDefaultOn = true;
-    }
-
-    cameraDefaultOn = cameraDefaultValueFunc?.call() ?? cameraDefaultOn;
-    microphoneDefaultOn =
-        microphoneDefaultValueFunc?.call() ?? microphoneDefaultOn;
-
     final buttonSize = zegoLiveButtonSize;
     final iconSize = zegoLiveButtonIconSize;
     switch (type) {
@@ -515,6 +495,28 @@ class _ZegoLiveStreamingBottomBarState
                 _isInPK;
             final needUserMuteMode =
                 (!widget.config.coHost.stopCoHostingWhenMicCameraOff) || isInPK;
+
+            final isConnected =
+                ZegoLiveStreamingAudienceConnectState.connected ==
+                    ZegoLiveStreamingPageLifeCycle()
+                        .currentManagers
+                        .connectManager
+                        .audienceLocalConnectStateNotifier
+                        .value;
+            var microphoneDefaultOn = widget.config.turnOnMicrophoneWhenJoining;
+            if (widget.config.plugins.isNotEmpty && isConnected) {
+              microphoneDefaultOn = true;
+            }
+            microphoneDefaultOn =
+                microphoneDefaultValueFunc?.call() ?? microphoneDefaultOn;
+
+            ZegoLoggerService.logInfo(
+              'isConnected:$isConnected, '
+              'default on:$microphoneDefaultOn, ',
+              tag: 'live.streaming.bottom-bar',
+              subTag: 'microphone',
+            );
+
             return ZegoToggleMicrophoneButton(
               roomID: widget.liveID,
               buttonSize: buttonSize,
@@ -561,6 +563,26 @@ class _ZegoLiveStreamingBottomBarState
           ),
         );
       case ZegoLiveStreamingMenuBarButtonName.toggleCameraButton:
+        final isConnected = ZegoLiveStreamingAudienceConnectState.connected ==
+            ZegoLiveStreamingPageLifeCycle()
+                .currentManagers
+                .connectManager
+                .audienceLocalConnectStateNotifier
+                .value;
+        var cameraDefaultOn = widget.config.turnOnCameraWhenJoining;
+        if (widget.config.plugins.isNotEmpty && isConnected) {
+          cameraDefaultOn =
+              widget.config.coHost.turnOnCameraWhenCohosted?.call() ?? true;
+        }
+        cameraDefaultOn = cameraDefaultValueFunc?.call() ?? cameraDefaultOn;
+
+        ZegoLoggerService.logInfo(
+          'isConnected:$isConnected, '
+          'default on:$cameraDefaultOn, ',
+          tag: 'live.streaming.bottom-bar',
+          subTag: 'camera',
+        );
+
         return ZegoToggleCameraButton(
           roomID: widget.liveID,
           buttonSize: buttonSize,
