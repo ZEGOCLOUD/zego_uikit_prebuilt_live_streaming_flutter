@@ -4,10 +4,8 @@ import 'dart:async';
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
-
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
@@ -15,6 +13,8 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/core/core_managers.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/swiping/swiping.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/minimization/data.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/modules/minimization/overlay_machine.dart';
+
 import 'defines.dart';
 import 'normal/normal.dart';
 
@@ -111,6 +111,16 @@ class ZegoLiveStreamingPageLifeCycle {
           ),
         );
 
+    if (isPrebuiltFromMinimizing) {
+      ZegoLoggerService.logInfo(
+        'isMinimizing, ignore',
+        tag: 'live.streaming.lifecyle',
+        subTag: 'initFromPreview',
+      );
+
+      return;
+    }
+
     swiping.initFromPreview(
       token: contextData.token,
       liveID: targetLiveID,
@@ -185,6 +195,15 @@ class ZegoLiveStreamingPageLifeCycle {
       subTag: 'uninitFromPreview',
     );
 
+    if (ZegoLiveStreamingMiniOverlayMachine().isMinimizing) {
+      ZegoLoggerService.logInfo(
+        'isMinimizing, ignore',
+        tag: 'live.streaming.lifecyle',
+        subTag: 'uninitFromPreview',
+      );
+      return;
+    }
+
     _initialized = false;
     for (final subscription in _subscriptions) {
       subscription?.cancel();
@@ -243,8 +262,9 @@ class ZegoLiveStreamingPageLifeCycle {
         subTag: 'initFromLive',
       );
 
-      return false;
+      return true;
     }
+
     if (ZegoUIKit().hasRoomLogin() &&
         ZegoLiveStreamingPageLifeCycle().swiping.usingRoomSwiping) {
       /// When using swiping, use page builder's events to drive room entry/exit
@@ -279,6 +299,16 @@ class ZegoLiveStreamingPageLifeCycle {
       tag: 'live.streaming.lifecyle',
       subTag: 'disposeFromLive',
     );
+
+    if (ZegoLiveStreamingMiniOverlayMachine().isMinimizing) {
+      ZegoLoggerService.logInfo(
+        'isMinimizing, ignore',
+        tag: 'live.streaming.lifecyle',
+        subTag: 'disposeFromLive',
+      );
+
+      return true;
+    }
 
     normal.initStateDelegate.clear();
 
