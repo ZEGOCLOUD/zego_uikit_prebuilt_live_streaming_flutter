@@ -1,9 +1,7 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
-
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/components.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/leave_button.dart';
@@ -14,6 +12,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/inner_text.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/lifecycle.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/minimization/mini_button.dart';
 
@@ -55,15 +54,23 @@ class ZegoLiveStreamingTopBar extends StatefulWidget {
 
 /// @nodoc
 class _ZegoLiveStreamingTopBarState extends State<ZegoLiveStreamingTopBar> {
-  @override
-  void initState() {
-    super.initState();
-  }
+  bool get hostExist =>
+      ZegoLiveStreamingPageLifeCycle()
+          .currentManagers
+          .hostManager
+          .notifier
+          .value
+          ?.id
+          .isNotEmpty ??
+      false;
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
+  bool get isLiving =>
+      ZegoLiveStreamingPageLifeCycle()
+          .currentManagers
+          .liveStatusManager
+          .notifier
+          .value ==
+      LiveStatus.living;
 
   @override
   Widget build(BuildContext context) {
@@ -177,6 +184,15 @@ class _ZegoLiveStreamingTopBarState extends State<ZegoLiveStreamingTopBar> {
               roomID: widget.liveID,
               buttonSize: Size(78.zR, 78.zR),
               iconSize: Size(56.zR, 56.zR),
+              canStart: () {
+                // final isInPK =
+                //     ZegoUIKitPrebuiltLiveStreamingPK.instance.liveID ==
+                //             widget.liveID &&
+                //         ZegoUIKitPrebuiltLiveStreamingPK.instance.isInPK;
+                return
+                    // !isInPK &&
+                    hostExist && isLiving;
+              },
               onPressed: (isScreenSharing) {},
               iconStartSharing: ButtonIcon(
                 icon: widget.config.bottomMenuBar.buttonStyle
