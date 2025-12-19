@@ -11,6 +11,7 @@ mixin ZegoLiveStreamingControllerPrivate {
 /// @nodoc
 class ZegoLiveStreamingControllerPrivateImpl {
   String _liveID = '';
+  bool isPrebuiltFromHall = false;
 
   String get liveID {
     return _liveID;
@@ -31,6 +32,7 @@ class ZegoLiveStreamingControllerPrivateImpl {
   /// Call Inside By Prebuilt
 
   void initByPrebuilt({
+    required bool isPrebuiltFromHall,
     required ZegoUIKitPrebuiltLiveStreamingConfig? config,
     required ZegoUIKitPrebuiltLiveStreamingEvents? events,
     required ZegoLiveStreamingMinimizationData minimizeData,
@@ -41,6 +43,8 @@ class ZegoLiveStreamingControllerPrivateImpl {
       tag: 'live.streaming.controller',
       subTag: 'controller.p',
     );
+
+    this.isPrebuiltFromHall = isPrebuiltFromHall;
 
     ZegoUIKitPrebuiltLiveStreamingController().pk.private.initByPrebuilt();
     ZegoUIKitPrebuiltLiveStreamingController()
@@ -91,6 +95,8 @@ class ZegoLiveStreamingControllerPrivateImpl {
       subTag: 'controller.p',
     );
 
+    isPrebuiltFromHall = false;
+
     ZegoUIKitPrebuiltLiveStreamingController().pk.private.uninitByPrebuilt();
     ZegoUIKitPrebuiltLiveStreamingController().room.private.uninitByPrebuilt();
     ZegoUIKitPrebuiltLiveStreamingController().user.private.uninitByPrebuilt();
@@ -122,6 +128,7 @@ class ZegoLiveStreamingControllerPrivateImpl {
 
   void onRoomSwitched({
     required String liveID,
+    required bool isPrebuiltFromHall,
     required ZegoUIKitPrebuiltLiveStreamingConfig config,
     required ZegoUIKitPrebuiltLiveStreamingEvents? events,
     required ZegoLiveStreamingMinimizationData minimizeData,
@@ -130,6 +137,11 @@ class ZegoLiveStreamingControllerPrivateImpl {
 
     _liveID = liveID;
 
-    initByPrebuilt(config: config, events: events, minimizeData: minimizeData);
+    initByPrebuilt(
+      isPrebuiltFromHall: isPrebuiltFromHall,
+      config: config,
+      events: events,
+      minimizeData: minimizeData,
+    );
   }
 }

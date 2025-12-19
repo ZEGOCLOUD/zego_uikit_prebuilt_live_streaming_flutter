@@ -3,11 +3,10 @@ import 'dart:async';
 import 'dart:io' show Platform;
 import 'dart:typed_data';
 
-// Flutter imports:
-import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:floating/floating.dart';
+// Flutter imports:
+import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
@@ -36,7 +35,6 @@ import 'modules/minimization/defines.dart';
 import 'modules/minimization/overlay_machine.dart';
 import 'modules/pk/core/core.dart';
 import 'modules/pk/core/defines.dart';
-import 'modules/pk/core/pk_combine_notifier.dart';
 import 'modules/pk/core/service/defines.dart';
 import 'modules/pk/core/service/services.dart';
 
@@ -108,6 +106,9 @@ class ZegoUIKitPrebuiltLiveStreamingController
       showConfirmation: showConfirmation,
     );
 
+    await ZegoLiveStreamingPageLifeCycle().uninitFromPreview(
+      isPrebuiltFromHall: private.isPrebuiltFromHall,
+    );
     await ZegoUIKitPrebuiltLiveStreamingController().pip.cancelBackground();
 
     private.uninitByPrebuilt();

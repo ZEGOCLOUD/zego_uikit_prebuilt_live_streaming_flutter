@@ -96,6 +96,7 @@ class ZegoLiveStreamingPageLifeCycle {
 
     ZegoUIKitPrebuiltLiveStreamingController().private.liveID = currentLiveID;
     ZegoUIKitPrebuiltLiveStreamingController().private.initByPrebuilt(
+          isPrebuiltFromHall: isPrebuiltFromHall,
           config: contextData.config,
           events: contextData.events,
           minimizeData: ZegoLiveStreamingMinimizationData(
@@ -170,11 +171,7 @@ class ZegoLiveStreamingPageLifeCycle {
   }
 
   Future<void> uninitFromPreview({
-    required BuildContext context,
-    required String liveID,
-    required bool isPrebuiltFromMinimizing,
     required bool isPrebuiltFromHall,
-    required ZegoUIKitPrebuiltLiveStreamingEvents? events,
   }) async {
     if (!_initialized) {
       ZegoLoggerService.logInfo(
@@ -187,7 +184,6 @@ class ZegoLiveStreamingPageLifeCycle {
     }
 
     ZegoLoggerService.logInfo(
-      'isPrebuiltFromMinimizing:$isPrebuiltFromMinimizing, '
       'isPrebuiltFromHall:$isPrebuiltFromHall, '
       'currentLiveID:$currentLiveID, '
       'currentContextData:$currentContextData, ',
@@ -351,6 +347,7 @@ class ZegoLiveStreamingPageLifeCycle {
     );
 
     ZegoUIKitPrebuiltLiveStreamingController().private.onRoomSwitched(
+          isPrebuiltFromHall: isPrebuiltFromHall,
           liveID: liveID,
           config: config,
           events: events,

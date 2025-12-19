@@ -3,7 +3,6 @@ import 'dart:core';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
 
@@ -155,11 +154,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     super.dispose();
 
     ZegoLiveStreamingPageLifeCycle().uninitFromPreview(
-      liveID: widget.liveID,
-      context: context,
-      isPrebuiltFromMinimizing: isPrebuiltFromMinimizing,
       isPrebuiltFromHall: isPrebuiltFromHall,
-      events: widget.events,
     );
 
     ZegoUIKitPrebuiltLiveStreamingController().pip.cancelBackground();
