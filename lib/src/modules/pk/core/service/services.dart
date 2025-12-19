@@ -29,15 +29,10 @@ import 'defines.dart';
 import 'protocol.dart';
 
 part '../event/events.dart';
-
 part 'completer.dart';
-
 part 'dialogs.dart';
-
 part 'host.pk.dart';
-
 part 'host.request.dart';
-
 part 'pk_users.dart';
 
 mixin ZegoUIKitPrebuiltLiveStreamingPKServices {
@@ -95,7 +90,7 @@ mixin ZegoUIKitPrebuiltLiveStreamingPKServices {
     );
   }
 
-  String get currentMixerStreamID => _mixer.mixerID;
+  String get currentMixerStreamID => _mixer.mixerStreamID;
 
   String get liveID => _liveID;
 

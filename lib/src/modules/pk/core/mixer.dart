@@ -16,7 +16,7 @@ class ZegoUIKitPrebuiltLiveStreamingPKServiceMixer {
   bool _init = false;
 
   ZegoUIKitMixerTask? _task;
-  String _mixerID = '';
+  String _mixerStreamID = '';
 
   String _liveID = '';
 
@@ -28,7 +28,7 @@ class ZegoUIKitPrebuiltLiveStreamingPKServiceMixer {
 
   ZegoLiveStreamingPKMixerLayout? _layout;
 
-  String get mixerID => _mixerID;
+  String get mixerStreamID => _mixerStreamID;
 
   ZegoLiveStreamingPKMixerLayout get layout =>
       _layout ?? ZegoLiveStreamingPKMixerDefaultLayout();
@@ -54,7 +54,8 @@ class ZegoUIKitPrebuiltLiveStreamingPKServiceMixer {
     _layout = layout;
 
     _liveID = liveID;
-    _mixerID = '${liveID}__mix';
+
+    _mixerStreamID = generateStreamID("", _liveID, ZegoStreamType.mix);
   }
 
   Future<void> uninit() async {
@@ -70,7 +71,7 @@ class ZegoUIKitPrebuiltLiveStreamingPKServiceMixer {
     mutedUsersNotifier.value = [];
 
     _isMuting = false;
-    _mixerID = '';
+    _mixerStreamID = '';
 
     _init = false;
 
@@ -93,7 +94,7 @@ class ZegoUIKitPrebuiltLiveStreamingPKServiceMixer {
 
       return false;
     }
-    if (_mixerID.isEmpty) {
+    if (_mixerStreamID.isEmpty) {
       ZegoLoggerService.logInfo(
         'update mixer, but mixer stream id is empty',
         tag: 'live.streaming.pk.mixer',
@@ -185,7 +186,7 @@ class ZegoUIKitPrebuiltLiveStreamingPKServiceMixer {
     }
     await ZegoUIKit().startPlayMixAudioVideo(
       targetRoomID: _liveID,
-      mixerID,
+      mixerStreamID,
       pkHosts.map((e) => e.userInfo).toList(),
       userSoundIDs,
       onPlayerStateUpdated: onPlayerStateUpdated,
@@ -193,20 +194,23 @@ class ZegoUIKitPrebuiltLiveStreamingPKServiceMixer {
   }
 
   Future<void> stopPlayStream() async {
-    await ZegoUIKit().stopPlayMixAudioVideo(targetRoomID: _liveID, mixerID);
+    await ZegoUIKit()
+        .stopPlayMixAudioVideo(targetRoomID: _liveID, mixerStreamID);
   }
 
   ZegoUIKitMixerTask _generateTask(
     List<ZegoLiveStreamingPKUser> hosts,
   ) {
-    var mixerTask = ZegoUIKitMixerTask(mixerID)
+    /// Output to the ZEGO server (stream ID is mixerStreamID),
+    /// and pull by specifying this stream name
+    var mixerTask = ZegoUIKitMixerTask(mixerStreamID)
       ..videoConfig.width = layout.getResolution().width.toInt()
       ..videoConfig.height = layout.getResolution().height.toInt()
       ..videoConfig.bitrate = 1500
       ..videoConfig.fps = 15
       ..enableSoundLevel = true
       ..outputList = [
-        ZegoUIKitMixerOutput(mixerID),
+        ZegoUIKitMixerOutput(mixerStreamID),
       ];
 
     final rectList = layout.getRectList(

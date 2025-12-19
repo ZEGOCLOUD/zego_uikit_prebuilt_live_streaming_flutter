@@ -503,7 +503,7 @@ extension PKServiceConnectedUsers on ZegoUIKitPrebuiltLiveStreamingPKServices {
       event: ZegoLiveStreamingReporter.eventPKStartPlay,
       params: {
         ZegoLiveStreamingReporter.eventKeyCallID: _coreData.currentRequestID,
-        ZegoLiveStreamingReporter.eventKeyStreamID: _mixer.mixerID,
+        ZegoLiveStreamingReporter.eventKeyStreamID: _mixer.mixerStreamID,
       },
     );
     await _mixer.startPlayStream(
@@ -519,7 +519,7 @@ extension PKServiceConnectedUsers on ZegoUIKitPrebuiltLiveStreamingPKServices {
             params: {
               ZegoLiveStreamingReporter.eventKeyCallID:
                   _coreData.currentRequestID,
-              ZegoLiveStreamingReporter.eventKeyStreamID: _mixer.mixerID,
+              ZegoLiveStreamingReporter.eventKeyStreamID: _mixer.mixerStreamID,
               ZegoLiveStreamingReporter.eventKeyError: errorCode,
             },
           );
@@ -529,7 +529,7 @@ extension PKServiceConnectedUsers on ZegoUIKitPrebuiltLiveStreamingPKServices {
 
     final mixAudioVideoLoaded = ZegoUIKit().getMixAudioVideoLoadedNotifier(
       targetRoomID: _liveID,
-      _mixer.mixerID,
+      _mixer.mixerStreamID,
     );
     if (mixAudioVideoLoaded.value) {
       /// load done
@@ -554,7 +554,7 @@ extension PKServiceConnectedUsers on ZegoUIKitPrebuiltLiveStreamingPKServices {
   void onMixAudioVideoLoadStatusChanged() {
     final mixAudioVideoLoaded = ZegoUIKit().getMixAudioVideoLoadedNotifier(
       targetRoomID: _liveID,
-      _mixer.mixerID,
+      _mixer.mixerStreamID,
     );
     mixAudioVideoLoaded.removeListener(onMixAudioVideoLoadStatusChanged);
 

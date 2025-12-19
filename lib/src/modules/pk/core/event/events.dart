@@ -797,13 +797,13 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
       );
     }
 
-    if (ZegoUIKit().useDebugMode) {
-      ZegoLoggerService.logInfo(
-        '${pkUser.userInfo.id}, onReceiveSEIEvent $event',
-        tag: 'live.streaming.pk.events($hashCode)',
-        subTag: 'heartbeat',
-      );
-    }
+    // if (ZegoUIKit().useDebugMode) {
+    //   ZegoLoggerService.logInfo(
+    //     '${pkUser.userInfo.id}, onReceiveSEIEvent $event',
+    //     tag: 'live.streaming.pk.events($hashCode)',
+    //     subTag: 'heartbeat',
+    //   );
+    // }
   }
 
   void _onRoomAttributesQueried(
