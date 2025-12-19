@@ -63,16 +63,6 @@ class ZegoLiveStreamingPageLifeCycle {
     required bool isPrebuiltFromMinimizing,
     required ZegoLiveStreamingPageLifeCycleContextData contextData,
   }) async {
-    if (_initialized) {
-      ZegoLoggerService.logInfo(
-        'init before, ignore',
-        tag: 'live.streaming.lifecyle',
-        subTag: 'initFromPreview',
-      );
-
-      return;
-    }
-
     ZegoLoggerService.logInfo(
       'targetLiveID:$targetLiveID, '
       'isPrebuiltFromHall:$isPrebuiltFromHall, '
@@ -81,7 +71,6 @@ class ZegoLiveStreamingPageLifeCycle {
       tag: 'live.streaming.lifecyle',
       subTag: 'initFromPreview',
     );
-    _initialized = true;
 
     assert(contextData.userID.isNotEmpty);
     assert(contextData.userName.isNotEmpty);
@@ -94,7 +83,7 @@ class ZegoLiveStreamingPageLifeCycle {
     rtcContextReadyNotifier.value =
         isPrebuiltFromMinimizing || isPrebuiltFromHall;
 
-    ZegoUIKitPrebuiltLiveStreamingController().private.liveID = currentLiveID;
+    ZegoUIKitPrebuiltLiveStreamingController().private.liveID = targetLiveID;
     ZegoUIKitPrebuiltLiveStreamingController().private.initByPrebuilt(
           isPrebuiltFromHall: isPrebuiltFromHall,
           config: contextData.config,
@@ -121,6 +110,18 @@ class ZegoLiveStreamingPageLifeCycle {
 
       return;
     }
+
+    if (_initialized) {
+      ZegoLoggerService.logInfo(
+        'init before, ignore',
+        tag: 'live.streaming.lifecyle',
+        subTag: 'initFromPreview',
+      );
+
+      return;
+    }
+
+    _initialized = true;
 
     swiping.initFromPreview(
       token: contextData.token,

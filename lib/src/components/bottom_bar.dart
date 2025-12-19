@@ -270,44 +270,8 @@ class _ZegoLiveStreamingBottomBarState
   }
 
   List<Widget> getDisplayButtons(BuildContext context) {
-    final needRestoreDeviceState = (ZegoUIKitPrebuiltLiveStreamingController()
-                .minimize
-                .private
-                .minimizeData
-                ?.isPrebuiltFromMinimizing ??
-            false) ||
-        ZegoUIKitPrebuiltLiveStreamingController()
-            .pip
-            .private
-            .pipImpl()
-            .isRestoredFromPIP;
-
     final buttonList = sortDisplayButtons(
-      getDefaultButtons(
-        context,
-        cameraDefaultValueFunc: needRestoreDeviceState
-            ? () {
-                /// if is minimizing, take the local device state
-                return ZegoUIKit()
-                    .getCameraStateNotifier(
-                      targetRoomID: widget.liveID,
-                      ZegoUIKit().getLocalUser().id,
-                    )
-                    .value;
-              }
-            : null,
-        microphoneDefaultValueFunc: needRestoreDeviceState
-            ? () {
-                /// if is minimizing, take the local device state
-                return ZegoUIKit()
-                    .getMicrophoneStateNotifier(
-                      targetRoomID: widget.liveID,
-                      ZegoUIKit().getLocalUser().id,
-                    )
-                    .value;
-              }
-            : null,
-      ),
+      getDefaultButtons(context),
       extendButtons,
     );
 
@@ -323,25 +287,7 @@ class _ZegoLiveStreamingBottomBarState
             child: ZegoMoreButton(
               menuButtonListFunc: () {
                 final buttonList = sortDisplayButtons(
-                  getDefaultButtons(
-                    context,
-                    cameraDefaultValueFunc: () {
-                      return ZegoUIKit()
-                          .getCameraStateNotifier(
-                            targetRoomID: widget.liveID,
-                            ZegoUIKit().getLocalUser().id,
-                          )
-                          .value;
-                    },
-                    microphoneDefaultValueFunc: () {
-                      return ZegoUIKit()
-                          .getMicrophoneStateNotifier(
-                            targetRoomID: widget.liveID,
-                            ZegoUIKit().getLocalUser().id,
-                          )
-                          .value;
-                    },
-                  ),
+                  getDefaultButtons(context),
                   extendButtons,
                 )..removeRange(
                     0,
@@ -454,23 +400,14 @@ class _ZegoLiveStreamingBottomBarState
     );
   }
 
-  List<Widget> getDefaultButtons(
-    BuildContext context, {
-    bool Function()? cameraDefaultValueFunc,
-    bool Function()? microphoneDefaultValueFunc,
-  }) {
+  List<Widget> getDefaultButtons(BuildContext context) {
     if (buttons.isEmpty) {
       return [];
     }
 
     return buttons
         .map((type) => buttonWrapper(
-              child: generateDefaultButtonsByEnum(
-                context,
-                type,
-                cameraDefaultValueFunc: cameraDefaultValueFunc,
-                microphoneDefaultValueFunc: microphoneDefaultValueFunc,
-              ),
+              child: generateDefaultButtonsByEnum(context, type),
               type: type,
             ))
         .toList();
@@ -478,10 +415,71 @@ class _ZegoLiveStreamingBottomBarState
 
   Widget generateDefaultButtonsByEnum(
     BuildContext context,
-    ZegoLiveStreamingMenuBarButtonName type, {
-    bool Function()? cameraDefaultValueFunc,
-    bool Function()? microphoneDefaultValueFunc,
-  }) {
+    ZegoLiveStreamingMenuBarButtonName type,
+  ) {
+    final needRestoreDeviceState = (ZegoUIKitPrebuiltLiveStreamingController()
+                .minimize
+                .private
+                .minimizeData
+                ?.isPrebuiltFromMinimizing ??
+            false) ||
+        ZegoUIKitPrebuiltLiveStreamingController()
+            .pip
+            .private
+            .pipImpl()
+            .isRestoredFromPIP;
+
+    final cameraDefaultOnFunc = needRestoreDeviceState
+        ? () {
+            /// if is minimizing, take the local device state
+            return ZegoUIKit()
+                .getCameraStateNotifier(
+                  targetRoomID: widget.liveID,
+                  ZegoUIKit().getLocalUser().id,
+                )
+                .value;
+          }
+        : () {
+            final isConnected =
+                ZegoLiveStreamingAudienceConnectState.connected ==
+                    ZegoLiveStreamingPageLifeCycle()
+                        .currentManagers
+                        .connectManager
+                        .audienceLocalConnectStateNotifier
+                        .value;
+            var cameraDefaultOn = widget.config.turnOnCameraWhenJoining;
+            if (widget.config.plugins.isNotEmpty && isConnected) {
+              cameraDefaultOn =
+                  widget.config.coHost.turnOnCameraWhenCohosted?.call() ?? true;
+            }
+            return cameraDefaultOn;
+          };
+    final microphoneDefaultOnFunc = needRestoreDeviceState
+        ? () {
+            /// if is minimizing, take the local device state
+            return ZegoUIKit()
+                .getMicrophoneStateNotifier(
+                  targetRoomID: widget.liveID,
+                  ZegoUIKit().getLocalUser().id,
+                )
+                .value;
+          }
+        : () {
+            final isConnected =
+                ZegoLiveStreamingAudienceConnectState.connected ==
+                    ZegoLiveStreamingPageLifeCycle()
+                        .currentManagers
+                        .connectManager
+                        .audienceLocalConnectStateNotifier
+                        .value;
+            var microphoneDefaultOn = widget.config.turnOnMicrophoneWhenJoining;
+            if (widget.config.plugins.isNotEmpty && isConnected) {
+              microphoneDefaultOn = true;
+            }
+
+            return microphoneDefaultOn;
+          };
+
     final buttonSize = zegoLiveButtonSize;
     final iconSize = zegoLiveButtonIconSize;
     switch (type) {
@@ -495,27 +493,6 @@ class _ZegoLiveStreamingBottomBarState
                 _isInPK;
             final needUserMuteMode =
                 (!widget.config.coHost.stopCoHostingWhenMicCameraOff) || isInPK;
-
-            final isConnected =
-                ZegoLiveStreamingAudienceConnectState.connected ==
-                    ZegoLiveStreamingPageLifeCycle()
-                        .currentManagers
-                        .connectManager
-                        .audienceLocalConnectStateNotifier
-                        .value;
-            var microphoneDefaultOn = widget.config.turnOnMicrophoneWhenJoining;
-            if (widget.config.plugins.isNotEmpty && isConnected) {
-              microphoneDefaultOn = true;
-            }
-            microphoneDefaultOn =
-                microphoneDefaultValueFunc?.call() ?? microphoneDefaultOn;
-
-            ZegoLoggerService.logInfo(
-              'isConnected:$isConnected, '
-              'default on:$microphoneDefaultOn, ',
-              tag: 'live.streaming.bottom-bar',
-              subTag: 'microphone',
-            );
 
             return ZegoToggleMicrophoneButton(
               roomID: widget.liveID,
@@ -537,7 +514,7 @@ class _ZegoLiveStreamingBottomBarState
                     ),
                 backgroundColor: Colors.transparent,
               ),
-              defaultOn: microphoneDefaultOn,
+              defaultOn: microphoneDefaultOnFunc(),
               muteMode: needUserMuteMode,
             );
           },
@@ -563,26 +540,6 @@ class _ZegoLiveStreamingBottomBarState
           ),
         );
       case ZegoLiveStreamingMenuBarButtonName.toggleCameraButton:
-        final isConnected = ZegoLiveStreamingAudienceConnectState.connected ==
-            ZegoLiveStreamingPageLifeCycle()
-                .currentManagers
-                .connectManager
-                .audienceLocalConnectStateNotifier
-                .value;
-        var cameraDefaultOn = widget.config.turnOnCameraWhenJoining;
-        if (widget.config.plugins.isNotEmpty && isConnected) {
-          cameraDefaultOn =
-              widget.config.coHost.turnOnCameraWhenCohosted?.call() ?? true;
-        }
-        cameraDefaultOn = cameraDefaultValueFunc?.call() ?? cameraDefaultOn;
-
-        ZegoLoggerService.logInfo(
-          'isConnected:$isConnected, '
-          'default on:$cameraDefaultOn, ',
-          tag: 'live.streaming.bottom-bar',
-          subTag: 'camera',
-        );
-
         return ZegoToggleCameraButton(
           roomID: widget.liveID,
           buttonSize: buttonSize,
@@ -603,7 +560,7 @@ class _ZegoLiveStreamingBottomBarState
                 ),
             backgroundColor: Colors.transparent,
           ),
-          defaultOn: cameraDefaultOn,
+          defaultOn: cameraDefaultOnFunc(),
         );
       case ZegoLiveStreamingMenuBarButtonName.switchCameraButton:
         return ZegoSwitchCameraButton(
