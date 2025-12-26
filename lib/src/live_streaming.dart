@@ -156,6 +156,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
 
     ZegoLiveStreamingPageLifeCycle().uninitFromPreview(
       isPrebuiltFromHall: isPrebuiltFromHall,
+      isFromMinimize: false,
     );
 
     ZegoUIKitPrebuiltLiveStreamingController().pip.cancelBackground();

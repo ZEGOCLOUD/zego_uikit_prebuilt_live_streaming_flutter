@@ -14,6 +14,7 @@ class ZegoLiveStreamingPageLifeCycleDispose {
     required ZegoLiveStreamingManagers? currentManagers,
     required ZegoLiveStreamingPageLifeCycleContextData data,
     required bool canLeaveRoom,
+    required bool isFromMinimize,
   }) async {
     ZegoLoggerService.logInfo(
       'room id:$targetLiveID, '
@@ -22,7 +23,8 @@ class ZegoLiveStreamingPageLifeCycleDispose {
       subTag: 'run',
     );
 
-    if (ZegoLiveStreamingMiniOverlayMachine().isMinimizing) {
+    /// not return if cause by minimized close
+    if (!isFromMinimize && ZegoLiveStreamingMiniOverlayMachine().isMinimizing) {
       ZegoLoggerService.logInfo(
         'isMinimizing, ignore',
         tag: 'live.streaming.lifecyle-dispose',
@@ -36,7 +38,9 @@ class ZegoLiveStreamingPageLifeCycleDispose {
       ZegoUIKit().stopSharingScreen(targetRoomID: targetLiveID);
     }
 
-    await currentManagers?.uninitPluginAndManagers();
+    await currentManagers?.uninitPluginAndManagers(
+      isFromMinimize: isFromMinimize,
+    );
 
     if (data.config.role == ZegoLiveStreamingRole.audience) {
       /// audience, should be start play when leave

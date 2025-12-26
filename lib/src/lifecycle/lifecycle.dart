@@ -174,6 +174,7 @@ class ZegoLiveStreamingPageLifeCycle {
 
   Future<void> uninitFromPreview({
     required bool isPrebuiltFromHall,
+    required bool isFromMinimize,
   }) async {
     if (!_initialized) {
       ZegoLoggerService.logInfo(
@@ -187,6 +188,8 @@ class ZegoLiveStreamingPageLifeCycle {
 
     ZegoLoggerService.logInfo(
       'isPrebuiltFromHall:$isPrebuiltFromHall, '
+      'isFromMinimize:$isFromMinimize, '
+      'isMinimizing:${ZegoLiveStreamingMiniOverlayMachine().isMinimizing}, '
       'currentLiveID:$currentLiveID, '
       'currentContextData:$currentContextData, ',
       tag: 'live.streaming.lifecyle',
@@ -213,7 +216,7 @@ class ZegoLiveStreamingPageLifeCycle {
       await ZegoUIKit().enableSwitchRoomNotStopPlay(false);
     }
 
-    if (swiping.usingRoomSwiping) {
+    if (swiping.usingRoomSwiping || isFromMinimize) {
       /// Using live streaming swiping
       /// 1. Need to leave room: If not from live hall, need to leave room because entire ZegoUIKitPrebuiltLiveStreaming is exiting
       /// 2. Need to switch room: From live hall
@@ -222,6 +225,7 @@ class ZegoLiveStreamingPageLifeCycle {
         currentManagers: currentManagers,
         data: currentContextData!,
         canLeaveRoom: !isPrebuiltFromHall,
+        isFromMinimize: isFromMinimize,
       );
     }
 
@@ -319,6 +323,7 @@ class ZegoLiveStreamingPageLifeCycle {
       data: currentContextData!,
       currentManagers: currentManagers,
       canLeaveRoom: true,
+      isFromMinimize: false,
     );
 
     currentLiveID = '';

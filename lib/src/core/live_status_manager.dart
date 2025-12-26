@@ -9,6 +9,7 @@ import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
@@ -306,21 +307,28 @@ class ZegoLiveStreamingStatusManager {
 
   void onLiveStatusUpdated() {
     ZegoLoggerService.logInfo(
-      'live status update to ${notifier.value}',
+      'live status update to ${notifier.value}, '
+      'inPK:${ZegoUIKitPrebuiltLiveStreamingController().pk.isInPK}, ',
       tag: 'live.streaming.live-status-mgr',
       subTag: 'onLiveStatusUpdated',
     );
 
-    switch (notifier.value) {
-      case LiveStatus.ended:
-        events?.onStateUpdated?.call(ZegoLiveStreamingState.ended);
-        break;
-      case LiveStatus.living:
-        events?.onStateUpdated?.call(ZegoLiveStreamingState.living);
-        break;
-      case LiveStatus.notStart:
-        events?.onStateUpdated?.call(ZegoLiveStreamingState.idle);
-        break;
+    if (ZegoUIKitPrebuiltLiveStreamingController().pk.isInPK) {
+      events?.onStateUpdated?.call(
+        ZegoLiveStreamingState.inPKBattle,
+      );
+    } else {
+      switch (notifier.value) {
+        case LiveStatus.ended:
+          events?.onStateUpdated?.call(ZegoLiveStreamingState.ended);
+          break;
+        case LiveStatus.living:
+          events?.onStateUpdated?.call(ZegoLiveStreamingState.living);
+          break;
+        case LiveStatus.notStart:
+          events?.onStateUpdated?.call(ZegoLiveStreamingState.idle);
+          break;
+      }
     }
   }
 }

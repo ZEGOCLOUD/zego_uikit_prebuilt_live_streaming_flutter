@@ -126,7 +126,9 @@ class ZegoLiveStreamingMiniOverlayMachine {
         .private
         .minimizeData;
 
-    ZegoLiveStreamingPageLifeCycle().currentManagers.uninitPluginAndManagers();
+    ZegoLiveStreamingPageLifeCycle().currentManagers.uninitPluginAndManagers(
+          isFromMinimize: true,
+        );
 
     await ZegoUIKit().resetSoundEffect();
     await ZegoUIKit().resetBeautyEffect();

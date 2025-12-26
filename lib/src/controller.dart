@@ -109,6 +109,7 @@ class ZegoUIKitPrebuiltLiveStreamingController
 
     await ZegoLiveStreamingPageLifeCycle().uninitFromPreview(
       isPrebuiltFromHall: private.isPrebuiltFromHall,
+      isFromMinimize: true,
     );
     await ZegoUIKitPrebuiltLiveStreamingController().pip.cancelBackground();
 
@@ -119,6 +120,8 @@ class ZegoUIKitPrebuiltLiveStreamingController
 
   ValueNotifier<bool> get isLeaveRequestingNotifier =>
       room.private.isLeaveRequestingNotifier;
+
+  ZegoLiveStreamingState get liveState => private.liveState;
 
   ZegoUIKitPrebuiltLiveStreamingController._internal() {
     ZegoLoggerService.logInfo(

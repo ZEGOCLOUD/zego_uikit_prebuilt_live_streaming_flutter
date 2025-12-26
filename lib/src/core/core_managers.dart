@@ -92,9 +92,11 @@ class ZegoLiveStreamingManagers {
     initializedNotifier.value = true;
   }
 
-  Future<void> uninitPluginAndManagers() async {
+  Future<void> uninitPluginAndManagers({
+    required bool isFromMinimize,
+  }) async {
     ZegoLoggerService.logInfo(
-      '',
+      'isFromMinimize:$isFromMinimize, ',
       tag: 'live.streaming.core-mgr',
       subTag: 'uninit',
     );
@@ -119,7 +121,9 @@ class ZegoLiveStreamingManagers {
     await connectManager.audienceCancelCoHostIfRequesting();
 
     uninitAudioVideoManagers();
-    await ZegoUIKitPrebuiltLiveStreamingPK.instance.uninit();
+    await ZegoUIKitPrebuiltLiveStreamingPK.instance.uninit(
+      isFromMinimize: isFromMinimize,
+    );
 
     /// Even if from live hall, still need to uninit plugins, probably won't be used
     await plugins.uninit();
@@ -141,7 +145,9 @@ class ZegoLiveStreamingManagers {
       subTag: 'onRoomWillSwitch',
     );
 
-    ZegoUIKitPrebuiltLiveStreamingPK.instance.uninit();
+    ZegoUIKitPrebuiltLiveStreamingPK.instance.uninit(
+      isFromMinimize: false,
+    );
 
     /// 切换房间前监听事件
     ZegoUIKitPrebuiltLiveStreamingPK.instance.addEventListener(

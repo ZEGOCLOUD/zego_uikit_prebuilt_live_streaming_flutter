@@ -17,6 +17,27 @@ class ZegoLiveStreamingControllerPrivateImpl {
     return _liveID;
   }
 
+  ZegoLiveStreamingState get liveState {
+    if (ZegoUIKitPrebuiltLiveStreamingController().pk.isInPK) {
+      return ZegoLiveStreamingState.inPKBattle;
+    }
+
+    switch (ZegoLiveStreamingPageLifeCycle()
+        .currentManagers
+        .liveStatusManager
+        .notifier
+        .value) {
+      case LiveStatus.ended:
+        return ZegoLiveStreamingState.ended;
+      case LiveStatus.living:
+        return ZegoLiveStreamingState.living;
+      case LiveStatus.notStart:
+        return ZegoLiveStreamingState.idle;
+    }
+
+    return ZegoLiveStreamingState.idle;
+  }
+
   set liveID(String value) {
     ZegoLoggerService.logInfo(
       'update live id from $_liveID to $value, ',
