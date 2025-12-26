@@ -60,7 +60,11 @@ class ZegoUIKitPrebuiltLiveStreamingPK
       contextQuery: contextQuery,
     );
 
-    initServices(liveID: liveID, coreData: _data);
+    initServices(
+      liveID: liveID,
+      coreData: _data,
+      prebuiltConfig: config,
+    );
 
     combineNotifier.init(
       v2StateNotifier: pkStateNotifier,

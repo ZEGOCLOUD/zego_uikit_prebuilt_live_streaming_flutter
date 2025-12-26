@@ -3,13 +3,13 @@ import 'dart:async';
 
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
-
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
-
+import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/error.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/layout/layout.dart';
+
 import 'defines.dart';
 
 class ZegoUIKitPrebuiltLiveStreamingPKServiceMixer {
@@ -19,6 +19,7 @@ class ZegoUIKitPrebuiltLiveStreamingPKServiceMixer {
   String _mixerStreamID = '';
 
   String _liveID = '';
+  ZegoUIKitPrebuiltLiveStreamingConfig? _prebuiltConfig;
 
   /// is execute mute api
   bool _isMuting = false;
@@ -38,6 +39,7 @@ class ZegoUIKitPrebuiltLiveStreamingPKServiceMixer {
 
   void init({
     required String liveID,
+    required ZegoUIKitPrebuiltLiveStreamingConfig? prebuiltConfig,
     required ZegoLiveStreamingPKMixerLayout? layout,
   }) async {
     if (_init) {
@@ -54,6 +56,7 @@ class ZegoUIKitPrebuiltLiveStreamingPKServiceMixer {
     _layout = layout;
 
     _liveID = liveID;
+    _prebuiltConfig = prebuiltConfig;
 
     _mixerStreamID = generateStreamID("", _liveID, ZegoStreamType.mix);
   }
@@ -74,6 +77,8 @@ class ZegoUIKitPrebuiltLiveStreamingPKServiceMixer {
     _mixerStreamID = '';
 
     _init = false;
+    _liveID = '';
+    _prebuiltConfig = null;
 
     ZegoLoggerService.logInfo(
       'uninit done',
@@ -225,7 +230,10 @@ class ZegoUIKitPrebuiltLiveStreamingPKServiceMixer {
         ..streamID = host.streamID
         ..contentType = contentType
         ..volume = 100
-        ..renderMode = ZegoUIKitMixRenderMode.Fill
+        ..renderMode =
+            (_prebuiltConfig?.audioVideoView.useVideoViewAspectFill ?? true)
+                ? ZegoUIKitMixRenderMode.Fill
+                : ZegoUIKitMixRenderMode.Fit
         ..layout = rectList[hostIndex]
         ..soundLevelID = hostIndex;
       mixerTask.inputList.add(inputConfig);

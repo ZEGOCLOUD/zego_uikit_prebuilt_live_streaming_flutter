@@ -1,6 +1,7 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'layout.dart';
@@ -20,6 +21,14 @@ class ZegoLiveStreamingPKPreferGridMixerLayout
     int hostCount, {
     double scale = 1.0,
   }) {
+    ZegoLoggerService.logInfo(
+      'update rect, '
+      'hostCount:$hostCount, '
+      'scale:$scale, ',
+      tag: 'live.streaming.pk.layout',
+      subTag: 'grid',
+    );
+
     if (3 == hostCount) {
       return getRectListFor3Hosts(scale: scale);
     } else if (5 == hostCount) {
@@ -29,6 +38,12 @@ class ZegoLiveStreamingPKPreferGridMixerLayout
     }
   }
 
+  /// layout for 3 hosts
+  /// ┌-------┬-------┐
+  /// |       |   2   |
+  /// |   1   ├-------┤
+  /// |       |   3   |
+  /// └-------┴-------┘
   List<Rect> getRectListFor3Hosts({
     double scale = 1.0,
   }) {
@@ -55,6 +70,12 @@ class ZegoLiveStreamingPKPreferGridMixerLayout
     ];
   }
 
+  /// layout for 5 hosts
+  /// ┌-------┬-------┐
+  /// |   1   |   2   |
+  /// ├----┬--┴--┬----┤
+  /// |  3 |  4  |  5 |
+  /// └----┴-----┴----┘
   List<Rect> getRectListFor5Hosts({
     double scale = 1.0,
   }) {
@@ -94,6 +115,34 @@ class ZegoLiveStreamingPKPreferGridMixerLayout
   }
 
   /// only for 2/4/6/7~9
+  ///
+  /// 2 hosts: 1x2
+  /// ┌-------┬-------┐
+  /// |   1   |   2   |
+  /// └-------┴-------┘
+  ///
+  /// 4 hosts: 2x2
+  /// ┌-------┬-------┐
+  /// |   1   |   2   |
+  /// ├-------┼-------┤
+  /// |   3   |   4   |
+  /// └-------┴-------┘
+  ///
+  /// 6 hosts: 2x3
+  /// ┌----┬-----┬----┐
+  /// |  1 |  2  |  3 |
+  /// ├----┼-----┼----┤
+  /// |  4 |  5  |  6 |
+  /// └----┴-----┴----┘
+  ///
+  /// > 6 hosts: 3x3
+  /// ┌----┬-----┬----┐
+  /// |  1 |  2  |  3 |
+  /// ├----┼-----┼----┤
+  /// |  4 |  5  |  6 |
+  /// ├----┼-----┼----┤
+  /// |  7 |  8  |  9 |
+  /// └----┴-----┴----┘
   List<Rect> getNormalRectList(
     int hostCount, {
     double scale = 1.0,

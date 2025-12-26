@@ -2,16 +2,15 @@
 import 'dart:async';
 import 'dart:convert';
 
+// Package imports:
+import 'package:collection/collection.dart';
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-
-// Package imports:
-import 'package:collection/collection.dart';
 import 'package:zego_uikit/zego_uikit.dart';
-
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/dialogs.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/defines.dart';
@@ -25,6 +24,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/core/data.dart
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/core/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/core/event/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/core/mixer.dart';
+
 import 'defines.dart';
 import 'protocol.dart';
 
@@ -39,6 +39,7 @@ mixin ZegoUIKitPrebuiltLiveStreamingPKServices {
   bool _serviceInitialized = false;
 
   String _liveID = '';
+  ZegoUIKitPrebuiltLiveStreamingConfig? _prebuiltConfig;
 
   bool _eventInitialized = false;
   bool _eventListened = false;
@@ -110,6 +111,7 @@ mixin ZegoUIKitPrebuiltLiveStreamingPKServices {
 
   void initServices({
     required String liveID,
+    required ZegoUIKitPrebuiltLiveStreamingConfig prebuiltConfig,
     required ZegoUIKitPrebuiltLiveStreamingPKData coreData,
   }) {
     if (_serviceInitialized) {
@@ -123,12 +125,14 @@ mixin ZegoUIKitPrebuiltLiveStreamingPKServices {
     }
 
     _liveID = liveID;
+    _prebuiltConfig = prebuiltConfig;
     _coreData = coreData;
     _serviceInitialized = true;
 
     _mixer.init(
       liveID: liveID,
       layout: _coreData.prebuiltConfig?.pkBattle.mixerLayout,
+      prebuiltConfig: _prebuiltConfig,
     );
     initEvents();
     queryRoomProperties();
@@ -162,6 +166,7 @@ mixin ZegoUIKitPrebuiltLiveStreamingPKServices {
     uninitEvents();
 
     _liveID = '';
+    _prebuiltConfig = null;
     _serviceInitialized = false;
 
     _mixer.uninit();
