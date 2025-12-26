@@ -51,37 +51,37 @@ extension PKServiceHostRequest on ZegoUIKitPrebuiltLiveStreamingPKServices {
       );
     }
 
-    var inInvitationUserIDs = <String>[];
-    for (var userID in targetHostIDs) {
-      if (ZegoUIKit()
-          .getSignalingPlugin()
-          .isUserInAdvanceInvitationNow(userID)) {
-        inInvitationUserIDs.add(userID);
-      }
-    }
-    var tempTargetHostUserIDs = List<String>.from(targetHostIDs);
-    tempTargetHostUserIDs.removeWhere(
-      (userID) => inInvitationUserIDs.contains(userID),
-    );
-    if (tempTargetHostUserIDs.isEmpty) {
-      ZegoLoggerService.logInfo(
-        'could not send pk request, '
-        'all user is in PK, '
-        'param target host id:$targetHostIDs, '
-        'now target host user ids:$tempTargetHostUserIDs, '
-        'advance data:${ZegoUIKit().getSignalingPlugin().advanceInvitationToString()}, ',
-        tag: 'live.streaming.pk.services',
-        subTag: 'sendPKBattleRequest',
-      );
-
-      return ZegoLiveStreamingPKServiceSendRequestResult(
-        errorUserIDs: inInvitationUserIDs,
-        error: PlatformException(
-          code: '-1',
-          message: 'all user is in PK or requesting',
-        ),
-      );
-    }
+    // var inInvitationUserIDs = <String>[];
+    // for (var userID in targetHostIDs) {
+    //   if (ZegoUIKit()
+    //       .getSignalingPlugin()
+    //       .isUserInAdvanceInvitationNow(userID)) {
+    //     inInvitationUserIDs.add(userID);
+    //   }
+    // }
+    // var tempTargetHostUserIDs = List<String>.from(targetHostIDs);
+    // tempTargetHostUserIDs.removeWhere(
+    //   (userID) => inInvitationUserIDs.contains(userID),
+    // );
+    // if (tempTargetHostUserIDs.isEmpty) {
+    //   ZegoLoggerService.logInfo(
+    //     'could not send pk request, '
+    //     'all user is in PK, '
+    //     'param target host id:$targetHostIDs, '
+    //     'now target host user ids:$tempTargetHostUserIDs, '
+    //     'advance data:${ZegoUIKit().getSignalingPlugin().advanceInvitationToString()}, ',
+    //     tag: 'live.streaming.pk.services',
+    //     subTag: 'sendPKBattleRequest',
+    //   );
+    //
+    //   return ZegoLiveStreamingPKServiceSendRequestResult(
+    //     errorUserIDs: inInvitationUserIDs,
+    //     error: PlatformException(
+    //       code: '-1',
+    //       message: 'all user is in PK or requesting',
+    //     ),
+    //   );
+    // }
 
     final isWaitingRemoteResponse =
         _coreData.remoteUserIDsWaitingResponseFromLocalRequest().isNotEmpty;
@@ -97,13 +97,13 @@ extension PKServiceHostRequest on ZegoUIKitPrebuiltLiveStreamingPKServices {
     return (isInPK || isWaitingRemoteResponse || isWaitingLocalResponse)
         ? _addPKBattleRequest(
             _coreData.currentRequestID,
-            tempTargetHostUserIDs,
+            targetHostIDs, // tempTargetHostUserIDs,
             timeout: timeout,
             customData: customData,
             isAutoAccept: isAutoAccept,
           )
         : _sendPKBattleRequest(
-            tempTargetHostUserIDs,
+            targetHostIDs, // tempTargetHostUserIDs,
             timeout: timeout,
             customData: customData,
             isAutoAccept: isAutoAccept,
@@ -431,16 +431,26 @@ extension PKServiceHostRequest on ZegoUIKitPrebuiltLiveStreamingPKServices {
         ZegoUIKit().getSignalingPlugin().getAdvanceInitiator(requestID);
     if (null != sessionInitiator &&
         targetHost.userInfo.id != sessionInitiator.userID) {
-      final initiatorPKRequestData = PKServiceRequestData.fromJson(
-        jsonDecode(sessionInitiator.extendedData) as Map<String, dynamic>,
-      );
-      sessionHosts.add(ZegoLiveStreamingPKUser(
-        userInfo: ZegoUIKitUser(
-          id: sessionInitiator.userID,
-          name: initiatorPKRequestData.inviter.name,
-        ),
-        liveID: initiatorPKRequestData.liveID,
-      ));
+      try {
+        final initiatorPKRequestData = PKServiceRequestData.fromJson(
+          jsonDecode(sessionInitiator.extendedData) as Map<String, dynamic>,
+        );
+
+        sessionHosts.add(ZegoLiveStreamingPKUser(
+          userInfo: ZegoUIKitUser(
+            id: sessionInitiator.userID,
+            name: initiatorPKRequestData.inviter.name,
+          ),
+          liveID: initiatorPKRequestData.liveID,
+        ));
+      } catch (e) {
+        ZegoLoggerService.logInfo(
+          'error from sessionInitiator json, '
+          'sessionInitiator:$sessionInitiator, ',
+          tag: 'live.streaming.pk.services',
+          subTag: 'acceptPKBattleRequest',
+        );
+      }
     }
 
     ZegoLoggerService.logInfo(

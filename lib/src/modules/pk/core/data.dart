@@ -171,15 +171,24 @@ mixin ZegoUIKitPrebuiltLiveStreamingPKServiceData {
     }
 
     String? remoteUserID;
-    for (final user in ZegoUIKit()
-        .getSignalingPlugin()
-        .getAdvanceInvitees(_currentRequestID)) {
-      if (user.userID != ZegoUIKit().getLocalUser().id) {
-        continue;
-      }
+    final initiator =
+        ZegoUIKit().getSignalingPlugin().getAdvanceInitiator(_currentRequestID);
+    if (initiator?.userID == ZegoUIKit().getLocalUser().id &&
+        AdvanceInvitationState.waiting == initiator?.state) {
+      /// As the sponsor, after leaving, he was invited again by others
+      remoteUserID = initiator?.userID ?? '';
+    } else {
+      /// Check again if it is the invitee
+      for (final invitee in ZegoUIKit()
+          .getSignalingPlugin()
+          .getAdvanceInvitees(_currentRequestID)) {
+        if (invitee.userID != ZegoUIKit().getLocalUser().id) {
+          continue;
+        }
 
-      if (AdvanceInvitationState.waiting == user.state) {
-        remoteUserID = user.userID;
+        if (AdvanceInvitationState.waiting == invitee.state) {
+          remoteUserID = invitee.userID;
+        }
       }
     }
 
