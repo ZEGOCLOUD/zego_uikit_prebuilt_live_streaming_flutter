@@ -69,13 +69,16 @@ class ZegoUIKitPrebuiltLiveStreamingPK
     );
   }
 
-  Future<void> uninit() async {
+  Future<void> uninit({
+    required bool isFromMinimize,
+  }) async {
     if (!_initialized) {
       return;
     }
 
     ZegoLoggerService.logInfo(
-      'uninit',
+      'uninit, '
+      'isFromMinimize:$isFromMinimize, ',
       tag: 'live.streaming.pk',
       subTag: 'service',
     );
@@ -93,6 +96,7 @@ class ZegoUIKitPrebuiltLiveStreamingPK
     );
     await quitPKBattle(
       requestID: _data.currentRequestID,
+      force: isFromMinimize,
     );
 
     _data.uninit();
