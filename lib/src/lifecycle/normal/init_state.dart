@@ -140,9 +140,14 @@ class ZegoLiveStreamingPageLifeCycleInitState {
 
     /// Wait until live streaming starts
     onPreviewPageVisibilityUpdated();
-    ZegoLiveStreamingPageLifeCycle()
-        .previewPageVisibilityNotifier
-        .addListener(onPreviewPageVisibilityUpdated);
+    if (ZegoLiveStreamingPageLifeCycle()
+        .currentManagers
+        .hostManager
+        .configIsHost) {
+      ZegoLiveStreamingPageLifeCycle()
+          .previewPageVisibilityNotifier
+          .addListener(onPreviewPageVisibilityUpdated);
+    }
   }
 
   void onPreviewPageVisibilityUpdated() {
