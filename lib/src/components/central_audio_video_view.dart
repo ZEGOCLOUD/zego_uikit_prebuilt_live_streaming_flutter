@@ -329,7 +329,7 @@ class ZegoLiveStreamingCentralAudioVideoViewState
           smallViewMargin: EdgeInsets.only(
             left: 24.zR,
             top: 144.zR,
-            right: 24.zR,
+            right: 1.zR,
             bottom: 144.zR,
           ),
           showNewScreenSharingViewInFullscreenMode: true,
