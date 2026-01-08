@@ -156,6 +156,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
         () {
           return context;
         },
+        onRoomLoginFailed: onRoomLoginFailed,
       );
 
       ZegoLiveStreamingManagers().plugins?.init();
@@ -598,6 +599,50 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
     }
   }
 
+  void onRoomLoginFailed(int code, String message) {
+    ZegoLoggerService.logInfo(
+      'room login failed: $code, $message',
+      tag: 'live-streaming',
+      subTag: 'prebuilt, room login failed',
+    );
+
+    final event = ZegoLiveStreamingRoomLoginFailedEvent(
+      errorCode: code,
+      message: message,
+    );
+    Future<void> defaultAction(
+      ZegoLiveStreamingRoomLoginFailedEvent event,
+    ) async {
+      await defaultRoomLoginFailedAction(event);
+    }
+
+    if (null != events.room.onLoginFailed) {
+      events.room.onLoginFailed!.call(event, defaultAction);
+    } else {
+      defaultAction.call(event);
+    }
+  }
+
+  Future<bool> defaultRoomLoginFailedAction(
+    ZegoLiveStreamingRoomLoginFailedEvent event,
+  ) async {
+    return showLiveDialog(
+      context: context,
+      rootNavigator: widget.config.rootNavigator,
+      title: widget.config.innerText.loginFailedDialogInfo.title,
+      content: widget.config.innerText.loginFailedDialogInfo.message,
+      rightButtonText:
+          widget.config.innerText.loginFailedDialogInfo.confirmButtonName,
+      rightButtonCallback: () {
+        Navigator.of(
+          context,
+          rootNavigator: widget.config.rootNavigator,
+        ).pop(true);
+        Navigator.of(context).pop();
+      },
+    );
+  }
+
   void onMeRemovedFromRoom(String fromUserID) {
     ZegoLoggerService.logInfo(
       'local user removed by $fromUserID',
@@ -757,6 +802,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
       liveDurationManager: ZegoLiveStreamingManagers().liveDurationManager!,
       popUpManager: popUpManager,
       plugins: ZegoLiveStreamingManagers().plugins,
+      onRoomLoginFailed: onRoomLoginFailed,
     );
   }
 }

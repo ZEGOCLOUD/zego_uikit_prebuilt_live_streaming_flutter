@@ -11,6 +11,7 @@ import 'package:zego_uikit/zego_uikit.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/minimizing/overlay_machine.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/events.defines.dart';
 
 /// @nodoc
 class ZegoLiveStreamingPlugins {
@@ -24,6 +25,7 @@ class ZegoLiveStreamingPlugins {
     required this.plugins,
     required this.events,
     this.onPluginReLogin,
+    this.onRoomLoginFailed,
     this.signalingPluginConfig,
     this.beautyConfig,
   }) {
@@ -45,6 +47,7 @@ class ZegoLiveStreamingPlugins {
   final List<IZegoUIKitPlugin> plugins;
 
   final VoidCallback? onPluginReLogin;
+  final ZegoLiveStreamingLoginFailedEvent? onRoomLoginFailed;
 
   final ZegoUIKitPrebuiltLiveStreamingEvents events;
 
@@ -195,6 +198,8 @@ class ZegoLiveStreamingPlugins {
 
     return ZegoUIKit().getSignalingPlugin().joinRoom(roomID).then((result) {
       if (result.error != null) {
+        onRoomLoginFailed?.call(-1, result.error.toString());
+
         ZegoLoggerService.logInfo(
           '[plugin] plugins joinRoom failed: ${result.error}',
           tag: 'live-streaming',

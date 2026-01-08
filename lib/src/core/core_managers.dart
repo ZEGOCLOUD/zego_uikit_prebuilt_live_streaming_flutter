@@ -20,6 +20,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/pk_combine_notifier.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/pk/core/core.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/events.defines.dart';
 
 part 'core_manager.audio_video.dart';
 
@@ -42,8 +43,9 @@ class ZegoLiveStreamingManagers {
     ZegoUIKitPrebuiltLiveStreamingEvents events,
     ZegoLiveStreamingPopUpManager popUpManager,
     ValueNotifier<bool> startedByLocalNotifier,
-    BuildContext Function()? contextQuery,
-  ) {
+    BuildContext Function()? contextQuery,{
+    ZegoLiveStreamingLoginFailedEvent? onRoomLoginFailed,
+  }) {
     if (_initialized) {
       ZegoLoggerService.logInfo(
         'had init',
@@ -84,6 +86,7 @@ class ZegoLiveStreamingManagers {
         signalingPluginConfig: config.signalingPlugin,
         beautyConfig: config.beauty,
         events: events,
+        onRoomLoginFailed: onRoomLoginFailed,
       );
 
       ZegoUIKitPrebuiltLiveStreamingPK().init(

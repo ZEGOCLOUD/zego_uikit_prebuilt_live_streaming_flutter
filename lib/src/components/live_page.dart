@@ -44,6 +44,7 @@ class ZegoLiveStreamingLivePage extends StatefulWidget {
     required this.events,
     required this.defaultEndAction,
     required this.defaultLeaveConfirmationAction,
+    required this.onRoomLoginFailed,
     required this.hostManager,
     required this.liveStatusManager,
     required this.liveDurationManager,
@@ -66,6 +67,7 @@ class ZegoLiveStreamingLivePage extends StatefulWidget {
   final Future<bool> Function(
     ZegoLiveStreamingLeaveConfirmationEvent event,
   ) defaultLeaveConfirmationAction;
+  final ZegoLiveStreamingLoginFailedEvent? onRoomLoginFailed;
 
   final ZegoLiveStreamingHostManager hostManager;
   final ZegoLiveStreamingStatusManager liveStatusManager;
@@ -206,6 +208,8 @@ class _ZegoLiveStreamingLivePageState extends State<ZegoLiveStreamingLivePage>
 
   Future<void> onRoomLogin(ZegoRoomLoginResult result) async {
     if (result.errorCode != 0) {
+      widget.onRoomLoginFailed
+          ?.call(result.errorCode, result.extendedData.toString());
       ZegoLoggerService.logError(
         'failed to login room:${result.errorCode},${result.extendedData}',
         tag: 'live-streaming',
