@@ -170,13 +170,13 @@ class ZegoLiveStreamingPlugins {
         subTag: 'plugin',
       );
 
-      return joinRoom().then((result) {
+      return joinRoom().then((bool success) {
         ZegoLoggerService.logInfo(
-          'plugins room joined, join result:$result',
+          'plugins room joined, join success:$success',
           tag: 'live-streaming',
           subTag: 'plugin',
         );
-        roomHasInitLogin = true;
+        roomHasInitLogin = success;
       });
     });
 
