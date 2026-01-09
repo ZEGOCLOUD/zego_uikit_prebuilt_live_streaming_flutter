@@ -610,16 +610,11 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
       errorCode: code,
       message: message,
     );
-    Future<void> defaultAction(
-      ZegoLiveStreamingRoomLoginFailedEvent event,
-    ) async {
-      await defaultRoomLoginFailedAction(event);
-    }
 
     if (null != events.room.onLoginFailed) {
-      events.room.onLoginFailed!.call(event, defaultAction);
+      events.room.onLoginFailed!.call(event, defaultRoomLoginFailedAction);
     } else {
-      defaultAction.call(event);
+      defaultRoomLoginFailedAction(event);
     }
   }
 
