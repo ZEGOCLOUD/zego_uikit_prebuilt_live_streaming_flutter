@@ -27,6 +27,8 @@ class ZegoUIKitPrebuiltLiveStreamingPKServiceMixer {
   /// host is muted or not
   var mutedUsersNotifier = ValueNotifier<List<String>>([]);
 
+  List<ZegoLiveStreamingPKUser> _currentPKHosts = [];
+
   ZegoLiveStreamingPKMixerLayout? _layout;
 
   String get mixerStreamID => _mixerStreamID;
@@ -45,6 +47,8 @@ class ZegoUIKitPrebuiltLiveStreamingPKServiceMixer {
     if (_init) {
       return;
     }
+
+    _currentPKHosts.clear();
 
     ZegoLoggerService.logInfo(
       'init',
@@ -88,8 +92,9 @@ class ZegoUIKitPrebuiltLiveStreamingPKServiceMixer {
   }
 
   Future<bool> updateTask(
-    List<ZegoLiveStreamingPKUser> pkHosts,
-  ) async {
+    List<ZegoLiveStreamingPKUser> pkHosts, {
+    bool force = false,
+  }) async {
     if (!_init) {
       ZegoLoggerService.logInfo(
         'update mixer, but not init',
@@ -108,6 +113,32 @@ class ZegoUIKitPrebuiltLiveStreamingPKServiceMixer {
 
       return false;
     }
+
+    if (!force) {
+      var isSame = false;
+      if (_currentPKHosts.length == pkHosts.length) {
+        isSame = true;
+        for (var i = 0; i < _currentPKHosts.length; i++) {
+          if (_currentPKHosts[i].userInfo.id != pkHosts[i].userInfo.id ||
+              _currentPKHosts[i].liveID != pkHosts[i].liveID) {
+            isSame = false;
+            break;
+          }
+        }
+      }
+      if (isSame) {
+        ZegoLoggerService.logInfo(
+          'update mixer, but hosts is same, '
+          'currentHosts:$_currentPKHosts, '
+          'newHosts:$pkHosts',
+          tag: 'live-streaming-pk',
+          subTag: 'mixer',
+        );
+        return true;
+      }
+    }
+
+    _currentPKHosts = List.from(pkHosts);
 
     _task = _generateTask(pkHosts);
 
@@ -144,6 +175,8 @@ class ZegoUIKitPrebuiltLiveStreamingPKServiceMixer {
       await ZegoUIKit().stopMixerTask(_task!);
       _task = null;
     }
+
+    _currentPKHosts.clear();
   }
 
   Future<bool> muteUserAudio({
@@ -174,7 +207,7 @@ class ZegoUIKitPrebuiltLiveStreamingPKServiceMixer {
       await ZegoUIKit().muteUserAudio(targetRoomID: _liveID, hostID, isMute);
     }
 
-    await updateTask(pkHosts);
+    await updateTask(pkHosts, force: true);
 
     _isMuting = false;
 

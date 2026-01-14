@@ -3,7 +3,10 @@
 - Features
     - 优化直播间滑动效果
     - 增加直播大厅控件
-- Migrate
+
+## 3.15.5
+
+- Fixed the issue where frequent stream mixing updates during PK caused failures
 
 ## 3.15.4
 
