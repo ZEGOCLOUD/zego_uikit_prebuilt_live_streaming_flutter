@@ -58,6 +58,7 @@ class _ZegoLiveStreamingInRoomLiveMessageViewState
               targetRoomID: widget.liveID,
             ),
             stream: ZegoUIKitPrebuiltLiveStreamingController().message.stream(
+                  targetRoomID: widget.liveID,
                   includeFakeMessage: widget.config?.showFakeMessage ?? true,
                 ),
             itemBuilder: widget.config?.itemBuilder ??

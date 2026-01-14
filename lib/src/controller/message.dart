@@ -96,6 +96,7 @@ class ZegoLiveStreamingControllerMessageImpl
   ///   )
   /// ```
   Stream<List<ZegoInRoomMessage>> stream({
+    required String targetRoomID,
     bool includeFakeMessage = true,
     ZegoInRoomMessageType type = ZegoInRoomMessageType.broadcastMessage,
   }) {
@@ -104,13 +105,12 @@ class ZegoLiveStreamingControllerMessageImpl
               ? private.streamControllerBroadcastList?.stream
               : private._streamControllerBarrageList?.stream) ??
           ZegoUIKit().getInRoomMessageListStream(
-            targetRoomID:
-                ZegoUIKitPrebuiltLiveStreamingController().private.liveID,
+            targetRoomID:targetRoomID,
             type: type,
           );
     }
     return ZegoUIKit().getInRoomMessageListStream(
-      targetRoomID: ZegoUIKitPrebuiltLiveStreamingController().private.liveID,
+      targetRoomID: targetRoomID,
       type: type,
     );
   }
