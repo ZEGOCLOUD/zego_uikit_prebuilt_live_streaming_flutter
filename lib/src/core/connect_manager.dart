@@ -127,9 +127,14 @@ class ZegoLiveStreamingConnectManager {
     /// if camera is in mute mode, same as open state
     final isCameraOpen = user.camera.value || user.cameraMuteMode.value;
 
-    /// if microphone is in mute mode, same as open state
-    final isMicrophoneOpen =
-        user.microphone.value || user.microphoneMuteMode.value;
+    final useMuteMode =
+        !(config?.coHost.stopCoHostingWhenMicCameraOff ?? false);
+    final isMicrophoneOpen = useMuteMode
+        ? (user.microphone.value ||
+
+            /// if mic is in mute mode, same as open state
+            user.microphoneMuteMode.value)
+        : user.microphone.value;
 
     return isCameraOpen || isMicrophoneOpen;
   }
@@ -1206,11 +1211,16 @@ class ZegoLiveStreamingConnectManager {
   }
 
   void onLocalCameraStateChanged() {
-    if (!ZegoUIKit().getLocalUser().camera.value &&
-        (!ZegoUIKit().getLocalUser().microphone.value &&
+    final useMuteMode =
+        !(config?.coHost.stopCoHostingWhenMicCameraOff ?? false);
+    final isMicrophoneOpen = useMuteMode
+        ? (ZegoUIKit().getLocalUser().microphone.value ||
 
             /// if mic is in mute mode, same as open state
-            !ZegoUIKit().getLocalUser().microphoneMuteMode.value)) {
+            ZegoUIKit().getLocalUser().microphoneMuteMode.value)
+        : ZegoUIKit().getLocalUser().microphone.value;
+
+    if (!ZegoUIKit().getLocalUser().camera.value && !isMicrophoneOpen) {
       ZegoLoggerService.logInfo(
         "co-host's camera and microphone are closed, update connect state to idle, "
         'local user:${ZegoUIKit().getLocalUser()} ',
@@ -1223,11 +1233,16 @@ class ZegoLiveStreamingConnectManager {
   }
 
   void onLocalMicrophoneStateChanged() {
-    if (!ZegoUIKit().getLocalUser().camera.value &&
-        (!ZegoUIKit().getLocalUser().microphone.value &&
+    final useMuteMode =
+        !(config?.coHost.stopCoHostingWhenMicCameraOff ?? false);
+    final isMicrophoneOpen = useMuteMode
+        ? (ZegoUIKit().getLocalUser().microphone.value ||
 
             /// if mic is in mute mode, same as open state
-            !ZegoUIKit().getLocalUser().microphoneMuteMode.value)) {
+            ZegoUIKit().getLocalUser().microphoneMuteMode.value)
+        : ZegoUIKit().getLocalUser().microphone.value;
+
+    if (!ZegoUIKit().getLocalUser().camera.value && !isMicrophoneOpen) {
       ZegoLoggerService.logInfo(
         "co-host's camera and microphone are closed, update connect state to idle, "
         'local user:${ZegoUIKit().getLocalUser()} ',
