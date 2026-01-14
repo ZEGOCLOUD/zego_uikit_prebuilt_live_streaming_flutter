@@ -131,6 +131,11 @@ class ZegoUIKitPrebuiltLiveStreamingInnerText {
   /// - Confirm button name: "Settings"
   ZegoLiveStreamingDialogInfo microphonePermissionSettingDialogInfo;
 
+  /// Automatically display a dialog when the room login fails.
+  ///
+  /// If you want to customize the dialog info, you can set this parameter.
+  ZegoLiveStreamingDialogInfo loginFailedDialogInfo;
+
   /// The dialog info for the host when receiving a request from an audience to join co-hosting.
   /// The **default values** are:
   /// - Title: "Can not use Microphone!"
@@ -367,6 +372,7 @@ class ZegoUIKitPrebuiltLiveStreamingInnerText {
     String? userLeave,
     ZegoLiveStreamingDialogInfo? cameraPermissionSettingDialogInfo,
     ZegoLiveStreamingDialogInfo? microphonePermissionSettingDialogInfo,
+    ZegoLiveStreamingDialogInfo? loginFailedDialogInfo,
     ZegoLiveStreamingDialogInfo? receivedCoHostRequestDialogInfo,
     ZegoLiveStreamingDialogInfo? receivedCoHostInvitationDialogInfo,
     ZegoLiveStreamingDialogInfo? endConnectionDialogInfo,
@@ -465,6 +471,12 @@ class ZegoUIKitPrebuiltLiveStreamingInnerText {
                   cancelButtonName: 'Cancel',
                   confirmButtonName: 'Settings',
                 ),
+        loginFailedDialogInfo = loginFailedDialogInfo ??
+            ZegoLiveStreamingDialogInfo(
+              title: 'Login Failed',
+              message: 'Failed to login room.',
+              confirmButtonName: 'Confirm',
+            ),
         receivedCoHostRequestDialogInfo = receivedCoHostRequestDialogInfo ??
             ZegoLiveStreamingDialogInfo(
               title: 'Co-host request',

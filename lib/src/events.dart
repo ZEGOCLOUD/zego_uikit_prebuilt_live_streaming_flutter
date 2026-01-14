@@ -163,6 +163,9 @@ class ZegoLiveStreamingUserEvents {
 class ZegoLiveStreamingRoomEvents {
   void Function(ZegoUIKitRoomState)? onStateChanged;
 
+  /// This callback is triggered when room login failed
+  ZegoLiveStreamingRoomLoginFailedCallback? onLoginFailed;
+
   /// the room Token authentication is about to expire,
   /// it will be sent 30 seconds before the Token expires.
   ///
@@ -173,6 +176,7 @@ class ZegoLiveStreamingRoomEvents {
   ZegoLiveStreamingRoomEvents({
     this.onStateChanged,
     this.onTokenExpired,
+    this.onLoginFailed,
   });
 
   @override
@@ -180,6 +184,7 @@ class ZegoLiveStreamingRoomEvents {
     return '{'
         'onStateChanged:$onStateChanged, '
         'onTokenExpired:$onTokenExpired, '
+        'onLoginFailed:$onLoginFailed, '
         '}';
   }
 }

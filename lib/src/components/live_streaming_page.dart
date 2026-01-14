@@ -4,13 +4,11 @@ import 'dart:core';
 import 'dart:io' show Platform;
 import 'dart:ui';
 
-// Flutter imports:
-import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:floating/floating.dart';
+// Flutter imports:
+import 'package:flutter/material.dart';
 import 'package:zego_uikit/zego_uikit.dart';
-
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
@@ -23,6 +21,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/internal/events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/lifecycle.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/minimization/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/minimization/overlay_machine.dart';
+
 import 'live_page.dart';
 import 'mini_live.dart';
 import 'preview_page.dart';
@@ -48,6 +47,7 @@ class ZegoLiveStreamingPage extends StatefulWidget {
     required this.popUpManager,
     required this.isPrebuiltFromMinimizing,
     required this.isPrebuiltFromHall,
+    required this.onRoomLoginFailed,
     this.token = '',
     this.events,
   });
@@ -89,6 +89,7 @@ class ZegoLiveStreamingPage extends StatefulWidget {
   final bool isPrebuiltFromMinimizing;
 
   final bool isPrebuiltFromHall;
+  final ZegoLiveStreamingLoginFailedEvent? onRoomLoginFailed;
 
   /// @nodoc
   @override
@@ -155,6 +156,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
     ZegoLiveStreamingPageLifeCycle().initFromLive(
       isPrebuiltFromMinimizing: widget.isPrebuiltFromMinimizing,
       isPrebuiltFromHall: widget.isPrebuiltFromHall,
+      onRoomLoginFailed: widget.onRoomLoginFailed,
     );
   }
 
@@ -526,6 +528,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
       defaultLeaveConfirmationAction: defaultLeaveConfirmationAction,
       popUpManager: widget.popUpManager,
       isPrebuiltFromHall: widget.isPrebuiltFromHall,
+      onRoomLoginFailed: widget.onRoomLoginFailed,
     );
   }
 }

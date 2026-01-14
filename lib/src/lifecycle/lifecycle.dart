@@ -4,18 +4,18 @@ import 'dart:async';
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
-
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/core_managers.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/events.defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/swiping/swiping.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/minimization/data.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/minimization/overlay_machine.dart';
+
 import 'defines.dart';
 import 'normal/normal.dart';
 
@@ -63,6 +63,7 @@ class ZegoLiveStreamingPageLifeCycle {
     required bool isPrebuiltFromHall,
     required bool isPrebuiltFromMinimizing,
     required ZegoLiveStreamingPageLifeCycleContextData contextData,
+    required ZegoLiveStreamingLoginFailedEvent? onRoomLoginFailed,
   }) async {
     ZegoLoggerService.logInfo(
       'targetLiveID:$targetLiveID, '
@@ -142,6 +143,7 @@ class ZegoLiveStreamingPageLifeCycle {
       contextData.config,
       contextData.events,
       contextQuery,
+      onRoomLoginFailed,
     );
 
     await ZegoLiveStreamingPageLifeCycle()
@@ -247,6 +249,7 @@ class ZegoLiveStreamingPageLifeCycle {
   bool initFromLive({
     required bool isPrebuiltFromMinimizing,
     required bool isPrebuiltFromHall,
+    required ZegoLiveStreamingLoginFailedEvent? onRoomLoginFailed,
   }) {
     ZegoLoggerService.logInfo(
       'isPrebuiltFromMinimizing:$isPrebuiltFromMinimizing, '
@@ -284,6 +287,7 @@ class ZegoLiveStreamingPageLifeCycle {
         isPrebuiltFromMinimizing: isPrebuiltFromMinimizing,
         isPrebuiltFromHall: isPrebuiltFromHall,
         rtcContextReadyNotifier: rtcContextReadyNotifier,
+        onRoomLoginFailed: onRoomLoginFailed,
       );
     }
 

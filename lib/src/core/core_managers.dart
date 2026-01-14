@@ -3,10 +3,8 @@ import 'dart:async';
 
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
-
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
-
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.defines.dart';
@@ -16,6 +14,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/core/live_duration_manage
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/live_status_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/plugins.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/events.defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/core/core.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/core/service/services.dart';
 
@@ -38,6 +37,7 @@ class ZegoLiveStreamingManagers {
     ZegoUIKitPrebuiltLiveStreamingConfig config,
     ZegoUIKitPrebuiltLiveStreamingEvents? events,
     BuildContext Function()? contextQuery,
+    ZegoLiveStreamingLoginFailedEvent? onRoomLoginFailed,
   ) {
     if (_initialized) {
       ZegoLoggerService.logInfo(
@@ -75,6 +75,7 @@ class ZegoLiveStreamingManagers {
       userName: userName,
       config: config,
       events: events,
+      onRoomLoginFailed: onRoomLoginFailed,
     );
 
     /// plugins.init要先于connectManager.init,connectManager.init有依赖

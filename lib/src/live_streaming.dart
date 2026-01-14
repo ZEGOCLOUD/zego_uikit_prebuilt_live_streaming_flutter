@@ -3,16 +3,17 @@ import 'dart:core';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
+import 'components/components.dart';
 import 'components/live_streaming_page.dart';
 import 'components/utils/pop_up_manager.dart';
 import 'config.dart';
 import 'controller.dart';
 import 'events.dart';
+import 'events.defines.dart';
 import 'internal/reporter.dart';
 import 'lifecycle/defines.dart';
 import 'lifecycle/lifecycle.dart';
@@ -190,6 +191,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
               events: widget.events,
               popUpManager: popUpManager,
             ),
+            onRoomLoginFailed: onRoomLoginFailed,
           ),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.none ||
@@ -223,6 +225,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
             popUpManager: popUpManager,
             isPrebuiltFromMinimizing: isPrebuiltFromMinimizing,
             isPrebuiltFromHall: isPrebuiltFromHall,
+            onRoomLoginFailed: onRoomLoginFailed,
           )
         : ZegoLiveStreamingPage(
             appID: widget.appID,
@@ -236,6 +239,49 @@ class _ZegoUIKitPrebuiltLiveStreamingState
             popUpManager: popUpManager,
             isPrebuiltFromMinimizing: isPrebuiltFromMinimizing,
             isPrebuiltFromHall: isPrebuiltFromHall,
+            onRoomLoginFailed: onRoomLoginFailed,
           );
+  }
+
+  void onRoomLoginFailed(int code, String message) {
+    ZegoLoggerService.logInfo(
+      'room login failed: $code, $message',
+      tag: 'live-streaming',
+      subTag: 'prebuilt, room login failed',
+    );
+
+    final event = ZegoLiveStreamingRoomLoginFailedEvent(
+      errorCode: code,
+      message: message,
+    );
+
+    if (null != widget.events?.room.onLoginFailed) {
+      widget.events?.room.onLoginFailed!.call(
+        event,
+        defaultRoomLoginFailedAction,
+      );
+    } else {
+      defaultRoomLoginFailedAction(event);
+    }
+  }
+
+  Future<bool> defaultRoomLoginFailedAction(
+    ZegoLiveStreamingRoomLoginFailedEvent event,
+  ) async {
+    return showLiveDialog(
+      context: context,
+      rootNavigator: widget.config.rootNavigator,
+      title: widget.config.innerText.loginFailedDialogInfo.title,
+      content: widget.config.innerText.loginFailedDialogInfo.message,
+      rightButtonText:
+          widget.config.innerText.loginFailedDialogInfo.confirmButtonName,
+      rightButtonCallback: () {
+        Navigator.of(
+          context,
+          rootNavigator: widget.config.rootNavigator,
+        ).pop(true);
+        Navigator.of(context).pop();
+      },
+    );
   }
 }

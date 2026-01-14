@@ -3,13 +3,12 @@ import 'dart:async';
 
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
-
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
-
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/events.defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/minimization/overlay_machine.dart';
 
 /// @nodoc
@@ -28,6 +27,7 @@ class ZegoLiveStreamingPlugins {
   ZegoUIKitPrebuiltLiveStreamingEvents? events;
 
   final VoidCallback? onPluginReLogin;
+  ZegoLiveStreamingLoginFailedEvent? onRoomLoginFailed;
 
   List<StreamSubscription<dynamic>?> subscriptions = [];
   ValueNotifier<ZegoSignalingPluginConnectionState> pluginUserStateNotifier =
@@ -50,6 +50,7 @@ class ZegoLiveStreamingPlugins {
     required String userName,
     required ZegoUIKitPrebuiltLiveStreamingConfig config,
     required ZegoUIKitPrebuiltLiveStreamingEvents? events,
+    ZegoLiveStreamingLoginFailedEvent? onRoomLoginFailed,
   }) async {
     if (initialized) {
       ZegoLoggerService.logInfo(
@@ -70,6 +71,7 @@ class ZegoLiveStreamingPlugins {
     this.userName = userName;
     this.config = config;
     this.events = events;
+    this.onRoomLoginFailed = onRoomLoginFailed;
 
     pluginUserStateNotifier.value =
         ZegoUIKit().getSignalingPlugin().getConnectionState();
@@ -199,6 +201,9 @@ class ZegoLiveStreamingPlugins {
 
     return ZegoUIKit().getSignalingPlugin().joinRoom(liveID).then((result) {
       if (result.error != null) {
+        onRoomLoginFailed?.call(-1, result.error.toString());
+        roomHasInitLogin = false;
+
         ZegoLoggerService.logInfo(
           'failed: ${result.error}',
           tag: 'live.streaming.plugin',
@@ -557,14 +562,14 @@ class ZegoLiveStreamingPlugins {
       return false;
     }
 
-    return joinRoom(liveID: liveID).then((result) {
+    return joinRoom(liveID: liveID).then((success) {
       ZegoLoggerService.logInfo(
-        'result:$result',
+        'plugins room joined, join success:$success',
         tag: 'live.streaming.plugin',
         subTag: 'tryReEnterRoom',
       );
 
-      if (!result) {
+      if (!success) {
         return false;
       }
 

@@ -40,6 +40,7 @@ class ZegoLiveStreamingLivePage extends StatefulWidget {
     required this.events,
     required this.defaultEndAction,
     required this.defaultLeaveConfirmationAction,
+    required this.onRoomLoginFailed,
     required this.popUpManager,
     required this.isPrebuiltFromHall,
   });
@@ -59,6 +60,7 @@ class ZegoLiveStreamingLivePage extends StatefulWidget {
   final Future<bool> Function(
     ZegoLiveStreamingLeaveConfirmationEvent event,
   ) defaultLeaveConfirmationAction;
+  final ZegoLiveStreamingLoginFailedEvent? onRoomLoginFailed;
 
   final ZegoLiveStreamingPopUpManager popUpManager;
   final bool isPrebuiltFromHall;

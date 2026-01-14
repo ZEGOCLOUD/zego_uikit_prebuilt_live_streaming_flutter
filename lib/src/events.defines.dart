@@ -4,6 +4,16 @@ import 'package:flutter/cupertino.dart';
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
 
+typedef ZegoLiveStreamingLoginFailedEvent = void Function(
+  int errorCode,
+  String message,
+);
+
+typedef ZegoLiveStreamingRoomLoginFailedCallback = void Function(
+  ZegoLiveStreamingRoomLoginFailedEvent event,
+  Future<void> Function(ZegoLiveStreamingRoomLoginFailedEvent event) defaultAction,
+);
+
 /// The default behavior is to return to the previous page.
 ///
 /// If you override this callback, you must perform the page navigation
@@ -26,6 +36,24 @@ class ZegoLiveStreamingLeaveConfirmationEvent {
   ZegoLiveStreamingLeaveConfirmationEvent({
     required this.context,
   });
+}
+
+class ZegoLiveStreamingRoomLoginFailedEvent {
+  int errorCode;
+  String message;
+
+  ZegoLiveStreamingRoomLoginFailedEvent({
+    required this.errorCode,
+    required this.message,
+  });
+
+  @override
+  String toString() {
+    return 'ZegoLiveStreamingRoomLoginFailedEvent{'
+        'errorCode:$errorCode, '
+        'message:$message, '
+        '}';
+  }
 }
 
 class ZegoLiveStreamingEndEvent {

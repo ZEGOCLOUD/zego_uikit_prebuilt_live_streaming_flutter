@@ -4,17 +4,16 @@ import 'dart:io';
 
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
-
 // Package imports:
 import 'package:permission_handler/permission_handler.dart';
 import 'package:zego_uikit/zego_uikit.dart';
-
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/permissions.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/controller/private/pip/pip_ios.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/core_managers.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/defines.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/events.defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/lifecycle.dart';
 
@@ -22,6 +21,7 @@ class ZegoLiveStreamingPageLifeCycleInitState {
   String liveID = '';
   bool isPrebuiltFromHall = false;
   ZegoLiveStreamingPageLifeCycleContextData? contextData;
+  ZegoLiveStreamingLoginFailedEvent? onRoomLoginFailed;
   BuildContext Function()? contextQuery;
 
   bool get playingStreamInPIPUnderIOS {
@@ -55,12 +55,14 @@ class ZegoLiveStreamingPageLifeCycleInitState {
     required BuildContext Function()? contextQuery,
     required bool isPrebuiltFromMinimizing,
     required bool isPrebuiltFromHall,
+    required ZegoLiveStreamingLoginFailedEvent? onRoomLoginFailed,
     required ValueNotifier<bool> rtcContextReadyNotifier,
   }) async {
     this.liveID = liveID;
     this.contextData = contextData;
     this.contextQuery = contextQuery;
     this.isPrebuiltFromHall = isPrebuiltFromHall;
+    this.onRoomLoginFailed = onRoomLoginFailed;
 
     ZegoLoggerService.logInfo(
       'liveID:$liveID, '
@@ -345,7 +347,7 @@ class ZegoLiveStreamingPageLifeCycleInitState {
     );
 
     if (isPrebuiltFromHall) {
-      onRoomLogin();
+      onRoomLogin(ZegoUIKitRoomLoginResult(ZegoUIKitErrorCode.success, {}));
     } else {
       ZegoUIKit()
           .joinRoom(
@@ -354,12 +356,21 @@ class ZegoLiveStreamingPageLifeCycleInitState {
         markAsLargeRoom: contextData?.config.markAsLargeRoom ?? false,
       )
           .then((result) {
-        onRoomLogin();
+        onRoomLogin(result);
       });
     }
   }
 
-  Future<void> onRoomLogin() async {
+  Future<void> onRoomLogin(ZegoUIKitRoomLoginResult result) async {
+    if (result.errorCode != 0) {
+      onRoomLoginFailed?.call(result.errorCode, result.extendedData.toString());
+      ZegoLoggerService.logError(
+        'failed to login room:${result.errorCode},${result.extendedData}',
+        tag: 'live-streaming',
+        subTag: 'prebuilt',
+      );
+    }
+
     ZegoLoggerService.logInfo(
       'login room done, '
       'room id:$liveID',
