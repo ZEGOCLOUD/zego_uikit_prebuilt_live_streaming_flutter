@@ -82,8 +82,9 @@ class ZegoLiveStreamingPageLifeCycle {
     currentLiveID = targetLiveID;
     currentContextData = contextData;
 
-    rtcContextReadyNotifier.value =
-        isPrebuiltFromMinimizing || isPrebuiltFromHall;
+    if (isPrebuiltFromMinimizing || isPrebuiltFromHall) {
+      rtcContextReadyNotifier.value = true;
+    }
 
     ZegoUIKitPrebuiltLiveStreamingController().private.liveID = targetLiveID;
     ZegoUIKitPrebuiltLiveStreamingController().private.initByPrebuilt(
