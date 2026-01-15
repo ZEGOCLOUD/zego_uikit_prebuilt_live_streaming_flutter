@@ -15,6 +15,13 @@ class ZegoLiveStreamingPageLifeCycleEventData {
     required this.liveID,
     required this.eventType,
   });
+
+  @override
+  String toString() {
+    return '{'
+        'liveID: $liveID, '
+        'eventType: $eventType}';
+  }
 }
 
 class ZegoLiveStreamingPageLifeCycleContextData {
@@ -58,4 +65,17 @@ class ZegoLiveStreamingPageLifeCycleContextData {
     required this.events,
     required this.popUpManager,
   });
+
+  @override
+  String toString() {
+    return '{'
+        'appID: $appID, '
+        'appSign: $appSign, '
+        'token: $token, '
+        'userID: $userID, '
+        'userName: $userName, '
+        'config: $config, '
+        'events: $events, '
+        'popUpManager: $popUpManager}';
+  }
 }

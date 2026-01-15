@@ -36,6 +36,13 @@ class ZegoLiveStreamingLeaveConfirmationEvent {
   ZegoLiveStreamingLeaveConfirmationEvent({
     required this.context,
   });
+
+  @override
+  String toString() {
+    return '{'
+        'context:$context, '
+        '}';
+  }
 }
 
 class ZegoLiveStreamingRoomLoginFailedEvent {
@@ -49,7 +56,7 @@ class ZegoLiveStreamingRoomLoginFailedEvent {
 
   @override
   String toString() {
-    return 'ZegoLiveStreamingRoomLoginFailedEvent{'
+    return '{'
         'errorCode:$errorCode, '
         'message:$message, '
         '}';

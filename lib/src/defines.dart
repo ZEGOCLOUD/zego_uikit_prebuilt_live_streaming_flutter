@@ -150,6 +150,15 @@ class ZegoLiveStreamingDialogInfo {
     this.cancelButtonName = 'Cancel',
     this.confirmButtonName = 'OK',
   });
+
+  @override
+  String toString() {
+    return '{'
+        'title: $title, '
+        'message: $message, '
+        'cancelButtonName: $cancelButtonName, '
+        'confirmButtonName: $confirmButtonName}';
+  }
 }
 
 /// only for audience or co-host, connection state
