@@ -8,6 +8,7 @@ import 'package:zego_uikit/zego_uikit.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/error.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/lifecycle.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/layout/layout.dart';
 
 import 'defines.dart';
@@ -51,9 +52,11 @@ class ZegoUIKitPrebuiltLiveStreamingPKServiceMixer {
     _currentPKHosts.clear();
 
     ZegoLoggerService.logInfo(
-      'init',
+      'live id:$liveID, '
+      'useVideoViewAspectFill:${prebuiltConfig?.audioVideoView.useVideoViewAspectFill}, '
+      'layout:${layout.runtimeType}, ',
       tag: 'live.streaming.pk.mixer',
-      subTag: 'mixer',
+      subTag: 'init',
     );
 
     _init = true;
@@ -62,14 +65,14 @@ class ZegoUIKitPrebuiltLiveStreamingPKServiceMixer {
     _liveID = liveID;
     _prebuiltConfig = prebuiltConfig;
 
-    _mixerStreamID = generateStreamID("", _liveID, ZegoStreamType.mix);
+    updateStreamID();
   }
 
   Future<void> uninit() async {
     ZegoLoggerService.logInfo(
-      'uninit',
+      '',
       tag: 'live.streaming.pk.mixer',
-      subTag: 'mixer',
+      subTag: 'uninit',
     );
 
     await stopTask();
@@ -85,10 +88,34 @@ class ZegoUIKitPrebuiltLiveStreamingPKServiceMixer {
     _prebuiltConfig = null;
 
     ZegoLoggerService.logInfo(
-      'uninit done',
+      'done',
       tag: 'live.streaming.pk.mixer',
-      subTag: 'mixer',
+      subTag: 'uninit',
     );
+  }
+
+  void updateStreamID() {
+    final hostID = ZegoLiveStreamingPageLifeCycle()
+            .currentManagers
+            .hostManager
+            .notifier
+            .value
+            ?.id ??
+        '';
+    if (hostID.isNotEmpty) {
+      _mixerStreamID = generateStreamID(hostID, _liveID, ZegoStreamType.mix);
+      ZegoLoggerService.logInfo(
+        'stream id:$_mixerStreamID, ',
+        tag: 'live.streaming.pk.mixer',
+        subTag: 'update stream id',
+      );
+    } else {
+      ZegoLiveStreamingPageLifeCycle()
+          .currentManagers
+          .hostManager
+          .notifier
+          .addListener(onMixerStreamIDUpdateWhenHostUpdated);
+    }
   }
 
   Future<bool> updateTask(
@@ -97,18 +124,18 @@ class ZegoUIKitPrebuiltLiveStreamingPKServiceMixer {
   }) async {
     if (!_init) {
       ZegoLoggerService.logInfo(
-        'update mixer, but not init',
+        'not init',
         tag: 'live.streaming.pk.mixer',
-        subTag: 'mixer',
+        subTag: 'update mixer',
       );
 
       return false;
     }
     if (_mixerStreamID.isEmpty) {
       ZegoLoggerService.logInfo(
-        'update mixer, but mixer stream id is empty',
+        'mixer stream id is empty',
         tag: 'live.streaming.pk.mixer',
-        subTag: 'mixer',
+        subTag: 'update mixer',
       );
 
       return false;
@@ -128,11 +155,11 @@ class ZegoUIKitPrebuiltLiveStreamingPKServiceMixer {
       }
       if (isSame) {
         ZegoLoggerService.logInfo(
-          'update mixer, but hosts is same, '
+          'hosts is same, '
           'currentHosts:$_currentPKHosts, '
           'newHosts:$pkHosts',
-          tag: 'live-streaming-pk',
-          subTag: 'mixer',
+          tag: 'live.streaming.pk.mixer',
+          subTag: 'update mixer',
         );
         return true;
       }
@@ -143,25 +170,24 @@ class ZegoUIKitPrebuiltLiveStreamingPKServiceMixer {
     _task = _generateTask(pkHosts);
 
     ZegoLoggerService.logInfo(
-      'update mixer, '
       'users:$pkHosts, '
       'mutedHosts:${mutedUsersNotifier.value}, '
       'task:${_task?.toStringX()}',
       tag: 'live.streaming.pk.mixer',
-      subTag: 'mixer',
+      subTag: 'update mixer',
     );
 
     final mixResult = await ZegoUIKit().startMixerTask(_task!);
     ZegoLoggerService.logInfo(
       'update mixer result:${mixResult.toStringX()}',
       tag: 'live.streaming.pk.mixer',
-      subTag: 'mixer',
+      subTag: 'update mixer',
     );
     if (ZegoLiveStreamingErrorCode.success != mixResult.errorCode) {
       ZegoLoggerService.logError(
         'update mixer error: ${mixResult.errorCode}, ${mixResult.extendedData}',
         tag: 'live.streaming.pk.mixer',
-        subTag: 'mixer',
+        subTag: 'update mixer',
       );
 
       return false;
@@ -273,5 +299,15 @@ class ZegoUIKitPrebuiltLiveStreamingPKServiceMixer {
     }
 
     return mixerTask;
+  }
+
+  void onMixerStreamIDUpdateWhenHostUpdated() {
+    ZegoLiveStreamingPageLifeCycle()
+        .currentManagers
+        .hostManager
+        .notifier
+        .removeListener(onMixerStreamIDUpdateWhenHostUpdated);
+
+    updateStreamID();
   }
 }
