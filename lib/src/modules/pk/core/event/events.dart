@@ -806,9 +806,9 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
     // }
   }
 
-  void _onRoomAttributesQueried(
+  Future<void> _onRoomAttributesQueried(
     ZegoSignalingPluginQueryRoomPropertiesResult event,
-  ) {
+  ) async {
     ZegoLoggerService.logInfo(
       'event:$event, ',
       tag: 'live.streaming.pk.events($hashCode)',
@@ -817,13 +817,25 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
     _coreData.updatePropertyHostIDByQuery(event);
 
     if (event.properties.containsKey(roomPropKeyPKUsers)) {
-      _onRoomAttributeUpdatedPKUsers(
-        event.properties[roomPropKeyPKUsers] ?? '',
+      final updatedPKUsers =
+          (jsonDecode(event.properties[roomPropKeyPKUsers] ?? '')
+                      as List<dynamic>? ??
+                  [])
+              .map(
+                (userJson) => ZegoLiveStreamingPKUser.fromJson(userJson),
+              )
+              .toList();
+
+      await _onRoomAttributeUpdatedPKUsers(
+        updatedPKUsers,
 
         /// host也需要更新
         hostCanUpdatePKUsers: true,
       );
+      await waitPKRoomAttributeProcessingFinished(updatedPKUsers);
     }
+
+    roomAttributesInitNotifier.value = true;
   }
 
   void _onRoomMemberLeft(ZegoSignalingPluginRoomMemberLeftEvent event) async {
@@ -873,7 +885,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
     );
   }
 
-  void _onRoomAttributesUpdated(
+  Future<void> _onRoomAttributesUpdated(
     ZegoSignalingPluginRoomPropertiesUpdatedEvent event,
   ) async {
     ZegoLoggerService.logInfo(
@@ -884,17 +896,29 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
     _coreData.updatePropertyHostIDByUpdated(event);
 
     if (event.deleteProperties.containsKey(roomPropKeyPKUsers)) {
-      _onRoomAttributeDeletePKUsers(
+      await _onRoomAttributeDeletePKUsers(
         event.deleteProperties[roomPropKeyPKUsers] ?? '',
       );
     }
 
     if (event.setProperties.containsKey(roomPropKeyPKUsers)) {
-      _onRoomAttributeUpdatedPKUsers(
-        event.setProperties[roomPropKeyPKUsers] ?? '',
+      final updatedPKUsers =
+          (jsonDecode(event.setProperties[roomPropKeyPKUsers] ?? '')
+                      as List<dynamic>? ??
+                  [])
+              .map(
+                (userJson) => ZegoLiveStreamingPKUser.fromJson(userJson),
+              )
+              .toList();
+
+      await _onRoomAttributeUpdatedPKUsers(
+        updatedPKUsers,
         hostCanUpdatePKUsers: false,
       );
+      await waitPKRoomAttributeProcessingFinished(updatedPKUsers);
     }
+
+    roomAttributesInitNotifier.value = true;
   }
 
   Future<void> _onRoomAttributeDeletePKUsers(String property) async {
@@ -922,7 +946,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
       );
       await _mixer.stopPlayStream();
 
-      updatePKUsers([]);
+      await updatePKUsers([]);
       updatePKState(ZegoLiveStreamingPKBattleState.idle);
 
       _coreData.events?.onStateUpdated?.call(
@@ -932,7 +956,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
   }
 
   Future<void> _onRoomAttributeUpdatedPKUsers(
-    String property, {
+    List<ZegoLiveStreamingPKUser> updatedPKUsers, {
     required bool hostCanUpdatePKUsers,
   }) async {
     if (isHost) {
@@ -1013,12 +1037,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
     }
 
     if (hostCanUpdatePKUsers || !isHost) {
-      final updatedPKUsers = (jsonDecode(property) as List<dynamic>)
-          .map(
-            (userJson) => ZegoLiveStreamingPKUser.fromJson(userJson),
-          )
-          .toList();
-      updatePKUsers(updatedPKUsers);
+      await updatePKUsers(updatedPKUsers);
     }
   }
 

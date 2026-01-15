@@ -56,6 +56,12 @@ mixin ZegoUIKitPrebuiltLiveStreamingPKServices {
     ZegoLiveStreamingPKBattleState.idle,
   );
 
+  /// Notifier for PK room attributes initialization completion:
+  /// - Initially false, indicating room attributes are not yet initialized
+  /// - Set to true after room attributes query/update events complete
+  /// - The view layer can use this value to decide whether to show PK-related views
+  final roomAttributesInitNotifier = ValueNotifier<bool>(false);
+
   bool isWaitingLocalResponse = false;
 
   bool get isInPK =>
@@ -109,6 +115,34 @@ mixin ZegoUIKitPrebuiltLiveStreamingPKServices {
   BuildContext? get context =>
       ZegoLiveStreamingPageLifeCycle().contextQuery?.call();
 
+  /// 等待PK处理完成：
+  /// - 如果当前状态为loading，则等待状态变为非loading（inPK或idle）
+  /// - 用于在房间属性到来后，确保后续链路（混流、拉流、状态切换）处理完成
+  Future<void> waitPKRoomAttributeProcessingFinished(
+    List<ZegoLiveStreamingPKUser> updatedPKUsers,
+  ) async {
+    if (isHost) {
+      return;
+    }
+
+    /// 观众等待房间属性处理完毕
+    if (updatedPKUsers.isEmpty &&
+        pkStateNotifier.value == ZegoLiveStreamingPKBattleState.idle) {
+      return;
+    }
+
+    final completer = Completer<void>();
+    void onStateChanged() {
+      if (pkStateNotifier.value != ZegoLiveStreamingPKBattleState.loading) {
+        pkStateNotifier.removeListener(onStateChanged);
+        completer.complete();
+      }
+    }
+
+    pkStateNotifier.addListener(onStateChanged);
+    await completer.future;
+  }
+
   void initServices({
     required String liveID,
     required ZegoUIKitPrebuiltLiveStreamingConfig prebuiltConfig,
@@ -134,6 +168,8 @@ mixin ZegoUIKitPrebuiltLiveStreamingPKServices {
       layout: _coreData.prebuiltConfig?.pkBattle.mixerLayout,
       prebuiltConfig: _prebuiltConfig,
     );
+    // Reset room attribute init flag during initialization
+    roomAttributesInitNotifier.value = false;
     initEvents();
     queryRoomProperties();
     listenPKUserChanged();
@@ -174,6 +210,8 @@ mixin ZegoUIKitPrebuiltLiveStreamingPKServices {
     _coreData.playingHostIDs.clear();
 
     updatePKState(ZegoLiveStreamingPKBattleState.idle);
+    // Reset room attribute init flag to false during uninitialization
+    roomAttributesInitNotifier.value = false;
   }
 
   Future<bool> muteUserAudio({

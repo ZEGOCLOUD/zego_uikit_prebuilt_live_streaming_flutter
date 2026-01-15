@@ -50,9 +50,9 @@ extension PKServiceConnectedUsers on ZegoUIKitPrebuiltLiveStreamingPKServices {
     return distinctPKUsers;
   }
 
-  void updatePKUsers(
+  Future<void> updatePKUsers(
     List<ZegoLiveStreamingPKUser> tempUpdatedPKUsers,
-  ) {
+  ) async {
     var updatedPKUsers = removeDuplicatePKUsers(tempUpdatedPKUsers);
 
     final currentPKUserIDs =
@@ -155,18 +155,15 @@ extension PKServiceConnectedUsers on ZegoUIKitPrebuiltLiveStreamingPKServices {
       return;
     }
 
-    int a = 0;
-    a++;
-
-    // 注意：不能直接简化为 isHost ? await hostOnPKUsersChanged() : await audienceOnPKUsersChanged();
-    // 原因：waitCompleter 和 completeCompleter 提供了同步机制，确保同一时间只有一个 onPKUsersChanged 在执行
-    // 1. waitCompleter('onPKUsersChanged'): 等待上一次 onPKUsersChanged 调用完成（如果存在），然后创建新的 Completer
-    // 2. 执行业务逻辑：根据 isHost 调用对应的处理方法
-    // 3. completeCompleter('onPKUsersChanged'): 标记当前调用完成，允许下一次调用继续执行
-    // 如果直接简化，会失去同步保护，可能导致：
-    // - 并发执行：多次快速调用 onPKUsersChanged 可能同时执行
-    // - 状态竞争：可能同时修改共享状态（如 _coreData.currentPKUsers）
-    // - 资源冲突：可能同时操作音视频资源（如播放流、混流等）
+    /// 注意：不能直接简化为 isHost ? await hostOnPKUsersChanged() : await audienceOnPKUsersChanged();
+    /// 原因：waitCompleter 和 completeCompleter 提供了同步机制，确保同一时间只有一个 onPKUsersChanged 在执行
+    /// 1. waitCompleter('onPKUsersChanged'): 等待上一次 onPKUsersChanged 调用完成（如果存在），然后创建新的 Completer
+    /// 2. 执行业务逻辑：根据 isHost 调用对应的处理方法
+    /// 3. completeCompleter('onPKUsersChanged'): 标记当前调用完成，允许下一次调用继续执行
+    /// 如果直接简化，会失去同步保护，可能导致：
+    /// - 并发执行：多次快速调用 onPKUsersChanged 可能同时执行
+    /// - 状态竞争：可能同时修改共享状态（如 _coreData.currentPKUsers）
+    /// - 资源冲突：可能同时操作音视频资源（如播放流、混流等）
     return waitCompleter('onPKUsersChanged').then((_) async {
       isHost ? await hostOnPKUsersChanged() : await audienceOnPKUsersChanged();
     }).then((_) {

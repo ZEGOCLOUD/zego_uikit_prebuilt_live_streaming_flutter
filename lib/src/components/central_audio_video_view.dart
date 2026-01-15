@@ -96,41 +96,53 @@ class ZegoLiveStreamingCentralAudioVideoViewState
   Widget build(BuildContext context) {
     return ValueListenableBuilder<bool>(
       valueListenable:
-          ZegoUIKitPrebuiltLiveStreamingPK.instance.combineNotifier.state,
-      builder: (context, _isInPK, _) {
-        final isInPK =
-            widget.liveID == ZegoUIKitPrebuiltLiveStreamingPK.instance.liveID &&
-                _isInPK;
-        if (isInPK) {
-          if (ZegoUIKitPrebuiltLiveStreamingPK.instance.pkStateNotifier.value ==
-                  ZegoLiveStreamingPKBattleState.inPK ||
-              ZegoUIKitPrebuiltLiveStreamingPK.instance.pkStateNotifier.value ==
-                  ZegoLiveStreamingPKBattleState.loading) {
-            return pkBattleView(
-              constraints: widget.constraints,
-            );
-          }
+          ZegoUIKitPrebuiltLiveStreamingPK.instance.roomAttributesInitNotifier,
+      builder: (context, isPKRoomAttrInit, _) {
+        if (!isPKRoomAttrInit) {
+          return Container();
         }
 
-        return StreamBuilder<List<ZegoUIKitUser>>(
-          stream: ZegoUIKit().getScreenSharingListStream(
-            targetRoomID: widget.liveID,
-          ),
-          builder: (context, snapshot) {
-            final screenSharingUsers = ZegoUIKit().getScreenSharingList(
-              targetRoomID: widget.liveID,
-            );
-            return ValueListenableBuilder<ZegoUIKitUser?>(
-              valueListenable: ZegoLiveStreamingPageLifeCycle()
-                  .currentManagers
-                  .hostManager
-                  .notifier,
-              builder: (context, host, _) {
-                return audioVideoView(
-                  host,
-                  widget.constraints.maxWidth,
-                  widget.constraints.maxHeight,
-                  screenSharingUsers.isNotEmpty,
+        return ValueListenableBuilder<bool>(
+          valueListenable:
+              ZegoUIKitPrebuiltLiveStreamingPK.instance.combineNotifier.state,
+          builder: (context, _isInPK, _) {
+            final isInPK = widget.liveID ==
+                    ZegoUIKitPrebuiltLiveStreamingPK.instance.liveID &&
+                _isInPK;
+            if (isInPK) {
+              if (ZegoUIKitPrebuiltLiveStreamingPK
+                          .instance.pkStateNotifier.value ==
+                      ZegoLiveStreamingPKBattleState.inPK ||
+                  ZegoUIKitPrebuiltLiveStreamingPK
+                          .instance.pkStateNotifier.value ==
+                      ZegoLiveStreamingPKBattleState.loading) {
+                return pkBattleView(
+                  constraints: widget.constraints,
+                );
+              }
+            }
+
+            return StreamBuilder<List<ZegoUIKitUser>>(
+              stream: ZegoUIKit().getScreenSharingListStream(
+                targetRoomID: widget.liveID,
+              ),
+              builder: (context, snapshot) {
+                final screenSharingUsers = ZegoUIKit().getScreenSharingList(
+                  targetRoomID: widget.liveID,
+                );
+                return ValueListenableBuilder<ZegoUIKitUser?>(
+                  valueListenable: ZegoLiveStreamingPageLifeCycle()
+                      .currentManagers
+                      .hostManager
+                      .notifier,
+                  builder: (context, host, _) {
+                    return audioVideoView(
+                      host,
+                      widget.constraints.maxWidth,
+                      widget.constraints.maxHeight,
+                      screenSharingUsers.isNotEmpty,
+                    );
+                  },
                 );
               },
             );
