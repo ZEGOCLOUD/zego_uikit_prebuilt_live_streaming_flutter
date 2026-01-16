@@ -11,7 +11,8 @@ typedef ZegoLiveStreamingLoginFailedEvent = void Function(
 
 typedef ZegoLiveStreamingRoomLoginFailedCallback = void Function(
   ZegoLiveStreamingRoomLoginFailedEvent event,
-  Future<void> Function(ZegoLiveStreamingRoomLoginFailedEvent event) defaultAction,
+  Future<void> Function(ZegoLiveStreamingRoomLoginFailedEvent event)
+      defaultAction,
 );
 
 /// The default behavior is to return to the previous page.

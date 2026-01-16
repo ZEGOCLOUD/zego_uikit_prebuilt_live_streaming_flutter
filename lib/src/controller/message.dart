@@ -105,7 +105,7 @@ class ZegoLiveStreamingControllerMessageImpl
               ? private.streamControllerBroadcastList?.stream
               : private._streamControllerBarrageList?.stream) ??
           ZegoUIKit().getInRoomMessageListStream(
-            targetRoomID:targetRoomID,
+            targetRoomID: targetRoomID,
             type: type,
           );
     }

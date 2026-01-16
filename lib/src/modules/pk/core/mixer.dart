@@ -3,14 +3,15 @@ import 'dart:async';
 
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
+
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
+
 // Project imports:
+import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/error.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/lifecycle.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/layout/layout.dart';
-
 import 'defines.dart';
 
 class ZegoUIKitPrebuiltLiveStreamingPKServiceMixer {
@@ -244,15 +245,15 @@ class ZegoUIKitPrebuiltLiveStreamingPKServiceMixer {
     List<ZegoLiveStreamingPKUser> pkHosts, {
     PlayerStateUpdateCallback? onPlayerStateUpdated,
   }) async {
-    Map<String, int> userSoundIDs = {};
+    Map<String, int> soundLevelIDMap = {};
     for (int hostIndex = 0; hostIndex < pkHosts.length; ++hostIndex) {
-      userSoundIDs[pkHosts[hostIndex].userInfo.id] = hostIndex;
+      soundLevelIDMap[pkHosts[hostIndex].userInfo.id] = hostIndex;
     }
     await ZegoUIKit().startPlayMixAudioVideo(
       targetRoomID: _liveID,
       mixerStreamID,
       pkHosts.map((e) => e.userInfo).toList(),
-      userSoundIDs,
+      soundLevelIDMap,
       onPlayerStateUpdated: onPlayerStateUpdated,
     );
   }
