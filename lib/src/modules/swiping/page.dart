@@ -446,6 +446,7 @@ class _ZegoLiveStreamingSwipingPageState
       await ZegoUIKit().stopPlayAnotherRoomAudioVideo(
         targetRoomID: host.roomID,
         host.user.id,
+        streamType: host.streamType,
       );
     }
   }
@@ -466,6 +467,7 @@ class _ZegoLiveStreamingSwipingPageState
         host.roomID,
         host.user.id,
         anotherUserName: host.user.name,
+        streamType: host.streamType,
 
         /// Render in other live page
         playOnAnotherRoom: true,
