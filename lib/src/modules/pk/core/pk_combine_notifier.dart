@@ -31,13 +31,17 @@ class ZegoLiveStreamingPKBattleStateCombineNotifier {
 
     _v2StateNotifier = v2StateNotifier;
     _v2StateNotifier?.addListener(_onV2StateChanged);
-    _onV2StateChanged();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _onV2StateChanged();
+    });
 
     _v2RequestReceivedEventInMinimizingNotifier =
         v2RequestReceivedEventInMinimizingNotifier;
     _v2RequestReceivedEventInMinimizingNotifier
         ?.addListener(onV2RequestReceivedEventInMinimizingChanged);
-    onV2RequestReceivedEventInMinimizingChanged();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      onV2RequestReceivedEventInMinimizingChanged();
+    });
   }
 
   void uninit() {

@@ -98,7 +98,15 @@ class ZegoLiveStreamingCentralAudioVideoViewState
       valueListenable:
           ZegoUIKitPrebuiltLiveStreamingPK.instance.roomAttributesInitNotifier,
       builder: (context, isPKRoomAttrInit, _) {
-        if (!isPKRoomAttrInit) {
+        if (!isPKRoomAttrInit &&
+            !ZegoUIKitPrebuiltLiveStreamingPK.instance.isInPK) {
+          ZegoLoggerService.logInfo(
+            'not init pk room attr or not in pk room, '
+            'isPKRoomAttrInit:$isPKRoomAttrInit, '
+            'isInPK:${ZegoUIKitPrebuiltLiveStreamingPK.instance.isInPK}',
+            tag: 'live.streaming.pk.central_audio_video_view',
+            subTag: 'build',
+          );
           return Container();
         }
 
@@ -106,22 +114,34 @@ class ZegoLiveStreamingCentralAudioVideoViewState
           valueListenable:
               ZegoUIKitPrebuiltLiveStreamingPK.instance.combineNotifier.state,
           builder: (context, _isInPK, _) {
-            final isInPK = widget.liveID ==
+            final isInPK = (widget.liveID ==
                     ZegoUIKitPrebuiltLiveStreamingPK.instance.liveID &&
-                _isInPK;
+                _isInPK);
             if (isInPK) {
-              if (ZegoUIKitPrebuiltLiveStreamingPK
-                          .instance.pkStateNotifier.value ==
-                      ZegoLiveStreamingPKBattleState.inPK ||
-                  ZegoUIKitPrebuiltLiveStreamingPK
-                          .instance.pkStateNotifier.value ==
-                      ZegoLiveStreamingPKBattleState.loading) {
+              ZegoLoggerService.logInfo(
+                'in pk room, '
+                'isInPK:$isInPK, '
+                'pkState:${ZegoUIKitPrebuiltLiveStreamingPK.instance.pkStateNotifier.value}',
+                tag: 'live.streaming.pk.central_audio_video_view',
+                subTag: 'build',
+              );
+              final pkState = ZegoUIKitPrebuiltLiveStreamingPK
+                  .instance.pkStateNotifier.value;
+              if (pkState == ZegoLiveStreamingPKBattleState.inPK ||
+                  pkState == ZegoLiveStreamingPKBattleState.loading) {
                 return pkBattleView(
                   constraints: widget.constraints,
                 );
               }
             }
 
+            ZegoLoggerService.logInfo(
+              'not in pk room, '
+              'isInPK:$isInPK, '
+              'pkState:${ZegoUIKitPrebuiltLiveStreamingPK.instance.pkStateNotifier.value}',
+              tag: 'live.streaming.pk.central_audio_video_view',
+              subTag: 'build',
+            );
             return StreamBuilder<List<ZegoUIKitUser>>(
               stream: ZegoUIKit().getScreenSharingListStream(
                 targetRoomID: widget.liveID,

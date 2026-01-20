@@ -45,8 +45,8 @@ class ZegoLiveStreamingPKAudienceViewState
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
       valueListenable: ZegoUIKit().getMixAudioVideoViewNotifier(
-        targetRoomID: widget.liveID,
         widget.mixerStreamID,
+        targetRoomID: widget.liveID,
       ),
       builder: (context, Widget? mixView, _) {
         if (null == mixView) {

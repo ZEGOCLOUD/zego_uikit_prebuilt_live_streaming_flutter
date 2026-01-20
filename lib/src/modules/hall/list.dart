@@ -298,12 +298,46 @@ class _ZegoUIKitLiveStreamingHallListState
           streamMode: widget.hallConfig.streamMode,
         );
 
-        /// ZegoUIKitHallRoomList dispose不退房和清数据
+        if (widget.hallModel != null) {
+          configs.pkBattle.internal ??=
+              ZegoLiveStreamingPKBattleInternalConfig();
+          configs.pkBattle.internal?.checkIfDefaultInPK = (String roomID) {
+            if (roomID == widget.hallModel?.activeRoom?.roomID) {
+              return widget.hallModel?.activeRoom?.streamType ==
+                  ZegoStreamType.mix;
+            }
+            if (roomID ==
+                widget.hallModel?.activeContext?.previous.roomID) {
+              return widget.hallModel?.activeContext?.previous.streamType ==
+                  ZegoStreamType.mix;
+            }
+            if (roomID == widget.hallModel?.activeContext?.next.roomID) {
+              return widget.hallModel?.activeContext?.next.streamType ==
+                  ZegoStreamType.mix;
+            }
+            return false;
+          };
+          configs.pkBattle.internal?.getDefaultHost = (String roomID) {
+            if (roomID == widget.hallModel?.activeRoom?.roomID) {
+              return widget.hallModel?.activeRoom?.user;
+            }
+            if (roomID ==
+                widget.hallModel?.activeContext?.previous.roomID) {
+              return widget.hallModel?.activeContext?.previous.user;
+            }
+            if (roomID == widget.hallModel?.activeContext?.next.roomID) {
+              return widget.hallModel?.activeContext?.next.user;
+            }
+            return null;
+          };
+        }
+
+        /// ZegoUIKitHallRoomList dispose does not leave the room or clear data
         ///
-        /// 在ZegoLiveStreamingSwipingLifeCycle中会处理
-        /// clearData 和 switch room
+        /// Will be handled in ZegoLiveStreamingSwipingLifeCycle
+        /// clearData and switch room
         ///
-        /// 在ZegoLiveStreamingControllerHallPrivateImpl会重置状态
+        /// The state will be reset in ZegoLiveStreamingControllerHallPrivateImpl
         controller.private.private.uninitOnDispose = false;
         Navigator.pushReplacement(
           context,

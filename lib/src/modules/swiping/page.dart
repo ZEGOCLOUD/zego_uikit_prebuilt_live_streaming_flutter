@@ -131,6 +131,33 @@ class _ZegoLiveStreamingSwipingPageState
   void initState() {
     super.initState();
 
+    widget.config.pkBattle.internal ??= ZegoLiveStreamingPKBattleInternalConfig();
+    widget.config.pkBattle.internal?.checkIfDefaultInPK = (String roomID) {
+      if (roomID == currentHost?.roomID) {
+        return currentHost?.streamType == ZegoStreamType.mix;
+      }
+      if (roomID == previousHost?.roomID) {
+        return previousHost?.streamType == ZegoStreamType.mix;
+      }
+      if (roomID == nextHost?.roomID) {
+        return nextHost?.streamType == ZegoStreamType.mix;
+      }
+      return false;
+    };
+
+    widget.config.pkBattle.internal?.getDefaultHost = (String roomID) {
+      if (roomID == currentHost?.roomID) {
+        return currentHost?.user;
+      }
+      if (roomID == previousHost?.roomID) {
+        return previousHost?.user;
+      }
+      if (roomID == nextHost?.roomID) {
+        return nextHost?.user;
+      }
+      return null;
+    };
+
     ZegoLoggerService.logInfo(
       'initState, _canScrollNotifier.value:${_canScrollNotifier.value}, ',
       tag: 'live.streaming.swiping.page',

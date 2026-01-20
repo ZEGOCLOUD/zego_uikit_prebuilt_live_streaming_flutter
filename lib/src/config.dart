@@ -1238,6 +1238,9 @@ class ZegoLiveStreamingPKBattleConfig {
 
   ZegoLiveStreamingDialogInfo? hostResumePKConfirmDialogInfo;
 
+  /// internal config, should not be set by user
+  ZegoLiveStreamingPKBattleInternalConfig? internal;
+
   ZegoLiveStreamingPKBattleConfig({
     this.userReconnectingSecond = 5,
     this.userDisconnectedSecond = 90,
@@ -1278,6 +1281,33 @@ class ZegoLiveStreamingPKBattleConfig {
         'bottomBuilder:${bottomBuilder != null}, '
         '}';
   }
+}
+
+class ZegoLiveStreamingPKBattleInternalConfig {
+  /// Whether the live streaming is in PK mode when entering the room.
+  ///
+  /// If the value is true, the PK view will be displayed immediately when entering the room.
+  /// If the value is false, the PK view will be displayed after the room attributes are synchronized.
+  bool? isDefaultInPK;
+
+  /// Whether the live streaming is in PK mode when entering the room.
+  ///
+  /// If the value is true, the PK view will be displayed immediately when entering the room.
+  /// If the value is false, the PK view will be displayed after the room attributes are synchronized.
+  bool Function(String roomID)? checkIfDefaultInPK;
+
+  /// The default host of the PK battle.
+  ZegoUIKitUser? defaultHost;
+
+  /// The default host of the PK battle.
+  ZegoUIKitUser? Function(String roomID)? getDefaultHost;
+
+  ZegoLiveStreamingPKBattleInternalConfig({
+    this.isDefaultInPK,
+    this.checkIfDefaultInPK,
+    this.defaultHost,
+    this.getDefaultHost,
+  });
 }
 
 /// Used to configure the parameters related to the preview of the live streaming.

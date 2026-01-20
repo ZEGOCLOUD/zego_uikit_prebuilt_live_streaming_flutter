@@ -54,12 +54,6 @@ class ZegoLiveStreamingHostManager {
       return;
     }
 
-    ZegoLoggerService.logInfo(
-      '',
-      tag: 'live.streaming.host-mgr',
-      subTag: 'init',
-    );
-
     _initialized = true;
 
     this.liveID = liveID;
@@ -67,6 +61,20 @@ class ZegoLiveStreamingHostManager {
 
     configIsHost = ZegoLiveStreamingRole.host ==
         (config?.role ?? ZegoLiveStreamingRole.audience);
+
+    final defaultHost = config?.pkBattle.internal?.defaultHost ??
+        config?.pkBattle.internal?.getDefaultHost?.call(liveID);
+    if (defaultHost != null && defaultHost.id.isNotEmpty) {
+      notifier.value = defaultHost;
+    }
+
+    ZegoLoggerService.logInfo(
+      'liveID: $liveID, config: $config,'
+      'configIsHost: $configIsHost, '
+      'defaultHost: $defaultHost, ',
+      tag: 'live.streaming.host-mgr',
+      subTag: 'init',
+    );
 
     registerRoomEvents(liveID);
   }

@@ -186,11 +186,25 @@ mixin ZegoUIKitPrebuiltLiveStreamingPKServices {
     _coreData = coreData;
     _serviceInitialized = true;
 
+    final isDefaultInPK = (prebuiltConfig.pkBattle.internal?.isDefaultInPK ??
+            false) ||
+        (prebuiltConfig.pkBattle.internal?.checkIfDefaultInPK?.call(liveID) ??
+            false);
+    ZegoLoggerService.logInfo(
+      'isDefaultInPK: $isDefaultInPK',
+      tag: 'live.streaming.pk.services',
+      subTag: 'init',
+    );
+    if (isDefaultInPK) {
+      updatePKState(ZegoLiveStreamingPKBattleState.inPK);
+    }
+
     _mixer.init(
       liveID: liveID,
       layout: _coreData.prebuiltConfig?.pkBattle.mixerLayout,
       prebuiltConfig: _prebuiltConfig,
     );
+
     // Reset room attribute init flag during initialization
     roomAttributesInitNotifier.value = false;
     initEvents();
