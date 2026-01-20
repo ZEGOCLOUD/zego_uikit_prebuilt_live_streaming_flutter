@@ -3,15 +3,14 @@ import 'dart:async';
 
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
-
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
-
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/error.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/lifecycle.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/layout/layout.dart';
+
 import 'defines.dart';
 
 class ZegoUIKitPrebuiltLiveStreamingPKServiceMixer {
@@ -252,15 +251,22 @@ class ZegoUIKitPrebuiltLiveStreamingPKServiceMixer {
     await ZegoUIKit().startPlayMixAudioVideo(
       targetRoomID: _liveID,
       mixerStreamID,
-      pkHosts.map((e) => e.userInfo).toList(),
-      soundLevelIDMap,
+      users: pkHosts.map((e) => e.userInfo).toList(),
+      userSoundIDs: soundLevelIDMap,
       onPlayerStateUpdated: onPlayerStateUpdated,
+    );
+    await ZegoUIKit().muteMixStreamAudio(
+      mixerStreamID,
+      false,
+      targetRoomID: _liveID,
     );
   }
 
   Future<void> stopPlayStream() async {
-    await ZegoUIKit()
-        .stopPlayMixAudioVideo(targetRoomID: _liveID, mixerStreamID);
+    await ZegoUIKit().stopPlayMixAudioVideo(
+      targetRoomID: _liveID,
+      mixerStreamID,
+    );
   }
 
   ZegoUIKitMixerTask _generateTask(

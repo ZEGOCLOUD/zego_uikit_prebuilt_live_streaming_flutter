@@ -129,18 +129,40 @@ mixin ZegoUIKitPrebuiltLiveStreamingPKServices {
     /// 观众等待房间属性处理完毕
     if (updatedPKUsers.isEmpty &&
         pkStateNotifier.value == ZegoLiveStreamingPKBattleState.idle) {
+      ZegoLoggerService.logInfo(
+        'updatedPKUsers is empty or pkStateNotifier.value is idle, no need to wait, '
+        'updatedPKUsers: $updatedPKUsers, '
+        'pkStateNotifier.value: ${pkStateNotifier.value}, ',
+        tag: 'live.streaming.pk.services',
+        subTag: 'waitPKRoomAttributeProcessingFinished(liveID:$liveID)',
+      );
       return;
     }
 
     final completer = Completer<void>();
     void onStateChanged() {
+      ZegoLoggerService.logInfo(
+        'pkStateNotifier.value changed: ${pkStateNotifier.value}',
+        tag: 'live.streaming.pk.services',
+        subTag: 'waitPKRoomAttributeProcessingFinished(liveID:$liveID)',
+      );
       if (pkStateNotifier.value != ZegoLiveStreamingPKBattleState.loading) {
+        ZegoLoggerService.logInfo(
+          'pkStateNotifier.value is non-loading, complete the completer',
+          tag: 'live.streaming.pk.services',
+          subTag: 'waitPKRoomAttributeProcessingFinished(liveID:$liveID)',
+        );
         pkStateNotifier.removeListener(onStateChanged);
         completer.complete();
       }
     }
 
     pkStateNotifier.addListener(onStateChanged);
+    ZegoLoggerService.logInfo(
+      'wait pkStateNotifier.value to be non-idle, current value: ${pkStateNotifier.value}',
+      tag: 'live.streaming.pk.services',
+      subTag: 'waitPKRoomAttributeProcessingFinished(liveID:$liveID)',
+    );
     await completer.future;
   }
 

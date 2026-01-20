@@ -394,7 +394,7 @@ extension PKServiceConnectedUsers on ZegoUIKitPrebuiltLiveStreamingPKServices {
     ZegoLoggerService.logInfo(
       'pk users:${_coreData.currentPKUsers.value}',
       tag: 'live.streaming.pk.services.users',
-      subTag: 'audienceOnPKUsersChanged',
+      subTag: 'audienceOnPKUsersChanged(liveID:$_liveID)',
     );
 
     final onlyLocalHostInPK = _coreData.currentPKUsers.value.length == 1 &&
@@ -410,7 +410,7 @@ extension PKServiceConnectedUsers on ZegoUIKitPrebuiltLiveStreamingPKServices {
         'pk users is empty or only local room host, not in pk, '
         'onlyLocalHostInPK:$onlyLocalHostInPK, ',
         tag: 'live.streaming.pk.services.users',
-        subTag: 'audienceOnPKUsersChanged',
+        subTag: 'audienceOnPKUsersChanged(liveID:$_liveID)',
       );
       return;
     }
@@ -420,6 +420,11 @@ extension PKServiceConnectedUsers on ZegoUIKitPrebuiltLiveStreamingPKServices {
         .currentManagers
         .connectManager
         .isInvitedToJoinCoHostDlgVisible) {
+      ZegoLoggerService.logInfo(
+        'hide invite join co-host dialog',
+        tag: 'live.streaming.pk.services.users',
+        subTag: 'audienceOnPKUsersChanged(liveID:$_liveID)',
+      );
       ZegoLiveStreamingPageLifeCycle()
           .currentManagers
           .connectManager
@@ -436,6 +441,11 @@ extension PKServiceConnectedUsers on ZegoUIKitPrebuiltLiveStreamingPKServices {
         .currentManagers
         .connectManager
         .isEndCoHostDialogVisible) {
+      ZegoLoggerService.logInfo(
+        'hide co-host end request dialog',
+        tag: 'live.streaming.pk.services.users',
+        subTag: 'audienceOnPKUsersChanged(liveID:$_liveID)',
+      );
       ZegoLiveStreamingPageLifeCycle()
           .currentManagers
           .connectManager
@@ -447,52 +457,58 @@ extension PKServiceConnectedUsers on ZegoUIKitPrebuiltLiveStreamingPKServices {
       ).pop();
     }
 
-    /// cancel audience's co-host request
-    if (ZegoLiveStreamingAudienceConnectState.connecting ==
-        ZegoLiveStreamingPageLifeCycle()
-            .currentManagers
-            .connectManager
-            .audienceLocalConnectStateNotifier
-            .value) {
-      ZegoLiveStreamingPageLifeCycle()
-          .currentManagers
-          .connectManager
-          .updateAudienceConnectState(
-            ZegoLiveStreamingAudienceConnectState.idle,
-          );
-      ZegoUIKit().getSignalingPlugin().cancelInvitation(
-        invitees: [
-          ZegoLiveStreamingPageLifeCycle()
-                  .currentManagers
-                  .hostManager
-                  .notifier
-                  .value
-                  ?.id ??
-              _coreData.propertyHostID
-        ],
-        data: '',
-      );
-    } else if (ZegoLiveStreamingAudienceConnectState.connected ==
-        ZegoLiveStreamingPageLifeCycle()
-            .currentManagers
-            .connectManager
-            .audienceLocalConnectStateNotifier
-            .value) {
-      ZegoLiveStreamingPageLifeCycle()
-          .currentManagers
-          .connectManager
-          .updateAudienceConnectState(
-            ZegoLiveStreamingAudienceConnectState.idle,
-          );
+    ZegoLoggerService.logInfo(
+      'audienceLocalConnectStateNotifier.value:${ZegoLiveStreamingPageLifeCycle().currentManagers.connectManager.audienceLocalConnectStateNotifier.value}',
+      tag: 'live.streaming.pk.services.users',
+      subTag: 'audienceOnPKUsersChanged(liveID:$_liveID)',
+    );
 
-      final dialogInfo = _coreData.innerText!.coHostEndCauseByHostStartPK;
-      showLiveDialog(
-        context: context,
-        rootNavigator: _coreData.prebuiltConfig?.rootNavigator ?? false,
-        title: dialogInfo.title,
-        content: dialogInfo.message,
-        rightButtonText: dialogInfo.confirmButtonName,
-      );
+    switch (ZegoLiveStreamingPageLifeCycle()
+        .currentManagers
+        .connectManager
+        .audienceLocalConnectStateNotifier
+        .value) {
+      case ZegoLiveStreamingAudienceConnectState.connecting:
+
+        /// cancel audience's co-host request
+        ZegoLiveStreamingPageLifeCycle()
+            .currentManagers
+            .connectManager
+            .updateAudienceConnectState(
+              ZegoLiveStreamingAudienceConnectState.idle,
+            );
+        ZegoUIKit().getSignalingPlugin().cancelInvitation(
+          invitees: [
+            ZegoLiveStreamingPageLifeCycle()
+                    .currentManagers
+                    .hostManager
+                    .notifier
+                    .value
+                    ?.id ??
+                _coreData.propertyHostID
+          ],
+          data: '',
+        );
+        break;
+      case ZegoLiveStreamingAudienceConnectState.connected:
+        ZegoLiveStreamingPageLifeCycle()
+            .currentManagers
+            .connectManager
+            .updateAudienceConnectState(
+              ZegoLiveStreamingAudienceConnectState.idle,
+            );
+
+        final dialogInfo = _coreData.innerText!.coHostEndCauseByHostStartPK;
+        showLiveDialog(
+          context: context,
+          rootNavigator: _coreData.prebuiltConfig?.rootNavigator ?? false,
+          title: dialogInfo.title,
+          content: dialogInfo.message,
+          rightButtonText: dialogInfo.confirmButtonName,
+        );
+        break;
+      case ZegoLiveStreamingAudienceConnectState.idle:
+        break;
     }
 
     /// pk process
@@ -502,6 +518,11 @@ extension PKServiceConnectedUsers on ZegoUIKitPrebuiltLiveStreamingPKServices {
         ZegoLiveStreamingReporter.eventKeyCallID: _coreData.currentRequestID,
         ZegoLiveStreamingReporter.eventKeyStreamID: _mixer.mixerStreamID,
       },
+    );
+    ZegoLoggerService.logInfo(
+      'start play pk stream, pk users:${_coreData.currentPKUsers.value}',
+      tag: 'live.streaming.pk.services.users',
+      subTag: 'audienceOnPKUsersChanged(liveID:$_liveID)',
     );
     await _mixer.startPlayStream(
       List.from(_coreData.currentPKUsers.value),
@@ -522,11 +543,22 @@ extension PKServiceConnectedUsers on ZegoUIKitPrebuiltLiveStreamingPKServices {
           );
         }
       },
-    );
+    ).then((_) {
+      ZegoLoggerService.logInfo(
+        'start play pk stream finished, pk users:${_coreData.currentPKUsers.value}',
+        tag: 'live.streaming.pk.services.users',
+        subTag: 'audienceOnPKUsersChanged(liveID:$_liveID)',
+      );
+    });
 
     final mixAudioVideoLoaded = ZegoUIKit().getMixAudioVideoLoadedNotifier(
       targetRoomID: _liveID,
       _mixer.mixerStreamID,
+    );
+    ZegoLoggerService.logInfo(
+      'wait mixAudioVideoLoaded to be true, current value: ${mixAudioVideoLoaded.value}',
+      tag: 'live.streaming.pk.services.users',
+      subTag: 'audienceOnPKUsersChanged(liveID:$_liveID)',
     );
     if (mixAudioVideoLoaded.value) {
       /// load done

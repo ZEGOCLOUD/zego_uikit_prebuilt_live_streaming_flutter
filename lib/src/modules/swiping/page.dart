@@ -436,18 +436,34 @@ class _ZegoLiveStreamingSwipingPageState
   Future<void> _muteHost(ZegoLiveStreamingSwipingHost host) async {
     if (streamMode == ZegoLiveStreamingStreamMode.preloaded) {
       /// use mute/unmute
-      await ZegoUIKit().muteUserAudioVideo(
-        host.user.id,
-        true, // mute
-        targetRoomID: host.roomID,
-      );
+      /// mute audio & video
+      if (ZegoStreamType.mix == host.streamType) {
+        await ZegoUIKit().muteMixStreamAudioVideo(
+          host.streamID,
+          true,
+          targetRoomID: host.roomID,
+        );
+      } else {
+        await ZegoUIKit().muteUserAudioVideo(
+          host.user.id,
+          true,
+          targetRoomID: host.roomID,
+        );
+      }
     } else {
-      /// stop playing stream to avoid extra costs
-      await ZegoUIKit().stopPlayAnotherRoomAudioVideo(
-        targetRoomID: host.roomID,
-        host.user.id,
-        streamType: host.streamType,
-      );
+      if (ZegoStreamType.mix == host.streamType) {
+        await ZegoUIKit().stopPlayMixAudioVideo(
+          host.streamID,
+          targetRoomID: host.roomID,
+        );
+      } else {
+        /// stop playing stream to avoid extra costs
+        await ZegoUIKit().stopPlayAnotherRoomAudioVideo(
+          targetRoomID: host.roomID,
+          host.user.id,
+          streamType: host.streamType,
+        );
+      }
     }
   }
 
@@ -455,28 +471,50 @@ class _ZegoLiveStreamingSwipingPageState
     if (streamMode == ZegoLiveStreamingStreamMode.preloaded) {
       /// only enable video;
       /// audio should only be enabled when the page is actually switched to onPageChanged.
-      await ZegoUIKit().muteUserVideo(
-        host.user.id,
-        false, // unmute
-        targetRoomID: host.roomID,
-      );
+      if (ZegoStreamType.mix == host.streamType) {
+        await ZegoUIKit().muteMixStreamVideo(
+          host.streamID,
+          false,
+          targetRoomID: host.roomID,
+        );
+      } else {
+        await ZegoUIKit().muteUserVideo(
+          host.user.id,
+          false,
+          targetRoomID: host.roomID,
+        );
+      }
     } else {
-      /// start playing stream
-      await ZegoUIKit().startPlayAnotherRoomAudioVideo(
-        targetRoomID: host.roomID,
-        host.roomID,
-        host.user.id,
-        anotherUserName: host.user.name,
-        streamType: host.streamType,
+      if (ZegoStreamType.mix == host.streamType) {
+        await ZegoUIKit().startPlayMixAudioVideo(
+          host.streamID,
+          targetRoomID: host.roomID,
+        );
 
-        /// Render in other live page
-        playOnAnotherRoom: true,
-      );
-      await ZegoUIKit().muteUserAudio(
-        host.user.id,
-        true,
-        targetRoomID: host.roomID,
-      );
+        /// mute audio; audio should only be enabled when the page is actually switched
+        await ZegoUIKit().muteMixStreamAudio(
+          host.streamID,
+          true,
+          targetRoomID: host.roomID,
+        );
+      } else {
+        /// start playing stream
+        await ZegoUIKit().startPlayAnotherRoomAudioVideo(
+          targetRoomID: host.roomID,
+          host.roomID,
+          host.user.id,
+          anotherUserName: host.user.name,
+          streamType: host.streamType,
+
+          /// Render in other live page
+          playOnAnotherRoom: true,
+        );
+        await ZegoUIKit().muteUserAudio(
+          host.user.id,
+          true,
+          targetRoomID: host.roomID,
+        );
+      }
     }
   }
 
