@@ -1,3 +1,11 @@
+## 3.15.6
+
+- Update dependency
+
+- Bugs
+  - Attempted to fix the occasionally occurring issue of failed room login 
+
+
 ## 3.15.5
 
 - Fixed the issue where frequent stream mixing updates during PK caused failures
