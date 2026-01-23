@@ -195,7 +195,13 @@ class ZegoLiveStreamingPlugins {
       subTag: 'joinRoom',
     );
 
-    return ZegoUIKit().getSignalingPlugin().joinRoom(roomID).then((result) {
+    return ZegoUIKit()
+        .getSignalingPlugin()
+        .joinRoom(
+          roomID,
+          force: true,
+        )
+        .then((result) {
       if (result.error != null) {
         onRoomLoginFailed?.call(-1, result.error.toString());
 
