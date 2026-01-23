@@ -482,7 +482,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
         'background:${background != null}, '
         'showBackgroundTips:$showBackgroundTips, '
         'advanceConfigs:$advanceConfigs, '
-        'audienceAudioVideoResourceMode:${audienceAudioVideoResourceMode != null}, '
+        'audienceAudioVideoResourceMode:$audienceAudioVideoResourceMode, '
         'showToast:$showToast, '
         '}';
   }
