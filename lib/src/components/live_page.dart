@@ -207,7 +207,7 @@ class _ZegoLiveStreamingLivePageState extends State<ZegoLiveStreamingLivePage>
   }
 
   Future<void> onRoomLogin(ZegoRoomLoginResult result) async {
-    if (result.errorCode != 0) {
+    if (result.errorCode != ZegoUIKitErrorCode.success) {
       widget.onRoomLoginFailed
           ?.call(result.errorCode, result.extendedData.toString());
       ZegoLoggerService.logError(
