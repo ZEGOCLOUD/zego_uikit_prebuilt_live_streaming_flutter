@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -106,6 +107,10 @@ class ZegoLiveStreamingPKAudienceViewState
                       targetRoomID: widget.liveID,
                       host.userInfo.id,
                     );
+                    if (updatedUser.name.isEmpty) {
+                      updatedUser.name = host.userInfo.name;
+                    }
+
                     return Stack(
                       children: [
                         (widget.backgroundBuilder ?? defaultPKBackgroundBuilder)
@@ -165,10 +170,14 @@ class ZegoLiveStreamingPKAudienceViewState
                   mixerStreamID: widget.mixerStreamID,
                 ),
                 builder: (context, _, __) {
-                  final updatedUser = ZegoUIKit().getUserInMixerStream(
+                  var updatedUser = ZegoUIKit().getUserInMixerStream(
                     targetRoomID: widget.liveID,
                     host.userInfo.id,
                   );
+                  if (updatedUser.name.isEmpty) {
+                    updatedUser.name = host.userInfo.name;
+                  }
+
                   return widget.foregroundBuilder?.call(
                         context,
                         rect.size,
@@ -188,6 +197,10 @@ class ZegoLiveStreamingPKAudienceViewState
                     targetRoomID: widget.liveID,
                     host.userInfo.id,
                   );
+                  if (updatedUser.name.isEmpty) {
+                    updatedUser.name = host.userInfo.name;
+                  }
+
                   return isHeartbeatBroken
                       ? Center(
                           child: widget.config.pkBattle.hostReconnectingBuilder
@@ -196,7 +209,9 @@ class ZegoLiveStreamingPKAudienceViewState
                                 updatedUser,
                                 {},
                               ) ??
-                              const CircularProgressIndicator(),
+                              ZegoLoadingIndicator(
+                                text: kDebugMode ? "PKAudienceView" : "",
+                              ),
                         )
                       : Container(color: Colors.transparent);
                 },

@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -176,7 +177,9 @@ class _ZegoUIKitLiveStreamingHallListState
                     if (!isRoomLogout) {
                       /// wait previous room logout
                       return widget.hallStyle.loadingBuilder?.call(context) ??
-                          const CircularProgressIndicator();
+                          ZegoLoadingIndicator(
+                            text: kDebugMode ? "HallList-RoomLogout" : "",
+                          );
                     }
 
                     return listWidget();
@@ -263,7 +266,9 @@ class _ZegoUIKitLiveStreamingHallListState
                       avatarSize: Size(30.zR, 30.zR),
                     ),
                   ),
-                  const CircularProgressIndicator()
+                  ZegoLoadingIndicator(
+                    text: kDebugMode ? "HallList" : "",
+                  ),
                 ],
               );
       },
@@ -306,8 +311,7 @@ class _ZegoUIKitLiveStreamingHallListState
               return widget.hallModel?.activeRoom?.streamType ==
                   ZegoStreamType.mix;
             }
-            if (roomID ==
-                widget.hallModel?.activeContext?.previous.roomID) {
+            if (roomID == widget.hallModel?.activeContext?.previous.roomID) {
               return widget.hallModel?.activeContext?.previous.streamType ==
                   ZegoStreamType.mix;
             }
@@ -321,8 +325,7 @@ class _ZegoUIKitLiveStreamingHallListState
             if (roomID == widget.hallModel?.activeRoom?.roomID) {
               return widget.hallModel?.activeRoom?.user;
             }
-            if (roomID ==
-                widget.hallModel?.activeContext?.previous.roomID) {
+            if (roomID == widget.hallModel?.activeContext?.previous.roomID) {
               return widget.hallModel?.activeContext?.previous.user;
             }
             if (roomID == widget.hallModel?.activeContext?.next.roomID) {

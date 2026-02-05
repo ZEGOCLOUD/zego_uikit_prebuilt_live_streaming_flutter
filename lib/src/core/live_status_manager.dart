@@ -17,7 +17,11 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/lifecycle.dart'
 
 /// @nodoc
 class ZegoLiveStreamingStatusManager {
-  String liveID = '';
+  ZegoLiveStreamingStatusManager({
+    required this.liveID,
+  });
+
+  final String liveID;
   ZegoUIKitPrebuiltLiveStreamingConfig? config;
   ZegoUIKitPrebuiltLiveStreamingEvents? events;
 
@@ -31,7 +35,7 @@ class ZegoLiveStreamingStatusManager {
     required bool isPrebuiltFromHall,
   }) async {
     final needStop = !ZegoLiveStreamingPageLifeCycle()
-            .currentManagers
+            .manager(liveID)
             .hostManager
             .isLocalHost &&
         notifier.value != LiveStatus.living;
@@ -54,7 +58,6 @@ class ZegoLiveStreamingStatusManager {
   }
 
   Future<void> init({
-    required String liveID,
     ZegoUIKitPrebuiltLiveStreamingConfig? config,
     ZegoUIKitPrebuiltLiveStreamingEvents? events,
   }) async {
@@ -70,7 +73,6 @@ class ZegoLiveStreamingStatusManager {
 
     _initialized = true;
 
-    this.liveID = liveID;
     this.config = config;
     this.events = events;
 
@@ -86,7 +88,7 @@ class ZegoLiveStreamingStatusManager {
     registerRoomEvents(liveID);
 
     if (ZegoLiveStreamingPageLifeCycle()
-            .currentManagers
+            .manager(liveID)
             .hostManager
             .isLocalHost &&
         (config?.preview.showPreviewForHost ?? true)) {
@@ -123,7 +125,7 @@ class ZegoLiveStreamingStatusManager {
     notifier.removeListener(onLiveStatusUpdated);
 
     if (ZegoLiveStreamingPageLifeCycle()
-        .currentManagers
+        .manager(liveID)
         .hostManager
         .isLocalHost) {
       ZegoLoggerService.logInfo(
@@ -142,7 +144,7 @@ class ZegoLiveStreamingStatusManager {
       );
     }
 
-    liveID = '';
+    // liveID = '';
   }
 
   void registerRoomEvents(String liveID) {
@@ -169,23 +171,20 @@ class ZegoLiveStreamingStatusManager {
   }
 
   void onRoomSwitched({
-    required String liveID,
     ZegoUIKitPrebuiltLiveStreamingConfig? config,
     ZegoUIKitPrebuiltLiveStreamingEvents? events,
   }) {
     ZegoLoggerService.logInfo(
-      'from ${this.liveID} to $liveID, ',
+      'from $liveID to $liveID, ',
       tag: 'live.streaming.live-status-mgr',
       subTag: 'onRoomSwitched',
     );
 
-    unregisterRoomEvents(this.liveID);
+    unregisterRoomEvents(liveID);
 
     notifier.value = LiveStatus.notStart;
 
-    this.liveID = liveID;
-
-    registerRoomEvents(this.liveID);
+    registerRoomEvents(liveID);
   }
 
   void onRoomStateUpdated() {
@@ -194,7 +193,7 @@ class ZegoLiveStreamingStatusManager {
     }
 
     if (ZegoLiveStreamingPageLifeCycle()
-        .currentManagers
+        .manager(liveID)
         .hostManager
         .isLocalHost) {
       ZegoLoggerService.logInfo(

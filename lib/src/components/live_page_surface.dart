@@ -119,7 +119,6 @@ class _ZegoLiveStreamingLivePageSurfaceState
 
   Widget topBar() {
     final isCoHostEnabled = (ZegoLiveStreamingPageLifeCycle()
-            .currentManagers
             .plugins
             .isEnabled) &&
         widget.config.bottomMenuBar.audienceButtons

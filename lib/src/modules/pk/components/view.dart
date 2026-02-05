@@ -10,6 +10,7 @@ import 'package:zego_uikit/zego_uikit.dart';
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/host_manager.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/lifecycle.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/core/core.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/core/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/core/service/defines.dart';
@@ -54,12 +55,17 @@ class _ZegoLiveStreamingPKV2ViewState extends State<ZegoLiveStreamingPKV2View> {
     return ConstrainedBox(
       constraints: widget.constraints,
       child: ValueListenableBuilder<List<ZegoLiveStreamingPKUser>>(
-        valueListenable:
-            ZegoUIKitPrebuiltLiveStreamingPK.instance.connectedPKHostsNotifier,
+        valueListenable: ZegoLiveStreamingPageLifeCycle()
+            .manager(widget.liveID)
+            .pk
+            .connectedPKHostsNotifier,
         builder: (context, __, _) {
           final pkHosts = List<ZegoLiveStreamingPKUser>.from(
-            ZegoUIKitPrebuiltLiveStreamingPK
-                .instance.connectedPKHostsNotifier.value,
+            ZegoLiveStreamingPageLifeCycle()
+                .manager(widget.liveID)
+                .pk
+                .connectedPKHostsNotifier
+                .value,
           );
 
           final mixerLayoutResolution = mixerLayout.getResolution();
@@ -82,8 +88,10 @@ class _ZegoLiveStreamingPKV2ViewState extends State<ZegoLiveStreamingPKV2View> {
                   children: [
                     audioVideoView(
                       hosts: pkHosts,
-                      mixerStreamID: ZegoUIKitPrebuiltLiveStreamingPK
-                          .instance.currentMixerStreamID,
+                      mixerStreamID: ZegoLiveStreamingPageLifeCycle()
+                          .manager(widget.liveID)
+                          .pk
+                          .currentMixerStreamID,
                       constraints: centralConstraints,
                     ),
                     ConstrainedBox(
@@ -117,10 +125,15 @@ class _ZegoLiveStreamingPKV2ViewState extends State<ZegoLiveStreamingPKV2View> {
     required BoxConstraints constraints,
   }) {
     return ValueListenableBuilder<ZegoLiveStreamingPKBattleState>(
-      valueListenable:
-          ZegoUIKitPrebuiltLiveStreamingPK.instance.pkStateNotifier,
+      valueListenable: ZegoLiveStreamingPageLifeCycle()
+          .manager(widget.liveID)
+          .pk
+          .pkStateNotifier,
       builder: (BuildContext context, pkBattleState, Widget? child) {
-        if (!ZegoUIKitPrebuiltLiveStreamingPK.instance.isInPK) {
+        if (!ZegoLiveStreamingPageLifeCycle()
+            .manager(widget.liveID)
+            .pk
+            .isInPK) {
           return const SizedBox.shrink();
         } else {
           return ConstrainedBox(

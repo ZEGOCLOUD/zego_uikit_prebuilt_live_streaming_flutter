@@ -10,7 +10,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
 
   bool get hostExist =>
       ZegoLiveStreamingPageLifeCycle()
-          .currentManagers
+          .manager(liveID)
           .hostManager
           .notifier
           .value
@@ -20,7 +20,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
 
   bool get isLiving =>
       ZegoLiveStreamingPageLifeCycle()
-          .currentManagers
+          .manager(liveID)
           .liveStatusManager
           .notifier
           .value ==
@@ -54,7 +54,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
         .notifier
         .addListener(_onHostUpdated);
 
-    addEventListener(liveID: _liveID);
+    addEventListener();
   }
 
   void _onHostUpdated() {
@@ -525,7 +525,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
             );
 
             ZegoUIKit().muteUserAudio(
-              targetRoomID: _liveID,
+              targetRoomID: liveID,
               pkUser.userInfo.id,
               true,
             );
@@ -569,9 +569,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
     );
   }
 
-  void addEventListener({
-    required String liveID,
-  }) {
+  void addEventListener() {
     if (_eventListened) {
       ZegoLoggerService.logInfo(
         'had listen',
@@ -787,7 +785,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
       );
 
       ZegoUIKit().muteUserAudio(
-        targetRoomID: _liveID,
+        targetRoomID: liveID,
         pkUser.userInfo.id,
         false,
       );
@@ -860,7 +858,10 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
     if (isHost) {
     } else {
       /// During the audience PK, the LIVE creator leaves, and the state reverts to non-PK
-      if (ZegoUIKitPrebuiltLiveStreamingPK.instance.isInPK) {
+      if (ZegoLiveStreamingPageLifeCycle()
+          .manager(ZegoUIKitPrebuiltLiveStreamingController().private.liveID)
+          .pk
+          .isInPK) {
         if (event.roomID == liveID) {
           final canQuitPK =
 
@@ -934,7 +935,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
 
     if (!isHost) {
       await ZegoUIKit().muteUserAudioVideo(
-        targetRoomID: _liveID,
+        targetRoomID: liveID,
         ZegoLiveStreamingPageLifeCycle()
                 .currentManagers
                 .hostManager
@@ -1229,12 +1230,15 @@ extension ZegoUIKitPrebuiltLiveStreamingPKEventsV2
   ) async {
     ZegoLoggerService.logInfo(
       'event:$event, '
-      'now pk state:${ZegoUIKitPrebuiltLiveStreamingPK.instance.pkStateNotifier.value}, ',
+      'now pk state:${ZegoLiveStreamingPageLifeCycle().manager(ZegoUIKitPrebuiltLiveStreamingController().private.liveID).pk.pkStateNotifier.value}, ',
       tag: 'live.streaming.pk.events($hashCode)',
       subTag: 'onInvitationAccepted',
     );
 
-    if (!ZegoUIKitPrebuiltLiveStreamingPK.instance.isInPK) {
+    if (!ZegoLiveStreamingPageLifeCycle()
+        .manager(ZegoUIKitPrebuiltLiveStreamingController().private.liveID)
+        .pk
+        .isInPK) {
       /// first invitee(other room's host) accept, start pk, update layout
       updatePKState(ZegoLiveStreamingPKBattleState.loading);
 

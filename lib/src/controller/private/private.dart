@@ -23,7 +23,7 @@ class ZegoLiveStreamingControllerPrivateImpl {
     }
 
     switch (ZegoLiveStreamingPageLifeCycle()
-        .currentManagers
+        .manager(liveID)
         .liveStatusManager
         .notifier
         .value) {
@@ -67,7 +67,9 @@ class ZegoLiveStreamingControllerPrivateImpl {
 
     this.isPrebuiltFromHall = isPrebuiltFromHall;
 
-    ZegoUIKitPrebuiltLiveStreamingController().pk.private.initByPrebuilt();
+    ZegoUIKitPrebuiltLiveStreamingController().pk.private.initByPrebuilt(
+          pk: ZegoLiveStreamingPageLifeCycle().manager(liveID).pk,
+        );
     ZegoUIKitPrebuiltLiveStreamingController()
         .room
         .private
@@ -118,7 +120,9 @@ class ZegoLiveStreamingControllerPrivateImpl {
 
     isPrebuiltFromHall = false;
 
-    ZegoUIKitPrebuiltLiveStreamingController().pk.private.uninitByPrebuilt();
+    ZegoUIKitPrebuiltLiveStreamingController().pk.private.uninitByPrebuilt(
+          pk: ZegoLiveStreamingPageLifeCycle().manager(liveID).pk,
+        );
     ZegoUIKitPrebuiltLiveStreamingController().room.private.uninitByPrebuilt();
     ZegoUIKitPrebuiltLiveStreamingController().user.private.uninitByPrebuilt();
     ZegoUIKitPrebuiltLiveStreamingController()

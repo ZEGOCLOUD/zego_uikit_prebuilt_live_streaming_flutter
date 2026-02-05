@@ -3,14 +3,15 @@ import 'dart:async';
 
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
+
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
+
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/error.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/lifecycle.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/layout/layout.dart';
-
 import 'defines.dart';
 
 class ZegoUIKitPrebuiltLiveStreamingPKServiceMixer {
@@ -70,7 +71,7 @@ class ZegoUIKitPrebuiltLiveStreamingPKServiceMixer {
 
   Future<void> uninit() async {
     ZegoLoggerService.logInfo(
-      '',
+      'live id:$_liveID, ',
       tag: 'live.streaming.pk.mixer',
       subTag: 'uninit',
     );

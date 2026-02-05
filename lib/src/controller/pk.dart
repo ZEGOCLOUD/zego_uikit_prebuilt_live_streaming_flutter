@@ -18,10 +18,15 @@ class ZegoLiveStreamingControllerPKImpl
       private.mutedUsersNotifier;
 
   /// is in pk or not
-  bool get isInPK => ZegoUIKitPrebuiltLiveStreamingPK.instance.isInPK;
+  bool get isInPK => ZegoLiveStreamingPageLifeCycle()
+      .manager(ZegoUIKitPrebuiltLiveStreamingController().private.liveID)
+      .pk
+      .isInPK;
 
-  String get currentRequestID =>
-      ZegoUIKitPrebuiltLiveStreamingPK.instance.currentRequestID;
+  String get currentRequestID => ZegoLiveStreamingPageLifeCycle()
+      .manager(ZegoUIKitPrebuiltLiveStreamingController().private.liveID)
+      .pk
+      .currentRequestID;
 
   String get currentInitiatorID =>
       ZegoUIKit()
@@ -81,12 +86,15 @@ class ZegoLiveStreamingControllerPKImpl
       subTag: 'sendRequest',
     );
 
-    return ZegoUIKitPrebuiltLiveStreamingPK.instance.sendPKBattleRequest(
-      targetHostIDs: targetHostIDs,
-      timeout: timeout,
-      customData: customData,
-      isAutoAccept: isAutoAccept,
-    );
+    return ZegoLiveStreamingPageLifeCycle()
+        .manager(ZegoUIKitPrebuiltLiveStreamingController().private.liveID)
+        .pk
+        .sendPKBattleRequest(
+          targetHostIDs: targetHostIDs,
+          timeout: timeout,
+          customData: customData,
+          isAutoAccept: isAutoAccept,
+        );
   }
 
   /// Cancel the PK invitation to [targetHostIDs].
@@ -105,10 +113,13 @@ class ZegoLiveStreamingControllerPKImpl
       subTag: 'cancelRequest',
     );
 
-    return ZegoUIKitPrebuiltLiveStreamingPK.instance.cancelPKBattleRequest(
-      targetHostIDs: targetHostIDs,
-      customData: customData,
-    );
+    return ZegoLiveStreamingPageLifeCycle()
+        .manager(ZegoUIKitPrebuiltLiveStreamingController().private.liveID)
+        .pk
+        .cancelPKBattleRequest(
+          targetHostIDs: targetHostIDs,
+          customData: customData,
+        );
   }
 
   /// Accept the PK invitation from the [targetHost], which invitation ID is
@@ -131,12 +142,15 @@ class ZegoLiveStreamingControllerPKImpl
       subTag: 'acceptRequest',
     );
 
-    return ZegoUIKitPrebuiltLiveStreamingPK.instance.acceptPKBattleRequest(
-      requestID: requestID,
-      targetHost: targetHost,
-      timeout: timeout,
-      customData: customData,
-    );
+    return ZegoLiveStreamingPageLifeCycle()
+        .manager(ZegoUIKitPrebuiltLiveStreamingController().private.liveID)
+        .pk
+        .acceptPKBattleRequest(
+          requestID: requestID,
+          targetHost: targetHost,
+          timeout: timeout,
+          customData: customData,
+        );
   }
 
   /// Rejects the PK invitation from the [targetHost], which invitation ID is [requestID].
@@ -158,12 +172,15 @@ class ZegoLiveStreamingControllerPKImpl
       subTag: 'rejectRequest',
     );
 
-    return ZegoUIKitPrebuiltLiveStreamingPK.instance.rejectPKBattleRequest(
-      requestID: requestID,
-      targetHostID: targetHostID,
-      timeout: timeout,
-      customData: customData,
-    );
+    return ZegoLiveStreamingPageLifeCycle()
+        .manager(ZegoUIKitPrebuiltLiveStreamingController().private.liveID)
+        .pk
+        .rejectPKBattleRequest(
+          requestID: requestID,
+          targetHostID: targetHostID,
+          timeout: timeout,
+          customData: customData,
+        );
   }
 
   /// Quit PK on your own.
@@ -176,9 +193,16 @@ class ZegoLiveStreamingControllerPKImpl
       subTag: 'quit',
     );
 
-    return ZegoUIKitPrebuiltLiveStreamingPK.instance.quitPKBattle(
-      requestID: ZegoUIKitPrebuiltLiveStreamingPK.instance.currentRequestID,
-    );
+    return ZegoLiveStreamingPageLifeCycle()
+        .manager(ZegoUIKitPrebuiltLiveStreamingController().private.liveID)
+        .pk
+        .quitPKBattle(
+          requestID: ZegoLiveStreamingPageLifeCycle()
+              .manager(
+                  ZegoUIKitPrebuiltLiveStreamingController().private.liveID)
+              .pk
+              .currentRequestID,
+        );
   }
 
   /// Stop PK to all pk-hosts, only the PK Initiator can stop it.
@@ -190,9 +214,16 @@ class ZegoLiveStreamingControllerPKImpl
       subTag: 'stop',
     );
 
-    return ZegoUIKitPrebuiltLiveStreamingPK.instance.stopPKBattle(
-      requestID: ZegoUIKitPrebuiltLiveStreamingPK.instance.currentRequestID,
-    );
+    return ZegoLiveStreamingPageLifeCycle()
+        .manager(ZegoUIKitPrebuiltLiveStreamingController().private.liveID)
+        .pk
+        .stopPKBattle(
+          requestID: ZegoLiveStreamingPageLifeCycle()
+              .manager(
+                  ZegoUIKitPrebuiltLiveStreamingController().private.liveID)
+              .pk
+              .currentRequestID,
+        );
   }
 
   /// Silence the [targetHostIDs] in PK, local host and audience in the live
@@ -209,9 +240,12 @@ class ZegoLiveStreamingControllerPKImpl
       subTag: 'muteAudios',
     );
 
-    return ZegoUIKitPrebuiltLiveStreamingPK.instance.muteUserAudio(
-      targetHostIDs: targetHostIDs,
-      isMute: isMute,
-    );
+    return ZegoLiveStreamingPageLifeCycle()
+        .manager(ZegoUIKitPrebuiltLiveStreamingController().private.liveID)
+        .pk
+        .muteUserAudio(
+          targetHostIDs: targetHostIDs,
+          isMute: isMute,
+        );
   }
 }

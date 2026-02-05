@@ -17,7 +17,6 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/lifecycle.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/components/view.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/core/core.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/core/service/defines.dart';
 
 /// @nodoc
@@ -55,12 +54,12 @@ class ZegoLiveStreamingCentralAudioVideoViewState
   bool get isLivingWithHost =>
       LiveStatus.living ==
           ZegoLiveStreamingPageLifeCycle()
-              .currentManagers
+              .manager(widget.liveID)
               .liveStatusManager
               .notifier
               .value &&
       ZegoLiveStreamingPageLifeCycle()
-              .currentManagers
+              .manager(widget.liveID)
               .hostManager
               .notifier
               .value !=
@@ -71,7 +70,7 @@ class ZegoLiveStreamingCentralAudioVideoViewState
     super.initState();
 
     ZegoLiveStreamingPageLifeCycle()
-        .currentManagers
+        .manager(widget.liveID)
         .liveStatusManager
         .notifier
         .addListener(onLiveStatusUpdated);
@@ -82,7 +81,7 @@ class ZegoLiveStreamingCentralAudioVideoViewState
     super.dispose();
 
     ZegoLiveStreamingPageLifeCycle()
-        .currentManagers
+        .manager(widget.liveID)
         .liveStatusManager
         .notifier
         .removeListener(onLiveStatusUpdated);
@@ -94,16 +93,15 @@ class ZegoLiveStreamingCentralAudioVideoViewState
 
   @override
   Widget build(BuildContext context) {
+    final pk = ZegoLiveStreamingPageLifeCycle().manager(widget.liveID).pk;
     return ValueListenableBuilder<bool>(
-      valueListenable:
-          ZegoUIKitPrebuiltLiveStreamingPK.instance.roomAttributesInitNotifier,
+      valueListenable: pk.roomAttributesInitNotifier,
       builder: (context, isPKRoomAttrInit, _) {
-        if (!isPKRoomAttrInit &&
-            !ZegoUIKitPrebuiltLiveStreamingPK.instance.isInPK) {
+        if (!isPKRoomAttrInit && !pk.isInPK) {
           ZegoLoggerService.logInfo(
             'not init pk room attr or not in pk room, '
             'isPKRoomAttrInit:$isPKRoomAttrInit, '
-            'isInPK:${ZegoUIKitPrebuiltLiveStreamingPK.instance.isInPK}',
+            'isInPK:${pk.isInPK}',
             tag: 'live.streaming.pk.central_audio_video_view',
             subTag: 'build',
           );
@@ -111,22 +109,18 @@ class ZegoLiveStreamingCentralAudioVideoViewState
         }
 
         return ValueListenableBuilder<bool>(
-          valueListenable:
-              ZegoUIKitPrebuiltLiveStreamingPK.instance.combineNotifier.state,
+          valueListenable: pk.combineNotifier.state,
           builder: (context, _isInPK, _) {
-            final isInPK = (widget.liveID ==
-                    ZegoUIKitPrebuiltLiveStreamingPK.instance.liveID &&
-                _isInPK);
+            final isInPK = (widget.liveID == pk.liveID && _isInPK);
             if (isInPK) {
               ZegoLoggerService.logInfo(
                 'in pk room, '
                 'isInPK:$isInPK, '
-                'pkState:${ZegoUIKitPrebuiltLiveStreamingPK.instance.pkStateNotifier.value}',
+                'pkState:${pk.pkStateNotifier.value}',
                 tag: 'live.streaming.pk.central_audio_video_view',
                 subTag: 'build',
               );
-              final pkState = ZegoUIKitPrebuiltLiveStreamingPK
-                  .instance.pkStateNotifier.value;
+              final pkState = pk.pkStateNotifier.value;
               if (pkState == ZegoLiveStreamingPKBattleState.inPK ||
                   pkState == ZegoLiveStreamingPKBattleState.loading) {
                 return pkBattleView(
@@ -138,7 +132,7 @@ class ZegoLiveStreamingCentralAudioVideoViewState
             ZegoLoggerService.logInfo(
               'not in pk room, '
               'isInPK:$isInPK, '
-              'pkState:${ZegoUIKitPrebuiltLiveStreamingPK.instance.pkStateNotifier.value}',
+              'pkState:${pk.pkStateNotifier.value}',
               tag: 'live.streaming.pk.central_audio_video_view',
               subTag: 'build',
             );
@@ -152,7 +146,7 @@ class ZegoLiveStreamingCentralAudioVideoViewState
                 );
                 return ValueListenableBuilder<ZegoUIKitUser?>(
                   valueListenable: ZegoLiveStreamingPageLifeCycle()
-                      .currentManagers
+                      .manager(widget.liveID)
                       .hostManager
                       .notifier,
                   builder: (context, host, _) {
@@ -185,7 +179,8 @@ class ZegoLiveStreamingCentralAudioVideoViewState
     final view = ZegoLiveStreamingPKV2View(
       liveID: widget.liveID,
       constraints: displayConstraints,
-      hostManager: ZegoLiveStreamingPageLifeCycle().currentManagers.hostManager,
+      hostManager:
+          ZegoLiveStreamingPageLifeCycle().manager(widget.liveID).hostManager,
       config: widget.config,
       foregroundBuilder: widget.config.audioVideoView.foregroundBuilder,
       backgroundBuilder: widget.config.audioVideoView.backgroundBuilder,
@@ -249,7 +244,7 @@ class ZegoLiveStreamingCentralAudioVideoViewState
   ) {
     return ValueListenableBuilder(
       valueListenable: ZegoLiveStreamingPageLifeCycle()
-          .currentManagers
+          .manager(widget.liveID)
           .liveStatusManager
           .notifier,
       builder: (context, LiveStatus liveStatusValue, Widget? child) {
@@ -450,7 +445,7 @@ class ZegoLiveStreamingCentralAudioVideoViewState
                 .getCameraStateNotifier(
                   targetRoomID: widget.liveID,
                   ZegoLiveStreamingPageLifeCycle()
-                          .currentManagers
+                          .manager(widget.liveID)
                           .hostManager
                           .notifier
                           .value
@@ -462,7 +457,7 @@ class ZegoLiveStreamingCentralAudioVideoViewState
                 .getMicrophoneStateNotifier(
                   targetRoomID: widget.liveID,
                   ZegoLiveStreamingPageLifeCycle()
-                          .currentManagers
+                          .manager(widget.liveID)
                           .hostManager
                           .notifier
                           .value
@@ -475,7 +470,7 @@ class ZegoLiveStreamingCentralAudioVideoViewState
         ..removeWhere((user) =>
             user.id ==
             ZegoLiveStreamingPageLifeCycle()
-                .currentManagers
+                .manager(widget.liveID)
                 .hostManager
                 .notifier
                 .value!
@@ -483,7 +478,7 @@ class ZegoLiveStreamingCentralAudioVideoViewState
         ..insert(
             0,
             ZegoLiveStreamingPageLifeCycle()
-                .currentManagers
+                .manager(widget.liveID)
                 .hostManager
                 .notifier
                 .value!);
@@ -511,7 +506,7 @@ class ZegoLiveStreamingCentralAudioVideoViewState
       if (null != widget.config.audioVideoView.visible) {
         var targetUserRole = ZegoLiveStreamingRole.coHost;
         if (ZegoLiveStreamingPageLifeCycle()
-            .currentManagers
+            .manager(widget.liveID)
             .hostManager
             .isHost(targetUser)) {
           targetUserRole = ZegoLiveStreamingRole.host;
@@ -519,7 +514,7 @@ class ZegoLiveStreamingCentralAudioVideoViewState
         if (!widget.config.audioVideoView.visible!.call(
           ZegoUIKit().getLocalUser(),
           ZegoLiveStreamingPageLifeCycle()
-              .currentManagers
+              .manager(widget.liveID)
               .connectManager
               .localRole,
           targetUser,
@@ -542,14 +537,14 @@ class ZegoLiveStreamingCentralAudioVideoViewState
 
   void onLiveStatusUpdated() {
     ZegoLoggerService.logInfo(
-      'live page, live status mgr updated, ${ZegoLiveStreamingPageLifeCycle().currentManagers.liveStatusManager.notifier.value}',
+      'live page, live status mgr updated, ${ZegoLiveStreamingPageLifeCycle().manager(widget.liveID).liveStatusManager.notifier.value}',
       tag: 'live.streaming.av-view',
       subTag: 'central audio video view',
     );
 
     if (LiveStatus.ended ==
         ZegoLiveStreamingPageLifeCycle()
-            .currentManagers
+            .manager(widget.liveID)
             .liveStatusManager
             .notifier
             .value) {

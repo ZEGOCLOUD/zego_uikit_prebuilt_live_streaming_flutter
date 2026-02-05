@@ -1,8 +1,10 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
+
 // Package imports:
 import 'package:loop_page_view/loop_page_view.dart';
 import 'package:zego_uikit/zego_uikit.dart';
+
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/live_streaming_page.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/pop_up_manager.dart';
@@ -15,7 +17,6 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/lifecycle.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/swiping/page_room_switcher.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/swiping/room_login_checker.dart';
-
 import 'defines.dart';
 
 /// The encapsulation layer of the "Live Streaming Widget" includes the
@@ -131,7 +132,8 @@ class _ZegoLiveStreamingSwipingPageState
   void initState() {
     super.initState();
 
-    widget.config.pkBattle.internal ??= ZegoLiveStreamingPKBattleInternalConfig();
+    widget.config.pkBattle.internal ??=
+        ZegoLiveStreamingPKBattleInternalConfig();
     widget.config.pkBattle.internal?.checkIfDefaultInPK = (String roomID) {
       if (roomID == currentHost?.roomID) {
         return currentHost?.streamType == ZegoStreamType.mix;
@@ -168,9 +170,10 @@ class _ZegoLiveStreamingSwipingPageState
     pageController = LoopPageController(initialPage: startIndex);
     roomSwitchManager = ZegoLiveStreamingSwipingPageRoomSwitcher(
       configPlugins: widget.config.plugins,
-      onRoomWillSwitch: (String liveID) {
+      onRoomWillSwitch: (String fromLiveID, String toLiveID) {
         ZegoLiveStreamingPageLifeCycle().onRoomWillSwitch(
-          liveID: liveID,
+          fromLiveID: fromLiveID,
+          toLiveID: toLiveID,
         );
       },
       onRoomSwitched: (String liveID) {
@@ -191,6 +194,7 @@ class _ZegoLiveStreamingSwipingPageState
             config: widget.config,
             events: widget.events,
             popUpManager: widget.popUpManager,
+            onRoomLoginFailed: widget.onRoomLoginFailed,
           ),
         );
       },
@@ -225,11 +229,7 @@ class _ZegoLiveStreamingSwipingPageState
           );
     });
 
-    ZegoLiveStreamingPageLifeCycle()
-        .currentManagers
-        .connectManager
-        .audienceLocalConnectStateNotifier
-        .addListener(onAudienceLocalConnectStateUpdated);
+    _updateAudienceConnectListener(currentHost?.roomID);
   }
 
   @override
@@ -239,13 +239,37 @@ class _ZegoLiveStreamingSwipingPageState
     roomSwitchManager.dispose();
     pageController.dispose();
 
-    ZegoLiveStreamingPageLifeCycle()
-        .currentManagers
-        .connectManager
-        .audienceLocalConnectStateNotifier
-        .removeListener(onAudienceLocalConnectStateUpdated);
+    _removeAudienceConnectListener(_currentMonitoredLiveID);
 
     super.dispose();
+  }
+
+  String? _currentMonitoredLiveID;
+  void _updateAudienceConnectListener(String? newLiveID) {
+    if (_currentMonitoredLiveID == newLiveID) {
+      return;
+    }
+
+    _removeAudienceConnectListener(_currentMonitoredLiveID);
+
+    if (newLiveID != null && newLiveID.isNotEmpty) {
+      _currentMonitoredLiveID = newLiveID;
+      ZegoLiveStreamingPageLifeCycle()
+          .manager(newLiveID)
+          .connectManager
+          .audienceLocalConnectStateNotifier
+          .addListener(onAudienceLocalConnectStateUpdated);
+    }
+  }
+
+  void _removeAudienceConnectListener(String? liveID) {
+    if (liveID != null && liveID.isNotEmpty) {
+      ZegoLiveStreamingPageLifeCycle()
+          .manager(liveID)
+          .connectManager
+          .audienceLocalConnectStateNotifier
+          .removeListener(onAudienceLocalConnectStateUpdated);
+    }
   }
 
   @override
@@ -293,6 +317,8 @@ class _ZegoLiveStreamingSwipingPageState
                 subTag: 'itemBuilder',
               );
 
+              /// 传递是否处于pk
+              final isInPK = itemHost.streamType == ZegoStreamType.mix;
               return Stack(
                 children: [
                   ZegoLiveStreamingPage(
@@ -625,6 +651,8 @@ class _ZegoLiveStreamingSwipingPageState
     }
     widget.swipingModelDelegate?.delegate?.call(toNext);
 
+    _updateAudienceConnectListener(currentHost?.roomID);
+
     ZegoLoggerService.logInfo(
       'page index:{now:$pageIndex, previous:$oldCurrentPageIndex},'
       'previous host:$previousHost, '
@@ -683,8 +711,12 @@ class _ZegoLiveStreamingSwipingPageState
   }
 
   void onAudienceLocalConnectStateUpdated() {
+    if (_currentMonitoredLiveID == null) {
+      return;
+    }
+
     final audienceLocalConnectState = ZegoLiveStreamingPageLifeCycle()
-        .currentManagers
+        .manager(_currentMonitoredLiveID!)
         .connectManager
         .audienceLocalConnectStateNotifier
         .value;

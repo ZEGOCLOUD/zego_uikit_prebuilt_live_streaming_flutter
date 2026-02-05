@@ -37,7 +37,7 @@ class ZegoLiveStreamingSwipingPageRoomSwitcher {
     required this.onRoomWillSwitch,
   }) : _configPlugins = configPlugins;
 
-  void Function(String liveID) onRoomWillSwitch;
+  void Function(String fromLiveID, String toLiveID) onRoomWillSwitch;
   void Function(String liveID) onRoomSwitched;
 
   final List<IZegoUIKitPlugin> _configPlugins;
@@ -159,7 +159,7 @@ class ZegoLiveStreamingSwipingPageRoomSwitcher {
       );
     }
 
-    onRoomWillSwitch.call(targetRoomID);
+    onRoomWillSwitch.call(ZegoUIKit().getCurrentRoom().id, targetRoomID);
 
     /// If not, then switchRoom
     _processingRoomID = targetRoomID;
@@ -187,7 +187,7 @@ class ZegoLiveStreamingSwipingPageRoomSwitcher {
     try {
       /// 不用stop publish，因为coHost状态不允许滑动
       final hostStreamID = ZegoLiveStreamingPageLifeCycle()
-              .currentManagers
+              .manager(ZegoUIKit().getCurrentRoom().id)
               .hostManager
               .notifier
               .value
@@ -210,7 +210,7 @@ class ZegoLiveStreamingSwipingPageRoomSwitcher {
         clearStreamData: false,
         clearUserData: false,
       );
-      await ZegoLiveStreamingPageLifeCycle().currentManagers.plugins.switchRoom(
+      await ZegoLiveStreamingPageLifeCycle().plugins.switchRoom(
             targetLiveID: targetRoomID,
           );
 

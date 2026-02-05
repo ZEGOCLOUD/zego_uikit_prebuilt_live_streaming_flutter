@@ -6,6 +6,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/core_managers.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/defines.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/lifecycle.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/minimization/overlay_machine.dart';
 
 class ZegoLiveStreamingPageLifeCycleDispose {
@@ -67,6 +68,10 @@ class ZegoLiveStreamingPageLifeCycleDispose {
     }
 
     ZegoUIKitPrebuiltLiveStreamingController().private.uninitByPrebuilt();
+    ZegoLiveStreamingPageLifeCycle()
+        .normal
+        .initStateDelegate
+        .clear(targetLiveID);
   }
 
   Future<void> _uninitBaseBeautyConfig() async {

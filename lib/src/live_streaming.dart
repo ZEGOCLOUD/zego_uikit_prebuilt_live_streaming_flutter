@@ -2,6 +2,7 @@
 import 'dart:core';
 
 // Flutter imports:
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -157,6 +158,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
     super.dispose();
 
     ZegoLiveStreamingPageLifeCycle().uninitFromPreview(
+      liveID: widget.liveID,
       isPrebuiltFromHall: isPrebuiltFromHall,
       isFromMinimize: false,
     );
@@ -191,6 +193,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
               config: widget.config,
               events: widget.events,
               popUpManager: popUpManager,
+              onRoomLoginFailed: onRoomLoginFailed,
             ),
             onRoomLoginFailed: onRoomLoginFailed,
           ),
@@ -201,8 +204,10 @@ class _ZegoUIKitPrebuiltLiveStreamingState
             }
 
             return widget.config.hall.loadingBuilder?.call(context) ??
-                const Center(
-                  child: CircularProgressIndicator(),
+                Center(
+                  child: ZegoLoadingIndicator(
+                    text: kDebugMode ? "PrebuiltLiveStreaming" : "",
+                  ),
                 );
           },
         ),

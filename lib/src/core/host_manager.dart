@@ -14,8 +14,12 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/lifecycle.dart'
 
 /// @nodoc
 class ZegoLiveStreamingHostManager {
+  ZegoLiveStreamingHostManager({
+    required this.liveID,
+  });
+
+  final String liveID;
   ZegoUIKitPrebuiltLiveStreamingConfig? config;
-  String liveID = '';
 
   bool _initialized = false;
 
@@ -41,13 +45,12 @@ class ZegoLiveStreamingHostManager {
   }
 
   Future<void> init({
-    required String liveID,
     required ZegoUIKitPrebuiltLiveStreamingConfig? config,
   }) async {
     if (_initialized) {
       ZegoLoggerService.logInfo(
         'had already init',
-        tag: 'live.streaming.host-mgr',
+        tag: 'live.streaming.host-mgr($liveID)',
         subTag: 'init',
       );
 
@@ -56,7 +59,6 @@ class ZegoLiveStreamingHostManager {
 
     _initialized = true;
 
-    this.liveID = liveID;
     this.config = config;
 
     configIsHost = ZegoLiveStreamingRole.host ==
@@ -72,7 +74,7 @@ class ZegoLiveStreamingHostManager {
       'liveID: $liveID, config: $config,'
       'configIsHost: $configIsHost, '
       'defaultHost: $defaultHost, ',
-      tag: 'live.streaming.host-mgr',
+      tag: 'live.streaming.host-mgr($liveID)',
       subTag: 'init',
     );
 
@@ -83,7 +85,7 @@ class ZegoLiveStreamingHostManager {
     if (!_initialized) {
       ZegoLoggerService.logInfo(
         'not init before',
-        tag: 'live.streaming.host-mgr',
+        tag: 'live.streaming.host-mgr($liveID)',
         subTag: 'uninit',
       );
 
@@ -94,14 +96,14 @@ class ZegoLiveStreamingHostManager {
 
     ZegoLoggerService.logInfo(
       '',
-      tag: 'live.streaming.host-mgr',
+      tag: 'live.streaming.host-mgr($liveID)',
       subTag: 'uninit',
     );
 
     if (isLocalHost) {
       ZegoLoggerService.logInfo(
         'host uninit host property',
-        tag: 'live.streaming.host-mgr',
+        tag: 'live.streaming.host-mgr($liveID)',
         subTag: 'uninit',
       );
       await ZegoUIKit().setRoomProperty(
@@ -117,8 +119,6 @@ class ZegoLiveStreamingHostManager {
     notifier.value = null;
     pendingHostID = '';
     localHostPropertyUpdateTime = 0;
-
-    liveID = '';
   }
 
   void registerRoomEvents(String liveID) {
@@ -154,29 +154,27 @@ class ZegoLiveStreamingHostManager {
   }
 
   void onRoomSwitched({
-    required String liveID,
     required ZegoUIKitPrebuiltLiveStreamingConfig? config,
   }) {
     ZegoLoggerService.logInfo(
-      'from ${this.liveID} to $liveID, ',
-      tag: 'live.streaming.host-mgr',
+      'from $liveID to $liveID, ',
+      tag: 'live.streaming.host-mgr($liveID)',
       subTag: 'onRoomSwitched',
     );
 
-    unregisterRoomEvents(this.liveID);
+    unregisterRoomEvents(liveID);
 
     hostUpdateEnabledNotifier.value = true;
     notifier.value = null;
     pendingHostID = '';
     localHostPropertyUpdateTime = 0;
 
-    this.liveID = liveID;
     this.config = config;
 
     configIsHost = ZegoLiveStreamingRole.host ==
         (config?.role ?? ZegoLiveStreamingRole.audience);
 
-    registerRoomEvents(this.liveID);
+    registerRoomEvents(liveID);
   }
 
   void onRoomStateUpdated() {
@@ -188,7 +186,7 @@ class ZegoLiveStreamingHostManager {
     if (configIsHost) {
       ZegoLoggerService.logInfo(
         'local user ${ZegoUIKit().getLocalUser()} is host in config',
-        tag: 'live.streaming.host-mgr',
+        tag: 'live.streaming.host-mgr($liveID)',
         subTag: 'onRoomStateUpdated',
       );
       if (notifier.value != null &&
@@ -196,14 +194,14 @@ class ZegoLiveStreamingHostManager {
         /// host is exist
         ZegoLoggerService.logInfo(
           'host is exist:${notifier.value!.id} ${notifier.value!.name}',
-          tag: 'live.streaming.host-mgr',
+          tag: 'live.streaming.host-mgr($liveID)',
           subTag: 'onRoomStateUpdated',
         );
       } else {
         localHostPropertyUpdateTime = DateTime.now().millisecondsSinceEpoch;
         ZegoLoggerService.logInfo(
           'set room property to notify, timestamp:$localHostPropertyUpdateTime',
-          tag: 'live.streaming.host-mgr',
+          tag: 'live.streaming.host-mgr($liveID)',
           subTag: 'onRoomStateUpdated',
         );
         updateHostValue(ZegoUIKit().getLocalUser());
@@ -222,7 +220,7 @@ class ZegoLiveStreamingHostManager {
       if (-1 != hostIndex) {
         ZegoLoggerService.logInfo(
           'host leave',
-          tag: 'live.streaming.host-mgr',
+          tag: 'live.streaming.host-mgr($liveID)',
           subTag: 'onUserLeaved',
         );
 
@@ -236,7 +234,7 @@ class ZegoLiveStreamingHostManager {
     if (pendingHostID.isNotEmpty) {
       ZegoLoggerService.logInfo(
         'exist pending host $pendingHostID',
-        tag: 'live.streaming.host-mgr',
+        tag: 'live.streaming.host-mgr($liveID)',
         subTag: 'onUserListUpdated',
       );
 
@@ -244,7 +242,7 @@ class ZegoLiveStreamingHostManager {
       if (!host.isEmpty()) {
         ZegoLoggerService.logInfo(
           'host updated, $host',
-          tag: 'live.streaming.host-mgr',
+          tag: 'live.streaming.host-mgr($liveID)',
           subTag: 'onUserListUpdated',
         );
         updateHostValue(host);
@@ -257,7 +255,7 @@ class ZegoLiveStreamingHostManager {
     if (!updatedProperties.containsKey(RoomPropertyKey.host.text)) {
       ZegoLoggerService.logInfo(
         'update properties not contain host',
-        tag: 'live.streaming.host-mgr',
+        tag: 'live.streaming.host-mgr($liveID)',
         subTag: 'onRoomPropertiesUpdated',
       );
       return;
@@ -266,7 +264,7 @@ class ZegoLiveStreamingHostManager {
     final roomProperties = ZegoUIKit().getRoomProperties(targetRoomID: liveID);
     ZegoLoggerService.logInfo(
       'onRoomPropertiesUpdated roomProperties:$roomProperties',
-      tag: 'live.streaming.host-mgr',
+      tag: 'live.streaming.host-mgr($liveID)',
       subTag: 'onRoomPropertiesUpdated',
     );
 
@@ -275,7 +273,7 @@ class ZegoLiveStreamingHostManager {
     if (null == hostIDProperty) {
       ZegoLoggerService.logInfo(
         'onRoomPropertiesUpdated, not exist host property',
-        tag: 'live.streaming.host-mgr',
+        tag: 'live.streaming.host-mgr($liveID)',
         subTag: 'onRoomPropertiesUpdated',
       );
 
@@ -285,7 +283,7 @@ class ZegoLiveStreamingHostManager {
     if (hostIDProperty.updateUserID == ZegoUIKit().getLocalUser().id) {
       ZegoLoggerService.logInfo(
         'cause by local user update, ignore',
-        tag: 'live.streaming.host-mgr',
+        tag: 'live.streaming.host-mgr($liveID)',
         subTag: 'onRoomPropertiesUpdated',
       );
 
@@ -298,7 +296,7 @@ class ZegoLiveStreamingHostManager {
         'host property update time is older than local setting time, '
         'property timestamp:${hostIDProperty.updateTime}, '
         'local timestamp:$localHostPropertyUpdateTime',
-        tag: 'live.streaming.host-mgr',
+        tag: 'live.streaming.host-mgr($liveID)',
         subTag: 'onRoomPropertiesUpdated',
       );
       return;
@@ -311,13 +309,13 @@ class ZegoLiveStreamingHostManager {
       ZegoLoggerService.logInfo(
         'host key is not exist, host is gone or null, '
         'local host had received: $localHostReceived',
-        tag: 'live.streaming.host-mgr',
+        tag: 'live.streaming.host-mgr($liveID)',
         subTag: 'onRoomPropertiesUpdated',
       );
       if (localHostReceived) {
         ZegoLoggerService.logInfo(
           'sync host property',
-          tag: 'live.streaming.host-mgr',
+          tag: 'live.streaming.host-mgr($liveID)',
           subTag: 'onRoomPropertiesUpdated',
         );
         ZegoUIKit().setRoomProperty(
@@ -331,7 +329,7 @@ class ZegoLiveStreamingHostManager {
     } else if (notifier.value?.id != hostIDProperty.value) {
       ZegoLoggerService.logInfo(
         'update host to be: $hostIDProperty',
-        tag: 'live.streaming.host-mgr',
+        tag: 'live.streaming.host-mgr($liveID)',
         subTag: 'onRoomPropertiesUpdated',
       );
       final host = ZegoUIKit().getUser(
@@ -341,7 +339,7 @@ class ZegoLiveStreamingHostManager {
       if (host.isEmpty() && hostIDProperty.value.isNotEmpty) {
         ZegoLoggerService.logInfo(
           '$hostIDProperty user is not exist, host will be wait update util user list update',
-          tag: 'live.streaming.host-mgr',
+          tag: 'live.streaming.host-mgr($liveID)',
           subTag: 'onRoomPropertiesUpdated',
         );
         pendingHostID = hostIDProperty.value;
@@ -371,7 +369,7 @@ class ZegoLiveStreamingHostManager {
       ZegoLoggerService.logInfo(
         'host updated, '
         'from ${notifier.value} to $host, ',
-        tag: 'live.streaming.host-mgr',
+        tag: 'live.streaming.host-mgr($liveID)',
         subTag: 'updateHostValue',
       );
       if (notifier.value?.id != host?.id) {
@@ -386,7 +384,7 @@ class ZegoLiveStreamingHostManager {
       /// in host ready to end, host should not update, otherwise host condition will failed
       ZegoLoggerService.logInfo(
         'host update disabled, $host',
-        tag: 'live.streaming.host-mgr',
+        tag: 'live.streaming.host-mgr($liveID)',
         subTag: 'updateHostValue',
       );
     }

@@ -67,8 +67,12 @@ class ZegoLiveStreamingControllerCoHostImpl
       return false;
     }
 
-    final isInPK =
-        ZegoUIKitPrebuiltLiveStreamingPK.instance.combineNotifier.state.value;
+    final isInPK = ZegoLiveStreamingPageLifeCycle()
+        .manager(ZegoUIKitPrebuiltLiveStreamingController().private.liveID)
+        .pk
+        .combineNotifier
+        .state
+        .value;
     if (isInPK) {
       ZegoLoggerService.logInfo(
         'local in the pk-battle, can not invite',

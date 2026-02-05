@@ -12,6 +12,7 @@ import 'package:zego_uikit/zego_uikit.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/core/core_managers.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/core/plugins.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/swiping/swiping.dart';
@@ -28,8 +29,22 @@ class ZegoLiveStreamingPageLifeCycle {
   String currentLiveID = '';
   ZegoLiveStreamingPageLifeCycleContextData? currentContextData;
 
+  final plugins = ZegoLiveStreamingPlugins();
+
   /// Only start initialization after RTC room login is complete
-  final currentManagers = ZegoLiveStreamingManagers();
+  ZegoLiveStreamingManagers get currentManagers => manager(currentLiveID);
+
+  final _managersMap = <String, ZegoLiveStreamingManagers>{};
+  final _contextDataMap = <String, ZegoLiveStreamingPageLifeCycleContextData>{};
+
+  ZegoLiveStreamingManagers manager(String liveID) {
+    return _managersMap.putIfAbsent(
+        liveID, () => ZegoLiveStreamingManagers(liveID: liveID));
+  }
+
+  ZegoLiveStreamingPageLifeCycleContextData? contextData(String liveID) {
+    return _contextDataMap[liveID];
+  }
 
   final swiping = ZegoLiveStreamingSwipingLifeCycle();
   final normal = ZegoLiveStreamingNormalLifeCycle();
@@ -57,8 +72,6 @@ class ZegoLiveStreamingPageLifeCycle {
     previewPageVisibilityNotifier.value = value;
   }
 
-  final rtcContextReadyNotifier = ValueNotifier<bool>(false);
-
   Future<void> initFromPreview({
     required String targetLiveID,
     required bool isPrebuiltFromHall,
@@ -82,9 +95,10 @@ class ZegoLiveStreamingPageLifeCycle {
 
     currentLiveID = targetLiveID;
     currentContextData = contextData;
+    _contextDataMap[targetLiveID] = contextData;
 
     if (isPrebuiltFromMinimizing || isPrebuiltFromHall) {
-      rtcContextReadyNotifier.value = true;
+      manager(targetLiveID).rtcContextReadyNotifier.value = true;
     }
 
     ZegoUIKitPrebuiltLiveStreamingController().private.liveID = targetLiveID;
@@ -135,13 +149,12 @@ class ZegoLiveStreamingPageLifeCycle {
       isPrebuiltFromHall: isPrebuiltFromHall,
       contextData: contextData,
     );
-    currentManagers.initPluginAndManagers(
+    manager(targetLiveID).initPluginAndManagers(
       contextData.appID,
       contextData.appSign,
       contextData.token,
       contextData.userID,
       contextData.userName,
-      targetLiveID,
       contextData.config,
       contextData.events,
       contextQuery,
@@ -149,7 +162,7 @@ class ZegoLiveStreamingPageLifeCycle {
     );
 
     await ZegoLiveStreamingPageLifeCycle()
-        .currentManagers
+        .manager(targetLiveID)
         .liveStatusManager
         .checkShouldStopPlayAllAudioVideo(
           isPrebuiltFromHall: isPrebuiltFromHall,
@@ -162,7 +175,7 @@ class ZegoLiveStreamingPageLifeCycle {
     /// Only host needs preview page, audience directly enters room
     updatePreviewPageVisibility(
       !isPrebuiltFromMinimizing &&
-          currentManagers.hostManager.isLocalHost &&
+          manager(targetLiveID).hostManager.isLocalHost &&
           contextData.config.preview.showPreviewForHost,
     );
 
@@ -177,6 +190,7 @@ class ZegoLiveStreamingPageLifeCycle {
   }
 
   Future<void> uninitFromPreview({
+    required String liveID,
     required bool isPrebuiltFromHall,
     required bool isFromMinimize,
   }) async {
@@ -190,7 +204,18 @@ class ZegoLiveStreamingPageLifeCycle {
       return;
     }
 
+    final contextData = _contextDataMap[liveID];
+    if (contextData == null) {
+      ZegoLoggerService.logInfo(
+        'contextData is null, ignore, liveID:$liveID',
+        tag: 'live.streaming.lifecyle',
+        subTag: 'uninitFromPreview',
+      );
+      return;
+    }
+
     ZegoLoggerService.logInfo(
+      'liveID:$liveID, '
       'isPrebuiltFromHall:$isPrebuiltFromHall, '
       'isFromMinimize:$isFromMinimize, '
       'isMinimizing:${ZegoLiveStreamingMiniOverlayMachine().isMinimizing}, '
@@ -226,23 +251,27 @@ class ZegoLiveStreamingPageLifeCycle {
       /// 2. Need to switch room: From live hall
       normal.disposeDelegate.run(
         targetLiveID: ZegoUIKit().getCurrentRoom().id,
-        currentManagers: currentManagers,
-        data: currentContextData!,
+        currentManagers: manager(liveID),
+        data: contextData,
         canLeaveRoom: !isPrebuiltFromHall,
         isFromMinimize: isFromMinimize,
       );
     }
 
     if (ZegoUIKit().getScreenSharingStateNotifier().value) {
-      ZegoUIKit().stopSharingScreen(targetRoomID: currentLiveID);
+      ZegoUIKit().stopSharingScreen(targetRoomID: liveID);
     }
 
     /// Handle live hall scenario
     await swiping.uninitFromPreview(isPrebuiltFromHall: isPrebuiltFromHall);
-    normal.uninitFromPreview();
+    normal.uninitFromPreview(liveID: liveID);
 
-    currentLiveID = '';
-    currentContextData = null;
+    if (currentLiveID == liveID) {
+      currentLiveID = '';
+      currentContextData = null;
+    }
+    _managersMap.remove(liveID);
+    _contextDataMap.remove(liveID);
   }
 
   /// Initiated from ZegoLiveStreamingPage
@@ -288,7 +317,7 @@ class ZegoLiveStreamingPageLifeCycle {
         contextQuery: contextQuery,
         isPrebuiltFromMinimizing: isPrebuiltFromMinimizing,
         isPrebuiltFromHall: isPrebuiltFromHall,
-        rtcContextReadyNotifier: rtcContextReadyNotifier,
+        rtcContextReadyNotifier: manager(currentLiveID).rtcContextReadyNotifier,
         onRoomLoginFailed: onRoomLoginFailed,
       );
     }
@@ -318,7 +347,7 @@ class ZegoLiveStreamingPageLifeCycle {
       return true;
     }
 
-    normal.initStateDelegate.clear();
+    normal.initStateDelegate.clear(targetLiveID);
 
     if (null == currentContextData || currentLiveID != targetLiveID) {
       return false;
@@ -327,21 +356,25 @@ class ZegoLiveStreamingPageLifeCycle {
     await normal.disposeDelegate.run(
       targetLiveID: targetLiveID,
       data: currentContextData!,
-      currentManagers: currentManagers,
+      currentManagers: manager(targetLiveID),
       canLeaveRoom: true,
       isFromMinimize: false,
     );
 
     currentLiveID = '';
     currentContextData = null;
+    _managersMap.remove(targetLiveID);
 
     return false;
   }
 
   void onRoomWillSwitch({
-    required String liveID,
+    required String fromLiveID,
+    required String toLiveID,
   }) {
-    currentManagers.onRoomWillSwitch(liveID: liveID);
+    if (fromLiveID.isNotEmpty) {
+      manager(fromLiveID).onRoomWillSwitch(liveID: toLiveID);
+    }
   }
 
   void onRoomSwitched({
@@ -352,11 +385,20 @@ class ZegoLiveStreamingPageLifeCycle {
     required bool isPrebuiltFromMinimizing,
     required bool isPrebuiltFromHall,
   }) {
-    currentManagers.onRoomSwitched(
-      liveID: liveID,
+    currentLiveID = liveID;
+    currentContextData = contextData;
+    _contextDataMap[liveID] = contextData;
+
+    manager(liveID).onRoomSwitched(
+      appID: contextData.appID,
+      appSign: contextData.appSign,
+      token: contextData.token,
+      userID: contextData.userID,
+      userName: contextData.userName,
       config: config,
       events: events,
       contextQuery: contextQuery,
+      onRoomLoginFailed: contextData.onRoomLoginFailed,
     );
 
     ZegoUIKitPrebuiltLiveStreamingController().private.onRoomSwitched(

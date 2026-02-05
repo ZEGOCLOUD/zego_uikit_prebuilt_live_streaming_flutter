@@ -318,12 +318,13 @@ class _ZegoLiveStreamingMemberListSheetState
 
   Widget controlsItem(ZegoUIKitUser user) {
     return ValueListenableBuilder<bool>(
-      valueListenable:
-          ZegoUIKitPrebuiltLiveStreamingPK.instance.combineNotifier.state,
+      valueListenable: ZegoLiveStreamingPageLifeCycle()
+          .manager(widget.liveID)
+          .pk
+          .combineNotifier
+          .state,
       builder: (context, _isInPK, _) {
-        final isInPK =
-            ZegoUIKitPrebuiltLiveStreamingPK.instance.liveID == widget.liveID &&
-                _isInPK;
+        final isInPK = _isInPK;
 
         final needHideCoHostWidget = isInPK;
         if (needHideCoHostWidget) {
@@ -393,8 +394,11 @@ class _ZegoLiveStreamingMemberListSheetState
 
   Widget hostControlItem(ZegoUIKitUser user) {
     return ValueListenableBuilder<bool>(
-      valueListenable:
-          ZegoUIKitPrebuiltLiveStreamingPK.instance.combineNotifier.state,
+      valueListenable: ZegoLiveStreamingPageLifeCycle()
+          .manager(widget.liveID)
+          .pk
+          .combineNotifier
+          .state,
       builder: (context, isInPK, _) {
         final needHideCoHostWidget = isInPK;
 

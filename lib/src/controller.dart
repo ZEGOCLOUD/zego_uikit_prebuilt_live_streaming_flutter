@@ -108,6 +108,7 @@ class ZegoUIKitPrebuiltLiveStreamingController
     );
 
     await ZegoLiveStreamingPageLifeCycle().uninitFromPreview(
+      liveID: private.liveID,
       isPrebuiltFromHall: private.isPrebuiltFromHall,
       isFromMinimize: true,
     );

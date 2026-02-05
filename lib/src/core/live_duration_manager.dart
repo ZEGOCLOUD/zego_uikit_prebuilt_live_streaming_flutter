@@ -12,7 +12,11 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/lifecycle.dart'
 
 /// @nodoc
 class ZegoLiveStreamingDurationManager {
-  String liveID = '';
+  ZegoLiveStreamingDurationManager({
+    required this.liveID,
+  });
+
+  final String liveID;
 
   bool _initialized = false;
 
@@ -24,9 +28,7 @@ class ZegoLiveStreamingDurationManager {
 
   bool isPropertyInited = false;
 
-  Future<void> init({
-    required String liveID,
-  }) async {
+  Future<void> init() async {
     if (_initialized) {
       ZegoLoggerService.logInfo(
         'had already init',
@@ -44,8 +46,6 @@ class ZegoLiveStreamingDurationManager {
       tag: 'live.streaming.live-duration-mgr',
       subTag: 'init',
     );
-
-    this.liveID = liveID;
 
     registerRoomEvents(liveID);
   }
@@ -73,7 +73,7 @@ class ZegoLiveStreamingDurationManager {
 
     unregisterRoomEvents(liveID);
 
-    liveID = '';
+    // liveID = '';
   }
 
   void registerRoomEvents(String liveID) {
@@ -99,23 +99,19 @@ class ZegoLiveStreamingDurationManager {
         .removeListener(onRoomStateUpdated);
   }
 
-  void onRoomSwitched({
-    required String liveID,
-  }) {
+  void onRoomSwitched() {
     ZegoLoggerService.logInfo(
-      'from ${this.liveID} to $liveID, ',
+      'from $liveID to $liveID, ',
       tag: 'live.streaming.live-duration-mgr',
       subTag: 'onRoomSwitched',
     );
 
     /// Cancel the event listener for the previous LIVE broadcast room
-    unregisterRoomEvents(this.liveID);
+    unregisterRoomEvents(liveID);
 
     notifier.value = DateTime(0);
 
-    this.liveID = liveID;
-
-    registerRoomEvents(this.liveID);
+    registerRoomEvents(liveID);
   }
 
   void onRoomStateUpdated() {
@@ -153,7 +149,7 @@ class ZegoLiveStreamingDurationManager {
 
     if (currentDateTime != serverDateTime) {
       if (ZegoLiveStreamingPageLifeCycle()
-          .currentManagers
+          .manager(liveID)
           .hostManager
           .isLocalHost) {
         ZegoLoggerService.logInfo(
@@ -179,7 +175,7 @@ class ZegoLiveStreamingDurationManager {
 
   void setRoomPropertyByHost() {
     if (!ZegoLiveStreamingPageLifeCycle()
-        .currentManagers
+        .manager(liveID)
         .hostManager
         .isLocalHost) {
       ZegoLoggerService.logInfo(

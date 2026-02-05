@@ -15,20 +15,24 @@ class ZegoLiveStreamingControllerPKPrivateImpl {
   );
   final mutedUsersNotifier = ValueNotifier<List<String>>([]);
 
+  ZegoUIKitPrebuiltLiveStreamingPK? _currentPK;
+
   /// Please do not call this interface. It is the internal logic of Prebuilt.
   /// DO NOT CALL!!!
   /// Call Inside By Prebuilt
-  void initByPrebuilt() {
+  void initByPrebuilt({required ZegoUIKitPrebuiltLiveStreamingPK pk}) {
     ZegoLoggerService.logInfo(
       'init by prebuilt',
       tag: 'live.streaming.controller.pk',
       subTag: 'controller.pk.p',
     );
 
-    ZegoUIKitPrebuiltLiveStreamingPK.instance.pkStateNotifier.addListener(
+    _currentPK = pk;
+
+    _currentPK?.pkStateNotifier.addListener(
       _onPKStateChanged,
     );
-    ZegoUIKitPrebuiltLiveStreamingPK.instance.mutedUsersNotifier.addListener(
+    _currentPK?.mutedUsersNotifier.addListener(
       _onMutedUsersChanged,
     );
   }
@@ -36,22 +40,32 @@ class ZegoLiveStreamingControllerPKPrivateImpl {
   /// Please do not call this interface. It is the internal logic of Prebuilt.
   /// DO NOT CALL!!!
   /// Call Inside By Prebuilt
-  void uninitByPrebuilt() {
+  void uninitByPrebuilt({required ZegoUIKitPrebuiltLiveStreamingPK pk}) {
     ZegoLoggerService.logInfo(
       'uninit by prebuilt',
       tag: 'live.streaming.controller.pk',
       subTag: 'controller.pk.p',
     );
 
+    if (_currentPK != pk) {
+      ZegoLoggerService.logInfo(
+        'current pk is not equal to target pk, ignore',
+        tag: 'live.streaming.controller.pk',
+        subTag: 'controller.pk.p',
+      );
+      return;
+    }
+
     pkStateNotifier.value = ZegoLiveStreamingPKBattleState.idle;
 
-    ZegoUIKitPrebuiltLiveStreamingPK.instance.pkStateNotifier
-        .removeListener(_onPKStateChanged);
+    _currentPK?.pkStateNotifier.removeListener(_onPKStateChanged);
+    _currentPK?.mutedUsersNotifier.removeListener(_onMutedUsersChanged);
+    _currentPK = null;
   }
 
   void _onPKStateChanged() {
-    final pkState =
-        ZegoUIKitPrebuiltLiveStreamingPK.instance.pkStateNotifier.value;
+    final pkState = _currentPK?.pkStateNotifier.value;
+    if (pkState == null) return;
 
     ZegoLoggerService.logInfo(
       'onPKStateChanged, pkState:$pkState',
@@ -63,8 +77,8 @@ class ZegoLiveStreamingControllerPKPrivateImpl {
   }
 
   void _onMutedUsersChanged() {
-    final mutedUsers =
-        ZegoUIKitPrebuiltLiveStreamingPK.instance.mutedUsersNotifier.value;
+    final mutedUsers = _currentPK?.mutedUsersNotifier.value;
+    if (mutedUsers == null) return;
 
     ZegoLoggerService.logInfo(
       'onMutedUsersChanged, mutedUsers:$mutedUsers',

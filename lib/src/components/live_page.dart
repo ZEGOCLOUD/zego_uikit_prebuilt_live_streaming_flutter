@@ -79,7 +79,7 @@ class _ZegoLiveStreamingLivePageState extends State<ZegoLiveStreamingLivePage>
   bool get isLiving =>
       LiveStatus.living ==
       ZegoLiveStreamingPageLifeCycle()
-          .currentManagers
+          .manager(widget.liveID)
           .liveStatusManager
           .notifier
           .value;
@@ -93,12 +93,12 @@ class _ZegoLiveStreamingLivePageState extends State<ZegoLiveStreamingLivePage>
 
     /// todo move
     ZegoLiveStreamingPageLifeCycle()
-        .currentManagers
+        .manager(widget.liveID)
         .hostManager
         .notifier
         .addListener(onHostManagerUpdated);
     ZegoLiveStreamingPageLifeCycle()
-        .currentManagers
+        .manager(widget.liveID)
         .liveStatusManager
         .notifier
         .addListener(onLiveStatusUpdated);
@@ -120,7 +120,7 @@ class _ZegoLiveStreamingLivePageState extends State<ZegoLiveStreamingLivePage>
     /// ---
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _savedContext = context;
-      ZegoLiveStreamingPageLifeCycle().updateContextQuery(() => context);
+      ZegoLiveStreamingPageLifeCycle().updateContextQuery(() => _savedContext!);
     });
 
     checkFromMinimizing();
@@ -131,7 +131,7 @@ class _ZegoLiveStreamingLivePageState extends State<ZegoLiveStreamingLivePage>
     super.dispose();
 
     ZegoLiveStreamingPageLifeCycle()
-        .currentManagers
+        .manager(widget.liveID)
         .liveStatusManager
         .notifier
         .removeListener(onLiveStatusUpdated);
@@ -175,13 +175,13 @@ class _ZegoLiveStreamingLivePageState extends State<ZegoLiveStreamingLivePage>
 
           if (canLeave) {
             if (ZegoLiveStreamingPageLifeCycle()
-                .currentManagers
+                .manager(widget.liveID)
                 .hostManager
                 .isLocalHost) {
               /// live is ready to end, host will update if receive property notify
               /// so need to keep current host value, DISABLE local host value UPDATE
               ZegoLiveStreamingPageLifeCycle()
-                  .currentManagers
+                  .manager(widget.liveID)
                   .hostManager
                   .hostUpdateEnabledNotifier
                   .value = false;
@@ -220,7 +220,7 @@ class _ZegoLiveStreamingLivePageState extends State<ZegoLiveStreamingLivePage>
               child: LayoutBuilder(builder: (context, constraints) {
                 return ValueListenableBuilder<ZegoUIKitUser?>(
                     valueListenable: ZegoLiveStreamingPageLifeCycle()
-                        .currentManagers
+                        .manager(widget.liveID)
                         .hostManager
                         .notifier,
                     builder: (context, host, _) {
@@ -277,13 +277,13 @@ class _ZegoLiveStreamingLivePageState extends State<ZegoLiveStreamingLivePage>
         return viewVisibility
             ? ValueListenableBuilder<int>(
                 valueListenable: ZegoLiveStreamingPageLifeCycle()
-                    .currentManagers
+                    .manager(widget.liveID)
                     .connectManager
                     .coHostCount,
                 builder: (context, coHostCount, _) {
                   final spacing = 20.zW;
                   final localRole = ZegoLiveStreamingPageLifeCycle()
-                      .currentManagers
+                      .manager(widget.liveID)
                       .connectManager
                       .localRole;
                   final queryParameter =
@@ -383,19 +383,19 @@ class _ZegoLiveStreamingLivePageState extends State<ZegoLiveStreamingLivePage>
 
     /// update callback
     ZegoLiveStreamingPageLifeCycle()
-        .currentManagers
+        .manager(widget.liveID)
         .liveStatusManager
         .onLiveStatusUpdated();
 
     if (null !=
         ZegoLiveStreamingPageLifeCycle()
-            .currentManagers
+            .manager(widget.liveID)
             .connectManager
             .dataOfInvitedToJoinCoHostInMinimizingNotifier
             .value) {
       final dataOfInvitedToJoinCoHostInMinimizing =
           ZegoLiveStreamingPageLifeCycle()
-              .currentManagers
+              .manager(widget.liveID)
               .connectManager
               .dataOfInvitedToJoinCoHostInMinimizingNotifier
               .value!;
@@ -407,7 +407,7 @@ class _ZegoLiveStreamingLivePageState extends State<ZegoLiveStreamingLivePage>
       );
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ZegoLiveStreamingPageLifeCycle()
-            .currentManagers
+            .manager(widget.liveID)
             .connectManager
             .onAudienceReceivedCoHostInvitation(
               dataOfInvitedToJoinCoHostInMinimizing.host,
@@ -417,7 +417,9 @@ class _ZegoLiveStreamingLivePageState extends State<ZegoLiveStreamingLivePage>
     }
 
     if (null !=
-        ZegoUIKitPrebuiltLiveStreamingPK()
+        ZegoLiveStreamingPageLifeCycle()
+            .manager(widget.liveID)
+            .pk
             .pkBattleRequestReceivedEventInMinimizingNotifier
             .value) {
       ZegoLoggerService.logInfo(
@@ -426,7 +428,9 @@ class _ZegoLiveStreamingLivePageState extends State<ZegoLiveStreamingLivePage>
         subTag: 'live page',
       );
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        ZegoUIKitPrebuiltLiveStreamingPK()
+        ZegoLiveStreamingPageLifeCycle()
+            .manager(widget.liveID)
+            .pk
             .restorePKBattleRequestReceivedEventFromMinimizing();
       });
     }
@@ -451,7 +455,7 @@ class _ZegoLiveStreamingLivePageState extends State<ZegoLiveStreamingLivePage>
   Widget backgroundTips() {
     return ValueListenableBuilder(
       valueListenable: ZegoLiveStreamingPageLifeCycle()
-          .currentManagers
+          .manager(widget.liveID)
           .liveStatusManager
           .notifier,
       builder: (BuildContext context, LiveStatus liveStatus, Widget? child) {
@@ -509,7 +513,7 @@ class _ZegoLiveStreamingLivePageState extends State<ZegoLiveStreamingLivePage>
 
   void onHostManagerUpdated() {
     ZegoLoggerService.logInfo(
-      'live page, host mgr updated, ${ZegoLiveStreamingPageLifeCycle().currentManagers.hostManager.notifier.value}',
+      'live page, host mgr updated, ${ZegoLiveStreamingPageLifeCycle().manager(widget.liveID).hostManager.notifier.value}',
       tag: 'live.streaming.page',
       subTag: 'live page',
     );
@@ -517,26 +521,26 @@ class _ZegoLiveStreamingLivePageState extends State<ZegoLiveStreamingLivePage>
 
   void onLiveStatusUpdated() {
     ZegoLoggerService.logInfo(
-      'live page, live status mgr updated, ${ZegoLiveStreamingPageLifeCycle().currentManagers.liveStatusManager.notifier.value}',
+      'live page, live status mgr updated, ${ZegoLiveStreamingPageLifeCycle().manager(widget.liveID).liveStatusManager.notifier.value}',
       tag: 'live.streaming.page',
       subTag: 'live page',
     );
 
     if (!ZegoLiveStreamingPageLifeCycle()
-        .currentManagers
+        .manager(widget.liveID)
         .hostManager
         .isLocalHost) {
       ZegoLoggerService.logInfo(
         'audience, live streaming end by host, '
-        'host: ${ZegoLiveStreamingPageLifeCycle().currentManagers.hostManager.notifier.value}, '
-        'live status: ${ZegoLiveStreamingPageLifeCycle().currentManagers.liveStatusManager.notifier.value}',
+        'host: ${ZegoLiveStreamingPageLifeCycle().manager(widget.liveID).hostManager.notifier.value}, '
+        'live status: ${ZegoLiveStreamingPageLifeCycle().manager(widget.liveID).liveStatusManager.notifier.value}',
         tag: 'live.streaming.page',
         subTag: 'live page',
       );
 
       if (LiveStatus.ended ==
           ZegoLiveStreamingPageLifeCycle()
-              .currentManagers
+              .manager(widget.liveID)
               .liveStatusManager
               .notifier
               .value) {

@@ -15,12 +15,12 @@ import 'service/services.dart';
 
 class ZegoUIKitPrebuiltLiveStreamingPK
     with ZegoUIKitPrebuiltLiveStreamingPKServices {
-  ZegoUIKitPrebuiltLiveStreamingPK._internal();
+  ZegoUIKitPrebuiltLiveStreamingPK({
+    required this.liveID,
+  });
 
-  factory ZegoUIKitPrebuiltLiveStreamingPK() => instance;
-
-  static final ZegoUIKitPrebuiltLiveStreamingPK instance =
-      ZegoUIKitPrebuiltLiveStreamingPK._internal();
+  @override
+  final String liveID;
 
   bool _initialized = false;
   final _data = ZegoUIKitPrebuiltLiveStreamingPKData();
@@ -36,7 +36,6 @@ class ZegoUIKitPrebuiltLiveStreamingPK
           _data.pkBattleRequestReceivedEventInMinimizingNotifier;
 
   void init({
-    required String liveID,
     required ZegoUIKitPrebuiltLiveStreamingConfig config,
     required ZegoUIKitPrebuiltLiveStreamingEvents? events,
     required BuildContext Function()? contextQuery,
@@ -61,7 +60,6 @@ class ZegoUIKitPrebuiltLiveStreamingPK
     );
 
     initServices(
-      liveID: liveID,
       coreData: _data,
       prebuiltConfig: config,
     );

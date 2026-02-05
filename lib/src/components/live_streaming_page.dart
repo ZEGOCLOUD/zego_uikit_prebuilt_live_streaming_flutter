@@ -5,6 +5,7 @@ import 'dart:io' show Platform;
 import 'dart:ui';
 
 // Flutter imports:
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -122,7 +123,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _savedContext = context;
       ZegoLiveStreamingPageLifeCycle().updateContextQuery(() {
-        return context;
+        return _savedContext!;
       });
     });
 
@@ -205,7 +206,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
 
     switch (state) {
       case AppLifecycleState.resumed:
-        ZegoLiveStreamingPageLifeCycle().currentManagers.plugins.tryReLogin();
+        ZegoLiveStreamingPageLifeCycle().plugins.tryReLogin();
         break;
       case AppLifecycleState.inactive:
       case AppLifecycleState.paused:
@@ -223,11 +224,16 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
       children: [
         page(),
         ValueListenableBuilder<bool>(
-          valueListenable:
-              ZegoLiveStreamingPageLifeCycle().rtcContextReadyNotifier,
+          valueListenable: ZegoLiveStreamingPageLifeCycle()
+              .manager(widget.liveID)
+              .rtcContextReadyNotifier,
           builder: (context, isReady, _) {
             if (!isReady) {
-              return const Center(child: CircularProgressIndicator());
+              return Center(
+                child: ZegoLoadingIndicator(
+                  text: kDebugMode ? "LiveStreamingPage" : "",
+                ),
+              );
             }
 
             return Container();
@@ -262,18 +268,18 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
 
   Widget normalPage() {
     return (ZegoLiveStreamingPageLifeCycle()
-            .currentManagers
+            .manager(widget.liveID)
             .hostManager
             .isLocalHost)
         ? ValueListenableBuilder<ZegoUIKitUser?>(
             valueListenable: ZegoLiveStreamingPageLifeCycle()
-                .currentManagers
+                .manager(widget.liveID)
                 .hostManager
                 .notifier,
             builder: (context, host, _) {
               /// local is host, but host updated
               if (ZegoLiveStreamingPageLifeCycle()
-                  .currentManagers
+                  .manager(widget.liveID)
                   .hostManager
                   .isLocalHost) {
                 return widget.config.preview.showPreviewForHost
@@ -335,8 +341,10 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
       subTag: 'prebuilt, removed users',
     );
 
-    ZegoLiveStreamingPageLifeCycle().currentManagers.kickOutNotifier.value =
-        true;
+    ZegoLiveStreamingPageLifeCycle()
+        .manager(widget.liveID)
+        .kickOutNotifier
+        .value = true;
 
     ///more button, member list, chat dialog
     widget.popUpManager.autoPop(context, widget.config.rootNavigator);
@@ -435,7 +443,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
           try {
             if (widget.isPrebuiltFromHall) {
               ZegoLiveStreamingPageLifeCycle()
-                  .currentManagers
+                  .manager(widget.liveID)
                   .connectManager
                   .removeRTCUsersDeviceListeners(
                     ZegoUIKit().getRemoteUsers(targetRoomID: widget.liveID),
@@ -443,7 +451,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState extends State<ZegoLiveStreamingPage>
 
               ZegoUIKit().stopPublishingAllStream(targetRoomID: widget.liveID);
               final hostStreamID = ZegoLiveStreamingPageLifeCycle()
-                      .currentManagers
+                      .manager(widget.liveID)
                       .hostManager
                       .notifier
                       .value

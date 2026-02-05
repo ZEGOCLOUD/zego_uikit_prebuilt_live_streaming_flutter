@@ -2,6 +2,7 @@
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/utils/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/events.defines.dart';
 
 enum ZegoLiveStreamingPageLifeCycleEventType {
   contextInit,
@@ -55,6 +56,8 @@ class ZegoLiveStreamingPageLifeCycleContextData {
 
   final ZegoLiveStreamingPopUpManager popUpManager;
 
+  final ZegoLiveStreamingLoginFailedEvent? onRoomLoginFailed;
+
   ZegoLiveStreamingPageLifeCycleContextData({
     required this.appID,
     required this.appSign,
@@ -64,6 +67,7 @@ class ZegoLiveStreamingPageLifeCycleContextData {
     required this.config,
     required this.events,
     required this.popUpManager,
+    this.onRoomLoginFailed,
   });
 
   @override

@@ -91,6 +91,7 @@ class ZegoLiveStreamingSwipingLifeCycle {
     streamContext.uninit();
 
     config = null;
+    currentLiveID = '';
     hallRoomID = '';
     hallConfig = null;
   }

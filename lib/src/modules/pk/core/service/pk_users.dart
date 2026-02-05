@@ -75,7 +75,7 @@ extension PKServiceConnectedUsers on ZegoUIKitPrebuiltLiveStreamingPKServices {
           );
 
           ZegoUIKit().muteUserAudio(
-            targetRoomID: _liveID,
+            targetRoomID: liveID,
             pkUser.userInfo.id,
             false,
           );
@@ -126,7 +126,7 @@ extension PKServiceConnectedUsers on ZegoUIKitPrebuiltLiveStreamingPKServices {
 
   void removeListenPKUserChanged() {
     ZegoLoggerService.logInfo(
-      '',
+      'live id:$liveID, ',
       tag: 'live.streaming.pk.services.users',
       subTag: 'removeListenPKUserChanged',
     );
@@ -137,7 +137,8 @@ extension PKServiceConnectedUsers on ZegoUIKitPrebuiltLiveStreamingPKServices {
 
   void onConnectingPKUsersChanged() {
     ZegoLoggerService.logInfo(
-      '${_coreData.connectingPKUsers.value}',
+      'live id:$liveID, '
+      '${_coreData.connectingPKUsers.value}, ',
       tag: 'live.streaming.pk.services.users',
       subTag: 'onConnectingPKUsersChanged',
     );
@@ -145,6 +146,7 @@ extension PKServiceConnectedUsers on ZegoUIKitPrebuiltLiveStreamingPKServices {
 
   Future<void> onPKUsersChanged() async {
     ZegoLoggerService.logInfo(
+      'live id:$liveID, '
       'isLiving;$isLiving, '
       'pk users:${_coreData.currentPKUsers.value}, ',
       tag: 'live.streaming.pk.services.users',
@@ -177,6 +179,7 @@ extension PKServiceConnectedUsers on ZegoUIKitPrebuiltLiveStreamingPKServices {
             (pkUser) => pkUser.userInfo.id == ZegoUIKit().getLocalUser().id);
 
     ZegoLoggerService.logInfo(
+      'live id:$liveID, '
       'isLocalHostInPK:$isLocalHostInPK, '
       'pk users:${_coreData.currentPKUsers.value}',
       tag: 'live.streaming.pk.services.users',
@@ -194,6 +197,7 @@ extension PKServiceConnectedUsers on ZegoUIKitPrebuiltLiveStreamingPKServices {
             ZegoUIKit().getLocalUser().id;
 
     ZegoLoggerService.logInfo(
+      'live id:$liveID, '
       'onlyLocalInPK:$onlyLocalInPK, '
       'pk users:${_coreData.currentPKUsers.value}, '
       'previousPKUsers:${_coreData.previousPKUsers.value}, '
@@ -210,12 +214,12 @@ extension PKServiceConnectedUsers on ZegoUIKitPrebuiltLiveStreamingPKServices {
 
       final isMicrophoneOn = ZegoUIKit()
           .getMicrophoneStateNotifier(
-            targetRoomID: _liveID,
+            targetRoomID: liveID,
             ZegoUIKit().getLocalUser().id,
           )
           .value;
       ZegoUIKit().turnMicrophoneOn(
-        targetRoomID: _liveID,
+        targetRoomID: liveID,
         isMicrophoneOn,
         muteMode: true,
       );
@@ -226,6 +230,7 @@ extension PKServiceConnectedUsers on ZegoUIKitPrebuiltLiveStreamingPKServices {
 
     /// start play other room user stream
     ZegoLoggerService.logInfo(
+      'live id:$liveID, '
       'try play ${_coreData.currentPKUsers.value}\'s stream',
       tag: 'live.streaming.pk.services.users',
       subTag: 'connectedHostOnPKUsersChanged',
@@ -237,6 +242,7 @@ extension PKServiceConnectedUsers on ZegoUIKitPrebuiltLiveStreamingPKServices {
 
       if (_coreData.playingHostIDs.contains(user.userInfo.id)) {
         ZegoLoggerService.logInfo(
+          'live id:$liveID, '
           '${user.userInfo.id} is playing, ignore',
           tag: 'live.streaming.pk.services.users',
           subTag: 'connectedHostOnPKUsersChanged',
@@ -245,6 +251,7 @@ extension PKServiceConnectedUsers on ZegoUIKitPrebuiltLiveStreamingPKServices {
       }
 
       ZegoLoggerService.logInfo(
+        'live id:$liveID, '
         'start play ${user.userInfo.id}',
         tag: 'live.streaming.pk.services.users',
         subTag: 'connectedHostOnPKUsersChanged',
@@ -264,7 +271,7 @@ extension PKServiceConnectedUsers on ZegoUIKitPrebuiltLiveStreamingPKServices {
         },
       );
       await ZegoUIKit().startPlayAnotherRoomAudioVideo(
-        targetRoomID: _liveID,
+        targetRoomID: liveID,
         user.liveID,
         user.userInfo.id,
         anotherUserName: user.userInfo.name,
@@ -295,6 +302,7 @@ extension PKServiceConnectedUsers on ZegoUIKitPrebuiltLiveStreamingPKServices {
 
     /// stop play other room user stream
     ZegoLoggerService.logInfo(
+      'live id:$liveID, '
       'try stop $removedPKUsersCompareCurrent\'s stream',
       tag: 'live.streaming.pk.services.users',
       subTag: 'connectedHostOnPKUsersChanged',
@@ -302,7 +310,8 @@ extension PKServiceConnectedUsers on ZegoUIKitPrebuiltLiveStreamingPKServices {
     for (var user in removedPKUsersCompareCurrent) {
       if (!_coreData.playingHostIDs.contains(user.userInfo.id)) {
         ZegoLoggerService.logInfo(
-          '${user.userInfo.id} is not playing, ignore',
+          'live id:$liveID, '
+          '${user.userInfo.id} is not playing, ignore, ',
           tag: 'live.streaming.pk.services.users',
           subTag: 'connectedHostOnPKUsersChanged',
         );
@@ -310,20 +319,21 @@ extension PKServiceConnectedUsers on ZegoUIKitPrebuiltLiveStreamingPKServices {
       }
 
       ZegoLoggerService.logInfo(
-        'stop play ${user.userInfo.id}',
+        'live id:$liveID, '
+        'stop play ${user.userInfo.id}, ',
         tag: 'live.streaming.pk.services.users',
         subTag: 'connectedHostOnPKUsersChanged',
       );
       _coreData.playingHostIDs.remove(user.userInfo.id);
       await ZegoUIKit().stopPlayAnotherRoomAudioVideo(
-        targetRoomID: _liveID,
+        targetRoomID: liveID,
         user.userInfo.id,
       );
     }
 
     /// update room property, notify the host info && layout
     await ZegoUIKit().getSignalingPlugin().updateRoomProperties(
-          roomID: _liveID,
+          roomID: liveID,
           roomProperties: {
             roomPropKeyRequestID: _coreData.currentRequestID,
             roomPropKeyHost: ZegoUIKit().getLocalUser().id,
@@ -353,12 +363,12 @@ extension PKServiceConnectedUsers on ZegoUIKitPrebuiltLiveStreamingPKServices {
 
       final isMicrophoneOn = ZegoUIKit()
           .getMicrophoneStateNotifier(
-            targetRoomID: _liveID,
+            targetRoomID: liveID,
             ZegoUIKit().getLocalUser().id,
           )
           .value;
       ZegoUIKit().turnMicrophoneOn(
-        targetRoomID: _liveID,
+        targetRoomID: liveID,
         isMicrophoneOn,
         muteMode: true,
       );
@@ -369,7 +379,7 @@ extension PKServiceConnectedUsers on ZegoUIKitPrebuiltLiveStreamingPKServices {
           continue;
         }
         await ZegoUIKit().stopPlayAnotherRoomAudioVideo(
-          targetRoomID: _liveID,
+          targetRoomID: liveID,
           hostID,
         );
       }
@@ -394,13 +404,13 @@ extension PKServiceConnectedUsers on ZegoUIKitPrebuiltLiveStreamingPKServices {
     ZegoLoggerService.logInfo(
       'pk users:${_coreData.currentPKUsers.value}',
       tag: 'live.streaming.pk.services.users',
-      subTag: 'audienceOnPKUsersChanged(liveID:$_liveID)',
+      subTag: 'audienceOnPKUsersChanged(liveID:$liveID)',
     );
 
     final onlyLocalHostInPK = _coreData.currentPKUsers.value.length == 1 &&
         _coreData.currentPKUsers.value.first.userInfo.id ==
             ZegoLiveStreamingPageLifeCycle()
-                .currentManagers
+                .manager(liveID)
                 .hostManager
                 .notifier
                 .value
@@ -410,23 +420,23 @@ extension PKServiceConnectedUsers on ZegoUIKitPrebuiltLiveStreamingPKServices {
         'pk users is empty or only local room host, not in pk, '
         'onlyLocalHostInPK:$onlyLocalHostInPK, ',
         tag: 'live.streaming.pk.services.users',
-        subTag: 'audienceOnPKUsersChanged(liveID:$_liveID)',
+        subTag: 'audienceOnPKUsersChanged(liveID:$liveID)',
       );
       return;
     }
 
     /// hide invite join co-host dialog
     if (ZegoLiveStreamingPageLifeCycle()
-        .currentManagers
+        .manager(liveID)
         .connectManager
         .isInvitedToJoinCoHostDlgVisible) {
       ZegoLoggerService.logInfo(
         'hide invite join co-host dialog',
         tag: 'live.streaming.pk.services.users',
-        subTag: 'audienceOnPKUsersChanged(liveID:$_liveID)',
+        subTag: 'audienceOnPKUsersChanged(liveID:$liveID)',
       );
       ZegoLiveStreamingPageLifeCycle()
-          .currentManagers
+          .manager(liveID)
           .connectManager
           .isInvitedToJoinCoHostDlgVisible = false;
 
@@ -438,16 +448,16 @@ extension PKServiceConnectedUsers on ZegoUIKitPrebuiltLiveStreamingPKServices {
 
     /// hide co-host end request dialog
     if (ZegoLiveStreamingPageLifeCycle()
-        .currentManagers
+        .manager(liveID)
         .connectManager
         .isEndCoHostDialogVisible) {
       ZegoLoggerService.logInfo(
         'hide co-host end request dialog',
         tag: 'live.streaming.pk.services.users',
-        subTag: 'audienceOnPKUsersChanged(liveID:$_liveID)',
+        subTag: 'audienceOnPKUsersChanged(liveID:$liveID)',
       );
       ZegoLiveStreamingPageLifeCycle()
-          .currentManagers
+          .manager(liveID)
           .connectManager
           .isEndCoHostDialogVisible = false;
 
@@ -458,13 +468,13 @@ extension PKServiceConnectedUsers on ZegoUIKitPrebuiltLiveStreamingPKServices {
     }
 
     ZegoLoggerService.logInfo(
-      'audienceLocalConnectStateNotifier.value:${ZegoLiveStreamingPageLifeCycle().currentManagers.connectManager.audienceLocalConnectStateNotifier.value}',
+      'audienceLocalConnectStateNotifier.value:${ZegoLiveStreamingPageLifeCycle().manager(liveID).connectManager.audienceLocalConnectStateNotifier.value}',
       tag: 'live.streaming.pk.services.users',
-      subTag: 'audienceOnPKUsersChanged(liveID:$_liveID)',
+      subTag: 'audienceOnPKUsersChanged(liveID:$liveID)',
     );
 
     switch (ZegoLiveStreamingPageLifeCycle()
-        .currentManagers
+        .manager(liveID)
         .connectManager
         .audienceLocalConnectStateNotifier
         .value) {
@@ -472,7 +482,7 @@ extension PKServiceConnectedUsers on ZegoUIKitPrebuiltLiveStreamingPKServices {
 
         /// cancel audience's co-host request
         ZegoLiveStreamingPageLifeCycle()
-            .currentManagers
+            .manager(liveID)
             .connectManager
             .updateAudienceConnectState(
               ZegoLiveStreamingAudienceConnectState.idle,
@@ -480,7 +490,7 @@ extension PKServiceConnectedUsers on ZegoUIKitPrebuiltLiveStreamingPKServices {
         ZegoUIKit().getSignalingPlugin().cancelInvitation(
           invitees: [
             ZegoLiveStreamingPageLifeCycle()
-                    .currentManagers
+                    .manager(liveID)
                     .hostManager
                     .notifier
                     .value
@@ -492,7 +502,7 @@ extension PKServiceConnectedUsers on ZegoUIKitPrebuiltLiveStreamingPKServices {
         break;
       case ZegoLiveStreamingAudienceConnectState.connected:
         ZegoLiveStreamingPageLifeCycle()
-            .currentManagers
+            .manager(liveID)
             .connectManager
             .updateAudienceConnectState(
               ZegoLiveStreamingAudienceConnectState.idle,
@@ -522,7 +532,7 @@ extension PKServiceConnectedUsers on ZegoUIKitPrebuiltLiveStreamingPKServices {
     ZegoLoggerService.logInfo(
       'start play pk stream, pk users:${_coreData.currentPKUsers.value}',
       tag: 'live.streaming.pk.services.users',
-      subTag: 'audienceOnPKUsersChanged(liveID:$_liveID)',
+      subTag: 'audienceOnPKUsersChanged(liveID:$liveID)',
     );
     await _mixer.startPlayStream(
       List.from(_coreData.currentPKUsers.value),
@@ -547,26 +557,26 @@ extension PKServiceConnectedUsers on ZegoUIKitPrebuiltLiveStreamingPKServices {
       ZegoLoggerService.logInfo(
         'start play pk stream finished, pk users:${_coreData.currentPKUsers.value}',
         tag: 'live.streaming.pk.services.users',
-        subTag: 'audienceOnPKUsersChanged(liveID:$_liveID)',
+        subTag: 'audienceOnPKUsersChanged(liveID:$liveID)',
       );
     });
 
     final mixAudioVideoLoaded = ZegoUIKit().getMixAudioVideoLoadedNotifier(
-      targetRoomID: _liveID,
+      targetRoomID: liveID,
       _mixer.mixerStreamID,
     );
     ZegoLoggerService.logInfo(
       'wait mixAudioVideoLoaded to be true, current value: ${mixAudioVideoLoaded.value}',
       tag: 'live.streaming.pk.services.users',
-      subTag: 'audienceOnPKUsersChanged(liveID:$_liveID)',
+      subTag: 'audienceOnPKUsersChanged(liveID:$liveID)',
     );
     if (mixAudioVideoLoaded.value) {
       /// load done
       updatePKState(ZegoLiveStreamingPKBattleState.inPK);
       ZegoUIKit().muteUserAudioVideo(
-        targetRoomID: _liveID,
+        targetRoomID: liveID,
         ZegoLiveStreamingPageLifeCycle()
-                .currentManagers
+                .manager(liveID)
                 .hostManager
                 .notifier
                 .value
@@ -582,7 +592,7 @@ extension PKServiceConnectedUsers on ZegoUIKitPrebuiltLiveStreamingPKServices {
 
   void onMixAudioVideoLoadStatusChanged() {
     final mixAudioVideoLoaded = ZegoUIKit().getMixAudioVideoLoadedNotifier(
-      targetRoomID: _liveID,
+      targetRoomID: liveID,
       _mixer.mixerStreamID,
     );
     mixAudioVideoLoaded.removeListener(onMixAudioVideoLoadStatusChanged);
@@ -591,9 +601,9 @@ extension PKServiceConnectedUsers on ZegoUIKitPrebuiltLiveStreamingPKServices {
       updatePKState(ZegoLiveStreamingPKBattleState.inPK);
 
       ZegoUIKit().muteUserAudioVideo(
-        targetRoomID: _liveID,
+        targetRoomID: liveID,
         ZegoLiveStreamingPageLifeCycle()
-                .currentManagers
+                .manager(liveID)
                 .hostManager
                 .notifier
                 .value

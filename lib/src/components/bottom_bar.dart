@@ -487,12 +487,13 @@ class _ZegoLiveStreamingBottomBarState
     switch (type) {
       case ZegoLiveStreamingMenuBarButtonName.toggleMicrophoneButton:
         return ValueListenableBuilder<bool>(
-          valueListenable:
-              ZegoUIKitPrebuiltLiveStreamingPK.instance.combineNotifier.state,
+          valueListenable: ZegoLiveStreamingPageLifeCycle()
+              .manager(widget.liveID)
+              .pk
+              .combineNotifier
+              .state,
           builder: (context, _isInPK, _) {
-            final isInPK = ZegoUIKitPrebuiltLiveStreamingPK.instance.liveID ==
-                    widget.liveID &&
-                _isInPK;
+            final isInPK = _isInPK;
             final needUserMuteMode =
                 (!widget.config.coHost.stopCoHostingWhenMicCameraOff) || isInPK;
 

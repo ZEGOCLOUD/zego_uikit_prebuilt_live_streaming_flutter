@@ -12,6 +12,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/components/mini_live.dart
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/lifecycle.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/core/core.dart';
 import 'data.dart';
 import 'defines.dart';
@@ -175,8 +176,11 @@ class _ZegoUIKitPrebuiltLiveStreamingMiniOverlayPageState
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<bool>(
-        valueListenable:
-            ZegoUIKitPrebuiltLiveStreamingPK.instance.combineNotifier.state,
+        valueListenable: ZegoLiveStreamingPageLifeCycle()
+            .manager(ZegoUIKitPrebuiltLiveStreamingController().private.liveID)
+            .pk
+            .combineNotifier
+            .state,
         builder: (context, isInPK, _) {
           overlaySize = calculateItemSize();
 
@@ -229,9 +233,11 @@ class _ZegoUIKitPrebuiltLiveStreamingMiniOverlayPageState
     }
 
     final size = MediaQuery.of(context).size;
-    final isInPK = ZegoUIKitPrebuiltLiveStreamingPK.instance.liveID ==
+    final manager = ZegoLiveStreamingPageLifeCycle()
+        .manager(ZegoUIKitPrebuiltLiveStreamingController().private.liveID);
+    final isInPK = manager.pk.liveID ==
             ZegoUIKitPrebuiltLiveStreamingController().private.liveID &&
-        ZegoUIKitPrebuiltLiveStreamingPK.instance.combineNotifier.state.value;
+        manager.pk.combineNotifier.state.value;
 
     if (isInPK) {
       /// pk has two audio views

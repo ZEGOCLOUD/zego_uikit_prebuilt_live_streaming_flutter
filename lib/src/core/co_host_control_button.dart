@@ -92,11 +92,15 @@ class _ZegoLiveStreamingCoHostControlButtonState
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<bool>(
-      valueListenable:
-          ZegoUIKitPrebuiltLiveStreamingPK.instance.combineNotifier.state,
+      valueListenable: ZegoLiveStreamingPageLifeCycle()
+          .manager(widget.liveID)
+          .pk
+          .combineNotifier
+          .state,
       builder: (context, _isInPK, _) {
         final isInPK =
-            ZegoUIKitPrebuiltLiveStreamingPK.instance.liveID == widget.liveID &&
+            ZegoLiveStreamingPageLifeCycle().manager(widget.liveID).pk.liveID ==
+                    widget.liveID &&
                 _isInPK;
         if (isInPK) {
           return const SizedBox.shrink();

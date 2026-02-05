@@ -192,11 +192,24 @@ class ZegoLiveStreamingPlugins {
     }
   }
 
-  Future<bool> joinRoom({required String liveID}) async {
-    this.liveID = liveID;
+  Future<bool> joinRoom({required String targetLiveID}) async {
+    if (liveID == targetLiveID &&
+        (roomStateNotifier.value == ZegoSignalingPluginRoomState.connected ||
+            roomStateNotifier.value ==
+                ZegoSignalingPluginRoomState.connecting)) {
+      ZegoLoggerService.logInfo(
+        'live id:$targetLiveID, had already join',
+        tag: 'live.streaming.plugin',
+        subTag: 'joinRoom',
+      );
+
+      return true;
+    }
+
+    liveID = targetLiveID;
 
     ZegoLoggerService.logInfo(
-      'live id:$liveID, ',
+      'live id:$targetLiveID, ',
       tag: 'live.streaming.plugin',
       subTag: 'joinRoom',
     );
@@ -204,7 +217,7 @@ class ZegoLiveStreamingPlugins {
     return ZegoUIKit()
         .getSignalingPlugin()
         .joinRoom(
-          liveID,
+          targetLiveID,
           force: true,
         )
         .then((result) {
@@ -232,6 +245,19 @@ class ZegoLiveStreamingPlugins {
   }
 
   Future<bool> switchRoom({required String targetLiveID}) async {
+    if (liveID == targetLiveID &&
+        (roomStateNotifier.value == ZegoSignalingPluginRoomState.connected ||
+            roomStateNotifier.value ==
+                ZegoSignalingPluginRoomState.connecting)) {
+      ZegoLoggerService.logInfo(
+        'live id:$liveID, had already join',
+        tag: 'live.streaming.plugin',
+        subTag: 'switchRoom',
+      );
+
+      return true;
+    }
+
     ZegoLoggerService.logInfo(
       'current live id:$liveID, '
       'target live id:$targetLiveID, ',
@@ -430,6 +456,16 @@ class ZegoLiveStreamingPlugins {
   }
 
   void _onRoomState(ZegoSignalingPluginRoomStateChangedEvent event) {
+    if (event.roomID != liveID) {
+      ZegoLoggerService.logInfo(
+        'ignore event, room id not match, current:$liveID, '
+        'event:event, ',
+        tag: 'live.streaming.plugin',
+        subTag: 'onRoomState',
+      );
+      return;
+    }
+
     ZegoLoggerService.logInfo(
       'event: $event',
       tag: 'live.streaming.plugin',
@@ -570,7 +606,7 @@ class ZegoLiveStreamingPlugins {
       return false;
     }
 
-    return joinRoom(liveID: liveID).then((success) {
+    return joinRoom(targetLiveID: liveID).then((success) {
       ZegoLoggerService.logInfo(
         'plugins room joined, join success:$success',
         tag: 'live.streaming.plugin',

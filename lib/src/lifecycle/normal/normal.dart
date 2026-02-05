@@ -1,3 +1,6 @@
+// Flutter imports:
+import 'package:flutter/widgets.dart';
+
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
 
@@ -7,31 +10,42 @@ import 'dispose.dart';
 import 'init_state.dart';
 
 class ZegoLiveStreamingNormalLifeCycle {
-  String currentLiveID = '';
-
   final initStateDelegate = ZegoLiveStreamingPageLifeCycleInitState();
   final disposeDelegate = ZegoLiveStreamingPageLifeCycleDispose();
+
+  final _listeners = <String, VoidCallback>{};
 
   void initFromPreview({
     required String liveID,
   }) {
-    currentLiveID = liveID;
+    if (_listeners.containsKey(liveID)) {
+      return;
+    }
 
-    ZegoUIKit().getRoomsStateStream().addListener(_onRoomsStateUpdated);
+    _listeners[liveID] = () {
+      _onRoomsStateUpdated(liveID);
+    };
+
+    ZegoUIKit().getRoomsStateStream().addListener(_listeners[liveID]!);
   }
 
-  void uninitFromPreview() {
-    ZegoUIKit().getRoomsStateStream().removeListener(_onRoomsStateUpdated);
+  void uninitFromPreview({
+    required String liveID,
+  }) {
+    if (!_listeners.containsKey(liveID)) {
+      return;
+    }
 
-    currentLiveID = '';
+    ZegoUIKit().getRoomsStateStream().removeListener(_listeners[liveID]!);
+    _listeners.remove(liveID);
   }
 
   /// Plugins wait for RTC room entry
   /// todo This should not be placed here
-  void _onRoomsStateUpdated() {
-    if (currentLiveID.isEmpty) {
+  void _onRoomsStateUpdated(String liveID) {
+    if (liveID.isEmpty) {
       ZegoLoggerService.logInfo(
-        'current live id is empty, ignore',
+        'live id is empty, ignore',
         tag: 'live.streaming.lifecyle',
         subTag: 'onRoomsStateUpdated',
       );
@@ -40,10 +54,10 @@ class ZegoLiveStreamingNormalLifeCycle {
     }
 
     final roomsState = ZegoUIKit().getRoomsStateStream().value;
-    if (!roomsState.containsKey(currentLiveID)) {
+    if (!roomsState.containsKey(liveID)) {
       ZegoLoggerService.logInfo(
-        'not contain current live id, ignore'
-        'currentLiveID:$currentLiveID, '
+        'not contain live id, ignore'
+        'liveID:$liveID, '
         'roomsState:$roomsState, ',
         tag: 'live.streaming.lifecyle',
         subTag: 'onRoomsStateUpdated',
@@ -52,11 +66,11 @@ class ZegoLiveStreamingNormalLifeCycle {
       return;
     }
 
-    final roomState = roomsState[currentLiveID]!;
+    final roomState = roomsState[liveID]!;
     if (!roomState.isLogin2) {
       ZegoLoggerService.logInfo(
         'room not login, ignore'
-        'currentLiveID:$currentLiveID, '
+        'liveID:$liveID, '
         'roomState:$roomState, ',
         tag: 'live.streaming.lifecyle',
         subTag: 'onRoomsStateUpdated',
@@ -67,14 +81,14 @@ class ZegoLiveStreamingNormalLifeCycle {
 
     ZegoLoggerService.logInfo(
       'room login, '
-      'currentLiveID:$currentLiveID, '
+      'liveID:$liveID, '
       'roomState:$roomState, ',
       tag: 'live.streaming.lifecyle',
       subTag: 'onRoomsStateUpdated',
     );
 
-    ZegoLiveStreamingPageLifeCycle().currentManagers.plugins.joinRoom(
-          liveID: currentLiveID,
+    ZegoLiveStreamingPageLifeCycle().plugins.joinRoom(
+          targetLiveID: liveID,
         );
   }
 }

@@ -21,7 +21,6 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/reporter.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/lifecycle.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/minimization/overlay_machine.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/core/core.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/core/data.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/core/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/core/event/defines.dart';
@@ -39,7 +38,7 @@ part 'pk_users.dart';
 mixin ZegoUIKitPrebuiltLiveStreamingPKServices {
   bool _serviceInitialized = false;
 
-  String _liveID = '';
+  String get liveID;
   ZegoUIKitPrebuiltLiveStreamingConfig? _prebuiltConfig;
 
   bool _eventInitialized = false;
@@ -75,7 +74,7 @@ mixin ZegoUIKitPrebuiltLiveStreamingPKServices {
     if (pkStateNotifier.value == value) {
       ZegoLoggerService.logInfo(
         'current state(${pkStateNotifier.value}) is same',
-        tag: 'live.streaming.pk.services',
+        tag: 'live.streaming.pk.services($liveID)',
         subTag: 'updatePKState',
       );
 
@@ -84,7 +83,7 @@ mixin ZegoUIKitPrebuiltLiveStreamingPKServices {
 
     ZegoLoggerService.logInfo(
       'from ${pkStateNotifier.value} to $value',
-      tag: 'live.streaming.pk.services',
+      tag: 'live.streaming.pk.services($liveID)',
       subTag: 'updatePKState',
     );
     pkStateNotifier.value = value;
@@ -100,14 +99,12 @@ mixin ZegoUIKitPrebuiltLiveStreamingPKServices {
 
   String get currentMixerStreamID => _mixer.mixerStreamID;
 
-  String get liveID => _liveID;
-
   bool get isHost =>
-      ZegoLiveStreamingPageLifeCycle().currentManagers.hostManager.isLocalHost;
+      ZegoLiveStreamingPageLifeCycle().manager(liveID).hostManager.isLocalHost;
 
   bool get isLiving =>
       ZegoLiveStreamingPageLifeCycle()
-          .currentManagers
+          .manager(liveID)
           .liveStatusManager
           .notifier
           .value ==
@@ -133,8 +130,8 @@ mixin ZegoUIKitPrebuiltLiveStreamingPKServices {
         'updatedPKUsers is empty or pkStateNotifier.value is idle, no need to wait, '
         'updatedPKUsers: $updatedPKUsers, '
         'pkStateNotifier.value: ${pkStateNotifier.value}, ',
-        tag: 'live.streaming.pk.services',
-        subTag: 'waitPKRoomAttributeProcessingFinished(liveID:$liveID)',
+        tag: 'live.streaming.pk.services($liveID)',
+        subTag: 'waitPKRoomAttributeProcessingFinished',
       );
       return;
     }
@@ -143,14 +140,14 @@ mixin ZegoUIKitPrebuiltLiveStreamingPKServices {
     void onStateChanged() {
       ZegoLoggerService.logInfo(
         'pkStateNotifier.value changed: ${pkStateNotifier.value}',
-        tag: 'live.streaming.pk.services',
-        subTag: 'waitPKRoomAttributeProcessingFinished(liveID:$liveID)',
+        tag: 'live.streaming.pk.services($liveID)',
+        subTag: 'waitPKRoomAttributeProcessingFinished',
       );
       if (pkStateNotifier.value != ZegoLiveStreamingPKBattleState.loading) {
         ZegoLoggerService.logInfo(
           'pkStateNotifier.value is non-loading, complete the completer',
-          tag: 'live.streaming.pk.services',
-          subTag: 'waitPKRoomAttributeProcessingFinished(liveID:$liveID)',
+          tag: 'live.streaming.pk.services($liveID)',
+          subTag: 'waitPKRoomAttributeProcessingFinished',
         );
         pkStateNotifier.removeListener(onStateChanged);
         completer.complete();
@@ -160,28 +157,26 @@ mixin ZegoUIKitPrebuiltLiveStreamingPKServices {
     pkStateNotifier.addListener(onStateChanged);
     ZegoLoggerService.logInfo(
       'wait pkStateNotifier.value to be non-idle, current value: ${pkStateNotifier.value}',
-      tag: 'live.streaming.pk.services',
-      subTag: 'waitPKRoomAttributeProcessingFinished(liveID:$liveID)',
+      tag: 'live.streaming.pk.services($liveID)',
+      subTag: 'waitPKRoomAttributeProcessingFinished',
     );
     await completer.future;
   }
 
   void initServices({
-    required String liveID,
     required ZegoUIKitPrebuiltLiveStreamingConfig prebuiltConfig,
     required ZegoUIKitPrebuiltLiveStreamingPKData coreData,
   }) {
     if (_serviceInitialized) {
       ZegoLoggerService.logInfo(
         'had already init',
-        tag: 'live.streaming.pk.services',
+        tag: 'live.streaming.pk.services($liveID)',
         subTag: 'init',
       );
 
       return;
     }
 
-    _liveID = liveID;
     _prebuiltConfig = prebuiltConfig;
     _coreData = coreData;
     _serviceInitialized = true;
@@ -192,7 +187,7 @@ mixin ZegoUIKitPrebuiltLiveStreamingPKServices {
             false);
     ZegoLoggerService.logInfo(
       'isDefaultInPK: $isDefaultInPK',
-      tag: 'live.streaming.pk.services',
+      tag: 'live.streaming.pk.services($liveID)',
       subTag: 'init',
     );
     if (isDefaultInPK) {
@@ -213,7 +208,7 @@ mixin ZegoUIKitPrebuiltLiveStreamingPKServices {
 
     ZegoLoggerService.logInfo(
       '',
-      tag: 'live.streaming.pk.services',
+      tag: 'live.streaming.pk.services($liveID)',
       subTag: 'init',
     );
   }
@@ -222,7 +217,7 @@ mixin ZegoUIKitPrebuiltLiveStreamingPKServices {
     if (!_serviceInitialized) {
       ZegoLoggerService.logInfo(
         'not init before',
-        tag: 'live.streaming.pk.services',
+        tag: 'live.streaming.pk.services($liveID)',
         subTag: 'uninit',
       );
 
@@ -230,15 +225,14 @@ mixin ZegoUIKitPrebuiltLiveStreamingPKServices {
     }
 
     ZegoLoggerService.logInfo(
-      '',
-      tag: 'live.streaming.pk.services',
+      'live id:$liveID, ',
+      tag: 'live.streaming.pk.services($liveID)',
       subTag: 'uninit',
     );
 
     removeListenPKUserChanged();
     uninitEvents();
 
-    _liveID = '';
     _prebuiltConfig = null;
     _serviceInitialized = false;
 
@@ -257,7 +251,7 @@ mixin ZegoUIKitPrebuiltLiveStreamingPKServices {
   }) async {
     ZegoLoggerService.logInfo(
       'targetHostIDs:$targetHostIDs, isMute:$isMute, ',
-      tag: 'live.streaming.pk.services',
+      tag: 'live.streaming.pk.services($liveID)',
       subTag: 'muteUserAudio',
     );
 

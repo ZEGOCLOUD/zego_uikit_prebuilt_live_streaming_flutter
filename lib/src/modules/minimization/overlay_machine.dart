@@ -74,10 +74,11 @@ class ZegoLiveStreamingMiniOverlayMachine {
         _stateLiving.enter();
         break;
       case ZegoLiveStreamingMiniOverlayPageState.minimizing:
+        _currentRoomID =
+            ZegoUIKitPrebuiltLiveStreamingController().private.liveID;
         _kickOutSubscription = ZegoUIKit()
             .getMeRemovedFromRoomStream(
-              targetRoomID:
-                  ZegoUIKitPrebuiltLiveStreamingController().private.liveID,
+              targetRoomID: _currentRoomID,
             )
             .listen(_onMeRemovedFromRoom);
 
@@ -126,7 +127,9 @@ class ZegoLiveStreamingMiniOverlayMachine {
         .private
         .minimizeData;
 
-    ZegoLiveStreamingPageLifeCycle().currentManagers.uninitPluginAndManagers(
+    ZegoLiveStreamingPageLifeCycle()
+        .manager(_currentRoomID)
+        .uninitPluginAndManagers(
           isFromMinimize: true,
         );
 
@@ -166,4 +169,5 @@ class ZegoLiveStreamingMiniOverlayMachine {
   late sm.State<ZegoLiveStreamingMiniOverlayPageState> _stateMinimizing;
 
   StreamSubscription<dynamic>? _kickOutSubscription;
+  String _currentRoomID = '';
 }

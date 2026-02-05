@@ -134,8 +134,12 @@ class ZegoMinimizingStreamingPageState
       builder: (context, constraints) {
         final page = Scaffold(
           resizeToAvoidBottomInset: false,
-          body: ZegoUIKitPrebuiltLiveStreamingPK
-                  .instance.combineNotifier.state.value
+          body: ZegoLiveStreamingPageLifeCycle()
+                  .manager(widget.liveID)
+                  .pk
+                  .combineNotifier
+                  .state
+                  .value
               ? minimizingPKUsersWidget(constraints)
               : ValueListenableBuilder<String?>(
                   valueListenable: ZegoUIKitPrebuiltLiveStreamingController()
@@ -256,9 +260,12 @@ class ZegoMinimizingStreamingPageState
     );
 
     /// new pk
-    final isInPK =
-        ZegoUIKitPrebuiltLiveStreamingPK.instance.liveID == widget.liveID &&
-            ZegoUIKitPrebuiltLiveStreamingPK.instance.isInPK;
+    final isInPK = ZegoLiveStreamingPageLifeCycle()
+        .manager(widget.liveID)
+        .pk
+        .combineNotifier
+        .state
+        .value;
     if (isInPK) {
       pkView = ZegoLiveStreamingPKV2View(
         liveID: widget.liveID,
@@ -463,8 +470,11 @@ class ZegoMinimizingStreamingPageState
       right: 3,
       top: 3,
       child: ValueListenableBuilder<bool>(
-          valueListenable: ZegoUIKitPrebuiltLiveStreamingPK
-              .instance.combineNotifier.hasRequestEvent,
+          valueListenable: ZegoLiveStreamingPageLifeCycle()
+              .manager(widget.liveID)
+              .pk
+              .combineNotifier
+              .hasRequestEvent,
           builder: (context, hasPKRequestEvent, _) {
             final redPointWidget = Container(
               decoration: const BoxDecoration(

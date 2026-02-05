@@ -26,7 +26,11 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/modules/minimization/over
 
 /// @nodoc
 class ZegoLiveStreamingConnectManager {
-  String liveID = '';
+  ZegoLiveStreamingConnectManager({
+    required this.liveID,
+  });
+
+  final String liveID;
   ZegoUIKitPrebuiltLiveStreamingConfig? config;
   ZegoUIKitPrebuiltLiveStreamingEvents? events;
 
@@ -67,7 +71,7 @@ class ZegoLiveStreamingConnectManager {
 
   bool get hostExist =>
       ZegoLiveStreamingPageLifeCycle()
-          .currentManagers
+          .manager(liveID)
           .hostManager
           .notifier
           .value
@@ -77,7 +81,7 @@ class ZegoLiveStreamingConnectManager {
 
   bool get isLiving =>
       ZegoLiveStreamingPageLifeCycle()
-          .currentManagers
+          .manager(liveID)
           .liveStatusManager
           .notifier
           .value ==
@@ -90,7 +94,7 @@ class ZegoLiveStreamingConnectManager {
   ZegoLiveStreamingRole get localRole {
     var role = ZegoLiveStreamingRole.audience;
     if (ZegoLiveStreamingPageLifeCycle()
-        .currentManagers
+        .manager(liveID)
         .hostManager
         .isLocalHost) {
       role = ZegoLiveStreamingRole.host;
@@ -103,7 +107,7 @@ class ZegoLiveStreamingConnectManager {
 
   bool get isLocalAudience =>
       !ZegoLiveStreamingPageLifeCycle()
-          .currentManagers
+          .manager(liveID)
           .hostManager
           .isLocalHost &&
       !isCoHost(ZegoUIKit().getLocalUser());
@@ -114,7 +118,7 @@ class ZegoLiveStreamingConnectManager {
     }
 
     if (ZegoLiveStreamingPageLifeCycle()
-            .currentManagers
+            .manager(liveID)
             .hostManager
             .notifier
             .value
@@ -144,7 +148,6 @@ class ZegoLiveStreamingConnectManager {
       ZegoLiveStreamingAudienceConnectState.connected;
 
   void init({
-    required String liveID,
     ZegoUIKitPrebuiltLiveStreamingConfig? config,
     ZegoUIKitPrebuiltLiveStreamingEvents? events,
   }) {
@@ -160,7 +163,6 @@ class ZegoLiveStreamingConnectManager {
 
     _initialized = true;
 
-    this.liveID = liveID;
     this.config = config;
     this.events = events;
 
@@ -211,7 +213,7 @@ class ZegoLiveStreamingConnectManager {
       subscription?.cancel();
     }
 
-    liveID = '';
+    // liveID = '';
   }
 
   void unregisterRTCRoom(String liveID) {
@@ -239,11 +241,9 @@ class ZegoLiveStreamingConnectManager {
         .addListener(onRTCRoomStateUpdated);
   }
 
-  void onRoomWillSwitch({
-    required String liveID,
-  }) {
+  void onRoomWillSwitch() {
     ZegoLoggerService.logInfo(
-      'from ${this.liveID} to $liveID, ',
+      'from $liveID to $liveID, ',
       tag: 'live.streaming.connect-mgr',
       subTag: 'onRoomWillSwitch',
     );
@@ -260,17 +260,16 @@ class ZegoLiveStreamingConnectManager {
   }
 
   void onRoomSwitched({
-    required String liveID,
     ZegoUIKitPrebuiltLiveStreamingConfig? config,
     ZegoUIKitPrebuiltLiveStreamingEvents? events,
   }) {
     ZegoLoggerService.logInfo(
-      'from ${this.liveID} to $liveID, ',
+      'from $liveID to $liveID, ',
       tag: 'live.streaming.connect-mgr',
       subTag: 'onRoomSwitched',
     );
 
-    unregisterRTCRoom(this.liveID);
+    unregisterRTCRoom(liveID);
 
     audienceLocalConnectStateNotifier.value =
         ZegoLiveStreamingAudienceConnectState.idle;
@@ -283,23 +282,22 @@ class ZegoLiveStreamingConnectManager {
 
     audienceIDsOfInvitingConnect.clear();
 
-    this.liveID = liveID;
     this.config = config;
     this.events = events;
 
-    registerRTCRoom(this.liveID);
+    registerRTCRoom(liveID);
   }
 
   void onRTCRoomStateUpdated() {
     if (ZegoLiveStreamingRole.host == config?.role &&
         ZegoLiveStreamingPageLifeCycle()
-                .currentManagers
+                .manager(liveID)
                 .hostManager
                 .notifier
                 .value !=
             null &&
         ZegoLiveStreamingPageLifeCycle()
-                .currentManagers
+                .manager(liveID)
                 .hostManager
                 .notifier
                 .value!
@@ -327,9 +325,9 @@ class ZegoLiveStreamingConnectManager {
         rootNavigator: config?.rootNavigator ?? false,
         permissions: permissions,
         popUpManager:
-            ZegoLiveStreamingPageLifeCycle().currentContextData?.popUpManager,
+            ZegoLiveStreamingPageLifeCycle().contextData(liveID)?.popUpManager,
         kickOutNotifier:
-            ZegoLiveStreamingPageLifeCycle().currentManagers.kickOutNotifier,
+            ZegoLiveStreamingPageLifeCycle().manager(liveID).kickOutNotifier,
       ).then((value) {
         ZegoUIKit().turnCameraOn(
           targetRoomID: liveID,
@@ -534,7 +532,7 @@ class ZegoLiveStreamingConnectManager {
     );
 
     if (ZegoLiveStreamingPageLifeCycle()
-        .currentManagers
+        .manager(liveID)
         .hostManager
         .isLocalHost) {
       if (ZegoLiveStreamingInvitationType.requestCoHost == invitationType) {
@@ -676,7 +674,7 @@ class ZegoLiveStreamingConnectManager {
 
     final key = DateTime.now().millisecondsSinceEpoch;
     ZegoLiveStreamingPageLifeCycle()
-        .currentContextData
+        .contextData(liveID)
         ?.popUpManager
         .addAPopUpSheet(key);
 
@@ -692,7 +690,7 @@ class ZegoLiveStreamingConnectManager {
 
         if (LiveStatus.living ==
             ZegoLiveStreamingPageLifeCycle()
-                .currentManagers
+                .manager(liveID)
                 .liveStatusManager
                 .notifier
                 .value) {
@@ -749,7 +747,7 @@ class ZegoLiveStreamingConnectManager {
           );
           if (LiveStatus.living ==
               ZegoLiveStreamingPageLifeCycle()
-                  .currentManagers
+                  .manager(liveID)
                   .liveStatusManager
                   .notifier
                   .value) {
@@ -787,10 +785,10 @@ class ZegoLiveStreamingConnectManager {
                 rootNavigator: config?.rootNavigator ?? false,
                 permissions: permissions,
                 popUpManager: ZegoLiveStreamingPageLifeCycle()
-                    .currentContextData
+                    .contextData(liveID)
                     ?.popUpManager,
                 kickOutNotifier: ZegoLiveStreamingPageLifeCycle()
-                    .currentManagers
+                    .manager(liveID)
                     .kickOutNotifier,
               ).then((_) {
                 updateAudienceConnectState(
@@ -809,7 +807,7 @@ class ZegoLiveStreamingConnectManager {
       },
     ).whenComplete(() {
       ZegoLiveStreamingPageLifeCycle()
-          .currentContextData
+          .contextData(liveID)
           ?.popUpManager
           .removeAPopUpSheet(key);
     });
@@ -829,7 +827,7 @@ class ZegoLiveStreamingConnectManager {
     );
 
     if (ZegoLiveStreamingPageLifeCycle()
-        .currentManagers
+        .manager(liveID)
         .hostManager
         .isLocalHost) {
       events?.coHost.host.onInvitationAccepted?.call(
@@ -855,9 +853,9 @@ class ZegoLiveStreamingConnectManager {
         rootNavigator: config?.rootNavigator ?? false,
         permissions: permissions,
         popUpManager:
-            ZegoLiveStreamingPageLifeCycle().currentContextData?.popUpManager,
+            ZegoLiveStreamingPageLifeCycle().contextData(liveID)?.popUpManager,
         kickOutNotifier:
-            ZegoLiveStreamingPageLifeCycle().currentManagers.kickOutNotifier,
+            ZegoLiveStreamingPageLifeCycle().manager(liveID).kickOutNotifier,
       ).then((value) {
         ZegoUIKit().turnCameraOn(
           targetRoomID: liveID,
@@ -885,7 +883,7 @@ class ZegoLiveStreamingConnectManager {
     );
 
     if (ZegoLiveStreamingPageLifeCycle()
-        .currentManagers
+        .manager(liveID)
         .hostManager
         .isLocalHost) {
       events?.coHost.host.onRequestCanceled?.call(
@@ -915,7 +913,7 @@ class ZegoLiveStreamingConnectManager {
     );
 
     if (ZegoLiveStreamingPageLifeCycle()
-        .currentManagers
+        .manager(liveID)
         .hostManager
         .isLocalHost) {
       events?.coHost.host.onInvitationRefused?.call(
@@ -962,7 +960,7 @@ class ZegoLiveStreamingConnectManager {
     );
 
     if (ZegoLiveStreamingPageLifeCycle()
-        .currentManagers
+        .manager(liveID)
         .hostManager
         .isLocalHost) {
       ZegoLiveStreamingReporter().report(
@@ -1022,7 +1020,7 @@ class ZegoLiveStreamingConnectManager {
     );
 
     if (ZegoLiveStreamingPageLifeCycle()
-        .currentManagers
+        .manager(liveID)
         .hostManager
         .isLocalHost) {
       for (final invitee in invitees) {
@@ -1062,7 +1060,7 @@ class ZegoLiveStreamingConnectManager {
 
     final key = DateTime.now().millisecondsSinceEpoch;
     ZegoLiveStreamingPageLifeCycle()
-        .currentContextData
+        .contextData(liveID)
         ?.popUpManager
         .addAPopUpSheet(key);
 
@@ -1084,7 +1082,7 @@ class ZegoLiveStreamingConnectManager {
       },
     ).whenComplete(() {
       ZegoLiveStreamingPageLifeCycle()
-          .currentContextData
+          .contextData(liveID)
           ?.popUpManager
           .removeAPopUpSheet(key);
     });
@@ -1255,7 +1253,7 @@ class ZegoLiveStreamingConnectManager {
   }
 
   void removeRTCUsersDeviceListeners(List<ZegoUIKitUser> users) {
-    for (final user in ZegoUIKit().getRemoteUsers(targetRoomID: liveID)) {
+    for (final user in users) {
       user.camera.removeListener(onUserCameraStateChanged);
       user.microphone.removeListener(onUserMicrophoneStateChanged);
     }
@@ -1293,13 +1291,13 @@ extension ZegoLiveConnectManagerCoHostCount on ZegoLiveStreamingConnectManager {
 
     if (isMaxCoHostReached &&
         ZegoLiveStreamingPageLifeCycle()
-            .currentManagers
+            .manager(liveID)
             .hostManager
             .isLocalHost) {
       final coHosts = List<ZegoUIKitUser>.from(users)
         ..removeWhere((user) =>
             ZegoLiveStreamingPageLifeCycle()
-                .currentManagers
+                .manager(liveID)
                 .hostManager
                 .notifier
                 .value

@@ -26,6 +26,9 @@ class ZegoLiveStreamingPageLifeCycleInitState {
   ZegoLiveStreamingLoginFailedEvent? onRoomLoginFailed;
   BuildContext Function()? contextQuery;
 
+  final _previewVisibilityListeners = <String, VoidCallback>{};
+  final _engineCreatedListeners = <String, VoidCallback>{};
+
   bool get playingStreamInPIPUnderIOS {
     bool isPlaying = false;
     if (Platform.isIOS) {
@@ -39,16 +42,33 @@ class ZegoLiveStreamingPageLifeCycleInitState {
     return isPlaying;
   }
 
-  void clear() {
+  void clear(String targetLiveID) {
     ZegoLoggerService.logInfo(
-      'liveID:$liveID, ',
+      'targetLiveID:$targetLiveID, '
+      'current liveID:$liveID, ',
       tag: 'live.streaming.lifecyle-initState',
       subTag: 'clear',
     );
 
-    liveID = '';
-    contextData = null;
-    contextQuery = null;
+    if (liveID == targetLiveID) {
+      liveID = '';
+      contextData = null;
+      contextQuery = null;
+    }
+
+    if (_previewVisibilityListeners.containsKey(targetLiveID)) {
+      ZegoLiveStreamingPageLifeCycle()
+          .previewPageVisibilityNotifier
+          .removeListener(_previewVisibilityListeners[targetLiveID]!);
+      _previewVisibilityListeners.remove(targetLiveID);
+    }
+
+    if (_engineCreatedListeners.containsKey(targetLiveID)) {
+      ZegoUIKit()
+          .engineCreatedNotifier
+          .removeListener(_engineCreatedListeners[targetLiveID]!);
+      _engineCreatedListeners.remove(targetLiveID);
+    }
   }
 
   Future<void> initFromLive({
@@ -72,7 +92,7 @@ class ZegoLiveStreamingPageLifeCycleInitState {
       'isPrebuiltFromHall:$isPrebuiltFromHall, '
       'rtcContextReadyNotifier:${rtcContextReadyNotifier.value}, ',
       tag: 'live.streaming.lifecyle-initState',
-      subTag: 'clear',
+      subTag: 'initFromLive',
     );
 
     /// Should not be called twice before exiting live streaming
@@ -104,7 +124,7 @@ class ZegoLiveStreamingPageLifeCycleInitState {
 
     await ZegoUIKit().enableCustomVideoRender(playingStreamInPIPUnderIOS);
 
-    await setVideoConfig(data: contextData);
+    await setVideoConfig(liveID: liveID, data: contextData);
     await initBaseBeautyConfig(data: contextData);
 
     await ZegoUIKit()
@@ -126,6 +146,7 @@ class ZegoLiveStreamingPageLifeCycleInitState {
     }
 
     await initPermissions(
+      liveID: liveID,
       data: contextData,
       contextQuery: contextQuery,
     ).then((_) {
@@ -143,9 +164,100 @@ class ZegoLiveStreamingPageLifeCycleInitState {
     });
 
     /// Wait until live streaming starts
+    late VoidCallback onPreviewPageVisibilityUpdated;
+
+    void joinRoomWaitEngineCreated() {
+      if (_engineCreatedListeners.containsKey(liveID)) {
+        ZegoUIKit()
+            .engineCreatedNotifier
+            .removeListener(_engineCreatedListeners[liveID]!);
+        _engineCreatedListeners.remove(liveID);
+      }
+
+      final isCreated = ZegoUIKit().engineCreatedNotifier.value;
+      ZegoLoggerService.logInfo(
+        'express engine created:$isCreated',
+        tag: 'live.streaming.lifecyle-initState',
+        subTag: 'joinRoomWaitEngineCreated',
+      );
+
+      if (isCreated) {
+        ZegoLiveStreamingPageLifeCycle()
+            .manager(liveID)
+            .liveStatusManager
+            .checkShouldStopPlayAllAudioVideo(
+              isPrebuiltFromHall: isPrebuiltFromHall,
+            )
+            .then((_) {
+          joinRoom(
+            liveID: liveID,
+            contextData: contextData,
+            roomID: liveID,
+            token: contextData.token,
+            markAsLargeRoom: contextData.config.markAsLargeRoom,
+          );
+        });
+      }
+    }
+
+    onPreviewPageVisibilityUpdated = () {
+      final isPreviewPageVisible =
+          ZegoLiveStreamingPageLifeCycle().previewPageVisibilityNotifier.value;
+
+      ZegoLoggerService.logInfo(
+        'onPreviewPageVisibilityUpdated:$isPreviewPageVisible, ',
+        tag: 'live.streaming.lifecyle-initState',
+        subTag: 'onPreviewPageVisibilityUpdated',
+      );
+
+      if (isPreviewPageVisible) {
+        /// Still on live preview page
+        return;
+      }
+
+      /// Enter live streaming page
+      if (_previewVisibilityListeners.containsKey(liveID)) {
+        ZegoLiveStreamingPageLifeCycle()
+            .previewPageVisibilityNotifier
+            .removeListener(_previewVisibilityListeners[liveID]!);
+        _previewVisibilityListeners.remove(liveID);
+      }
+
+      if (ZegoUIKit().engineCreatedNotifier.value) {
+        ZegoLiveStreamingPageLifeCycle()
+            .manager(liveID)
+            .liveStatusManager
+            .checkShouldStopPlayAllAudioVideo(
+              isPrebuiltFromHall: isPrebuiltFromHall,
+            )
+            .then((_) {
+          joinRoom(
+            liveID: liveID,
+            contextData: contextData,
+            roomID: liveID,
+            token: contextData.token,
+            markAsLargeRoom: contextData.config.markAsLargeRoom,
+          );
+        });
+      } else {
+        ZegoLoggerService.logInfo(
+          'express engine is not created, waiting',
+          tag: 'live.streaming.lifecyle-initState',
+          subTag: 'prebuilt',
+        );
+
+        _engineCreatedListeners[liveID] = joinRoomWaitEngineCreated;
+        ZegoUIKit()
+            .engineCreatedNotifier
+            .addListener(joinRoomWaitEngineCreated);
+      }
+    };
+
+    _previewVisibilityListeners[liveID] = onPreviewPageVisibilityUpdated;
     onPreviewPageVisibilityUpdated();
+
     if (ZegoLiveStreamingPageLifeCycle()
-        .currentManagers
+        .manager(liveID)
         .hostManager
         .configIsHost) {
       ZegoLiveStreamingPageLifeCycle()
@@ -154,52 +266,8 @@ class ZegoLiveStreamingPageLifeCycleInitState {
     }
   }
 
-  void onPreviewPageVisibilityUpdated() {
-    final isPreviewPageVisible =
-        ZegoLiveStreamingPageLifeCycle().previewPageVisibilityNotifier.value;
-
-    ZegoLoggerService.logInfo(
-      'onPreviewPageVisibilityUpdated:$onPreviewPageVisibilityUpdated, ',
-      tag: 'live.streaming.lifecyle-initState',
-      subTag: 'onPreviewPageVisibilityUpdated',
-    );
-
-    if (isPreviewPageVisible) {
-      /// Still on live preview page
-      return;
-    }
-
-    /// Enter live streaming page
-    ZegoLiveStreamingPageLifeCycle()
-        .previewPageVisibilityNotifier
-        .removeListener(onPreviewPageVisibilityUpdated);
-    if (ZegoUIKit().engineCreatedNotifier.value) {
-      ZegoLiveStreamingPageLifeCycle()
-          .currentManagers
-          .liveStatusManager
-          .checkShouldStopPlayAllAudioVideo(
-            isPrebuiltFromHall: isPrebuiltFromHall,
-          )
-          .then((_) {
-        joinRoom(
-          roomID: liveID,
-          token: contextData?.token ?? '',
-          markAsLargeRoom: contextData?.config.markAsLargeRoom ?? false,
-        );
-      });
-    } else {
-      ZegoLoggerService.logInfo(
-        'hashcode:$hashCode, '
-        'express engine is not created, waiting',
-        tag: 'live.streaming.lifecyle-initState',
-        subTag: 'prebuilt',
-      );
-
-      ZegoUIKit().engineCreatedNotifier.addListener(joinRoomWaitEngineCreated);
-    }
-  }
-
   Future<void> initPermissions({
+    required String liveID,
     required ZegoLiveStreamingPageLifeCycleContextData data,
     required BuildContext Function()? contextQuery,
   }) async {
@@ -212,11 +280,11 @@ class ZegoLiveStreamingPageLifeCycleInitState {
 
     var isCameraGranted = true;
     var isMicrophoneGranted = true;
-    if ((contextQuery?.call().mounted ?? false) &&
+    if ((contextQuery?.call()?.mounted ?? false) &&
         data.config.turnOnCameraWhenJoining) {
       isCameraGranted = await requestPermission(Permission.camera);
     }
-    if ((contextQuery?.call().mounted ?? false) &&
+    if ((contextQuery?.call()?.mounted ?? false) &&
         data.config.turnOnMicrophoneWhenJoining) {
       isMicrophoneGranted = await requestPermission(Permission.microphone);
     }
@@ -229,20 +297,20 @@ class ZegoLiveStreamingPageLifeCycleInitState {
     );
 
     if (!isCameraGranted) {
-      if (contextQuery?.call().mounted ?? false) {
+      if (contextQuery?.call()?.mounted ?? false) {
         await showAppSettingsDialog(
           context: contextQuery!.call(),
           rootNavigator: data.config.rootNavigator,
           popUpManager: data.popUpManager,
           dialogInfo: data.config.innerText.cameraPermissionSettingDialogInfo,
           kickOutNotifier:
-              ZegoLiveStreamingPageLifeCycle().currentManagers.kickOutNotifier,
+              ZegoLiveStreamingPageLifeCycle().manager(liveID).kickOutNotifier,
         );
       }
     }
 
     if (!isMicrophoneGranted) {
-      if (contextQuery?.call().mounted ?? false) {
+      if (contextQuery?.call()?.mounted ?? false) {
         await showAppSettingsDialog(
           context: contextQuery!.call(),
           rootNavigator: data.config.rootNavigator,
@@ -250,13 +318,14 @@ class ZegoLiveStreamingPageLifeCycleInitState {
           dialogInfo:
               data.config.innerText.microphonePermissionSettingDialogInfo,
           kickOutNotifier:
-              ZegoLiveStreamingPageLifeCycle().currentManagers.kickOutNotifier,
+              ZegoLiveStreamingPageLifeCycle().manager(liveID).kickOutNotifier,
         );
       }
     }
   }
 
   Future<void> setVideoConfig({
+    required String liveID,
     required ZegoLiveStreamingPageLifeCycleContextData data,
   }) async {
     ZegoLoggerService.logInfo(
@@ -306,37 +375,9 @@ class ZegoLiveStreamingPageLifeCycleInitState {
         .then((value) => ZegoUIKit().enableBeauty(true));
   }
 
-  void joinRoomWaitEngineCreated() {
-    ZegoUIKit().engineCreatedNotifier.removeListener(joinRoomWaitEngineCreated);
-
-    final isCreated = ZegoUIKit().engineCreatedNotifier.value;
-    ZegoLoggerService.logInfo(
-      'express engine created:$isCreated',
-      tag: 'live.streaming.lifecyle-initState',
-      subTag: 'joinRoomWaitEngineCreated',
-    );
-
-    if (isCreated) {
-      ZegoUIKit()
-          .engineCreatedNotifier
-          .removeListener(joinRoomWaitEngineCreated);
-      ZegoLiveStreamingPageLifeCycle()
-          .currentManagers
-          .liveStatusManager
-          .checkShouldStopPlayAllAudioVideo(
-            isPrebuiltFromHall: isPrebuiltFromHall,
-          )
-          .then((_) {
-        joinRoom(
-          roomID: liveID,
-          token: contextData?.token ?? '',
-          markAsLargeRoom: contextData?.config.markAsLargeRoom ?? false,
-        );
-      });
-    }
-  }
-
   Future<void> joinRoom({
+    required String liveID,
+    required ZegoLiveStreamingPageLifeCycleContextData contextData,
     required String roomID,
     required String token,
     required bool markAsLargeRoom,
@@ -349,21 +390,33 @@ class ZegoLiveStreamingPageLifeCycleInitState {
     );
 
     if (isPrebuiltFromHall) {
-      onRoomLogin(ZegoUIKitRoomLoginResult(ZegoUIKitErrorCode.success, {}));
+      onRoomLogin(
+        liveID: liveID,
+        contextData: contextData,
+        result: ZegoUIKitRoomLoginResult(ZegoUIKitErrorCode.success, {}),
+      );
     } else {
       ZegoUIKit()
           .joinRoom(
         liveID,
-        token: contextData?.token ?? '',
-        markAsLargeRoom: contextData?.config.markAsLargeRoom ?? false,
+        token: token,
+        markAsLargeRoom: markAsLargeRoom,
       )
           .then((result) {
-        onRoomLogin(result);
+        onRoomLogin(
+          liveID: liveID,
+          contextData: contextData,
+          result: result,
+        );
       });
     }
   }
 
-  Future<void> onRoomLogin(ZegoUIKitRoomLoginResult result) async {
+  Future<void> onRoomLogin({
+    required String liveID,
+    required ZegoLiveStreamingPageLifeCycleContextData contextData,
+    required ZegoUIKitRoomLoginResult result,
+  }) async {
     if (result.errorCode != 0) {
       onRoomLoginFailed?.call(result.errorCode, result.extendedData.toString());
       ZegoLoggerService.logError(
@@ -380,30 +433,33 @@ class ZegoLiveStreamingPageLifeCycleInitState {
       subTag: 'onRoomLogin',
     );
 
-    notifyUserJoinByMessage();
+    notifyUserJoinByMessage(liveID: liveID, contextData: contextData);
 
-    ZegoLiveStreamingPageLifeCycle().currentManagers.muteCoHostAudioVideo(
+    ZegoLiveStreamingPageLifeCycle().manager(liveID).muteCoHostAudioVideo(
           ZegoUIKit().getAudioVideoList(targetRoomID: liveID),
         );
   }
 
-  Future<void> notifyUserJoinByMessage() async {
-    if (!(contextData?.config.inRoomMessage.notifyUserJoin ?? false)) {
+  Future<void> notifyUserJoinByMessage({
+    required String liveID,
+    required ZegoLiveStreamingPageLifeCycleContextData contextData,
+  }) async {
+    if (!(contextData.config.inRoomMessage.notifyUserJoin)) {
       return;
     }
 
     final messageAttributes =
-        contextData?.config.inRoomMessage.attributes?.call();
+        contextData.config.inRoomMessage.attributes?.call();
     if (messageAttributes?.isEmpty ?? true) {
       await ZegoUIKit().sendInRoomMessage(
         targetRoomID: liveID,
-        contextData?.config.innerText.userEnter ?? '',
+        contextData.config.innerText.userEnter,
       );
     } else {
       await ZegoUIKit().sendInRoomMessage(
         targetRoomID: liveID,
         ZegoInRoomMessage.jsonBody(
-          message: contextData?.config.innerText.userEnter ?? '',
+          message: contextData.config.innerText.userEnter,
           attributes: messageAttributes!,
         ),
       );

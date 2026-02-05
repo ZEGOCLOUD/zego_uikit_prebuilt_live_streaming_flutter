@@ -3,6 +3,7 @@ import 'dart:core';
 import 'dart:math' as math;
 
 // Flutter imports:
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -98,7 +99,7 @@ class _ZegoLiveStreamingPreviewPageState
                     ZegoUIKit().turnCameraOn(
                       targetRoomID: widget.liveID,
                       ZegoLiveStreamingPageLifeCycle()
-                          .currentManagers
+                          .manager(widget.liveID)
                           .hostManager
                           .isLocalHost,
                     ),
@@ -107,7 +108,12 @@ class _ZegoLiveStreamingPreviewPageState
                     if (snapshot.hasData) {
                       return page;
                     }
-                    return const Center(child: CircularProgressIndicator());
+
+                    return Center(
+                      child: ZegoLoadingIndicator(
+                        text: kDebugMode ? "PreviewPage" : "",
+                      ),
+                    );
                   },
                 )
               : page;
@@ -271,8 +277,9 @@ class _ZegoLiveStreamingPreviewPageState
         translationText: widget.config.innerText,
         rootNavigator: widget.config.rootNavigator,
         popUpManager: widget.popUpManager,
-        kickOutNotifier:
-            ZegoLiveStreamingPageLifeCycle().currentManagers.kickOutNotifier,
+        kickOutNotifier: ZegoLiveStreamingPageLifeCycle()
+            .manager(widget.liveID)
+            .kickOutNotifier,
       ).then(
         (value) {
           ZegoLoggerService.logInfo(
