@@ -63,9 +63,12 @@ class ZegoLiveStreamingPKAudienceViewState
 
           return Stack(
             children: [
+              /// The audience pulls the mixed stream,
+              /// which is a frame composed of multiple hosts,
+              /// so mixView should be placed at the bottom layer
               mixView,
-              ...background(rectList),
-              ...foreground(rectList),
+              // ...background(rectList),
+              // ...foreground(rectList),
             ],
           );
         });
