@@ -1,3 +1,6 @@
+// Dart imports:
+import 'dart:async';
+
 // Flutter imports:
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -67,8 +70,8 @@ class ZegoLiveStreamingPKAudienceViewState
               /// which is a frame composed of multiple hosts,
               /// so mixView should be placed at the bottom layer
               mixView,
-              // ...background(rectList),
-              // ...foreground(rectList),
+              ...background(rectList),
+              ...foreground(rectList),
             ],
           );
         });
@@ -86,6 +89,7 @@ class ZegoLiveStreamingPKAudienceViewState
 
       widgets.add(
         Positioned.fromRect(
+          key: ValueKey(host.userInfo.id),
           rect: rect,
           child: ValueListenableBuilder(
             valueListenable: ZegoUIKitUserPropertiesNotifier(
@@ -101,36 +105,43 @@ class ZegoLiveStreamingPKAudienceViewState
                     host.userInfo.id,
                   ),
                   builder: (context, isCameraOn, _) {
-                    if (isCameraOn) {
-                      /// hide foreground when use camera
-                      return Container(color: Colors.transparent);
-                    }
+                    return _ZegoPKBackgroundDelayedShow(
+                      isCameraOn: isCameraOn,
+                      childBuilder: () {
+                        final updatedUser = ZegoUIKit().getUserInMixerStream(
+                          targetRoomID: widget.liveID,
+                          host.userInfo.id,
+                        );
+                        if (updatedUser.name.isEmpty) {
+                          updatedUser.name = host.userInfo.name;
+                        }
 
-                    final updatedUser = ZegoUIKit().getUserInMixerStream(
-                      targetRoomID: widget.liveID,
-                      host.userInfo.id,
-                    );
-                    if (updatedUser.name.isEmpty) {
-                      updatedUser.name = host.userInfo.name;
-                    }
-
-                    return Stack(
-                      children: [
-                        (widget.backgroundBuilder ?? defaultPKBackgroundBuilder)
-                            .call(
-                          context,
-                          rect.size,
-                          updatedUser,
-                          {},
-                        ),
-                        Positioned(
-                          top: 0,
-                          left: 0,
-                          right: 0,
-                          bottom: 0,
-                          child: avatar(host, rect),
-                        )
-                      ],
+                        return Stack(
+                          children: [
+                            (widget.backgroundBuilder ??
+                                    defaultPKBackgroundBuilder)
+                                .call(
+                              context,
+                              rect.size,
+                              updatedUser,
+                              {},
+                            ),
+                            Positioned(
+                              top: 0,
+                              left: 0,
+                              right: 0,
+                              bottom: 0,
+                              child: ZegoLiveStreamingPKAudienceContent(
+                                roomID: widget.liveID,
+                                user: updatedUser,
+                                avatarConfig: widget.avatarConfig,
+                                rect: rect,
+                                mixerStreamID: widget.mixerStreamID,
+                              ),
+                            )
+                          ],
+                        );
+                      },
                     );
                   });
             },
@@ -203,7 +214,6 @@ class ZegoLiveStreamingPKAudienceViewState
                   if (updatedUser.name.isEmpty) {
                     updatedUser.name = host.userInfo.name;
                   }
-
                   return isHeartbeatBroken
                       ? Center(
                           child: widget.config.pkBattle.hostReconnectingBuilder
@@ -227,24 +237,118 @@ class ZegoLiveStreamingPKAudienceViewState
 
     return widgets;
   }
+}
 
-  Widget avatar(
-    ZegoLiveStreamingPKUser host,
-    Rect rect,
-  ) {
+/// A widget that delays the display of the background when the camera is off.
+/// This prevents the background from flashing briefly before the video stream is ready
+/// when the initial camera state might be false but quickly becomes true.
+class _ZegoPKBackgroundDelayedShow extends StatefulWidget {
+  const _ZegoPKBackgroundDelayedShow({
+    super.key,
+    required this.isCameraOn,
+    required this.childBuilder,
+    this.delay = const Duration(milliseconds: 500),
+  });
+
+  final bool isCameraOn;
+  final Widget Function() childBuilder;
+  final Duration delay;
+
+  @override
+  State<_ZegoPKBackgroundDelayedShow> createState() =>
+      _ZegoPKBackgroundDelayedShowState();
+}
+
+class _ZegoPKBackgroundDelayedShowState
+    extends State<_ZegoPKBackgroundDelayedShow> {
+  Timer? _timer;
+  bool _showBackground = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _updateState();
+  }
+
+  @override
+  void didUpdateWidget(_ZegoPKBackgroundDelayedShow oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.isCameraOn != widget.isCameraOn) {
+      _updateState();
+    }
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  void _updateState() {
+    _timer?.cancel();
+
+    if (widget.isCameraOn) {
+      // Camera is ON, hide background immediately
+      _showBackground = false;
+    } else {
+      // Camera is OFF, delay showing background
+      if (!_showBackground) {
+        _timer = Timer(widget.delay, () {
+          if (mounted) {
+            setState(() {
+              _showBackground = true;
+            });
+          }
+        });
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (widget.isCameraOn) {
+      return Container(color: Colors.transparent);
+    }
+
+    if (_showBackground) {
+      return widget.childBuilder();
+    }
+
+    return Container(color: Colors.transparent);
+  }
+}
+
+class ZegoLiveStreamingPKAudienceContent extends StatelessWidget {
+  const ZegoLiveStreamingPKAudienceContent({
+    super.key,
+    required this.roomID,
+    required this.user,
+    required this.rect,
+    required this.mixerStreamID,
+    this.avatarConfig,
+  });
+
+  final String roomID;
+  final ZegoUIKitUser user;
+  final ZegoAvatarConfig? avatarConfig;
+  final Rect rect;
+  final String mixerStreamID;
+
+  @override
+  Widget build(BuildContext context) {
     return SizedBox(
-      width: widget.avatarConfig?.size?.width ?? rect.width / 2,
-      height: widget.avatarConfig?.size?.height ?? rect.width / 2,
+      width: avatarConfig?.size?.width ?? rect.width / 2,
+      height: avatarConfig?.size?.height ?? rect.width / 2,
       child: ZegoAvatar(
-        roomID: widget.liveID,
-        avatarSize: widget.avatarConfig?.size ?? rect.size / 2,
-        user: host.userInfo,
-        showAvatar: widget.avatarConfig?.showInAudioMode ?? true,
-        showSoundLevel: widget.avatarConfig?.showSoundWavesInAudioMode ?? true,
-        avatarBuilder: widget.avatarConfig?.builder,
-        soundLevelSize: widget.avatarConfig?.size,
-        soundLevelColor: widget.avatarConfig?.soundWaveColor,
-        mixerStreamID: widget.mixerStreamID,
+        roomID: roomID,
+        avatarSize: avatarConfig?.size ?? rect.size / 2,
+        user: user,
+        showAvatar: avatarConfig?.showInAudioMode ?? true,
+        showSoundLevel: avatarConfig?.showSoundWavesInAudioMode ?? true,
+        avatarBuilder: avatarConfig?.builder,
+        soundLevelSize: avatarConfig?.size,
+        soundLevelColor: avatarConfig?.soundWaveColor,
+        mixerStreamID: mixerStreamID,
       ),
     );
   }
