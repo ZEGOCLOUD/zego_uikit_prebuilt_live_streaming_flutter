@@ -1,6 +1,7 @@
 // Dart imports:
 import 'dart:async';
 
+// Flutter imports:
 import 'package:flutter/material.dart';
 
 /// A widget that delays the display of the background when the camera is off.
