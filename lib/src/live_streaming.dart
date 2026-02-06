@@ -120,7 +120,7 @@ class _ZegoUIKitPrebuiltLiveStreamingState
         ZegoUIKitHallRoomIDHelper.isRandomRoomID(
             ZegoUIKit().getCurrentRoom().id);
 
-    ZegoUIKit().getZegoUIKitVersion().then((uikitVersion) {
+    ZegoUIKit().version().then((uikitVersion) {
       ZegoLoggerService.logInfo(
         'version: zego_uikit_prebuilt_live_streaming:${ZegoUIKitPrebuiltLiveStreamingController().version}; $uikitVersion, \n'
         'config:${widget.config.toString()}, \n'
