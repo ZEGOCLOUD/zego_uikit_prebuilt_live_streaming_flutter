@@ -3,10 +3,8 @@ import 'dart:io' show Platform;
 
 // Flutter imports:
 import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
-
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/components/duration_time_board.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
@@ -18,7 +16,6 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/events.defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/internal/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/lifecycle.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/components/view.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/core/core.dart';
 
 class ZegoMinimizingStreamingPage extends StatefulWidget {
   const ZegoMinimizingStreamingPage({

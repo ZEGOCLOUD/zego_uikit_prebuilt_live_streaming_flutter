@@ -20,7 +20,7 @@ extension PKServiceCompleter on ZegoUIKitPrebuiltLiveStreamingPKServices {
 
   void completeCompleter(String apiName) {
     ZegoLoggerService.logInfo(
-      '$apiName',
+      'apiName:$apiName',
       tag: 'live.streaming.pk.services',
       subTag: 'completeCompleter',
     );
