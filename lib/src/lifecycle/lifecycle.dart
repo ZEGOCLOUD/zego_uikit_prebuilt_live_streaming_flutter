@@ -18,6 +18,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/events.defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/swiping/swiping.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/minimization/data.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/minimization/overlay_machine.dart';
+
 import 'defines.dart';
 import 'normal/normal.dart';
 
@@ -194,8 +195,9 @@ class ZegoLiveStreamingPageLifeCycle {
     required bool isPrebuiltFromHall,
     required bool isFromMinimize,
   }) async {
-    if (!_initialized) {
-      ZegoLoggerService.logInfo(
+    manager(liveID).pk.updateInitStatus(false);
+
+    if (!_initialized) {      ZegoLoggerService.logInfo(
         'not init, ignore',
         tag: 'live.streaming.lifecyle',
         subTag: 'uninitFromPreview',

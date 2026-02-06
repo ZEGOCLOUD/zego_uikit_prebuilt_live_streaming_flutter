@@ -36,6 +36,8 @@ part 'host.request.dart';
 part 'pk_users.dart';
 
 mixin ZegoUIKitPrebuiltLiveStreamingPKServices {
+  final isInitDoneNotifier = ValueNotifier<bool>(false);
+
   bool _serviceInitialized = false;
 
   String get liveID;
@@ -70,6 +72,22 @@ mixin ZegoUIKitPrebuiltLiveStreamingPKServices {
   ValueNotifier<List<String>> get mutedUsersNotifier =>
       _mixer.mutedUsersNotifier;
 
+  String get currentMixerStreamID => _mixer.mixerStreamID;
+
+  bool get isHost =>
+      ZegoLiveStreamingPageLifeCycle().manager(liveID).hostManager.isLocalHost;
+
+  bool get isLiving =>
+      ZegoLiveStreamingPageLifeCycle()
+          .manager(liveID)
+          .liveStatusManager
+          .notifier
+          .value ==
+      LiveStatus.living;
+
+  BuildContext? get context =>
+      ZegoLiveStreamingPageLifeCycle().contextQuery?.call();
+
   void updatePKState(ZegoLiveStreamingPKBattleState value) {
     if (pkStateNotifier.value == value) {
       ZegoLoggerService.logInfo(
@@ -97,21 +115,19 @@ mixin ZegoUIKitPrebuiltLiveStreamingPKServices {
     );
   }
 
-  String get currentMixerStreamID => _mixer.mixerStreamID;
+  void updateInitStatus(bool isDone) {
+    if (isInitDoneNotifier.value == isDone) {
+      return;
+    }
 
-  bool get isHost =>
-      ZegoLiveStreamingPageLifeCycle().manager(liveID).hostManager.isLocalHost;
+    ZegoLoggerService.logInfo(
+      'isDone:$isDone',
+      tag: 'live.streaming.pk.services($liveID)',
+      subTag: 'updateInitStatus',
+    );
 
-  bool get isLiving =>
-      ZegoLiveStreamingPageLifeCycle()
-          .manager(liveID)
-          .liveStatusManager
-          .notifier
-          .value ==
-      LiveStatus.living;
-
-  BuildContext? get context =>
-      ZegoLiveStreamingPageLifeCycle().contextQuery?.call();
+    isInitDoneNotifier.value = isDone;
+  }
 
   /// 等待PK处理完成：
   /// - 如果当前状态为loading，则等待状态变为非loading（inPK或idle）
@@ -191,7 +207,7 @@ mixin ZegoUIKitPrebuiltLiveStreamingPKServices {
       subTag: 'init',
     );
     if (isDefaultInPK) {
-      updatePKState(ZegoLiveStreamingPKBattleState.inPK);
+      updatePKState(ZegoLiveStreamingPKBattleState.loading);
     }
 
     _mixer.init(
@@ -207,10 +223,12 @@ mixin ZegoUIKitPrebuiltLiveStreamingPKServices {
     listenPKUserChanged();
 
     ZegoLoggerService.logInfo(
-      '',
+      'done',
       tag: 'live.streaming.pk.services($liveID)',
       subTag: 'init',
     );
+
+    updateInitStatus(true);
   }
 
   Future<void> uninitServices() async {
@@ -229,6 +247,8 @@ mixin ZegoUIKitPrebuiltLiveStreamingPKServices {
       tag: 'live.streaming.pk.services($liveID)',
       subTag: 'uninit',
     );
+
+    updateInitStatus(false);
 
     removeListenPKUserChanged();
     uninitEvents();

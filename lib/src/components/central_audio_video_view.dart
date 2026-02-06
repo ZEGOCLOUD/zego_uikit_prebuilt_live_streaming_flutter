@@ -93,70 +93,83 @@ class ZegoLiveStreamingCentralAudioVideoViewState
 
   @override
   Widget build(BuildContext context) {
-    final pk = ZegoLiveStreamingPageLifeCycle().manager(widget.liveID).pk;
     return ValueListenableBuilder<bool>(
-      valueListenable: pk.roomAttributesInitNotifier,
-      builder: (context, isPKRoomAttrInit, _) {
-        if (!isPKRoomAttrInit && !pk.isInPK) {
-          ZegoLoggerService.logInfo(
-            'not init pk room attr or not in pk room, '
-            'isPKRoomAttrInit:$isPKRoomAttrInit, '
-            'isInPK:${pk.isInPK}',
-            tag: 'live.streaming.pk.central_audio_video_view(${widget.liveID})',
-            subTag: 'build',
-          );
-          return Container();
+      valueListenable: ZegoLiveStreamingPageLifeCycle()
+          .manager(widget.liveID)
+          .pk
+          .isInitDoneNotifier,
+      builder: (context, isInitDone, _) {
+        if (!isInitDone) {
+          return const SizedBox();
         }
 
+        final pk = ZegoLiveStreamingPageLifeCycle().manager(widget.liveID).pk;
         return ValueListenableBuilder<bool>(
-          valueListenable: pk.combineNotifier.state,
-          builder: (context, _isInPK, _) {
-            final isInPK = (widget.liveID == pk.liveID && _isInPK);
-            if (isInPK) {
+          valueListenable: pk.roomAttributesInitNotifier,
+          builder: (context, isPKRoomAttrInit, _) {
+            if (!isPKRoomAttrInit && !pk.isInPK) {
               ZegoLoggerService.logInfo(
-                'in pk room, '
-                'isInPK:$isInPK, '
-                'pkState:${pk.pkStateNotifier.value}',
+                'not init pk room attr or not in pk room, '
+                'isPKRoomAttrInit:$isPKRoomAttrInit, '
+                'isInPK:${pk.isInPK}',
                 tag:
                     'live.streaming.pk.central_audio_video_view(${widget.liveID})',
                 subTag: 'build',
               );
-              final pkState = pk.pkStateNotifier.value;
-              if (pkState == ZegoLiveStreamingPKBattleState.inPK ||
-                  pkState == ZegoLiveStreamingPKBattleState.loading) {
-                return pkBattleView(
-                  constraints: widget.constraints,
-                );
-              }
+              return Container();
             }
 
-            ZegoLoggerService.logInfo(
-              'not in pk room, '
-              'isInPK:$isInPK, '
-              'pkState:${pk.pkStateNotifier.value}',
-              tag:
-                  'live.streaming.pk.central_audio_video_view(${widget.liveID})',
-              subTag: 'build',
-            );
-            return StreamBuilder<List<ZegoUIKitUser>>(
-              stream: ZegoUIKit().getScreenSharingListStream(
-                targetRoomID: widget.liveID,
-              ),
-              builder: (context, snapshot) {
-                final screenSharingUsers = ZegoUIKit().getScreenSharingList(
-                  targetRoomID: widget.liveID,
+            return ValueListenableBuilder<bool>(
+              valueListenable: pk.combineNotifier.state,
+              builder: (context, _isInPK, _) {
+                final isInPK = (widget.liveID == pk.liveID && _isInPK);
+                if (isInPK) {
+                  ZegoLoggerService.logInfo(
+                    'in pk room, '
+                    'isInPK:$isInPK, '
+                    'pkState:${pk.pkStateNotifier.value}',
+                    tag:
+                        'live.streaming.pk.central_audio_video_view(${widget.liveID})',
+                    subTag: 'build',
+                  );
+                  final pkState = pk.pkStateNotifier.value;
+                  if (pkState == ZegoLiveStreamingPKBattleState.inPK ||
+                      pkState == ZegoLiveStreamingPKBattleState.loading) {
+                    return pkBattleView(
+                      constraints: widget.constraints,
+                    );
+                  }
+                }
+
+                ZegoLoggerService.logInfo(
+                  'not in pk room, '
+                  'isInPK:$isInPK, '
+                  'pkState:${pk.pkStateNotifier.value}',
+                  tag:
+                      'live.streaming.pk.central_audio_video_view(${widget.liveID})',
+                  subTag: 'build',
                 );
-                return ValueListenableBuilder<ZegoUIKitUser?>(
-                  valueListenable: ZegoLiveStreamingPageLifeCycle()
-                      .manager(widget.liveID)
-                      .hostManager
-                      .notifier,
-                  builder: (context, host, _) {
-                    return audioVideoView(
-                      host,
-                      widget.constraints.maxWidth,
-                      widget.constraints.maxHeight,
-                      screenSharingUsers.isNotEmpty,
+                return StreamBuilder<List<ZegoUIKitUser>>(
+                  stream: ZegoUIKit().getScreenSharingListStream(
+                    targetRoomID: widget.liveID,
+                  ),
+                  builder: (context, snapshot) {
+                    final screenSharingUsers = ZegoUIKit().getScreenSharingList(
+                      targetRoomID: widget.liveID,
+                    );
+                    return ValueListenableBuilder<ZegoUIKitUser?>(
+                      valueListenable: ZegoLiveStreamingPageLifeCycle()
+                          .manager(widget.liveID)
+                          .hostManager
+                          .notifier,
+                      builder: (context, host, _) {
+                        return audioVideoView(
+                          host,
+                          widget.constraints.maxWidth,
+                          widget.constraints.maxHeight,
+                          screenSharingUsers.isNotEmpty,
+                        );
+                      },
                     );
                   },
                 );
