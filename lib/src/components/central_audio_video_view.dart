@@ -102,7 +102,7 @@ class ZegoLiveStreamingCentralAudioVideoViewState
             'not init pk room attr or not in pk room, '
             'isPKRoomAttrInit:$isPKRoomAttrInit, '
             'isInPK:${pk.isInPK}',
-            tag: 'live.streaming.pk.central_audio_video_view',
+            tag: 'live.streaming.pk.central_audio_video_view(${widget.liveID})',
             subTag: 'build',
           );
           return Container();
@@ -117,7 +117,8 @@ class ZegoLiveStreamingCentralAudioVideoViewState
                 'in pk room, '
                 'isInPK:$isInPK, '
                 'pkState:${pk.pkStateNotifier.value}',
-                tag: 'live.streaming.pk.central_audio_video_view',
+                tag:
+                    'live.streaming.pk.central_audio_video_view(${widget.liveID})',
                 subTag: 'build',
               );
               final pkState = pk.pkStateNotifier.value;
@@ -133,7 +134,8 @@ class ZegoLiveStreamingCentralAudioVideoViewState
               'not in pk room, '
               'isInPK:$isInPK, '
               'pkState:${pk.pkStateNotifier.value}',
-              tag: 'live.streaming.pk.central_audio_video_view',
+              tag:
+                  'live.streaming.pk.central_audio_video_view(${widget.liveID})',
               subTag: 'build',
             );
             return StreamBuilder<List<ZegoUIKitUser>>(
