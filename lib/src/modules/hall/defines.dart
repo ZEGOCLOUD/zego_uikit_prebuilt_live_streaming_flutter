@@ -1,6 +1,5 @@
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
-
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
 
@@ -27,7 +26,8 @@ typedef ZegoLiveStreamingHallListModelDelegate
 
 /// Typedef for the slide context in hall list.
 /// See [ZegoUIKitHallRoomListSlideContext] for details.
-typedef LiveStreamingHallListSlideContext = ZegoUIKitHallRoomListSlideContext;
+typedef ZegoLiveStreamingHallListSlideContext
+    = ZegoUIKitHallRoomListSlideContext;
 
 /// View style for the live hall list.
 ///

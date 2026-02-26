@@ -1,15 +1,14 @@
 // Flutter imports:
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
-
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/events.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/live_streaming.dart';
+
 import 'controller.dart';
 import 'defines.dart';
 import 'foreground/foreground.dart';
@@ -54,7 +53,6 @@ class ZegoUIKitLiveStreamingHallList extends StatefulWidget {
     this.appSign = '',
     this.token = '',
     this.eventsQuery,
-    this.hallController,
     this.hallModel,
     this.hallModelDelegate,
     this.hallStyle = const ZegoLiveStreamingHallListStyle(),
@@ -105,9 +103,6 @@ class ZegoUIKitLiveStreamingHallList extends StatefulWidget {
   /// hallConfig
   final ZegoLiveStreamingHallListConfig hallConfig;
 
-  /// hall Controller
-  final ZegoLiveStreamingHallListController? hallController;
-
   /// hallModel
   /// list of [host id && live id]
   /// When swiping up or down, the corresponding LIVE information will be returned via this [hallModel]
@@ -138,7 +133,6 @@ class _ZegoUIKitLiveStreamingHallListState
       'userID:${widget.userID}, '
       'userName:${widget.userName}, '
       'eventsQuery:${widget.eventsQuery}, '
-      'hallController:${widget.hallController}, '
       'hallModel:${widget.hallModel}, '
       'hallModelDelegate:${widget.hallModelDelegate}, '
       'hallStyle:${widget.hallStyle}, '
@@ -147,10 +141,7 @@ class _ZegoUIKitLiveStreamingHallListState
       subTag: 'initState',
     );
 
-    ZegoUIKitPrebuiltLiveStreamingController()
-        .hall
-        .private
-        .initByPrebuilt(hallController: widget.hallController);
+    ZegoUIKitPrebuiltLiveStreamingController().hall.private.initByPrebuilt();
 
     if (null != widget.hallConfig.audioVideoResourceMode) {
       ZegoUIKit().setPlayerResourceMode(

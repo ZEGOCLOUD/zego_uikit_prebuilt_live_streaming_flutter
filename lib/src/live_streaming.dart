@@ -33,7 +33,12 @@ import 'modules/swiping/page.dart';
 /// {@category APIs}
 /// {@category Events}
 /// {@category Configs}
+/// {@category Defines}
 /// {@category Components}
+/// {@category Minimization}
+/// {@category PK}
+/// {@category Swiping}
+/// {@category Hall}
 /// {@category Migration_v3.x}
 ///
 class ZegoUIKitPrebuiltLiveStreaming extends StatefulWidget {

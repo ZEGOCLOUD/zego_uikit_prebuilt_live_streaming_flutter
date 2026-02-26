@@ -13,6 +13,14 @@ dartdoc:
       markdown: doc/components.md
     "Defines":
       markdown: doc/defines.md
+    "Minimization":
+      markdown: doc/minimization.md
+    "PK":
+      markdown: doc/pk.md
+    "Swiping":
+      markdown: doc/swiping.md
+    "Hall":
+      markdown: doc/hall.md
     "Migration_v3.x":
       markdown: doc/MigrateGuide_v3.x.md
     "Migration_v4.x":

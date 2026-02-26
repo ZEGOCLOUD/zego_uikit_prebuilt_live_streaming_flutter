@@ -7,11 +7,15 @@ This feature provides a visual gallery where viewers can browse and discover liv
 
 - [Usage Scenarios](#usage-scenarios)
 - [ZegoUIKitLiveStreamingHallList](#zegouikitlivestreaminghalllist)
-- [ZegoLiveStreamingHallListController](#zegolivstreaminghalllistcontroller)
 - [ZegoLiveStreamingHallListStyle](#zegolivstreaminghallliststyle)
 - [ZegoLiveStreamingHallListForegroundStyle](#zegolivstreaminghalllistforegroundstyle)
 - [ZegoLiveStreamingHallListConfig](#zegolivstreaminghalllistconfig)
 - [ZegoLiveStreamingHallConfig](#zegolivstreaminghallconfig)
+- [ZegoLiveStreamingHallListItemStyle](#zegolivstreaminghalllistitemstyle)
+- [ZegoLiveStreamingHallListModel](#zegolivstreaminghalllistmodel)
+- [ZegoLiveStreamingHallListModelDelegate](#zegolivstreaminghalllistmodeldelegate)
+- [ZegoLiveStreamingHallHost](#zegolivstreaminghallhost)
+- [ZegoLiveStreamingHallListSlideContext](#zegolivesstreaminghalllistslidecontext)
 
 
 ## Usage Scenarios
@@ -249,24 +253,6 @@ The Hall List Widget.
 
 ---
 
-## ZegoLiveStreamingHallListController
-
-Controller for the Hall List.
-
-- **roomID**
-  - **Description**
-    - Get current room ID.
-  - **Prototype**
-    ```dart
-    String get roomID
-    ```
-  - **Example**
-    ```dart
-    var roomID = controller.roomID;
-    ```
-
----
-
 ## ZegoLiveStreamingHallListStyle
 
 Style configuration for the Hall List widget.
@@ -376,25 +362,185 @@ Configuration for Hall.
 
 ## ZegoLiveStreamingHallListItemStyle
 
-Hall list item style.
+Hall list item style for customizing the appearance of each item in the hall list.
 
 - **Description**
-  - See [ZegoUIKitHallRoomListItemStyle] for details.
+  - This class provides styling configuration for individual items in the hall list. It allows customization of the foreground, background, loading state, and avatar for each item.
+- **Properties**
+
+| Name              | Description                                                                 | Type                              |
+| :---------------- | :-------------------------------------------------------------------------- | :-------------------------------- |
+| foregroundBuilder | Widget builder for foreground, always displayed on top of the view        | `Widget Function(...)?`          |
+| backgroundBuilder | Widget builder for background, displayed when user closes camera          | `Widget Function(...)?`           |
+| loadingBuilder    | Widget builder for loading state, return `Container()` to hide it          | `Widget Function(...)?`           |
+| avatar            | Custom avatar configuration                                                 | `ZegoAvatarConfig?`              |
+
+- **Example**
+
+  ```dart
+  final itemStyle = ZegoLiveStreamingHallListItemStyle(
+    backgroundBuilder: (context, size, user, roomID) {
+      return Container(
+        color: Colors.black,
+        child: user != null
+            ? ZegoRemoteView(userID: user.id, roomID: roomID)
+            : const Center(child: Icon(Icons.videocam_off)),
+      );
+    },
+    foregroundBuilder: (context, size, user, roomID) {
+      return Positioned(
+        bottom: 10,
+        left: 10,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(user?.name ?? 'Unknown'),
+            const Chip(label: Text('LIVE')),
+          ],
+        ),
+      );
+    },
+    loadingBuilder: (context, user, roomID) {
+      return const CircularProgressIndicator();
+    },
+  );
+  ```
 
 ---
 
 ## ZegoLiveStreamingHallListModel
 
-Hall list model.
+Hall list model for managing the hall room list and interactions.
 
 - **Description**
-  - See [ZegoUIKitHallRoomListModel] for details.
+  - This class manages the state of rooms in the hall, including the currently active room and its adjacent rooms (previous and next). It provides functionality for sliding between rooms in the hall list, supporting vertical/horizontal sliding scenarios where users can switch between different rooms seamlessly.
+  - The model maintains an internal list of all available stream users and tracks the current position/index. When sliding occurs, it automatically calculates the previous and next rooms based on the current position, with circular navigation support (wrapping around at the beginning and end of the list).
+- **Properties**
+
+| Name           | Description                                                                      | Type                                      |
+| :------------- | :-------------------------------------------------------------------------------- | :---------------------------------------- |
+| activeRoom     | The currently active/selected room in the hall                                  | `ZegoLiveStreamingHallHost?`            |
+| activeContext  | Adjacent room data context relative to [activeRoom]                             | `ZegoLiveStreamingHallListSlideContext?`    |
+
+- **Constructor**
+  - `fromActiveStreamUsers(activeStreamUsers)`: Creates a model with a list of stream users
+  - `fromActiveRoomAndContext(activeRoom, activeContext)`: Creates a model with specific active room and context
+- **Methods**
+  - `updateStreamUsers(streamUsers)`: Updates the list of stream users
+  - `next()`: Gets the context for sliding to the next room
+  - `previous()`: Gets the context for sliding to the previous room
+
+- **Example**
+
+  ```dart
+  final model = ZegoLiveStreamingHallListModel.fromActiveStreamUsers(
+    activeStreamUsers: [
+      ZegoLiveStreamingHallHost(
+        user: ZegoUIKitUser(id: 'host_1', name: 'Host 1'),
+        roomID: 'live_1',
+      ),
+      ZegoLiveStreamingHallHost(
+        user: ZegoUIKitUser(id: 'host_2', name: 'Host 2'),
+        roomID: 'live_2',
+      ),
+    ],
+  );
+
+  // Slide to next room
+  final nextContext = model.next();
+
+  // Slide to previous room
+  final prevContext = model.previous();
+  ```
 
 ---
 
 ## ZegoLiveStreamingHallListModelDelegate
 
-Hall list model delegate.
+Delegate for managing hall room data yourself.
 
 - **Description**
-  - See [ZegoUIKitHallRoomListModelDelegate] for details.
+  - Use this delegate when you need to dynamically fetch room data (e.g., from server on-demand) instead of using a fixed room list. It provides callbacks for fetching adjacent rooms when the user swipes.
+- **Properties**
+
+| Name          | Description                                                                      | Type                                      |
+| :------------ | :-------------------------------------------------------------------------------- | :---------------------------------------- |
+| activeRoom    | The currently active/selected room in the hall                                  | `ZegoLiveStreamingHallHost`              |
+| activeContext | Adjacent room data context relative to [activeRoom]                             | `ZegoLiveStreamingHallListSlideContext`      |
+| delegate      | Callback triggered when swiping to fetch new adjacent rooms                     | `Function(bool toNext)?`                 |
+
+- **Parameters**
+  - `delegate(toNext)`: 
+    - `toNext`: `true` means swipe to next room, `false` means swipe to previous room
+    - Returns: `ZegoLiveStreamingHallListSlideContext` containing the new adjacent rooms
+
+---
+
+## ZegoLiveStreamingHallHost
+
+Hall host (stream user) information for the hall list.
+
+- **Description**
+  - Represents a live streaming host in the hall list. Contains user information, room ID, and stream playback state.
+- **Prototype**
+  ```dart
+  typedef ZegoLiveStreamingHallHost = ZegoUIKitHallRoomListStreamUser;
+  ```
+
+- **Properties**
+
+| Name | Description | Type |
+| :--- | :--- | :--- |
+| user | The user information of the host | `ZegoUIKitUser` |
+| roomID | The room ID of the live streaming | `String` |
+| isPlayed | Whether the stream has been played | `bool` |
+| isPlaying | Whether the stream is currently playing | `bool` |
+| streamType | The stream type (main or aux). Use `aux` for PK scenarios | `ZegoStreamType` |
+
+- **Example**
+  ```dart
+  ZegoLiveStreamingHallHost(
+    user: ZegoUIKitUser(
+      id: "host_1",
+      name: "Host 1",
+      isAnotherRoomUser: true,
+    ),
+    roomID: "live_1",
+  );
+  ```
+
+---
+
+## ZegoLiveStreamingHallListSlideContext
+
+Slide context for adjacent room data in hall list sliding scenarios.
+
+- **Description**
+  - Encapsulates information about the "previous" and "next" rooms adjacent to the current room when sliding to switch between rooms. Works with the current room to form a "previous-current-next" data chain for smooth sliding.
+- **Prototype**
+  ```dart
+  typedef ZegoLiveStreamingHallListSlideContext = ZegoUIKitHallRoomListSlideContext;
+  ```
+
+- **Properties**
+
+| Name | Description | Type |
+| :--- | :--- | :--- |
+| previous | Information of the previous room relative to the active room | `ZegoLiveStreamingHallHost` |
+| next | Information of the next room relative to the active room | `ZegoLiveStreamingHallHost` |
+
+- **Example**
+  ```dart
+  // Get slide context from hall list model
+  final model = ZegoLiveStreamingHallListModel.fromActiveStreamUsers(
+    activeStreamUsers: [...],
+  );
+  
+  // Slide to next room
+  final nextContext = model.next();
+  print('Next room: ${nextContext.next.roomID}');
+  
+  // Slide to previous room
+  final prevContext = model.previous();
+  print('Previous room: ${prevContext.previous.roomID}');
+  ```
