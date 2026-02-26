@@ -32,6 +32,10 @@ dartdoc:
     - "Configs"
     - "Components"
     - "Defines"
+    - "Minimization"
+    - "PK"
+    - "Swiping"
+    - "Hall"
     - "Migration_v3.x"
     - "Migration_v4.x"
   showUndocumentedCategories: true

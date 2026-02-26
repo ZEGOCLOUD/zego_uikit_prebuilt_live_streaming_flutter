@@ -15,7 +15,9 @@ class ZegoLiveStreamingControllerMessageImpl
     with ZegoLiveStreamingControllerMessagePrivate {
   /// sends the chat message
   ///
-  /// [payloadAttributes] same as
+  /// - [message] The message content to send.
+  /// - [type] The type of the message, defaults to [ZegoInRoomMessageType.broadcastMessage].
+  ///
   /// @return Error code, please refer to the error codes document https://docs.zegocloud.com/en/5548.html for details.
   ///
   /// @return A `Future` that representing whether the request was successful.

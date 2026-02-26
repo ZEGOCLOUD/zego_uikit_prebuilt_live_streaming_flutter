@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 
 // Project imports:
 import 'prefer_gird_layout.dart';
+import 'gird_layout.dart';
 
 /// Width of the mixer canvas for PK battles.
 const zegoLiveStreamingPKMixerCanvasWidth = 810.0;

@@ -8,7 +8,7 @@ typedef ZegoLiveStreamingSwipingHost = ZegoUIKitHallRoomListStreamUser;
 /// Swiping model delegate
 ///
 /// If you want to manage data yourself, please refer to [ZegoLiveStreamingSwipingModel],
-/// then cancel the setting of [model], and then set [modelDelegate]
+/// then cancel the setting of the `model` property, and then set `modelDelegate`
 ///
 /// Example usage:
 /// ```dart

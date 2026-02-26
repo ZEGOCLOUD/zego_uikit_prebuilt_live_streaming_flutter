@@ -61,7 +61,7 @@ class ZegoLiveStreamingPage extends StatefulWidget {
   final String appSign;
 
   /// The token issued by the developer's business server is used to ensure security.
-  /// For the generation rules, please refer to [Using Token Authentication] (https://doc-zh.zego.im/article/10360), the default is an empty string, that is, no authentication.
+  /// For the generation rules, please refer to `Using Token Authentication` (https://doc-zh.zego.im/article/10360), the default is an empty string, that is, no authentication.
   ///
   /// if appSign is not passed in or if appSign is empty, this parameter must be set for authentication when logging in to a room.
   final String token;

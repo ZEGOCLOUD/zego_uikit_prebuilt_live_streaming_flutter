@@ -73,7 +73,7 @@ part 'controller/user.dart';
 /// you can directly invoke it by ZegoUIKitPrebuiltLiveStreamingController().
 ///
 /// If the default live streaming UI and interactions do not meet your requirements, you can use this [ZegoUIKitPrebuiltLiveStreamingController] to actively control the business logic.
-/// This class is used by setting the [ZegoUIKitPrebuiltLiveStreaming.controller] parameter in the constructor of [ZegoUIKitPrebuiltLiveStreaming].
+/// This class is used by setting the `controller` parameter in the constructor of [ZegoUIKitPrebuiltLiveStreaming].
 class ZegoUIKitPrebuiltLiveStreamingController
     with
         ZegoLiveStreamingControllerPrivate,

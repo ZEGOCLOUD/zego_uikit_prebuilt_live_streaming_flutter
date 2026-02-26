@@ -83,7 +83,7 @@ class ZegoLiveStreamingEndEvent {
   /// while it was in a minimization state.
   ///
   /// You **can not** return to the previous page while it was **in a minimization state**!!!
-  /// just hide the minimize page by [ZegoUIKitPrebuiltLiveStreamingController().minimize.hide()]
+  /// just hide the minimize page by `ZegoUIKitPrebuiltLiveStreamingController().minimize.hide()`
   ///
   /// On the other hand, if the value of the parameter is false, it means
   /// that the user left the live streaming while it was not minimization.

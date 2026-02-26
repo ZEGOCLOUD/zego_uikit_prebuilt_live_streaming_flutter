@@ -22,32 +22,32 @@
 
 ## ZegoUIKitPrebuiltLiveStreamingEvents
 
-- `user`: [ZegoLiveStreamingUserEvents](#zegolivestreaminguserevents)
+- `user`: `ZegoLiveStreamingUserEvents`(#zegolivestreaminguserevents)
   - events about user.
-- `room`: [ZegoLiveStreamingRoomEvents](#zegolivestreamingroomevents)
+- `room`: `ZegoLiveStreamingRoomEvents`(#zegolivestreamingroomevents)
   - events about room.
-- `audioVideo`: [ZegoLiveStreamingAudioVideoEvents](#zegolivestreamingaudiovideoevents)
+- `audioVideo`: `ZegoLiveStreamingAudioVideoEvents`(#zegolivestreamingaudiovideoevents)
   - events about audio video.
-- `coHost`: [ZegoLiveStreamingCoHostEvents](#zegolivestreamingcohostevents)
+- `coHost`: `ZegoLiveStreamingCoHostEvents`(#zegolivestreamingcohostevents)
   - events about co-host.
-- `topMenuBar`: [ZegoLiveStreamingTopMenuBarEvents](#zegolivestreamingtopmenubarevents)
+- `topMenuBar`: `ZegoLiveStreamingTopMenuBarEvents`(#zegolivestreamingtopmenubarevents)
   - events about top menu bar.
-- `memberList`: [ZegoLiveStreamingMemberListEvents](#zegolivestreamingmemberlistevents)
+- `memberList`: `ZegoLiveStreamingMemberListEvents`(#zegolivestreamingmemberlistevents)
   - events about member list.
-- `inRoomMessage`: [ZegoLiveStreamingInRoomMessageEvents](#zegolivestreaminginroommessageevents)
+- `inRoomMessage`: `ZegoLiveStreamingInRoomMessageEvents`(#zegolivestreaminginroommessageevents)
   - events about in-room message.
-- `duration`: [ZegoLiveStreamingDurationEvents](#zegolivestreamingdurationevents)
+- `duration`: `ZegoLiveStreamingDurationEvents`(#zegolivestreamingdurationevents)
   - events about duration.
-- `beauty`: [ZegoLiveStreamingBeautyEvents](#zegolivestreamingbeautyevents)
+- `beauty`: `ZegoLiveStreamingBeautyEvents`(#zegolivestreamingbeautyevents)
   - events about beauty.
-- `media`: [ZegoUIKitMediaPlayerEvent](#zegouikitmediaplayerevent)
+- `media`: `ZegoUIKitMediaPlayerEvent`(#zegouikitmediaplayerevent)
   - events about media.
 
 ### onLeaveConfirmation
 
 - **Description**
   - Confirmation callback method before leaving the live streaming.
-  - If you want to perform more complex business logic before exiting the live streaming, such as updating some records to the backend, you can use the [onLeaveConfirmation] parameter to set it.
+  - If you want to perform more complex business logic before exiting the live streaming, such as updating some records to the backend, you can use the `onLeaveConfirmation` parameter to set it.
   - This parameter requires you to provide a callback method that returns an asynchronous result.
   - If you return true in the callback, the prebuilt page will quit and return to your previous page, otherwise it will be ignored.
 
@@ -222,7 +222,7 @@ Events about room.
 - **Description**
   - The room Token authentication is about to expire.
   - it will be sent 30 seconds before the Token expires.
-  - After receiving this callback, the Token can be updated through [ZegoUIKitPrebuiltLiveStreamingController.room.renewToken].
+  - After receiving this callback, the Token can be updated through `ZegoUIKitPrebuiltLiveStreamingController.room.renewToken`.
   - If there is no update, it will affect the user's next login and publish streaming operation, and will not affect the current operation.
 
 - **Prototype**
@@ -398,11 +398,11 @@ Events about audio-video.
 
 Events about co-host.
 
-- `host`: [ZegoLiveStreamingCoHostHostEvents](#zegolivestreamingcohosthostevents)
+- `host`: `ZegoLiveStreamingCoHostHostEvents`(#zegolivestreamingcohosthostevents)
   - events about host.
-- `audience`: [ZegoLiveStreamingCoHostAudienceEvents](#zegolivestreamingcohostaudienceevents)
+- `audience`: `ZegoLiveStreamingCoHostAudienceEvents`(#zegolivestreamingcohostaudienceevents)
   - events about audience.
-- `coHost`: [ZegoLiveStreamingCoHostCoHostEvents](#zegolivestreamingcohostcohostevents)
+- `coHost`: `ZegoLiveStreamingCoHostCoHostEvents`(#zegolivestreamingcohostcohostevents)
   - events about co-host.
 
 ### onMaxCountReached

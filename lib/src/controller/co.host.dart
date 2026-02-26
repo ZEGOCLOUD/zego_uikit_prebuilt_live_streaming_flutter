@@ -252,7 +252,15 @@ class ZegoLiveStreamingControllerCoHostImpl
     });
   }
 
+  /// Audience rejects the co-host invitation from the host.
+  ///
+  /// If [withToast] is set to true, a toast message will be displayed after the request succeeds or fails.
+  ///
+  /// - [customData] Custom data that you want to attach to the rejection.
+  ///
+  /// @return A `Future` that representing whether the request was successful.
   Future<bool> audienceRejectCoHostInvitation({
+    bool withToast = false,
     String customData = '',
   }) async {
     ZegoLoggerService.logInfo(

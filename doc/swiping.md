@@ -245,7 +245,7 @@ Swiping model for managing the hall room list and sliding interactions.
 | Name           | Description                                                                      | Type                                     |
 | :------------- | :-------------------------------------------------------------------------------- | :--------------------------------------- |
 | activeRoom     | The currently active/selected room in the hall                                  | `ZegoLiveStreamingSwipingHost?`        |
-| activeContext  | Adjacent room data context relative to [activeRoom]                             | `ZegoLiveStreamingSwipingSlideContext?` |
+| activeContext  | Adjacent room data context relative to `activeRoom`                             | `ZegoLiveStreamingSwipingSlideContext?` |
 
 - **Constructor**
   - `fromActiveStreamUsers(activeStreamUsers)`: Creates a model with a list of stream users
@@ -309,7 +309,7 @@ Delegate for managing room data yourself.
 | Name          | Description                                                                      | Type                                       |
 | :------------ | :-------------------------------------------------------------------------------- | :----------------------------------------- |
 | activeRoom    | The currently active/selected room in the hall                                  | `ZegoLiveStreamingSwipingHost`            |
-| activeContext | Adjacent room data context relative to [activeRoom]                             | `ZegoLiveStreamingSwipingSlideContext`    |
+| activeContext | Adjacent room data context relative to `activeRoom`                             | `ZegoLiveStreamingSwipingSlideContext`    |
 | delegate      | Callback triggered when swiping to fetch new adjacent rooms                     | `Function(bool toNext)?`                  |
 
 - **Parameters**

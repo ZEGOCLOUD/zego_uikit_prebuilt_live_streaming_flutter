@@ -44,12 +44,12 @@ enum ZegoLiveStreamingState {
   ended,
 }
 
-/// This enum type is used in [ZegoUIKitPrebuiltLiveStreamingConfig.bottomMenuBarConfig].
+/// This enum type is used in [ZegoUIKitPrebuiltLiveStreamingConfig.bottomMenuBar].
 ///
 /// Please note that these buttons are not role-specific and can be added to anyone's toolbar.
 /// The Live Streaming SDK simply defaults to defining which buttons can be displayed on the corresponding role's toolbar.
 ///
-/// For example, if you don't want co-hosts to control their own microphone, you can exclude the toggleMicrophoneButton from [ZegoBottomMenuBarConfig.coHostButtons].
+/// For example, if you don't want co-hosts to control their own microphone, you can exclude the toggleMicrophoneButton from [ZegoLiveStreamingBottomMenuBarConfig.coHostButtons].
 enum ZegoLiveStreamingMenuBarButtonName {
   /// Button for controlling the camera switch.
   toggleCameraButton,

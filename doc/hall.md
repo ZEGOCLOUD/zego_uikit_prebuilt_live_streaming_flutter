@@ -228,7 +228,7 @@ The Hall List Widget.
     | configsQuery | Callback to get the live streaming config for a given live ID. | `ZegoUIKitPrebuiltLiveStreamingConfig Function(String liveID)` | `Required` |
     | appSign | The app sign for authentication. | `String` | `''` |
     | token | The token for authentication. | `String` | `''` |
-    | eventsQuery | Callback to get the events for a given live ID. <br/>**Required** when using hall: You must set [ZegoUIKitPrebuiltLiveStreamingEvents.hall.onPagePushReplace] callback to handle navigation when users leave a live streaming page. | `ZegoUIKitPrebuiltLiveStreamingEvents? Function(String liveID)?` | `Optional` |
+    | eventsQuery | Callback to get the events for a given live ID. <br/>**Required** when using hall: You must set `ZegoUIKitPrebuiltLiveStreamingEvents.hall.onPagePushReplace` callback to handle navigation when users leave a live streaming page. | `ZegoUIKitPrebuiltLiveStreamingEvents? Function(String liveID)?` | `Optional` |
     | hallStyle | Style configuration for the hall list. | `ZegoLiveStreamingHallListStyle?` | `Optional` |
     | hallConfig | Configuration for the hall list. | `ZegoLiveStreamingHallListConfig?` | `Optional` |
     | hallController | Controller for the hall list. | `ZegoLiveStreamingHallListController?` | `Optional` |
@@ -420,7 +420,7 @@ Hall list model for managing the hall room list and interactions.
 | Name           | Description                                                                      | Type                                      |
 | :------------- | :-------------------------------------------------------------------------------- | :---------------------------------------- |
 | activeRoom     | The currently active/selected room in the hall                                  | `ZegoLiveStreamingHallHost?`            |
-| activeContext  | Adjacent room data context relative to [activeRoom]                             | `ZegoLiveStreamingHallListSlideContext?`    |
+| activeContext  | Adjacent room data context relative to `activeRoom`                             | `ZegoLiveStreamingHallListSlideContext?`    |
 
 - **Constructor**
   - `fromActiveStreamUsers(activeStreamUsers)`: Creates a model with a list of stream users
@@ -466,7 +466,7 @@ Delegate for managing hall room data yourself.
 | Name          | Description                                                                      | Type                                      |
 | :------------ | :-------------------------------------------------------------------------------- | :---------------------------------------- |
 | activeRoom    | The currently active/selected room in the hall                                  | `ZegoLiveStreamingHallHost`              |
-| activeContext | Adjacent room data context relative to [activeRoom]                             | `ZegoLiveStreamingHallListSlideContext`      |
+| activeContext | Adjacent room data context relative to `activeRoom`                             | `ZegoLiveStreamingHallListSlideContext`      |
 | delegate      | Callback triggered when swiping to fetch new adjacent rooms                     | `Function(bool toNext)?`                 |
 
 - **Parameters**

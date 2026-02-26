@@ -237,6 +237,9 @@ class ZegoLiveStreamingControllerPKImpl
   /// Silence the [targetHostIDs] in PK, local host and audience in the live
   /// streaming won't hear the muted host's voice.
   ///
+  /// - [targetHostIDs] List of host IDs to mute/unmute.
+  /// - [isMute] Whether to mute (true) or unmute (false) the hosts.
+  ///
   /// If you want to cancel mute, set [isMute] to false.
   Future<bool> muteAudios({
     required List<String> targetHostIDs,

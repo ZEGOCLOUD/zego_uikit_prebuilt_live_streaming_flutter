@@ -172,7 +172,7 @@ class ZegoLiveStreamingRoomEvents {
   /// the room Token authentication is about to expire,
   /// it will be sent 30 seconds before the Token expires.
   ///
-  /// After receiving this callback, the Token can be updated through [ZegoUIKitPrebuiltLiveStreamingController.room.renewToken].
+  /// After receiving this callback, the Token can be updated through `ZegoUIKitPrebuiltLiveStreamingController().room.renewToken`.
   /// If there is no update, it will affect the user's next login and publish streaming operation, and will not affect the current operation.
   String? Function(int remainSeconds)? onTokenExpired;
 
@@ -484,10 +484,10 @@ class ZegoLiveStreamingCoHostCoHostEvents {
 
 /// pk related events
 ///
-/// The [defaultAction] is the internal default behavior (popup).
+/// The `defaultAction` is the internal default behavior (popup).
 /// If you override the event and still require these default actions, please execute `defaultAction.call()`.
 class ZegoLiveStreamingPKEvents {
-  /// Received a PK invitation from [event.fromHost], with the ID [event.requestID].
+  /// Received a PK invitation from `event.fromHost`, with the ID `event.requestID`.
   ///
   /// When receiving a PK battle request, the Live Streaming Kit
   /// (ZegoUIKitPrebuiltLiveStreaming) defaults to check whether you are
@@ -499,7 +499,7 @@ class ZegoLiveStreamingPKEvents {
     VoidCallback defaultAction,
   )? onIncomingRequestReceived;
 
-  /// The received PK invitation has been canceled by the inviting host [event.fromHost].
+  /// The received PK invitation has been canceled by the inviting host `event.fromHost`.
   ///
   /// You can receive callback notifications or customize your business logic
   /// by listening to or setting up the [onIncomingRequestCancelled]
@@ -519,7 +519,7 @@ class ZegoLiveStreamingPKEvents {
     VoidCallback defaultAction,
   )? onIncomingRequestTimeout;
 
-  /// The PK invitation to [event.fromHost] has been accepted.
+  /// The PK invitation to `event.fromHost` has been accepted.
   ///
   /// When the sent PK battle request is accepted, the Live Streaming Kit
   /// (ZegoUIKitPrebuiltLiveStreaming) starts the PK battle by default.
@@ -530,7 +530,7 @@ class ZegoLiveStreamingPKEvents {
     VoidCallback defaultAction,
   )? onOutgoingRequestAccepted;
 
-  /// The PK invitation to [event.fromHost] has been rejected.
+  /// The PK invitation to `event.fromHost` has been rejected.
   ///
   /// When the sent PK battle request is rejected, the default behaviour is
   /// notify you that the host has rejected your PK battle request through a pop-up window.
@@ -557,7 +557,7 @@ class ZegoLiveStreamingPKEvents {
     VoidCallback defaultAction,
   )? onOutgoingRequestTimeout;
 
-  /// PK invitation had been ended by [event.fromHost]
+  /// PK invitation had been ended by `event.fromHost`
   void Function(
     ZegoLiveStreamingPKBattleEndedEvent event,
     VoidCallback defaultAction,
@@ -724,10 +724,10 @@ class ZegoLiveStreamingHallEvents {
   /// **Required** when using [ZegoUIKitLiveStreamingHallList]. If not set, the SDK will log an error and assert in debug mode.
   ///
   /// Parameters:
-  /// - [context]: The build context
-  /// - [fromLiveID]: The live ID of the room that the user is leaving
-  /// - [hallListModel]: The hall list model configuration (if available)
-  /// - [hallListModelDelegate]: The hall list model delegate (if available)
+  /// - `context`: The build context
+  /// - `fromLiveID`: The live ID of the room that the user is leaving
+  /// - `hallListModel`: The hall list model configuration (if available)
+  /// - `hallListModelDelegate`: The hall list model delegate (if available)
   ///
   /// Example:
   /// ```dart

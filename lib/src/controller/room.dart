@@ -112,9 +112,12 @@ class ZegoLiveStreamingControllerRoomImpl
 
   /// set/update room property
   ///
-  /// @param isForce: Whether the operation is mandatory, that is, the property of the room whose owner is another user can be modified.
-  /// @param isDeleteAfterOwnerLeft: Room attributes are automatically deleted after the owner leaves the room.
-  /// @param isUpdateOwner: Whether to update the owner of the room attribute involved.
+  /// - [roomID] The ID of the room to update property.
+  /// - [key] The property key to set/update.
+  /// - [value] The property value to set/update.
+  /// - [isForce] Whether the operation is mandatory, that is, the property of the room whose owner is another user can be modified.
+  /// - [isDeleteAfterOwnerLeft] Room attributes are automatically deleted after the owner leaves the room.
+  /// - [isUpdateOwner] Whether to update the owner of the room attribute involved.
   Future<bool> updateProperty({
     required String roomID,
     required String key,
@@ -134,9 +137,11 @@ class ZegoLiveStreamingControllerRoomImpl
 
   /// set/update room properties
   ///
-  /// @param isForce: Whether the operation is mandatory, that is, the property of the room whose owner is another user can be modified.
-  /// @param isDeleteAfterOwnerLeft: Room attributes are automatically deleted after the owner leaves the room.
-  /// @param isUpdateOwner: Whether to update the owner of the room attribute involved.
+  /// - [roomID] The ID of the room to update properties.
+  /// - [roomProperties] Map of property keys and values to set/update.
+  /// - [isForce] Whether the operation is mandatory, that is, the property of the room whose owner is another user can be modified.
+  /// - [isDeleteAfterOwnerLeft] Room attributes are automatically deleted after the owner leaves the room.
+  /// - [isUpdateOwner] Whether to update the owner of the room attribute involved.
   Future<bool> updateProperties({
     required String roomID,
     required Map<String, String> roomProperties,
@@ -179,6 +184,10 @@ class ZegoLiveStreamingControllerRoomImpl
   }
 
   /// delete room properties
+  ///
+  /// - [roomID] The ID of the room whose properties to delete.
+  /// - [keys] List of property keys to delete.
+  /// - [isForce] Whether the operation is mandatory.
   Future<bool> deleteProperties({
     required String roomID,
     required List<String> keys,
@@ -217,6 +226,8 @@ class ZegoLiveStreamingControllerRoomImpl
   }
 
   /// query room properties
+  ///
+  /// - [roomID] The ID of the room whose properties to query.
   Future<Map<String, String>> queryProperties({
     required String roomID,
   }) async {
@@ -273,6 +284,9 @@ class ZegoLiveStreamingControllerRoomImpl
   /// import 'dart:typed_data';
   ///
   /// Uint8List dataBytes = Uint8List.fromList(utf8.encode(commandString));
+  ///
+  /// - [roomID] The ID of the room to send the command to.
+  /// - [command] The command data to send, encoded as Uint8List.
   Future<bool> sendCommand({
     required String roomID,
     required Uint8List command,

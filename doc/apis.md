@@ -52,9 +52,9 @@ Used to control the live streaming functionality.
 
 - **Description**
   - This function is used to end the Live Streaming.
-  - You can pass the context [context] for any necessary pop-ups or page transitions.
-  - By using the [showConfirmation] parameter, you can control whether to display a confirmation dialog to confirm ending the Live Streaming.
-  - This function behaves the same as the close button in the calling interface's top right corner, and it is also affected by the [ZegoUIKitPrebuiltLiveStreamingEvents.onLeaveConfirmation], [ZegoUIKitPrebuiltLiveStreamingEvents.onEnded] settings in the config.
+  - You can pass the context `context` for any necessary pop-ups or page transitions.
+  - By using the `showConfirmation` parameter, you can control whether to display a confirmation dialog to confirm ending the Live Streaming.
+  - This function behaves the same as the close button in the calling interface's top right corner, and it is also affected by the `ZegoUIKitPrebuiltLiveStreamingEvents.onLeaveConfirmation`, `ZegoUIKitPrebuiltLiveStreamingEvents.onEnded` settings in the config.
 - **Prototype**
   ```dart
   Future<bool> leave(
@@ -124,7 +124,7 @@ Used to control the live streaming functionality.
 
 - **state**
   - **Description**
-    - Microphone state of [userID].
+    - Microphone state of `userID`.
   - **Prototype**
     ```dart
     bool state(String userID);
@@ -132,7 +132,7 @@ Used to control the live streaming functionality.
 
 - **stateNotifier**
   - **Description**
-    - Microphone state notifier of [userID].
+    - Microphone state notifier of `userID`.
   - **Prototype**
     ```dart
     ValueNotifier<bool> stateNotifier(String userID);
@@ -140,7 +140,7 @@ Used to control the live streaming functionality.
 
 - **turnOn**
   - **Description**
-    - Turn on/off [userID] microphone, if [userID] is empty, then it refers to local user.
+    - Turn on/off `userID` microphone, if `userID` is empty, then it refers to local user.
   - **Prototype**
     ```dart
     Future<void> turnOn(bool isOn, {String? userID});
@@ -152,7 +152,7 @@ Used to control the live streaming functionality.
 
 - **switchState**
   - **Description**
-    - Switch [userID] microphone state, if [userID] is empty, then it refers to local user.
+    - Switch `userID` microphone state, if `userID` is empty, then it refers to local user.
   - **Prototype**
     ```dart
     void switchState({String? userID});
@@ -180,7 +180,7 @@ Used to control the live streaming functionality.
 
 - **state**
   - **Description**
-    - Camera state of [userID].
+    - Camera state of `userID`.
   - **Prototype**
     ```dart
     bool state(String userID);
@@ -188,7 +188,7 @@ Used to control the live streaming functionality.
 
 - **stateNotifier**
   - **Description**
-    - Camera state notifier of [userID].
+    - Camera state notifier of `userID`.
   - **Prototype**
     ```dart
     ValueNotifier<bool> stateNotifier(String userID);
@@ -196,7 +196,7 @@ Used to control the live streaming functionality.
 
 - **turnOn**
   - **Description**
-    - Turn on/off [userID] camera, if [userID] is empty, then it refers to local user.
+    - Turn on/off `userID` camera, if `userID` is empty, then it refers to local user.
   - **Prototype**
     ```dart
     Future<void> turnOn(bool isOn, {String? userID});
@@ -208,7 +208,7 @@ Used to control the live streaming functionality.
 
 - **switchState**
   - **Description**
-    - Switch [userID] camera state, if [userID] is empty, then it refers to local user.
+    - Switch `userID` camera state, if `userID` is empty, then it refers to local user.
   - **Prototype**
     ```dart
     void switchState({String? userID});
@@ -664,7 +664,7 @@ Used to control the live streaming functionality.
     ```
   - **Example**
     ```dart
-    ZegoUIKitPrebuiltLiveStreamingController().user.remove(["user1"]);
+    ZegoUIKitPrebuiltLiveStreamingController().user.remove(`"user1"`);
     ```
 
 - **addFakeUser**
@@ -777,7 +777,7 @@ Used to control the live streaming functionality.
 
 - **hostSendCoHostInvitationToAudience**
   - **Description**
-    - Host invite [audience] to be a co-host.
+    - Host invite `audience` to be a co-host.
   - **Prototype**
     ```dart
     Future<bool> hostSendCoHostInvitationToAudience(
@@ -866,7 +866,7 @@ Used to control the live streaming functionality.
 
 - **hostAgreeCoHostRequest**
   - **Description**
-    - Host approve the co-host request made by [audience].
+    - Host approve the co-host request made by `audience`.
   - **Prototype**
     ```dart
     Future<bool> hostAgreeCoHostRequest(ZegoUIKitUser audience, {String customData = ''})
@@ -878,7 +878,7 @@ Used to control the live streaming functionality.
 
 - **hostRejectCoHostRequest**
   - **Description**
-    - Host reject the co-host request made by [audience].
+    - Host reject the co-host request made by `audience`.
   - **Prototype**
     ```dart
     Future<bool> hostRejectCoHostRequest(ZegoUIKitUser audience, {String customData = ''})
@@ -890,7 +890,7 @@ Used to control the live streaming functionality.
 
 - **removeCoHost**
   - **Description**
-    - Host remove the co-host, make [coHost] to be an audience.
+    - Host remove the co-host, make `coHost` to be an audience.
   - **Prototype**
     ```dart
     Future<bool> removeCoHost(ZegoUIKitUser coHost, {String customData = ''})
@@ -911,7 +911,7 @@ Used to control the live streaming functionality.
     - Export logs.
   - **Prototype**
     ```dart
-    Future<bool> exportLogs({String? title, String? content, String? fileName, List<ZegoLogExporterFileType> fileTypes = const [ZegoLogExporterFileType.txt, ZegoLogExporterFileType.log, ZegoLogExporterFileType.zip], List<ZegoLogExporterDirectoryType> directories = const [ZegoLogExporterDirectoryType.zegoUIKits, ZegoLogExporterDirectoryType.zimAudioLog, ZegoLogExporterDirectoryType.zimLogs, ZegoLogExporterDirectoryType.zefLogs, ZegoLogExporterDirectoryType.zegoLogs], void Function(double progress)? onProgress})
+    Future<bool> exportLogs({String? title, String? content, String? fileName, List<ZegoLogExporterFileType> fileTypes = const `ZegoLogExporterFileType.txt, ZegoLogExporterFileType.log, ZegoLogExporterFileType.zip`, List<ZegoLogExporterDirectoryType> directories = const [ZegoLogExporterDirectoryType.zegoUIKits, ZegoLogExporterDirectoryType.zimAudioLog, ZegoLogExporterDirectoryType.zimLogs, ZegoLogExporterDirectoryType.zefLogs, ZegoLogExporterDirectoryType.zegoLogs], void Function(double progress)? onProgress})
     ```
 
   - **Parameters**

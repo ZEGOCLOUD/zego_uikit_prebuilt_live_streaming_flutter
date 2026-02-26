@@ -69,7 +69,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
 
   /// swiping config, if you wish to use swiping, please configure this config.
   /// if it is null, this swiping will not be enabled.
-  /// the [liveID] will be the initial live id of swiping
+  /// the `liveID` will be the initial live id of swiping
   ZegoLiveStreamingSwipingConfig? swiping;
 
   /// Used to configure the parameters related to PK battles
@@ -108,7 +108,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   ZegoLiveStreamingRole role = ZegoLiveStreamingRole.audience;
 
   /// Plugins, currently supports signaling, beauty.
-  /// if you need cohost function, you need to install [ZegoUIKitSignalingPlugin]
+  /// if you need cohost function, you need to install `ZegoUIKitSignalingPlugin`
   List<IZegoUIKitPlugin> plugins = [];
 
   /// Whether to open the camera when joining the live streaming.
@@ -166,7 +166,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   /// All visible text content on the UI can be modified using this single property.
   ZegoUIKitPrebuiltLiveStreamingInnerText innerText;
 
-  /// Layout-related configuration. You can choose your layout here. such as [layout = ZegoLayout.gallery()]
+  /// Layout-related configuration. You can choose your layout here. such as `ZegoLayout.gallery()`
   ZegoLayout? layout;
 
   /// same as Flutter's Navigator's param
@@ -202,7 +202,7 @@ class ZegoUIKitPrebuiltLiveStreamingConfig {
   ///  Mark is large room or not
   ///
   ///  sendInRoomCommand will sending to everyone in the room if true
-  ///  that mean [toUserIDs] of [sendInRoomCommand] function is disabled if true
+  ///  that mean `toUserIDs` of sendInRoomCommand function is disabled if true
   bool markAsLargeRoom;
 
   /// set whether the surface can be slid to hide, including the top toolbar, bottom toolbar, message list, and foreground
@@ -620,7 +620,7 @@ class ZegoLiveStreamingAudioVideoViewConfig {
 /// Configuration options for the top menu bar (toolbar).
 class ZegoLiveStreamingTopMenuBarConfig {
   /// These buttons will displayed on the menu bar, order by the list
-  /// only support [minimizingButton] right now
+  /// only support `ZegoLiveStreamingMenuBarButtonName.minimizingButton` right now
   List<ZegoLiveStreamingMenuBarButtonName> buttons;
 
   /// padding for the top menu bar.
@@ -798,7 +798,7 @@ class ZegoLiveStreamingMemberButtonConfig {
 ///
 /// You can use the [ZegoUIKitPrebuiltLiveStreamingConfig.memberList] property to set the properties inside this class.
 ///
-/// In addition, you can listen for item click events through [ZegoUIKitPrebuiltLiveStreamingEvents.memberList.onClicked].
+/// In addition, you can listen for item click events through [ZegoUIKitPrebuiltLiveStreamingEvents.memberList] callback.
 class ZegoLiveStreamingMemberListConfig {
   /// Custom member list item view.
   ///
@@ -819,8 +819,8 @@ class ZegoLiveStreamingMemberListConfig {
 
   ///  show fake user or not
   ///
-  ///  [ZegoUIKitPrebuiltLiveStreamingController().user.addFake()]
-  ///  [ZegoUIKitPrebuiltLiveStreamingController().user.removeFake()]
+  ///  `ZegoUIKitPrebuiltLiveStreamingController().user.addFake()`
+  ///  `ZegoUIKitPrebuiltLiveStreamingController().user.removeFake()`
   bool showFakeUser;
 
   ZegoLiveStreamingMemberListConfig({
@@ -926,7 +926,7 @@ class ZegoLiveStreamingInRoomMessageConfig {
 
   /// show fake message or not
   ///
-  ///  [ZegoUIKitPrebuiltLiveStreamingController().message.sendFakeMessage()]
+  ///  `ZegoUIKitPrebuiltLiveStreamingController().message.sendFakeMessage()`
   bool showFakeMessage;
 
   /// display user name in message list view or not
@@ -1198,20 +1198,20 @@ class ZegoLiveStreamingEffectConfig {
 ///
 /// This class is used for the [ZegoUIKitPrebuiltLiveStreamingConfig.pkBattle] property.
 class ZegoLiveStreamingPKBattleConfig {
-  /// If the connection with a PK user is lost for a [userReconnectingSecond] period of time,
+  /// If the connection with a PK user is lost for a `userReconnectingSecond` period of time,
   /// it will trigger [hostReconnectingBuilder], which waits for the user to reconnect.
   ///
   /// default value is 5 seconds.
   ///
-  /// [ZegoUIKitPrebuiltLiveStreamingPKEvents.onUserReconnecting] will be triggered
+  /// `ZegoUIKitPrebuiltLiveStreamingPKEvents.onUserReconnecting` will be triggered
   int userReconnectingSecond;
 
-  /// When a PK user loses connection for more than [userDisconnectedSecond],
+  /// When a PK user loses connection for more than `userDisconnectedSecond`,
   /// they will be automatically kicked out of the PK.
   ///
   /// default value is 90 seconds.
   ///
-  /// [ZegoUIKitPrebuiltLiveStreamingPKEvents.onUserDisconnected] will be triggered
+  /// `ZegoUIKitPrebuiltLiveStreamingPKEvents.onUserDisconnected` will be triggered
   int userDisconnectedSecond;
 
   /// you can custom coordinates and modify the PK layout.
@@ -1454,19 +1454,19 @@ class ZegoLiveStreamingHallConfig {
 
 /// swiping config, if you wish to use swiping, please configure this config.
 /// if it is null, this swiping will not be enabled.
-/// the [liveID] will be the initial live id of swiping
+/// the `liveID` will be the initial live id of swiping
 ///
 /// If you use **ZegoLiveStreamingHallList**, this setting will be invalid because **ZegoLiveStreamingHallList** will reset it
 class ZegoLiveStreamingSwipingConfig {
   ZegoLiveStreamingStreamMode streamMode;
 
   /// swiping model
-  /// list of [live id]
-  /// When swiping up or down, the corresponding LIVE ID will be returned via this [model]
+  /// list of `live id`
+  /// When swiping up or down, the corresponding LIVE ID will be returned via this `model`
   final ZegoLiveStreamingSwipingModel? model;
 
   /// If you want to manage data yourself, please refer to [ZegoLiveStreamingSwipingModel],
-  /// then cancel the setting of [model], and then set [modelDelegate]
+  /// then cancel the setting of `model`, and then set `modelDelegate`
   final ZegoLiveStreamingSwipingModelDelegate? modelDelegate;
 
   ZegoLiveStreamingSwipingConfig({

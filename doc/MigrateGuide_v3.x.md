@@ -1165,8 +1165,10 @@ type of `turnOnCameraWhenCohosted`, change from **bool** to `bool Function()?`.
 > |startPKBattleWith|none|After accepting the PK invitation, the interface will automatically switch to the PK screen, and no further action is required.<br><br>If you want the other party to directly
 > enter the PK after the invitation is sent, you can set the isAutoAccept parameter to true in the sendRequest function.|
 >
-> For example, if you previously used **ZegoUIKitPrebuiltLiveStreamingService().sendPKBattleRequest(hostUserID)** to send a PK invitation, now you should use **
-> ZegoUIKitPrebuiltLiveStreamingController().pk.sendRequest([hostUserID])**.
+> For example, if you previously used **ZegoUIKitPrebuiltLiveStreamingService().sendPKBattleRequest(hostUserID)** to send a PK invitation, now you should use 
+> ```dart
+> ZegoUIKitPrebuiltLiveStreamingController().pk.sendRequest([hostUserID]).
+> ```
 >
 >- Events
 >

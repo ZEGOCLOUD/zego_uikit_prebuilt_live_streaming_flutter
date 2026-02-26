@@ -74,7 +74,7 @@ typedef ZegoLiveStreamingAudioVideoContainerBuilder = Widget? Function(
 class ZegoLiveStreamingMenuBarExtendButton extends StatelessWidget {
   /// Index of buttons within the entire bottom toolbar, including both built-in buttons and extension buttons.
   ///
-  /// For example, if it's for the host, the index refers to the array index of [hostButtons] + [hostExtendButtons].
+  /// For example, if it's for the host, the index refers to the array index of `hostButtons` + `hostExtendButtons` in [ZegoLiveStreamingBottomMenuBarConfig].
   ///
   /// If this index is set, the corresponding button will be placed at the specified position in the array of buttons for the corresponding role.
   ///
@@ -112,7 +112,7 @@ class ZegoLiveStreamingMenuBarExtendButton extends StatelessWidget {
 
 /// Button style for the bottom toolbar, allowing customization of button icons or text.
 ///
-/// You can use the [ZegoUIKitPrebuiltLiveStreamingConfig.bottomMenuBarConfig] -> [ZegoLiveStreamingBottomMenuBarConfig.buttonStyle] property to set the properties inside this class.
+/// You can use the [ZegoUIKitPrebuiltLiveStreamingConfig.bottomMenuBar] -> [ZegoLiveStreamingBottomMenuBarConfig.buttonStyle] property to set the properties inside this class.
 ///
 /// Example:
 /// ```dart

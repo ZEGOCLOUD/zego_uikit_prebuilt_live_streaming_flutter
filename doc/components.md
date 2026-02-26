@@ -17,14 +17,14 @@ You can embed this widget into any page of your project to integrate the functio
 
 | Name | Description | Type | Default Value |
 | :--- | :--- | :--- | :--- |
-| appID | You can create a project and obtain an appID from the [ZEGOCLOUD Admin Console](https://console.zegocloud.com). | `int` | |
-| appSign | log in by using [appID] + [appSign]. You can create a project and obtain an appSign from the [ZEGOCLOUD Admin Console](https://console.zegocloud.com). | `String` | `''` |
-| token | log in by using [appID] + [token]. The token issued by the developer's business server is used to ensure security. | `String` | `''` |
+| appID | You can create a project and obtain an appID from the `ZEGOCLOUD Admin Console`(https://console.zegocloud.com). | `int` | |
+| appSign | log in by using `appID` + `appSign`. You can create a project and obtain an appSign from the `ZEGOCLOUD Admin Console`(https://console.zegocloud.com). | `String` | `''` |
+| token | log in by using `appID` + `token`. The token issued by the developer's business server is used to ensure security. | `String` | `''` |
 | userID | The ID of the currently logged-in user. | `String` | |
 | userName | The name of the currently logged-in user. | `String` | |
 | liveID | You can customize the live ID arbitrarily, just need to know: users who use the same live ID can talk with each other. | `String` | |
-| config | Initialize the configuration for the live-streaming. See [ZegoUIKitPrebuiltLiveStreamingConfig](configs.md#zegouikitprebuiltlivestreamingconfig). | `ZegoUIKitPrebuiltLiveStreamingConfig` | |
-| events | You can listen to events that you are interested in here. See [ZegoUIKitPrebuiltLiveStreamingEvents](events.md#zegouikitprebuiltlivestreamingevents). | `ZegoUIKitPrebuiltLiveStreamingEvents?` | `null` |
+| config | Initialize the configuration for the live-streaming. See `ZegoUIKitPrebuiltLiveStreamingConfig`(configs.md#zegouikitprebuiltlivestreamingconfig). | `ZegoUIKitPrebuiltLiveStreamingConfig` | |
+| events | You can listen to events that you are interested in here. See `ZegoUIKitPrebuiltLiveStreamingEvents`(events.md#zegouikitprebuiltlivestreamingevents). | `ZegoUIKitPrebuiltLiveStreamingEvents?` | `null` |
 
 - **Example**
 

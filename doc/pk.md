@@ -348,7 +348,7 @@ PK controller implementation.
 - **muteAudios**
 
   - **Description**
-    - Silence the [targetHostIDs] in PK.
+    - Silence the `targetHostIDs` in PK.
   - **Prototype**
     ```dart
     Future<bool> muteAudios({required List<String> targetHostIDs, required bool isMute})
@@ -449,7 +449,7 @@ Result of PK service operations.
 
 PK related events.
 
-The [defaultAction] is the internal default behavior (popup).
+The `defaultAction` is the internal default behavior (popup).
 If you override the event and still require these default actions, please execute `defaultAction.call()`.
 
 ### onIncomingRequestReceived
@@ -867,7 +867,7 @@ Abstract class for PK mixer layout.
 - **Description**
 
   - Inheritance of the hybrid layout parent class allows you to return your custom coordinates and modify the layout of the mixed stream.
-  - You can refer to [ZegoLiveStreamingPKPreferGridMixerLayout] or [ZegoPKV2GridMixerLayout].
+  - You can refer to `ZegoLiveStreamingPKPreferGridMixerLayout` or `ZegoPKV2GridMixerLayout`.
 - **Methods**
 
 #### getResolution
@@ -883,7 +883,7 @@ Abstract class for PK mixer layout.
 #### getRectList
 
 - **Description**
-  - Get the coordinates of the user's video frame on the PK layout at position [hostCount].
+  - Get the coordinates of the user's video frame on the PK layout at position `hostCount`.
 - **Prototype**
   ```dart
   List<Rect> getRectList(
@@ -897,4 +897,4 @@ Abstract class for PK mixer layout.
 Default PK mixer layout.
 
 - **Description**
-  - This is a typedef for [ZegoLiveStreamingPKPreferGridMixerLayout].
+  - This is a typedef for `ZegoLiveStreamingPKPreferGridMixerLayout`.
