@@ -1,12 +1,16 @@
 part of 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 
+/// Mixin that provides room control functionality for the live streaming controller.
+///
+/// Access via [ZegoUIKitPrebuiltLiveStreamingController.room].
 mixin ZegoLiveStreamingControllerRoom {
   final _roomImpl = ZegoLiveStreamingControllerRoomImpl();
 
+  /// Returns the room implementation instance.
   ZegoLiveStreamingControllerRoomImpl get room => _roomImpl;
 }
 
-/// Here are the APIs related to screen sharing.
+/// Here are the APIs related to room.
 class ZegoLiveStreamingControllerRoomImpl
     with ZegoLiveStreamingControllerRoomPrivate {
   Future<bool> _leave(

@@ -1,10 +1,13 @@
 part of 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 
-/// @nodoc
+/// Mixin that provides media player control functionality for the live streaming controller.
+///
+/// Access via [ZegoUIKitPrebuiltLiveStreamingController.media].
 mixin ZegoLiveStreamingControllerMedia {
   final ZegoLiveStreamingControllerMediaImpl _mediaController =
       ZegoLiveStreamingControllerMediaImpl();
 
+  /// Returns the media player implementation instance.
   ZegoLiveStreamingControllerMediaImpl get media => _mediaController;
 }
 

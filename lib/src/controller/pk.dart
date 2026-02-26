@@ -1,8 +1,12 @@
 part of 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 
+/// Mixin that provides PK (Player vs Player) control functionality for the live streaming controller.
+///
+/// Access via [ZegoUIKitPrebuiltLiveStreamingController.pk].
 mixin ZegoLiveStreamingControllerPK {
   final _pkImpl = ZegoLiveStreamingControllerPKImpl();
 
+  /// Returns the PK implementation instance.
   ZegoLiveStreamingControllerPKImpl get pk => _pkImpl;
 }
 
@@ -23,11 +27,13 @@ class ZegoLiveStreamingControllerPKImpl
       .pk
       .isInPK;
 
+  /// The current PK request ID.
   String get currentRequestID => ZegoLiveStreamingPageLifeCycle()
       .manager(ZegoUIKitPrebuiltLiveStreamingController().private.liveID)
       .pk
       .currentRequestID;
 
+  /// The current PK initiator ID.
   String get currentInitiatorID =>
       ZegoUIKit()
           .getSignalingPlugin()
@@ -36,6 +42,8 @@ class ZegoLiveStreamingControllerPKImpl
       '';
 
   ///  the host list in invitation or in PK.
+  ///
+  /// - [requestID] The PK request ID.
   List<AdvanceInvitationUser> getHosts(String requestID) {
     return ZegoUIKit().getSignalingPlugin().getAdvanceInvitees(requestID);
   }

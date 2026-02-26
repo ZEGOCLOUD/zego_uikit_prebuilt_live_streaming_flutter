@@ -1,12 +1,16 @@
 part of 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 
+/// Mixin that provides minimization control functionality for the live streaming controller.
+///
+/// Access via [ZegoUIKitPrebuiltLiveStreamingController.minimize].
 mixin ZegoLiveStreamingControllerMinimizing {
   final _minimizingImpl = ZegoLiveStreamingControllerMinimizingImpl();
 
+  /// Returns the minimization implementation instance.
   ZegoLiveStreamingControllerMinimizingImpl get minimize => _minimizingImpl;
 }
 
-/// Here are the APIs related to screen sharing.
+/// Here are the APIs related to minimization.
 class ZegoLiveStreamingControllerMinimizingImpl
     with ZegoLiveStreamingControllerMinimizationPrivate {
   /// current minimize state

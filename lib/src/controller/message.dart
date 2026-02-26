@@ -1,8 +1,12 @@
 part of 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 
+/// Mixin that provides message control functionality for the live streaming controller.
+///
+/// Access via [ZegoUIKitPrebuiltLiveStreamingController.message].
 mixin ZegoLiveStreamingControllerMessage {
   final _messageImpl = ZegoLiveStreamingControllerMessageImpl();
 
+  /// Returns the message implementation instance.
   ZegoLiveStreamingControllerMessageImpl get message => _messageImpl;
 }
 

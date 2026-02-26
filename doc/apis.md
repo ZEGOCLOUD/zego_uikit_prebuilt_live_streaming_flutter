@@ -6,22 +6,13 @@
   - [isLeaveRequestingNotifier](#isleaverequestingnotifier)
   - [AudioVideo](#audiovideo)
   - [Message](#message)
-  - [Minimization](#minimization)
   - [PIP](#pip)
   - [Room](#room)
   - [User](#user)
   - [Screen](#screen)
   - [CoHost](#cohost)
-  - [PK](#pk)
   - [Log](#log)
   - [Media](#media)
-  - [Hall](#hall)
-- [Hall](#hall-1)
-  - [ZegoUIKitLiveStreamingHallList](#zegouikitlivestreaminghalllist)
-  - [ZegoLiveStreamingHallListController](#zegolivestreaminghalllistcontroller)
-  - [ZegoLiveStreamingHallListStyle](#zegolivestreaminghallliststyle)
-  - [ZegoLiveStreamingHallListForegroundStyle](#zegolivestreaminghalllistforegroundstyle)
-  - [ZegoLiveStreamingHallListConfig](#zegolivestreaminghalllistconfig)
 
 ---
 
@@ -71,10 +62,26 @@ Used to control the live streaming functionality.
     bool showConfirmation = false,
   })
   ```
+
+  - **Parameters**
+
+    | Name | Description | Type | Default Value |
+    | :--- | :--- | :--- | :--- |
+    | context | for any necessary pop-ups or page transitions | `BuildContext` | `Optional` |
+    | showConfirmation | parameter, you can control whether to display a confirmation dialog to confirm ending the Live Streaming | `bool` | `false` |
+
 - **Example**
   ```dart
   ZegoUIKitPrebuiltLiveStreamingController().leave(context);
   ```
+
+  - **Parameters**
+
+    | Name | Description | Type | Default Value |
+    | :--- | :--- | :--- | :--- |
+    | context | for any necessary pop-ups or page transitions | `BuildContext` | `Optional` |
+    | showConfirmation | parameter, you can control whether to display a confirmation dialog to confirm ending the Live Streaming | `bool` | `false` |
+
 
 ### isLeaveRequestingNotifier
 
@@ -83,6 +90,10 @@ Used to control the live streaming functionality.
 - **Prototype**
   ```dart
   ValueNotifier<bool> get isLeaveRequestingNotifier;
+  ```
+- **Example**
+  ```dart
+  ZegoUIKitPrebuiltLiveStreamingController().isLeaveRequestingNotifier.addListener(() {});
   ```
 
 ---
@@ -260,23 +271,44 @@ Used to control the live streaming functionality.
     ```dart
     Future<bool> send(String message, {ZegoInRoomMessageType type = ZegoInRoomMessageType.broadcastMessage})
     ```
+
+  - **Parameters**
+
+    | Name | Description | Type | Default Value |
+    | :--- | :--- | :--- | :--- |
+    | message | Unknown | `String` | `Optional` |
+    | type | Unknown | `ZegoInRoomMessageType` | `ZegoInRoomMessageType.broadcastMessage` |
+
   - **Example**
     ```dart
     ZegoUIKitPrebuiltLiveStreamingController().message.send("Hello");
     ```
 
+  - **Parameters**
+
+    | Name | Description | Type | Default Value |
+    | :--- | :--- | :--- | :--- |
+    | message | Unknown | `String` | `Optional` |
+    | type | Unknown | `ZegoInRoomMessageType` | `ZegoInRoomMessageType.broadcastMessage` |
+
+
 - **list**
   - **Description**
-    - Get message list stream.
+    - Get message list.
   - **Prototype**
     ```dart
-    Stream<List<ZegoInRoomMessage>> list()
+    List<ZegoInRoomMessage> list({ZegoInRoomMessageType type = ZegoInRoomMessageType.broadcastMessage})
     ```
+
+  - **Parameters**
+
+    | Name | Description | Type | Default Value |
+    | :--- | :--- | :--- | :--- |
+    | type | Message type | `ZegoInRoomMessageType` | `ZegoInRoomMessageType.broadcastMessage` |
+
   - **Example**
     ```dart
-    ZegoUIKitPrebuiltLiveStreamingController().message.list().listen((messages) {
-      // handle messages
-    });
+    ZegoUIKitPrebuiltLiveStreamingController().message.list();
     ```
 
 - **stream**
@@ -284,14 +316,17 @@ Used to control the live streaming functionality.
     - Get message stream.
   - **Prototype**
     ```dart
-    Stream<ZegoInRoomMessage> stream()
+    Stream<List<ZegoInRoomMessage>> stream({required String targetRoomID, bool includeFakeMessage = true, ZegoInRoomMessageType type = ZegoInRoomMessageType.broadcastMessage})
     ```
-  - **Example**
-    ```dart
-    ZegoUIKitPrebuiltLiveStreamingController().message.stream().listen((message) {
-      // handle message
-    });
-    ```
+
+  - **Parameters**
+
+    | Name | Description | Type | Default Value |
+    | :--- | :--- | :--- | :--- |
+    | targetRoomID | Target room ID | `String` | `Required` |
+    | includeFakeMessage | Whether to include fake message | `bool` | `true` |
+    | type | Message type | `ZegoInRoomMessageType` | `ZegoInRoomMessageType.broadcastMessage` |
+
 
 - **delete**
   - **Description**
@@ -300,70 +335,48 @@ Used to control the live streaming functionality.
     ```dart
     Future<void> delete(int messageID)
     ```
+
+  - **Parameters**
+
+    | Name | Description | Type | Default Value |
+    | :--- | :--- | :--- | :--- |
+    | message | Unknown | `String` | `Optional` |
+    | type | Unknown | `ZegoInRoomMessageType` | `ZegoInRoomMessageType.broadcastMessage` |
+
   - **Example**
     ```dart
     ZegoUIKitPrebuiltLiveStreamingController().message.delete(123);
     ```
 
----
+  - **Parameters**
 
-### Minimization
+    | Name | Description | Type | Default Value |
+    | :--- | :--- | :--- | :--- |
+    | message | Unknown | `String` | `Optional` |
+    | type | Unknown | `ZegoInRoomMessageType` | `ZegoInRoomMessageType.broadcastMessage` |
 
-**ZegoLiveStreamingControllerMinimizing**
-
-- **state**
-  - **Description**
-    - Get current minimization state.
-  - **Prototype**
-    ```dart
-    ZegoLiveStreamingMiniOverlayPageState get state
-    ```
-  - **Example**
-    ```dart
-    var state = ZegoUIKitPrebuiltLiveStreamingController().minimize.state;
-    ```
-
-- **restore**
-  - **Description**
-    - Restore the minimized window.
-  - **Prototype**
-    ```dart
-    bool restore(BuildContext context, {bool rootNavigator = true, bool withSafeArea = false})
-    ```
-  - **Example**
-    ```dart
-    ZegoUIKitPrebuiltLiveStreamingController().minimize.restore(context);
-    ```
-
-- **minimize**
-  - **Description**
-    - Minimize the window.
-  - **Prototype**
-    ```dart
-    bool minimize(BuildContext context, {bool rootNavigator = true})
-    ```
-  - **Example**
-    ```dart
-    ZegoUIKitPrebuiltLiveStreamingController().minimize.minimize(context);
-    ```
-
-- **hide**
-  - **Description**
-    - Hide the minimized window.
-  - **Prototype**
-    ```dart
-    void hide()
-    ```
-  - **Example**
-    ```dart
-    ZegoUIKitPrebuiltLiveStreamingController().minimize.hide();
-    ```
 
 ---
 
 ### PIP
 
 **ZegoLiveStreamingControllerPIP**
+
+- **status**
+  - **Description**
+    - Get current PIP status.
+  - **Prototype**
+    ```dart
+    Future<ZegoPiPStatus> get status
+    ```
+
+- **available**
+  - **Description**
+    - Check if PIP is available.
+  - **Prototype**
+    ```dart
+    Future<bool> get available
+    ```
 
 - **enable**
   - **Description**
@@ -372,10 +385,26 @@ Used to control the live streaming functionality.
     ```dart
     Future<ZegoPiPStatus> enable({int aspectWidth = 9, int aspectHeight = 16})
     ```
+
+  - **Parameters**
+
+    | Name | Description | Type | Default Value |
+    | :--- | :--- | :--- | :--- |
+    | aspectWidth | Unknown | `int` | `9` |
+    | aspectHeight | Unknown | `int` | `16` |
+
   - **Example**
     ```dart
     ZegoUIKitPrebuiltLiveStreamingController().pip.enable();
     ```
+
+  - **Parameters**
+
+    | Name | Description | Type | Default Value |
+    | :--- | :--- | :--- | :--- |
+    | aspectWidth | Unknown | `int` | `9` |
+    | aspectHeight | Unknown | `int` | `16` |
+
 
 - **enableWhenBackground**
   - **Description**
@@ -384,10 +413,26 @@ Used to control the live streaming functionality.
     ```dart
     Future<ZegoPiPStatus> enableWhenBackground({int aspectWidth = 9, int aspectHeight = 16})
     ```
+
+  - **Parameters**
+
+    | Name | Description | Type | Default Value |
+    | :--- | :--- | :--- | :--- |
+    | aspectWidth | Unknown | `int` | `9` |
+    | aspectHeight | Unknown | `int` | `16` |
+
   - **Example**
     ```dart
     ZegoUIKitPrebuiltLiveStreamingController().pip.enableWhenBackground();
     ```
+
+  - **Parameters**
+
+    | Name | Description | Type | Default Value |
+    | :--- | :--- | :--- | :--- |
+    | aspectWidth | Unknown | `int` | `9` |
+    | aspectHeight | Unknown | `int` | `16` |
+
 
 - **cancelBackground**
   - **Description**
@@ -396,10 +441,26 @@ Used to control the live streaming functionality.
     ```dart
     Future<void> cancelBackground()
     ```
+
+  - **Parameters**
+
+    | Name | Description | Type | Default Value |
+    | :--- | :--- | :--- | :--- |
+    | aspectWidth | Unknown | `int` | `9` |
+    | aspectHeight | Unknown | `int` | `16` |
+
   - **Example**
     ```dart
     ZegoUIKitPrebuiltLiveStreamingController().pip.cancelBackground();
     ```
+
+  - **Parameters**
+
+    | Name | Description | Type | Default Value |
+    | :--- | :--- | :--- | :--- |
+    | aspectWidth | Unknown | `int` | `9` |
+    | aspectHeight | Unknown | `int` | `16` |
+
 
 ---
 
@@ -414,10 +475,55 @@ Used to control the live streaming functionality.
     ```dart
     Future<bool> leave(BuildContext context, {bool showConfirmation = false})
     ```
-  - **Example**
+  - **Note**
+    - This method is available in `ZegoUIKitPrebuiltLiveStreamingController`, not in Room controller.
+
+- **queryProperties**
+  - **Description**
+    - Query room properties.
+  - **Prototype**
     ```dart
-    ZegoUIKitPrebuiltLiveStreamingController().room.leave(context);
+    Future<Map<String, String>> queryProperties({required String roomID})
     ```
+
+- **sendCommand**
+  - **Description**
+    - Send room command.
+  - **Prototype**
+    ```dart
+    Future<bool> sendCommand({required String roomID, required Uint8List command})
+    ```
+
+- **commandReceivedStream**
+  - **Description**
+    - Room command stream notify.
+  - **Prototype**
+    ```dart
+    Stream<ZegoSignalingPluginInRoomCommandMessageReceivedEvent> commandReceivedStream()
+    ```
+
+- **propertiesStream**
+  - **Description**
+    - Room properties stream notify.
+  - **Prototype**
+    ```dart
+    Stream<ZegoSignalingPluginRoomPropertiesUpdatedEvent> propertiesStream()
+    ```
+
+- **renewToken**
+  - **Description**
+    - Renew room token.
+  - **Prototype**
+    ```dart
+    Future<void> renewToken(String token)
+    ```
+
+  - **Parameters**
+
+    | Name | Description | Type | Default Value |
+    | :--- | :--- | :--- | :--- |
+    | token | The new token | `String` | `Required` |
+
 
 - **updateProperty**
   - **Description**
@@ -426,10 +532,26 @@ Used to control the live streaming functionality.
     ```dart
     Future<bool> updateProperty({required String roomID, required String key, required String value, bool isForce = false, bool isDeleteAfterOwnerLeft = false, bool isUpdateOwner = false})
     ```
+
+  - **Parameters**
+
+    | Name | Description | Type | Default Value |
+    | :--- | :--- | :--- | :--- |
+    | context | Unknown | `BuildContext` | `Optional` |
+    | showConfirmation | Unknown | `bool` | `false` |
+
   - **Example**
     ```dart
     ZegoUIKitPrebuiltLiveStreamingController().room.updateProperty(roomID: "123", key: "test", value: "1");
     ```
+
+  - **Parameters**
+
+    | Name | Description | Type | Default Value |
+    | :--- | :--- | :--- | :--- |
+    | context | Unknown | `BuildContext` | `Optional` |
+    | showConfirmation | Unknown | `bool` | `false` |
+
 
 - **updateProperties**
   - **Description**
@@ -438,10 +560,26 @@ Used to control the live streaming functionality.
     ```dart
     Future<bool> updateProperties({required String roomID, required Map<String, String> roomProperties, bool isForce = false, bool isDeleteAfterOwnerLeft = false, bool isUpdateOwner = false})
     ```
+
+  - **Parameters**
+
+    | Name | Description | Type | Default Value |
+    | :--- | :--- | :--- | :--- |
+    | context | Unknown | `BuildContext` | `Optional` |
+    | showConfirmation | Unknown | `bool` | `false` |
+
   - **Example**
     ```dart
     ZegoUIKitPrebuiltLiveStreamingController().room.updateProperties(roomID: "123", roomProperties: {"test": "1"});
     ```
+
+  - **Parameters**
+
+    | Name | Description | Type | Default Value |
+    | :--- | :--- | :--- | :--- |
+    | context | Unknown | `BuildContext` | `Optional` |
+    | showConfirmation | Unknown | `bool` | `false` |
+
 
 - **deleteProperties**
   - **Description**
@@ -450,10 +588,26 @@ Used to control the live streaming functionality.
     ```dart
     Future<bool> deleteProperties({required String roomID, required List<String> keys, bool isForce = false})
     ```
+
+  - **Parameters**
+
+    | Name | Description | Type | Default Value |
+    | :--- | :--- | :--- | :--- |
+    | context | Unknown | `BuildContext` | `Optional` |
+    | showConfirmation | Unknown | `bool` | `false` |
+
   - **Example**
     ```dart
     ZegoUIKitPrebuiltLiveStreamingController().room.deleteProperties(roomID: "123", keys: ["test"]);
     ```
+
+  - **Parameters**
+
+    | Name | Description | Type | Default Value |
+    | :--- | :--- | :--- | :--- |
+    | context | Unknown | `BuildContext` | `Optional` |
+    | showConfirmation | Unknown | `bool` | `false` |
+
 
 - **renewToken**
   - **Description**
@@ -462,6 +616,14 @@ Used to control the live streaming functionality.
     ```dart
     Future<bool> renewToken({required String token})
     ```
+
+  - **Parameters**
+
+    | Name | Description | Type | Default Value |
+    | :--- | :--- | :--- | :--- |
+    | context | Unknown | `BuildContext` | `Optional` |
+    | showConfirmation | Unknown | `bool` | `false` |
+
 
 ---
 
@@ -740,141 +902,6 @@ Used to control the live streaming functionality.
 
 ---
 
-### PK
-
-**ZegoLiveStreamingControllerPKImpl**
-
-- **stateNotifier**
-  - **Description**
-    - PK state stream.
-  - **Prototype**
-    ```dart
-    ValueNotifier<ZegoLiveStreamingPKBattleState> get stateNotifier
-    ```
-
-- **mutedUsersNotifier**
-  - **Description**
-    - Mute users stream.
-  - **Prototype**
-    ```dart
-    ValueNotifier<List<String>> get mutedUsersNotifier
-    ```
-
-- **isInPK**
-  - **Description**
-    - Is in PK or not.
-  - **Prototype**
-    ```dart
-    bool get isInPK
-    ```
-
-- **currentRequestID**
-  - **Description**
-    - Get current PK request ID.
-  - **Prototype**
-    ```dart
-    String get currentRequestID
-    ```
-
-- **currentInitiatorID**
-  - **Description**
-    - Get current PK initiator ID.
-  - **Prototype**
-    ```dart
-    String get currentInitiatorID
-    ```
-
-- **getHosts**
-  - **Description**
-    - Get the host list in invitation or in PK.
-  - **Prototype**
-    ```dart
-    List<AdvanceInvitationUser> getHosts(String requestID)
-    ```
-
-- **sendRequest**
-  - **Description**
-    - Send PK battle request.
-  - **Prototype**
-    ```dart
-    Future<ZegoLiveStreamingPKServiceSendRequestResult> sendRequest({
-      required List<String> targetHostIDs,
-      int timeout = 60,
-      String customData = '',
-      bool isAutoAccept = false,
-    })
-    ```
-  - **Example**
-    ```dart
-    ZegoUIKitPrebuiltLiveStreamingController().pk.sendRequest(targetHostIDs: ["host2"]);
-    ```
-
-- **cancelRequest**
-  - **Description**
-    - Cancel PK battle request.
-  - **Prototype**
-    ```dart
-    Future<ZegoLiveStreamingPKServiceResult> cancelRequest({required List<String> targetHostIDs, String customData = ''})
-    ```
-  - **Example**
-    ```dart
-    ZegoUIKitPrebuiltLiveStreamingController().pk.cancelRequest(targetHostIDs: ["host2"]);
-    ```
-
-- **acceptRequest**
-  - **Description**
-    - Accept PK battle request.
-  - **Prototype**
-    ```dart
-    Future<ZegoLiveStreamingPKServiceResult> acceptRequest({required String requestID, required ZegoLiveStreamingPKUser targetHost, int timeout = 60, String customData = ''})
-    ```
-  - **Example**
-    ```dart
-    ZegoUIKitPrebuiltLiveStreamingController().pk.acceptRequest(requestID: "req1", targetHost: host);
-    ```
-
-- **rejectRequest**
-  - **Description**
-    - Reject PK battle request.
-  - **Prototype**
-    ```dart
-    Future<ZegoLiveStreamingPKServiceResult> rejectRequest({required String requestID, required String targetHostID, int timeout = 60, String customData = ''})
-    ```
-  - **Example**
-    ```dart
-    ZegoUIKitPrebuiltLiveStreamingController().pk.rejectRequest(requestID: "req1", targetHostID: "host2");
-    ```
-
-- **quit**
-  - **Description**
-    - Quit PK on your own.
-  - **Prototype**
-    ```dart
-    Future<ZegoLiveStreamingPKServiceResult> quit()
-    ```
-  - **Example**
-    ```dart
-    ZegoUIKitPrebuiltLiveStreamingController().pk.quit();
-    ```
-
-- **stop**
-  - **Description**
-    - Stop PK to all pk-hosts, only the PK Initiator can stop it.
-  - **Prototype**
-    ```dart
-    Future<ZegoLiveStreamingPKServiceResult> stop()
-    ```
-
-- **muteAudios**
-  - **Description**
-    - Silence the [targetHostIDs] in PK.
-  - **Prototype**
-    ```dart
-    Future<bool> muteAudios({required List<String> targetHostIDs, required bool isMute})
-    ```
-
----
-
 ### Log
 
 **ZegoLiveStreamingControllerLog**
@@ -886,16 +913,128 @@ Used to control the live streaming functionality.
     ```dart
     Future<bool> exportLogs({String? title, String? content, String? fileName, List<ZegoLogExporterFileType> fileTypes = const [ZegoLogExporterFileType.txt, ZegoLogExporterFileType.log, ZegoLogExporterFileType.zip], List<ZegoLogExporterDirectoryType> directories = const [ZegoLogExporterDirectoryType.zegoUIKits, ZegoLogExporterDirectoryType.zimAudioLog, ZegoLogExporterDirectoryType.zimLogs, ZegoLogExporterDirectoryType.zefLogs, ZegoLogExporterDirectoryType.zegoLogs], void Function(double progress)? onProgress})
     ```
+
+  - **Parameters**
+
+    | Name | Description | Type | Default Value |
+    | :--- | :--- | :--- | :--- |
+    | title | Unknown | `String?` | `Optional` |
+    | content | Unknown | `String?` | `Optional` |
+    | fileName | Unknown | `String?` | `Optional` |
+    | fileTypes | Unknown | `List<ZegoLogExporterFileType>` | `const [ZegoLogExporterFileType.txt` |
+    | directories | Unknown | `List<ZegoLogExporterDirectoryType>` | `const [ZegoLogExporterDirectoryType.zegoUIKits` |
+    | Function | Unknown | `void` | `Optional` |
+
   - **Example**
     ```dart
     ZegoUIKitPrebuiltLiveStreamingController().log.exportLogs();
     ```
+
+  - **Parameters**
+
+    | Name | Description | Type | Default Value |
+    | :--- | :--- | :--- | :--- |
+    | title | Unknown | `String?` | `Optional` |
+    | content | Unknown | `String?` | `Optional` |
+    | fileName | Unknown | `String?` | `Optional` |
+    | fileTypes | Unknown | `List<ZegoLogExporterFileType>` | `const [ZegoLogExporterFileType.txt` |
+    | directories | Unknown | `List<ZegoLogExporterDirectoryType>` | `const [ZegoLogExporterDirectoryType.zegoUIKits` |
+    | Function | Unknown | `void` | `Optional` |
+
 
 ---
 
 ### Media
 
 **ZegoLiveStreamingControllerMedia**
+
+- **defaultPlayer**
+  - **Description**
+    - Default player controller.
+  - **Prototype**
+    ```dart
+    ZegoLiveStreamingControllerMediaDefaultPlayer get defaultPlayer
+    ```
+
+- **volume**
+  - **Description**
+    - Volume of current media.
+  - **Prototype**
+    ```dart
+    int get volume
+    ```
+
+- **totalDuration**
+  - **Description**
+    - The total progress (millisecond) of current media resources.
+  - **Prototype**
+    ```dart
+    int get totalDuration
+    ```
+
+- **currentProgress**
+  - **Description**
+    - Current playing progress of current media.
+  - **Prototype**
+    ```dart
+    int get currentProgress
+    ```
+
+- **type**
+  - **Description**
+    - Media type of current media.
+  - **Prototype**
+    ```dart
+    ZegoUIKitMediaType get type
+    ```
+
+- **volumeNotifier**
+  - **Description**
+    - Volume notifier of current media.
+  - **Prototype**
+    ```dart
+    ValueNotifier<int> get volumeNotifier
+    ```
+
+- **currentProgressNotifier**
+  - **Description**
+    - Current progress notifier of current media.
+  - **Prototype**
+    ```dart
+    ValueNotifier<int> get currentProgressNotifier
+    ```
+
+- **playStateNotifier**
+  - **Description**
+    - Play state notifier of current media.
+  - **Prototype**
+    ```dart
+    ValueNotifier<ZegoUIKitMediaPlayState> get playStateNotifier
+    ```
+
+- **typeNotifier**
+  - **Description**
+    - Type notifier of current media.
+  - **Prototype**
+    ```dart
+    ValueNotifier<ZegoUIKitMediaType> get typeNotifier
+    ```
+
+- **muteNotifier**
+  - **Description**
+    - Mute state notifier of current media.
+  - **Prototype**
+    ```dart
+    ValueNotifier<bool> get muteNotifier
+    ```
+
+- **info**
+  - **Description**
+    - Info of current media.
+  - **Prototype**
+    ```dart
+    ZegoUIKitMediaInfo get info
+    ```
 
 - **play**
   - **Description**
@@ -904,81 +1043,51 @@ Used to control the live streaming functionality.
     ```dart
     Future<ZegoUIKitMediaPlayResult> play({required String filePathOrURL, bool enableRepeat = false, bool autoStart = true})
     ```
+
+  - **Parameters**
+
+    | Name | Description | Type | Default Value |
+    | :--- | :--- | :--- | :--- |
+    | filePathOrURL | Unknown | `String` | `Required` |
+    | enableRepeat | Unknown | `bool` | `false` |
+    | autoStart | Unknown | `bool` | `true` |
+
   - **Example**
     ```dart
     ZegoUIKitPrebuiltLiveStreamingController().media.play(filePathOrURL: "http://test.com/a.mp4");
     ```
 
-- **stop**
+  - **Parameters**
+
+    | Name | Description | Type | Default Value |
+    | :--- | :--- | :--- | :--- |
+    | filePathOrURL | Unknown | `String` | `Required` |
+    | enableRepeat | Unknown | `bool` | `false` |
+    | autoStart | Unknown | `bool` | `true` |
+
+
+- **destroy**
   - **Description**
-    - Stop play media.
+    - Destroy current media.
   - **Prototype**
     ```dart
-    Future<void> stop()
-    ```
-  - **Example**
-    ```dart
-    ZegoUIKitPrebuiltLiveStreamingController().media.stop();
+    Future<void> destroy()
     ```
 
-- **pause**
+- **pickPureAudioFile**
   - **Description**
-    - Pause media.
+    - Pick pure audio media file.
   - **Prototype**
     ```dart
-    Future<void> pause()
-    ```
-  - **Example**
-    ```dart
-    ZegoUIKitPrebuiltLiveStreamingController().media.pause();
+    Future<List<ZegoUIKitPlatformFile>> pickPureAudioFile()
     ```
 
-- **resume**
+- **pickVideoFile**
   - **Description**
-    - Resume media.
+    - Pick video media file.
   - **Prototype**
     ```dart
-    Future<void> resume()
-    ```
-  - **Example**
-    ```dart
-    ZegoUIKitPrebuiltLiveStreamingController().media.resume();
-    ```
-
-- **seekTo**
-  - **Description**
-    - Seek to specified position.
-  - **Prototype**
-    ```dart
-    Future<ZegoUIKitMediaSeekToResult> seekTo(int millisecond)
-    ```
-  - **Example**
-    ```dart
-    ZegoUIKitPrebuiltLiveStreamingController().media.seekTo(1000);
-    ```
-
-- **setVolume**
-  - **Description**
-    - Set media volume.
-  - **Prototype**
-    ```dart
-    Future<void> setVolume(int volume, {bool isSyncToRemote = false})
-    ```
-  - **Example**
-    ```dart
-    ZegoUIKitPrebuiltLiveStreamingController().media.setVolume(50);
-    ```
-
-- **muteLocal**
-  - **Description**
-    - Mute local playback.
-  - **Prototype**
-    ```dart
-    Future<void> muteLocal(bool mute)
-    ```
-  - **Example**
-    ```dart
-    ZegoUIKitPrebuiltLiveStreamingController().media.muteLocal(true);
+    Future<List<ZegoUIKitPlatformFile>> pickVideoFile()
     ```
 
 - **pickFile**
@@ -988,91 +1097,216 @@ Used to control the live streaming functionality.
     ```dart
     Future<List<ZegoUIKitPlatformFile>> pickFile({List<String>? allowedExtensions})
     ```
+
+
+- **stop**
+  - **Description**
+    - Stop play media.
+  - **Prototype**
+    ```dart
+    Future<void> stop()
+    ```
+
+  - **Parameters**
+
+    | Name | Description | Type | Default Value |
+    | :--- | :--- | :--- | :--- |
+    | filePathOrURL | Unknown | `String` | `Required` |
+    | enableRepeat | Unknown | `bool` | `false` |
+    | autoStart | Unknown | `bool` | `true` |
+
+  - **Example**
+    ```dart
+    ZegoUIKitPrebuiltLiveStreamingController().media.stop();
+    ```
+
+  - **Parameters**
+
+    | Name | Description | Type | Default Value |
+    | :--- | :--- | :--- | :--- |
+    | filePathOrURL | Unknown | `String` | `Required` |
+    | enableRepeat | Unknown | `bool` | `false` |
+    | autoStart | Unknown | `bool` | `true` |
+
+
+- **pause**
+  - **Description**
+    - Pause media.
+  - **Prototype**
+    ```dart
+    Future<void> pause()
+    ```
+
+  - **Parameters**
+
+    | Name | Description | Type | Default Value |
+    | :--- | :--- | :--- | :--- |
+    | filePathOrURL | Unknown | `String` | `Required` |
+    | enableRepeat | Unknown | `bool` | `false` |
+    | autoStart | Unknown | `bool` | `true` |
+
+  - **Example**
+    ```dart
+    ZegoUIKitPrebuiltLiveStreamingController().media.pause();
+    ```
+
+  - **Parameters**
+
+    | Name | Description | Type | Default Value |
+    | :--- | :--- | :--- | :--- |
+    | filePathOrURL | Unknown | `String` | `Required` |
+    | enableRepeat | Unknown | `bool` | `false` |
+    | autoStart | Unknown | `bool` | `true` |
+
+
+- **resume**
+  - **Description**
+    - Resume media.
+  - **Prototype**
+    ```dart
+    Future<void> resume()
+    ```
+
+  - **Parameters**
+
+    | Name | Description | Type | Default Value |
+    | :--- | :--- | :--- | :--- |
+    | filePathOrURL | Unknown | `String` | `Required` |
+    | enableRepeat | Unknown | `bool` | `false` |
+    | autoStart | Unknown | `bool` | `true` |
+
+  - **Example**
+    ```dart
+    ZegoUIKitPrebuiltLiveStreamingController().media.resume();
+    ```
+
+  - **Parameters**
+
+    | Name | Description | Type | Default Value |
+    | :--- | :--- | :--- | :--- |
+    | filePathOrURL | Unknown | `String` | `Required` |
+    | enableRepeat | Unknown | `bool` | `false` |
+    | autoStart | Unknown | `bool` | `true` |
+
+
+- **seekTo**
+  - **Description**
+    - Seek to specified position.
+  - **Prototype**
+    ```dart
+    Future<ZegoUIKitMediaSeekToResult> seekTo(int millisecond)
+    ```
+
+  - **Parameters**
+
+    | Name | Description | Type | Default Value |
+    | :--- | :--- | :--- | :--- |
+    | filePathOrURL | Unknown | `String` | `Required` |
+    | enableRepeat | Unknown | `bool` | `false` |
+    | autoStart | Unknown | `bool` | `true` |
+
+  - **Example**
+    ```dart
+    ZegoUIKitPrebuiltLiveStreamingController().media.seekTo(1000);
+    ```
+
+  - **Parameters**
+
+    | Name | Description | Type | Default Value |
+    | :--- | :--- | :--- | :--- |
+    | filePathOrURL | Unknown | `String` | `Required` |
+    | enableRepeat | Unknown | `bool` | `false` |
+    | autoStart | Unknown | `bool` | `true` |
+
+
+- **setVolume**
+  - **Description**
+    - Set media volume.
+  - **Prototype**
+    ```dart
+    Future<void> setVolume(int volume, {bool isSyncToRemote = false})
+    ```
+
+  - **Parameters**
+
+    | Name | Description | Type | Default Value |
+    | :--- | :--- | :--- | :--- |
+    | filePathOrURL | Unknown | `String` | `Required` |
+    | enableRepeat | Unknown | `bool` | `false` |
+    | autoStart | Unknown | `bool` | `true` |
+
+  - **Example**
+    ```dart
+    ZegoUIKitPrebuiltLiveStreamingController().media.setVolume(50);
+    ```
+
+  - **Parameters**
+
+    | Name | Description | Type | Default Value |
+    | :--- | :--- | :--- | :--- |
+    | filePathOrURL | Unknown | `String` | `Required` |
+    | enableRepeat | Unknown | `bool` | `false` |
+    | autoStart | Unknown | `bool` | `true` |
+
+
+- **muteLocal**
+  - **Description**
+    - Mute local playback.
+  - **Prototype**
+    ```dart
+    Future<void> muteLocal(bool mute)
+    ```
+
+  - **Parameters**
+
+    | Name | Description | Type | Default Value |
+    | :--- | :--- | :--- | :--- |
+    | filePathOrURL | Unknown | `String` | `Required` |
+    | enableRepeat | Unknown | `bool` | `false` |
+    | autoStart | Unknown | `bool` | `true` |
+
+  - **Example**
+    ```dart
+    ZegoUIKitPrebuiltLiveStreamingController().media.muteLocal(true);
+    ```
+
+  - **Parameters**
+
+    | Name | Description | Type | Default Value |
+    | :--- | :--- | :--- | :--- |
+    | filePathOrURL | Unknown | `String` | `Required` |
+    | enableRepeat | Unknown | `bool` | `false` |
+    | autoStart | Unknown | `bool` | `true` |
+
+
+- **pickFile**
+  - **Description**
+    - Pick media file.
+  - **Prototype**
+    ```dart
+    Future<List<ZegoUIKitPlatformFile>> pickFile({List<String>? allowedExtensions})
+    ```
+
+  - **Parameters**
+
+    | Name | Description | Type | Default Value |
+    | :--- | :--- | :--- | :--- |
+    | filePathOrURL | Unknown | `String` | `Required` |
+    | enableRepeat | Unknown | `bool` | `false` |
+    | autoStart | Unknown | `bool` | `true` |
+
   - **Example**
     ```dart
     ZegoUIKitPrebuiltLiveStreamingController().media.pickFile();
     ```
 
----
+  - **Parameters**
 
-### Hall
+    | Name | Description | Type | Default Value |
+    | :--- | :--- | :--- | :--- |
+    | filePathOrURL | Unknown | `String` | `Required` |
+    | enableRepeat | Unknown | `bool` | `false` |
+    | autoStart | Unknown | `bool` | `true` |
 
-**ZegoLiveStreamingControllerHall**
-
-- **getRoomList**
-  - **Description**
-    - Get the list of live streaming rooms.
-  - **Prototype**
-    ```dart
-    Future<ZegoUIKitHallRoomListQueryResult> getRoomList({int pageIndex = 1, int pageSize = 20})
-    ```
 
 ---
-
-## Hall
-
-### ZegoUIKitLiveStreamingHallList
-
-The Hall List Widget.
-
-- **Parameters**
-
-| Name | Description | Type | Default Value |
-| :--- | :--- | :--- | :--- |
-| appID | You can create a project and obtain an appID from the [ZEGOCLOUD Admin Console](https://console.zegocloud.com). | `int` | |
-| appSign | log in by using [appID] + [appSign]. | `String` | `''` |
-| token | log in by using [appID] + [token]. | `String` | `''` |
-| userID | The ID of the currently logged-in user. | `String` | |
-| userName | The name of the currently logged-in user. | `String` | |
-| configsQuery | Initialize the configuration for the live-streaming. | `ZegoUIKitPrebuiltLiveStreamingConfig Function(String liveID)` | |
-| eventsQuery | You can listen to events that you are interested in here. | `ZegoUIKitPrebuiltLiveStreamingEvents? Function(String liveID)?` | `null` |
-| hallStyle | Hall style. | `ZegoLiveStreamingHallListStyle` | |
-| hallConfig | Hall configuration. | `ZegoLiveStreamingHallListConfig` | |
-| hallController | Hall controller. | `ZegoLiveStreamingHallListController?` | `null` |
-| hallModel | When swiping up or down, the corresponding LIVE information will be returned via this model. | `ZegoLiveStreamingHallListModel?` | `null` |
-| hallModelDelegate | If you want to manage data yourself, set this delegate. | `ZegoLiveStreamingHallListModelDelegate?` | `null` |
-
-### ZegoLiveStreamingHallListController
-
-- **roomID**
-  - **Description**
-    - Get current room ID.
-  - **Prototype**
-    ```dart
-    String get roomID
-    ```
-  - **Example**
-    ```dart
-    var roomID = controller.roomID;
-    ```
-
-### ZegoLiveStreamingHallListStyle
-
-- **Parameters**
-
-| Name | Description | Type | Default Value |
-| :--- | :--- | :--- | :--- |
-| loadingBuilder | Custom loading widget builder. | `Widget? Function(BuildContext context)?` | `null` |
-| item | Item style configuration. | `ZegoLiveStreamingHallListItemStyle` | `const ZegoUIKitHallRoomListItemStyle()` |
-| foreground | Foreground style configuration. | `ZegoLiveStreamingHallListForegroundStyle` | `const ZegoLiveStreamingHallListForegroundStyle()` |
-
-### ZegoLiveStreamingHallListForegroundStyle
-
-- **Parameters**
-
-| Name | Description | Type | Default Value |
-| :--- | :--- | :--- | :--- |
-| showUserInfo | Whether to show user info. | `bool` | `true` |
-| showLivingFlag | Whether to show living flag. | `bool` | `true` |
-| showCloseButton | Whether to show close button. | `bool` | `true` |
-
-### ZegoLiveStreamingHallListConfig
-
-- **Parameters**
-
-| Name | Description | Type | Default Value |
-| :--- | :--- | :--- | :--- |
-| video | Configuration parameters for audio and video streaming, such as Resolution, Frame rate, Bit rate. | `ZegoUIKitVideoConfig?` | `null` |
-| streamMode | Stream mode. | `ZegoUIKitHallRoomStreamMode` | |
-| audioVideoResourceMode | Audio video resource mode. | `ZegoUIKitStreamResourceMode?` | `null` |
-

@@ -7,17 +7,38 @@ import 'package:zego_uikit/zego_uikit.dart';
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/defines.dart';
 
+/// A callback function for customizing the member button in the top bar.
+///
+/// - [count] is the number of members in the live streaming room.
+/// - [liveID] is the ID of the current live streaming room.
+///
+/// Returns a [Widget] that represents the custom member button.
 typedef ZegoLiveStreamingMemberButtonBuilder = Widget Function(
   int count,
   String liveID,
 );
 
+/// A callback function to determine whether to play the audio of a specific co-host.
+///
+/// - [localUser] is the current local user.
+/// - [localRole] is the role of the local user in the live streaming.
+/// - [coHost] is the co-host user whose audio playback is being determined.
+///
+/// Returns true to play the co-host's audio, false to mute.
 typedef ZegoPlayCoHostAudioVideoCallback = bool Function(
   ZegoUIKitUser localUser,
   ZegoLiveStreamingRole localRole,
   ZegoUIKitUser coHost,
 );
 
+/// A callback function for building a custom audio/video container.
+///
+/// - [context] is the [BuildContext] of the widget.
+/// - [allUsers] is the list of all users in the live streaming room.
+/// - [audioVideoUsers] is the list of users who have audio/video streams.
+/// - [audioVideoViewCreator] is the default audio-video view creator.
+///
+/// Returns a custom [Widget] for the audio/video container, or null to use the default.
 typedef ZegoLiveStreamingAudioVideoContainerBuilder = Widget? Function(
   BuildContext context,
   List<ZegoUIKitUser> allUsers,

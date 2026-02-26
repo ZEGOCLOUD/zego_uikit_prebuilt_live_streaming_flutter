@@ -1,45 +1,61 @@
 // Flutter imports:
 import 'package:flutter/services.dart';
 
-/// state in pk service
+/// State of the PK battle service.
+///
+/// - [idle]: No active PK battle.
+/// - [inPK]: Currently in a PK battle.
+/// - [loading]: Loading state when setting up a PK battle.
 enum ZegoLiveStreamingPKBattleState {
   idle,
   inPK,
   loading,
 }
 
-/// reject code in pk service
+/// Reject code for PK battle requests.
+///
+/// These codes indicate why a PK battle request was rejected.
 enum ZegoLiveStreamingPKBattleRejectCode {
   /// 0:
-  /// the invited host rejects your PK request.
+  /// The invited host rejects your PK request.
   reject,
 
   /// 1:
-  /// the invited host hasn't started his own live stream yet,
+  /// The invited host hasn't started his own live stream yet,
   /// the host is in a PK battle with others,
   /// the host is being invited,
   /// or the host is sending a PK battle request to others.
   hostStateError,
 
   /// 2:
-  /// the host is in a PK battle with others,
+  /// The host is in a PK battle with others,
   /// the host is being invited,
   /// or the host is sending a PK battle request to others.
   busy,
 }
 
-/// result of send request in pk service
+/// Result of sending a PK battle request.
+///
+/// This class contains the result information when sending a PK battle request.
 class ZegoLiveStreamingPKServiceSendRequestResult {
+  /// Creates a PK service send request result.
+  ///
+  /// - [requestID] is the ID of the PK session request.
+  /// - [errorUserIDs] is a list of user IDs that encountered errors.
+  /// - [error] is the platform exception if an error occurred.
   const ZegoLiveStreamingPKServiceSendRequestResult({
     this.requestID = '',
     this.errorUserIDs = const [],
     this.error,
   });
 
-  /// The ID of the current PK session
+  /// The ID of the current PK session.
   final String requestID;
 
+  /// List of user IDs that encountered errors during the request.
   final List<String> errorUserIDs;
+
+  /// Platform exception if an error occurred.
   final PlatformException? error;
 
   @override
@@ -50,14 +66,23 @@ class ZegoLiveStreamingPKServiceSendRequestResult {
       '}';
 }
 
-/// result of request in pk service
+/// Result of a PK battle request.
+///
+/// This class contains the result information for a PK battle request operation.
 class ZegoLiveStreamingPKServiceResult {
+  /// Creates a PK service result.
+  ///
+  /// - [errorUserIDs] is a list of user IDs that encountered errors.
+  /// - [error] is the platform exception if an error occurred.
   const ZegoLiveStreamingPKServiceResult({
     this.errorUserIDs = const [],
     this.error,
   });
 
+  /// List of user IDs that encountered errors during the request.
   final List<String> errorUserIDs;
+
+  /// Platform exception if an error occurred.
   final PlatformException? error;
 
   @override

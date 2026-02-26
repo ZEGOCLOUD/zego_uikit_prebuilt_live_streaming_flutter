@@ -1,8 +1,12 @@
 part of 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 
+/// Mixin that provides audio/video control functionality for the live streaming controller.
+///
+/// Access via [ZegoUIKitPrebuiltLiveStreamingController.audioVideo].
 mixin ZegoLiveStreamingControllerAudioVideo {
   final _audioVideoImpl = ZegoLiveStreamingControllerAudioVideoImpl();
 
+  /// Returns the audio/video implementation instance.
   ZegoLiveStreamingControllerAudioVideoImpl get audioVideo => _audioVideoImpl;
 }
 
@@ -21,6 +25,7 @@ class ZegoLiveStreamingControllerAudioVideoImpl
       private._audioOutput;
 }
 
+/// Controller for managing microphone operations.
 class ZegoLiveStreamingControllerAudioVideoMicrophoneImpl
     with ZegoLiveStreamingControllerAudioVideoDeviceImplPrivate {
   /// microphone state of local user
@@ -39,6 +44,8 @@ class ZegoLiveStreamingControllerAudioVideoMicrophoneImpl
       );
 
   /// microphone state of [userID]
+  ///
+  /// - [userID] The ID of the user whose microphone state to get.
   bool state(String userID) => ZegoUIKit()
       .getMicrophoneStateNotifier(
         targetRoomID: ZegoUIKitPrebuiltLiveStreamingController().private.liveID,
@@ -47,6 +54,8 @@ class ZegoLiveStreamingControllerAudioVideoMicrophoneImpl
       .value;
 
   /// microphone state notifier of [userID]
+  ///
+  /// - [userID] The ID of the user whose microphone state notifier to get.
   ValueNotifier<bool> stateNotifier(String userID) =>
       ZegoUIKit().getMicrophoneStateNotifier(
         targetRoomID: ZegoUIKitPrebuiltLiveStreamingController().private.liveID,
@@ -54,6 +63,9 @@ class ZegoLiveStreamingControllerAudioVideoMicrophoneImpl
       );
 
   /// turn on/off [userID] microphone, if [userID] is empty, then it refers to local user
+  ///
+  /// - [isOn] Whether to turn on (true) or off (false) the microphone.
+  /// - [userID] Optional user ID. If not specified or empty, targets the local user.
   Future<void> turnOn(bool isOn, {String? userID}) async {
     final needUseMuteMode =
         (!(private.config?.coHost.stopCoHostingWhenMicCameraOff ?? false)) ||
@@ -75,6 +87,8 @@ class ZegoLiveStreamingControllerAudioVideoMicrophoneImpl
   }
 
   /// switch [userID] microphone state, if [userID] is empty, then it refers to local user
+  ///
+  /// - [userID] Optional user ID. If not specified, targets the local user.
   void switchState({String? userID}) {
     final targetUserID = userID ?? ZegoUIKit().getLocalUser().id;
     final currentMicrophoneState = ZegoUIKit()
@@ -89,6 +103,7 @@ class ZegoLiveStreamingControllerAudioVideoMicrophoneImpl
   }
 }
 
+/// Controller for managing camera operations.
 class ZegoLiveStreamingControllerAudioVideoCameraImpl
     with ZegoLiveStreamingControllerAudioVideoDeviceImplPrivate {
   /// camera state of local user
@@ -107,6 +122,8 @@ class ZegoLiveStreamingControllerAudioVideoCameraImpl
       );
 
   /// camera state of [userID]
+  ///
+  /// - [userID] The ID of the user whose camera state to get.
   bool state(String userID) => ZegoUIKit()
       .getCameraStateNotifier(
         targetRoomID: ZegoUIKitPrebuiltLiveStreamingController().private.liveID,
@@ -115,6 +132,8 @@ class ZegoLiveStreamingControllerAudioVideoCameraImpl
       .value;
 
   /// camera state notifier of [userID]
+  ///
+  /// - [userID] The ID of the user whose camera state notifier to get.
   ValueNotifier<bool> stateNotifier(String userID) =>
       ZegoUIKit().getCameraStateNotifier(
         targetRoomID: ZegoUIKitPrebuiltLiveStreamingController().private.liveID,
@@ -122,6 +141,9 @@ class ZegoLiveStreamingControllerAudioVideoCameraImpl
       );
 
   /// turn on/off [userID] camera, if [userID] is empty, then it refers to local user
+  ///
+  /// - [isOn] Whether to turn on (true) or off (false) the camera.
+  /// - [userID] Optional user ID. If not specified or empty, targets the local user.
   Future<void> turnOn(bool isOn, {String? userID}) async {
     ZegoLoggerService.logInfo(
       "turn ${isOn ? "on" : "off"} $userID camera",
@@ -137,6 +159,8 @@ class ZegoLiveStreamingControllerAudioVideoCameraImpl
   }
 
   /// switch [userID] camera state, if [userID] is empty, then it refers to local user
+  ///
+  /// - [userID] Optional user ID. If not specified, targets the local user.
   void switchState({String? userID}) {
     final targetUserID = userID ?? ZegoUIKit().getLocalUser().id;
     final currentCameraState = ZegoUIKit()
@@ -151,16 +175,21 @@ class ZegoLiveStreamingControllerAudioVideoCameraImpl
   }
 
   /// local use front facing camera
+  ///
+  /// - [isFrontFacing] Whether to use the front-facing camera (true) or back camera (false).
   void switchFrontFacing(bool isFrontFacing) {
     ZegoUIKit().useFrontFacingCamera(isFrontFacing);
   }
 
   /// set video mirror mode
+  ///
+  /// - [isVideoMirror] Whether to enable video mirroring.
   void switchVideoMirroring(bool isVideoMirror) {
     ZegoUIKit().enableVideoMirroring(isVideoMirror);
   }
 }
 
+/// Controller for managing audio output operations.
 class ZegoLiveStreamingControllerAudioVideoAudioOutputImpl
     with ZegoLiveStreamingControllerAudioVideoDeviceImplPrivate {
   /// local audio output device notifier
@@ -168,6 +197,8 @@ class ZegoLiveStreamingControllerAudioVideoAudioOutputImpl
       notifier(ZegoUIKit().getLocalUser().id);
 
   /// get audio output device notifier
+  ///
+  /// - [userID] The ID of the user whose audio output notifier to get.
   ValueNotifier<ZegoUIKitAudioRoute> notifier(
     String userID,
   ) {
@@ -178,6 +209,8 @@ class ZegoLiveStreamingControllerAudioVideoAudioOutputImpl
   }
 
   /// set audio output to speaker or earpiece(telephone receiver)
+  ///
+  /// - [isSpeaker] Whether to use speaker (true) or earpiece (false).
   void switchToSpeaker(bool isSpeaker) {
     ZegoLoggerService.logInfo(
       "switchToSpeaker, isSpeaker:$isSpeaker, ",

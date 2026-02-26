@@ -1,8 +1,12 @@
 part of 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 
+/// Mixin that provides screen sharing control functionality for the live streaming controller.
+///
+/// Access via [ZegoUIKitPrebuiltLiveStreamingController.screenSharing].
 mixin ZegoLiveStreamingControllerScreen {
   final _screenController = ZegoLiveStreamingScreenController();
 
+  /// Returns the screen sharing implementation instance.
   ZegoLiveStreamingScreenController get screenSharing => _screenController;
 }
 

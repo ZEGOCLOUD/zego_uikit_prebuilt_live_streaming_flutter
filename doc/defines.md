@@ -4,26 +4,10 @@
 - [ZegoLiveStreamingRole](#zegolivestreamingrole)
 - [ZegoLiveStreamingMenuBarButtonName](#zegolivestreamingmenubarbuttonname)
 - [ZegoLiveStreamingAudienceConnectState](#zegolivestreamingaudienceconnectstate)
-- [ZegoLiveStreamingPKBattleState](#zegolivestreamingpkbattlestate)
-- [ZegoLiveStreamingPKBattleRejectCode](#zegolivestreamingpkbattlerejectcode)
-- [ZegoLiveStreamingPKUser](#zegolivestreamingpkuser)
-- [ZegoLiveStreamingIncomingPKBattleRequestReceivedEvent](#zegolivestreamingincomingpkbattlerequestreceivedevent)
-- [ZegoLiveStreamingIncomingPKBattleRequestUser](#zegolivestreamingincomingpkbattlerequestuser)
-- [ZegoLiveStreamingIncomingPKBattleRequestTimeoutEvent](#zegolivestreamingincomingpkbattlerequesttimeoutevent)
-- [ZegoLiveStreamingIncomingPKBattleRequestCancelledEvent](#zegolivestreamingincomingpkbattlerequestcancelledevent)
-- [ZegoLiveStreamingOutgoingPKBattleRequestAcceptedEvent](#zegolivestreamingoutgoingpkbattlerequestacceptedevent)
-- [ZegoLiveStreamingOutgoingPKBattleRequestRejectedEvent](#zegolivestreamingoutgoingpkbattlerequestrejectedevent)
-- [ZegoLiveStreamingOutgoingPKBattleRequestTimeoutEvent](#zegolivestreamingoutgoingpkbattlerequesttimeoutevent)
-- [ZegoLiveStreamingPKBattleEndedEvent](#zegolivestreamingpkbattleendedevent)
-- [ZegoLiveStreamingPKBattleUserOfflineEvent](#zegolivestreamingpkbattleuserofflineevent)
-- [ZegoLiveStreamingPKBattleUserQuitEvent](#zegolivestreamingpkbattleuserquitevent)
-- [ZegoLiveStreamingPKServiceSendRequestResult](#zegolivestreamingpkservicesendrequestresult)
-- [ZegoLiveStreamingPKServiceResult](#zegolivestreamingpkserviceresult)
-- [ZegoLiveStreamingPKMixinLayoutType](#zegolivestreamingpkmixinlayouttype)
-- [ZegoLiveStreamingMiniOverlayPageState](#zegolivestreamingminioverlaypagestate)
-- [ZegoLiveStreamingHallListStyle](#zegolivestreaminghallliststyle)
-- [ZegoLiveStreamingHallListForegroundStyle](#zegolivestreaminghalllistforegroundstyle)
 - [ZegoLiveStreamingDialogInfo](#zegolivestreamingdialoginfo)
+- [ZegoLiveStreamingEndEvent](#zegolivestreamingendevent)
+- [ZegoLiveStreamingLeaveConfirmationEvent](#zegolivstreamingleaveconfirmationevent)
+- [ZegoLiveStreamingRoomLoginFailedEvent](#zegolivstreamingroomloginfailedevent)
 - [ZegoUIKitPrebuiltLiveStreamingInnerText](#zegouikitprebuiltlivestreaminginnertext)
 
 ---
@@ -38,6 +22,8 @@ Live streaming state.
 | :--- | :--- | :--- |
 | idle | Not started or ended. | `0` |
 | living | Live streaming is in progress. | `1` |
+| inPKBattle | In PK battle. | `2` |
+| ended | Live streaming ended. | `3` |
 
 ---
 
@@ -63,19 +49,20 @@ Menu bar button names.
 
 | Name | Description | Value |
 | :--- | :--- | :--- |
-| chat | Chat button. | `0` |
-| toggleMicrophone | Toggle microphone button. | `1` |
-| toggleCamera | Toggle camera button. | `2` |
-| switchCamera | Switch camera button. | `3` |
-| switchAudioOutput | Switch audio output button. | `4` |
-| leave | Leave button. | `5` |
-| requestCoHost | Request co-host button. | `6` |
-| cancelRequestCoHost | Cancel request co-host button. | `7` |
-| endCoHost | End co-host button. | `8` |
-| beauty | Beauty button. | `9` |
-| soundEffect | Sound effect button. | `10` |
-| screenSharing | Screen sharing button. | `11` |
-| pk | PK button. | `12` |
+| toggleCameraButton | Button for controlling the camera switch. | `0` |
+| toggleMicrophoneButton | Button for controlling the microphone switch. | `1` |
+| switchCameraButton | Button for switching between front and rear cameras. | `2` |
+| switchAudioOutputButton | Button for switching audio output. | `3` |
+| leaveButton | Button for leaving the live streaming. | `4` |
+| coHostControlButton | Button for co-host control. | `5` |
+| beautyEffectButton | Button for beauty effect. | `6` |
+| soundEffectButton | Button for sound effect. | `7` |
+| enableChatButton | Button to disable/enable chat. | `8` |
+| toggleScreenSharingButton | Button for toggling screen sharing. | `9` |
+| chatButton | Button to open/hide the chat UI. | `10` |
+| minimizingButton | Button for minimizing the live streaming. | `11` |
+| pipButton | Button for PIP the live streaming. | `12` |
+| expanding | Used in toolbar layout, similar to the Expanded widget. | `13` |
 
 ---
 
@@ -93,271 +80,18 @@ Audience connection state.
 
 ---
 
-## ZegoLiveStreamingPKBattleState
 
-PK battle state.
+## ZegoLiveStreamingEndReason
 
-- **Enum Values**
-
-| Name | Description | Value |
-| :--- | :--- | :--- |
-| idle | No PK battle. | `0` |
-| loading | PK battle is loading. | `1` |
-| inPK | PK battle is in progress. | `2` |
-
----
-
-## ZegoLiveStreamingPKBattleRejectCode
-
-PK battle reject code.
+Live streaming end reason.
 
 - **Enum Values**
 
 | Name | Description | Value |
 | :--- | :--- | :--- |
-| reject | The invited host rejects your PK request. | `0` |
-| hostStateError | The invited host hasn't started their own live stream, is in a PK battle, or is being invited. | `1` |
-| busy | The host is busy with another PK battle, invitation, or request. | `2` |
-
----
-
-## ZegoLiveStreamingPKUser
-
-PK user information.
-
-- **Properties**
-
-| Name | Description | Type | Default Value |
-| :--- | :--- | :--- | :--- |
-| userInfo | User information. | `ZegoUIKitUser` | |
-| liveID | Live ID of the user. | `String` | |
-
----
-
-## ZegoLiveStreamingIncomingPKBattleRequestReceivedEvent
-
-Event received when an incoming PK battle request is received.
-
-- **Properties**
-
-| Name | Description | Type | Default Value |
-| :--- | :--- | :--- | :--- |
-| requestID | The ID of the current PK session. | `String` | |
-| fromHost | The host who sent the PK request. | `ZegoUIKitUser` | |
-| fromLiveID | The live ID of the host who sent the request. | `String` | |
-| isAutoAccept | Whether the PK request will be auto-accepted. | `bool` | |
-| customData | Custom data attached to the request. | `String` | |
-| startTimestampSecond | Timestamp (in seconds) when the PK starts. | `int` | |
-| timeoutSecond | Timeout duration (in seconds) for this request. | `int` | |
-| sessionHosts | The hosts already involved in the same PK session. | `List<ZegoLiveStreamingIncomingPKBattleRequestUser>` | `[]` |
-
----
-
-## ZegoLiveStreamingIncomingPKBattleRequestUser
-
-User information in an incoming PK battle request.
-
-- **Properties**
-
-| Name | Description | Type | Default Value |
-| :--- | :--- | :--- | :--- |
-| id | User ID. | `String` | `''` |
-| name | User name. | `String` | `''` |
-| fromLiveID | The live ID the user is from. | `String` | `''` |
-| state | Invitation user state. | `ZegoSignalingPluginInvitationUserState` | `ZegoSignalingPluginInvitationUserState.unknown` |
-| customData | Custom data. | `String` | `''` |
-
----
-
-## ZegoLiveStreamingIncomingPKBattleRequestTimeoutEvent
-
-Event received when an incoming PK battle request times out.
-
-- **Properties**
-
-| Name | Description | Type | Default Value |
-| :--- | :--- | :--- | :--- |
-| requestID | The ID of the current PK session. | `String` | |
-| fromHost | The host who sent the PK request. | `ZegoUIKitUser` | |
-
----
-
-## ZegoLiveStreamingIncomingPKBattleRequestCancelledEvent
-
-Event received when an incoming PK battle request is cancelled.
-
-- **Properties**
-
-| Name | Description | Type | Default Value |
-| :--- | :--- | :--- | :--- |
-| requestID | The ID of the current PK session. | `String` | |
-| fromHost | The host who sent the PK request. | `ZegoUIKitUser` | |
-| customData | Custom data attached to the cancellation. | `String` | |
-
----
-
-## ZegoLiveStreamingOutgoingPKBattleRequestAcceptedEvent
-
-Event received when an outgoing PK battle request is accepted.
-
-- **Properties**
-
-| Name | Description | Type | Default Value |
-| :--- | :--- | :--- | :--- |
-| requestID | The ID of the current PK session. | `String` | |
-| fromHost | The host who accepted the PK request. | `ZegoUIKitUser` | |
-| fromLiveID | The live ID of the host who accepted the request. | `String` | |
-
----
-
-## ZegoLiveStreamingOutgoingPKBattleRequestRejectedEvent
-
-Event received when an outgoing PK battle request is rejected.
-
-- **Properties**
-
-| Name | Description | Type | Default Value |
-| :--- | :--- | :--- | :--- |
-| requestID | The ID of the current PK session. | `String` | |
-| fromHost | The host who rejected the PK request. | `ZegoUIKitUser` | |
-| refuseCode | Reject reason code. | `int` | |
-
----
-
-## ZegoLiveStreamingOutgoingPKBattleRequestTimeoutEvent
-
-Event received when an outgoing PK battle request times out.
-
-- **Properties**
-
-| Name | Description | Type | Default Value |
-| :--- | :--- | :--- | :--- |
-| requestID | The ID of the current PK session. | `String` | |
-| fromHost | The host who was invited. | `ZegoUIKitUser` | |
-
----
-
-## ZegoLiveStreamingPKBattleEndedEvent
-
-Event received when a PK battle ends.
-
-- **Properties**
-
-| Name | Description | Type | Default Value |
-| :--- | :--- | :--- | :--- |
-| requestID | The ID of the current PK session. | `String` | |
-| fromHost | The host involved in the PK. | `ZegoUIKitUser` | |
-| time | End time. | `int` | |
-| code | End reason code. | `int` | |
-| isRequestFromLocal | Whether the request was from the local user. | `bool` | |
-
----
-
-## ZegoLiveStreamingPKBattleUserOfflineEvent
-
-Event received when a PK battle user goes offline.
-
-- **Properties**
-
-| Name | Description | Type | Default Value |
-| :--- | :--- | :--- | :--- |
-| requestID | The ID of the current PK session. | `String` | |
-| fromHost | The host who went offline. | `ZegoUIKitUser` | |
-
----
-
-## ZegoLiveStreamingPKBattleUserQuitEvent
-
-Event received when a PK battle user quits.
-
-- **Properties**
-
-| Name | Description | Type | Default Value |
-| :--- | :--- | :--- | :--- |
-| requestID | The ID of the current PK session. | `String` | |
-| fromHost | The host who quit. | `ZegoUIKitUser` | |
-
----
-
-## ZegoLiveStreamingPKServiceSendRequestResult
-
-Result of sending a PK request.
-
-- **Properties**
-
-| Name | Description | Type | Default Value |
-| :--- | :--- | :--- | :--- |
-| requestID | The ID of the current PK session. | `String` | `''` |
-| errorUserIDs | List of user IDs that had errors. | `List<String>` | `[]` |
-| error | Platform exception if any. | `PlatformException?` | `null` |
-
----
-
-## ZegoLiveStreamingPKServiceResult
-
-Result of PK service operations.
-
-- **Properties**
-
-| Name | Description | Type | Default Value |
-| :--- | :--- | :--- | :--- |
-| errorUserIDs | List of user IDs that had errors. | `List<String>` | `[]` |
-| error | Platform exception if any. | `PlatformException?` | `null` |
-
----
-
-## ZegoLiveStreamingPKMixinLayoutType
-
-PK mix layout type.
-
-- **Enum Values**
-
-| Name | Description | Value |
-| :--- | :--- | :--- |
-| default | Default layout. | `0` |
-| pkTopVsBottom | Top vs bottom layout. | `1` |
-
----
-
-## ZegoLiveStreamingMiniOverlayPageState
-
-Mini overlay page state.
-
-- **Enum Values**
-
-| Name | Description | Value |
-| :--- | :--- | :--- |
-| invisible | Not visible. | `0` |
-| minimized | Minimized state. | `1` |
-| showed | Showing state. | `2` |
-
----
-
-## ZegoLiveStreamingHallListStyle
-
-Hall list style.
-
-- **Properties**
-
-| Name | Description | Type | Default Value |
-| :--- | :--- | :--- | :--- |
-| loadingBuilder | Custom loading widget builder. | `Widget? Function(BuildContext context)?` | `null` |
-| item | Item style. | `ZegoLiveStreamingHallListItemStyle` | `const ZegoUIKitHallRoomListItemStyle()` |
-| foreground | Foreground style. | `ZegoLiveStreamingHallListForegroundStyle` | `const ZegoLiveStreamingHallListForegroundStyle()` |
-
----
-
-## ZegoLiveStreamingHallListForegroundStyle
-
-Hall list foreground style.
-
-- **Properties**
-
-| Name | Description | Type | Default Value |
-| :--- | :--- | :--- | :--- |
-| showUserInfo | Whether to show user info. | `bool` | `true` |
-| showLivingFlag | Whether to show living flag. | `bool` | `true` |
-| showCloseButton | Whether to show close button. | `bool` | `true` |
+| hostEnd | The live streaming ended due to host ended. | `hostEnd` |
+| localLeave | Local user left the live streaming. | `localLeave` |
+| kickOut | User was kicked out of the live streaming. | `kickOut` |
 
 ---
 
@@ -373,6 +107,45 @@ Dialog information for confirmation dialogs.
 | message | Dialog message. | `String` | |
 | cancelButtonName | Cancel button text. | `String` | |
 | confirmButtonName | Confirm button text. | `String` | |
+
+---
+
+## ZegoLiveStreamingEndEvent
+
+Event data for live streaming end event.
+
+- **Properties**
+
+| Name | Description | Type | Default Value |
+| :--- | :--- | :--- | :--- |
+| kickerUserID | The user ID of who kicked you out. | `String?` | `null` |
+| reason | End reason. | `ZegoLiveStreamingEndReason` | |
+| isFromMinimizing | Whether the user left from minimization state. | `bool` | |
+
+---
+
+## ZegoLiveStreamingLeaveConfirmationEvent
+
+Event data for leave confirmation event.
+
+- **Properties**
+
+| Name | Description | Type | Default Value |
+| :--- | :--- | :--- | :--- |
+| context | Build context. | `BuildContext` | |
+
+---
+
+## ZegoLiveStreamingRoomLoginFailedEvent
+
+Event data for room login failed event.
+
+- **Properties**
+
+| Name | Description | Type | Default Value |
+| :--- | :--- | :--- | :--- |
+| errorCode | Error code. | `int` | |
+| message | Error message. | `String` | |
 
 ---
 

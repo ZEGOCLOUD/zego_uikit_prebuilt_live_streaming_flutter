@@ -8,10 +8,6 @@
 - [ZegoLiveStreamingMemberListConfig](#zegolivestreamingmemberlistconfig)
 - [ZegoLiveStreamingInRoomMessageConfig](#zegolivestreaminginroommessageconfig)
 - [ZegoLiveStreamingEffectConfig](#zegolivestreamingeffectconfig)
-- [ZegoLiveStreamingPKBattleConfig](#zegolivestreamingpkbattleconfig)
-- [ZegoLiveStreamingPreviewConfig](#zegolivestreamingpreviewconfig)
-- [ZegoLiveStreamingHallConfig](#zegolivestreaminghallconfig)
-- [ZegoLiveStreamingSwipingConfig](#zegolivestreamingswipingconfig)
 - [ZegoLiveStreamingDurationConfig](#zegolivestreamingdurationconfig)
 - [ZegoLiveStreamingSignalingPluginConfig](#zegolivestreamingsignalingpluginconfig)
 - [ZegoLiveStreamingScreenSharingConfig](#zegolivestreamingscreensharingconfig)
@@ -43,9 +39,6 @@ Configuration for initializing the Live Streaming.
 | inRoomMessage | Control options for the bottom-left message list. | `ZegoLiveStreamingInRoomMessageConfig` | |
 | effect | Configuration options for voice changer, beauty effects and reverberation effects. | `ZegoLiveStreamingEffectConfig` | |
 | preview | Used to configure the parameters related to the preview of the live streaming. | `ZegoLiveStreamingPreviewConfig` | |
-| hall | Configuration for Hall. | `ZegoLiveStreamingHallConfig` | |
-| swiping | Configuration for Swiping. | `ZegoLiveStreamingSwipingConfig?` | `null` |
-| pkBattle | Configuration for PK Battle. | `ZegoLiveStreamingPKBattleConfig` | |
 | duration | Configuration for Duration. | `ZegoLiveStreamingDurationConfig` | |
 | signalingPlugin | Configuration for Signaling Plugin. | `ZegoLiveStreamingSignalingPluginConfig` | |
 | beauty | Configuration for Beauty. | `ZegoBeautyPluginConfig?` | `null` |
@@ -69,6 +62,36 @@ Configuration for initializing the Live Streaming.
 | advanceConfigs | Set advanced engine configuration. | `Map<String, String>` | `{}` |
 | audienceAudioVideoResourceMode | Audio video resource mode for audience. | `ZegoUIKitStreamResourceMode?` | `null` |
 | showToast | Whether to show toast. | `bool` | `false` |
+
+### Factory Methods
+
+#### host()
+
+- **Description**
+  - Factory method to create a configuration for host role.
+- **Prototype**
+  ```dart
+  ZegoUIKitPrebuiltLiveStreamingConfig.host({List<IZegoUIKitPlugin>? plugins})
+  ```
+
+- **Example**
+  ```dart
+  ZegoUIKitPrebuiltLiveStreamingConfig.host()
+  ```
+
+#### audience()
+
+- **Description**
+  - Factory method to create a configuration for audience role.
+- **Prototype**
+  ```dart
+  ZegoUIKitPrebuiltLiveStreamingConfig.audience({List<IZegoUIKitPlugin>? plugins})
+  ```
+
+- **Example**
+  ```dart
+  ZegoUIKitPrebuiltLiveStreamingConfig.audience()
+  ```
 
 ---
 
@@ -232,26 +255,6 @@ Configuration options for voice changer, beauty effects and reverberation effect
 
 ---
 
-## ZegoLiveStreamingPKBattleConfig
-
-Configuration for PK Battle.
-
-- **Properties**
-
-| Name | Description | Type | Default Value |
-| :--- | :--- | :--- | :--- |
-| userReconnectingSecond | User reconnecting second. | `int` | `5` |
-| userDisconnectedSecond | User disconnected second. | `int` | `90` |
-| mixerLayout | Mixer layout. | `ZegoLiveStreamingPKMixerLayout?` | `null` |
-| hostReconnectingBuilder | Host reconnecting builder. | `ZegoLiveStreamingPKBattleHostReconnectingBuilder?` | `null` |
-| topPadding | PK battle view top padding. | `double?` | `null` |
-| containerRect | Custom container rect. | `Rect Function()?` | `null` |
-| foregroundBuilder | Custom foreground builder. | `ZegoLiveStreamingPKBattleViewBuilder?` | `null` |
-| topBuilder | Custom top builder. | `ZegoLiveStreamingPKBattleViewBuilder?` | `null` |
-| bottomBuilder | Custom bottom builder. | `ZegoLiveStreamingPKBattleViewBuilder?` | `null` |
-| hostResumePKConfirmDialogInfo | Host resume PK confirm dialog info. | `ZegoLiveStreamingDialogInfo?` | `null` |
-
----
 
 ## ZegoLiveStreamingPreviewConfig
 
@@ -288,36 +291,7 @@ Used to configure the parameters related to the preview of the live streaming.
 
 ---
 
-## ZegoLiveStreamingHallConfig
-
-Configuration for Hall.
-
-- **Properties**
-
-| Name | Description | Type | Default Value |
-| :--- | :--- | :--- | :--- |
-| fromHall | Whether it is entered from the hall. | `bool` | `false` |
-| loadingBuilder | Custom loading builder. | `Widget? Function(BuildContext context)?` | `null` |
-
----
-
-## ZegoLiveStreamingSwipingConfig
-
-Configuration for Swiping.
-
-- **Properties**
-
-| Name | Description | Type | Default Value |
-| :--- | :--- | :--- | :--- |
-| streamMode | Stream mode. | `ZegoLiveStreamingStreamMode` | `ZegoLiveStreamingStreamMode.preloaded` |
-| model | Swiping model. | `ZegoLiveStreamingSwipingModel?` | `null` |
-| modelDelegate | Swiping model delegate. | `ZegoLiveStreamingSwipingModelDelegate?` | `null` |
-
----
-
 ## ZegoLiveStreamingDurationConfig
-
-Configuration for Duration.
 
 - **Properties**
 
@@ -372,6 +346,14 @@ Configuration options for media player.
 | :--- | :--- | :--- | :--- |
 | supportTransparent | Whether to support transparency (iOS only). | `bool` | `false` |
 | defaultPlayer | Default player configuration. | `ZegoLiveStreamingMediaPlayerDefaultPlayerConfig` | |
+
+### ZegoLiveStreamingMediaPlayerQueryParameter
+
+- **Properties**
+
+| Name | Description | Type | Default Value |
+| :--- | :--- | :--- | :--- |
+| localRole | Local user's role. | `ZegoLiveStreamingRole` | |
 
 ### ZegoLiveStreamingMediaPlayerDefaultPlayerConfig
 

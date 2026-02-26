@@ -26,6 +26,20 @@ You can embed this widget into any page of your project to integrate the functio
 | config | Initialize the configuration for the live-streaming. See [ZegoUIKitPrebuiltLiveStreamingConfig](configs.md#zegouikitprebuiltlivestreamingconfig). | `ZegoUIKitPrebuiltLiveStreamingConfig` | |
 | events | You can listen to events that you are interested in here. See [ZegoUIKitPrebuiltLiveStreamingEvents](events.md#zegouikitprebuiltlivestreamingevents). | `ZegoUIKitPrebuiltLiveStreamingEvents?` | `null` |
 
+- **Example**
+
+```dart
+ZegoUIKitPrebuiltLiveStreaming(
+  appID: 123456789,
+  userID: 'user_001',
+  userName: 'user_name',
+  liveID: 'live_streaming_001',
+  config: ZegoUIKitPrebuiltLiveStreamingConfig(
+    role: ZegoLiveStreamingRole.host,
+  ),
+);
+```
+
 ---
 
 ## ZegoLiveStreamingBottomBar
@@ -44,6 +58,16 @@ The bottom navigation bar of the live streaming.
 | buttonSize | The size of the buttons. | `Size` | |
 | popUpManager | The popup manager. | `ZegoLiveStreamingPopUpManager` | |
 | isLeaveRequestingNotifier | The notifier for the leave request status. | `ValueNotifier<bool>?` | `null` |
+
+- **Example**
+
+```dart
+ZegoLiveStreamingBottomBar(
+  liveID: 'live_streaming_001',
+  config: ZegoUIKitPrebuiltLiveStreamingConfig(),
+  events: ZegoUIKitPrebuiltLiveStreamingEvents(),
+);
+```
 
 ---
 
@@ -64,6 +88,17 @@ The top navigation bar of the live streaming.
 | popUpManager | The popup manager. | `ZegoLiveStreamingPopUpManager` | |
 | translationText | The translation text. | `ZegoUIKitPrebuiltLiveStreamingInnerText` | |
 | isLeaveRequestingNotifier | The notifier for the leave request status. | `ValueNotifier<bool>?` | `null` |
+
+- **Example**
+
+```dart
+ZegoLiveStreamingTopBar(
+  liveID: 'live_streaming_001',
+  isCoHostEnabled: true,
+  config: ZegoUIKitPrebuiltLiveStreamingConfig(),
+  events: ZegoUIKitPrebuiltLiveStreamingEvents(),
+);
+```
 
 ---
 
@@ -86,5 +121,16 @@ The button to display the member list.
 | translationText | The translation text. | `ZegoUIKitPrebuiltLiveStreamingInnerText` | |
 | config | The configuration of the live streaming. | `ZegoUIKitPrebuiltLiveStreamingConfig` | |
 | events | The events of the live streaming. | `ZegoUIKitPrebuiltLiveStreamingEvents` | |
-| liveConfig | The live configuration. | `ZegoLiveStreamingConfig` | |
+| liveConfig | The live configuration. | `ZegoUIKitPrebuiltLiveStreamingConfig` | |
+
+- **Example**
+
+```dart
+ZegoLiveStreamingMemberButton(
+  liveID: 'live_streaming_001',
+  isCoHostEnabled: true,
+  config: ZegoUIKitPrebuiltLiveStreamingConfig(),
+  events: ZegoUIKitPrebuiltLiveStreamingEvents(),
+);
+```
 

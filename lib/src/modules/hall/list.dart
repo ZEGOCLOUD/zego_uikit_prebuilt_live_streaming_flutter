@@ -14,7 +14,36 @@ import 'controller.dart';
 import 'defines.dart';
 import 'foreground/foreground.dart';
 
-/// live hall
+/// Live streaming hall list widget.
+///
+/// This widget provides a list of live streaming rooms for users to browse and join.
+///
+/// **Important**: When using [ZegoUIKitLiveStreamingHallList], you must set the
+/// [ZegoUIKitPrebuiltLiveStreamingEvents.hall.onPagePushReplace] callback in the
+/// [eventsQuery] to handle navigation when users leave a live streaming page.
+/// If not set, the SDK will log an error and assert in debug mode.
+///
+/// Example:
+/// ```dart
+/// eventsQuery: (String liveID) {
+///   return ZegoUIKitPrebuiltLiveStreamingEvents(
+///     hall: ZegoLiveStreamingHallEvents(
+///       onPagePushReplace: (context, fromLiveID, hallListModel, hallListModelDelegate) {
+///         // Navigate back to hall list
+///         Navigator.pushReplacement(
+///           context,
+///           MaterialPageRoute(
+///             builder: (context) => YourHallPage(
+///               hallListModel,
+///               hallListModelDelegate,
+///             ),
+///           ),
+///         );
+///       },
+///     ),
+///   );
+/// },
+/// ```
 class ZegoUIKitLiveStreamingHallList extends StatefulWidget {
   const ZegoUIKitLiveStreamingHallList({
     super.key,

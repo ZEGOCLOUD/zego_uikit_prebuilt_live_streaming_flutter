@@ -43,6 +43,7 @@ class ZegoUIKitPrebuiltLiveStreamingEvents {
   /// events about beauty
   ZegoLiveStreamingBeautyEvents beauty;
 
+  /// events about hall
   ZegoLiveStreamingHallEvents hall;
 
   /// events about media
@@ -162,6 +163,7 @@ class ZegoLiveStreamingUserEvents {
 
 /// events about room
 class ZegoLiveStreamingRoomEvents {
+  /// This callback is triggered when room state changed
   void Function(ZegoUIKitRoomState)? onStateChanged;
 
   /// This callback is triggered when room login failed
@@ -318,6 +320,7 @@ class ZegoLiveStreamingAudioVideoEvents {
     BuildContext context,
   )? onMicrophoneTurnOnByOthersConfirmation;
 
+  /// Constructs a [ZegoLiveStreamingAudioVideoEvents] instance
   ZegoLiveStreamingAudioVideoEvents({
     this.onCameraStateChanged,
     this.onFrontFacingCameraStateChanged,
@@ -577,9 +580,14 @@ class ZegoLiveStreamingPKEvents {
 
   /// pk user disconnect events
   void Function(ZegoUIKitUser user)? onUserDisconnected;
+
+  /// pk user reconnecting
   void Function(ZegoUIKitUser user)? onUserReconnecting;
+
+  /// pk user reconnected
   void Function(ZegoUIKitUser user)? onUserReconnected;
 
+  /// Constructs a [ZegoLiveStreamingPKEvents] instance
   ZegoLiveStreamingPKEvents({
     this.onIncomingRequestReceived,
     this.onIncomingRequestCancelled,
@@ -597,7 +605,9 @@ class ZegoLiveStreamingPKEvents {
   });
 }
 
+/// Top menu bar events
 class ZegoLiveStreamingTopMenuBarEvents {
+  /// Constructs a [ZegoLiveStreamingTopMenuBarEvents] instance
   ZegoLiveStreamingTopMenuBarEvents({
     this.onHostAvatarClicked,
   });
@@ -614,7 +624,9 @@ class ZegoLiveStreamingTopMenuBarEvents {
   void Function(ZegoUIKitUser host)? onHostAvatarClicked;
 }
 
+/// Member list events
 class ZegoLiveStreamingMemberListEvents {
+  /// Constructs a [ZegoLiveStreamingMemberListEvents] instance
   ZegoLiveStreamingMemberListEvents({
     this.onClicked,
   });
@@ -624,7 +636,9 @@ class ZegoLiveStreamingMemberListEvents {
   void Function(ZegoUIKitUser user)? onClicked;
 }
 
+/// In-room message events
 class ZegoLiveStreamingInRoomMessageEvents {
+  /// Constructs a [ZegoLiveStreamingInRoomMessageEvents] instance
   ZegoLiveStreamingInRoomMessageEvents({
     this.onLocalSend,
     this.onClicked,
@@ -642,7 +656,9 @@ class ZegoLiveStreamingInRoomMessageEvents {
   ZegoInRoomMessageViewItemPressEvent? onLongPress;
 }
 
+/// Duration events
 class ZegoLiveStreamingDurationEvents {
+  /// Constructs a [ZegoLiveStreamingDurationEvents] instance
   ZegoLiveStreamingDurationEvents({
     this.onUpdated,
   });
@@ -660,7 +676,9 @@ class ZegoLiveStreamingDurationEvents {
   void Function(Duration)? onUpdated;
 }
 
+/// Beauty events
 class ZegoLiveStreamingBeautyEvents {
+  /// Constructs a [ZegoLiveStreamingBeautyEvents] instance
   ZegoLiveStreamingBeautyEvents({
     this.onError,
     this.onFaceDetection,
@@ -687,11 +705,49 @@ class ZegoLiveStreamingBeautyEvents {
   Function(ZegoBeautyPluginFaceDetectionData)? onFaceDetection;
 }
 
+/// Hall events
 class ZegoLiveStreamingHallEvents {
+  /// Constructs a [ZegoLiveStreamingHallEvents] instance
   ZegoLiveStreamingHallEvents({
     this.onPagePushReplace,
   });
 
+  /// Callback when user leaves the live streaming page and needs to navigate back to the hall.
+  ///
+  /// This callback is triggered when:
+  /// - The user actively leaves the live streaming (localLeave)
+  /// - The user is kicked out from the live streaming (kickOut)
+  /// - And the page was entered from the hall (isPrebuiltFromHall is true)
+  ///
+  /// Use this callback to implement custom navigation logic from the live streaming page back to the hall list page.
+  ///
+  /// **Required** when using [ZegoUIKitLiveStreamingHallList]. If not set, the SDK will log an error and assert in debug mode.
+  ///
+  /// Parameters:
+  /// - [context]: The build context
+  /// - [fromLiveID]: The live ID of the room that the user is leaving
+  /// - [hallListModel]: The hall list model configuration (if available)
+  /// - [hallListModelDelegate]: The hall list model delegate (if available)
+  ///
+  /// Example:
+  /// ```dart
+  /// onPagePushReplace: (
+  ///   BuildContext context,
+  ///   String fromLiveID,
+  ///   ZegoLiveStreamingHallListModel? hallListModel,
+  ///   ZegoLiveStreamingHallListModelDelegate? hallListModelDelegate,
+  /// ) {
+  ///   Navigator.pushReplacement(
+  ///     context,
+  ///     MaterialPageRoute(
+  ///       builder: (context) => YourHallPage(
+  ///         hallListModel,
+  ///         hallListModelDelegate,
+  ///       ),
+  ///     ),
+  ///   );
+  /// },
+  /// ```
   Function(
     BuildContext context,
     String fromLiveID,

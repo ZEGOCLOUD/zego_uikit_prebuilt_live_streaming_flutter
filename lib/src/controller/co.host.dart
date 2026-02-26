@@ -1,8 +1,12 @@
 part of 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 
+/// Mixin that provides co-host control functionality for the live streaming controller.
+///
+/// Access via [ZegoUIKitPrebuiltLiveStreamingController.coHost].
 mixin ZegoLiveStreamingControllerCoHost {
   final _coHostImpl = ZegoLiveStreamingControllerCoHostImpl();
 
+  /// Returns the co-host implementation instance.
   ZegoLiveStreamingControllerCoHostImpl get coHost => _coHostImpl;
 }
 

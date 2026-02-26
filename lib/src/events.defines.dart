@@ -4,11 +4,19 @@ import 'package:flutter/cupertino.dart';
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
 
+/// A callback for handling room login failure.
+///
+/// - [errorCode] is the error code returned when login fails.
+/// - [message] is the error message describing why the login failed.
 typedef ZegoLiveStreamingLoginFailedEvent = void Function(
   int errorCode,
   String message,
 );
 
+/// A callback for handling room login failure with custom action.
+///
+/// - [event] contains the error code and message of the login failure.
+/// - [defaultAction] is the default action to perform (typically showing an error dialog).
 typedef ZegoLiveStreamingRoomLoginFailedCallback = void Function(
   ZegoLiveStreamingRoomLoginFailedEvent event,
   Future<void> Function(ZegoLiveStreamingRoomLoginFailedEvent event)

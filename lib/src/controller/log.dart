@@ -1,8 +1,12 @@
 part of 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 
+/// Mixin that provides log control functionality for the live streaming controller.
+///
+/// Access via [ZegoUIKitPrebuiltLiveStreamingController.log].
 mixin ZegoLiveStreamingControllerLog {
   final _logImpl = ZegoLiveStreamingControllerLogImpl();
 
+  /// Returns the log implementation instance.
   ZegoLiveStreamingControllerLogImpl get log => _logImpl;
 }
 

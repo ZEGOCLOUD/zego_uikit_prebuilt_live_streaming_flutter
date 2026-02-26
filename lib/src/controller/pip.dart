@@ -1,12 +1,16 @@
 part of 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 
+/// Mixin that provides PIP (Picture-in-Picture) control functionality for the live streaming controller.
+///
+/// Access via [ZegoUIKitPrebuiltLiveStreamingController.pip].
 mixin ZegoLiveStreamingControllerPIP {
   final _pipImpl = ZegoLiveStreamingControllerPIPImpl();
 
+  /// Returns the PIP implementation instance.
   ZegoLiveStreamingControllerPIPImpl get pip => _pipImpl;
 }
 
-/// Here are the APIs related to audio video.
+/// Here are the APIs related to PIP (Picture-in-Picture).
 class ZegoLiveStreamingControllerPIPImpl
     with ZegoLiveStreamingControllerPIPImplPrivate {
   Future<ZegoPiPStatus> get status async => await private.pipImpl().status;

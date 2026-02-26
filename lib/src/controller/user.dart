@@ -1,12 +1,16 @@
 part of 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 
+/// Mixin that provides user control functionality for the live streaming controller.
+///
+/// Access via [ZegoUIKitPrebuiltLiveStreamingController.user].
 mixin ZegoLiveStreamingControllerUser {
   final _userImpl = ZegoLiveStreamingControllerUserImpl();
 
+  /// Returns the user implementation instance.
   ZegoLiveStreamingControllerUserImpl get user => _userImpl;
 }
 
-/// Here are the APIs related to audio video.
+/// Here are the APIs related to user.
 class ZegoLiveStreamingControllerUserImpl
     with ZegoLiveStreamingControllerUserImplPrivate {
   /// user list count notifier

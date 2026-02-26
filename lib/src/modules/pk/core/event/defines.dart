@@ -2,10 +2,18 @@
 import 'package:zego_plugin_adapter/zego_plugin_adapter.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
+/// Room property key for storing PK users.
 const String roomPropKeyPKUsers = "pk_users";
+
+/// Room property key for storing host information.
 const String roomPropKeyHost = "host";
+
+/// Room property key for storing request ID.
 const String roomPropKeyRequestID = "r_id";
 
+/// Event triggered when receiving an incoming PK battle request.
+///
+/// This event is fired when another host sends a PK battle invitation to the local user.
 class ZegoLiveStreamingIncomingPKBattleRequestReceivedEvent {
   const ZegoLiveStreamingIncomingPKBattleRequestReceivedEvent({
     required this.requestID,
@@ -18,18 +26,25 @@ class ZegoLiveStreamingIncomingPKBattleRequestReceivedEvent {
     this.sessionHosts = const [],
   });
 
-  /// The ID of the current PK session
+  /// The ID of the current PK session.
   final String requestID;
 
-  /// timestamp(second) of PK start
+  /// Timestamp (in seconds) when the PK started.
   final int startTimestampSecond;
 
-  ///  timeout second of this request
+  /// Timeout in seconds for this request.
   final int timeoutSecond;
 
+  /// The host who initiated the PK request.
   final ZegoUIKitUser fromHost;
+
+  /// The live streaming ID of the host who initiated the PK request.
   final String fromLiveID;
+
+  /// Whether the PK request is automatically accepted.
   final bool isAutoAccept;
+
+  /// Custom data associated with the PK request.
   final String customData;
 
   /// The hosts already involved in the same PK session,
@@ -49,7 +64,15 @@ class ZegoLiveStreamingIncomingPKBattleRequestReceivedEvent {
       '}';
 }
 
+/// Represents a user in an incoming PK battle request.
 class ZegoLiveStreamingIncomingPKBattleRequestUser {
+  /// Creates an incoming PK battle request user.
+  ///
+  /// - [id] is the user's ID.
+  /// - [state] is the user's invitation state.
+  /// - [customData] is custom data associated with the user.
+  /// - [name] is the user's name.
+  /// - [fromLiveID] is the live ID the user is from.
   ZegoLiveStreamingIncomingPKBattleRequestUser({
     this.id = '',
     this.state = ZegoSignalingPluginInvitationUserState.unknown,
@@ -58,12 +81,19 @@ class ZegoLiveStreamingIncomingPKBattleRequestUser {
     this.fromLiveID = '',
   });
 
+  /// The user's ID.
   final String id;
 
+  /// The user's name.
   String name;
+
+  /// The live streaming ID the user is from.
   String fromLiveID;
 
+  /// The user's invitation state.
   final ZegoSignalingPluginInvitationUserState state;
+
+  /// Custom data associated with the user.
   final String customData;
 
   @override
@@ -83,8 +113,10 @@ class ZegoLiveStreamingIncomingPKBattleRequestTimeoutEvent {
     required this.fromHost,
   });
 
-  /// The ID of the current PK session
+  /// The ID of the current PK session.
   final String requestID;
+
+  /// The host whose request timed out.
   final ZegoUIKitUser fromHost;
 
   @override
@@ -101,9 +133,13 @@ class ZegoLiveStreamingIncomingPKBattleRequestCancelledEvent {
     required this.customData,
   });
 
-  /// The ID of the current PK session
+  /// The ID of the current PK session.
   final String requestID;
+
+  /// The host who cancelled the PK request.
   final ZegoUIKitUser fromHost;
+
+  /// Custom data associated with the request.
   final String customData;
 
   @override
@@ -122,9 +158,13 @@ class ZegoLiveStreamingOutgoingPKBattleRequestAcceptedEvent {
     required this.fromLiveID,
   });
 
-  /// The ID of the current PK session
+  /// The ID of the current PK session.
   final String requestID;
+
+  /// The host who accepted the PK request.
   final ZegoUIKitUser fromHost;
+
+  /// The live streaming ID of the host who accepted the request.
   final String fromLiveID;
 
   @override
@@ -143,11 +183,13 @@ class ZegoLiveStreamingOutgoingPKBattleRequestRejectedEvent {
     required this.refuseCode,
   });
 
-  /// The ID of the current PK session
+  /// The ID of the current PK session.
   final String requestID;
+
+  /// The host who rejected the PK request.
   final ZegoUIKitUser fromHost;
 
-  /// reject reason code
+  /// Reject reason code.
   final int refuseCode;
 
   @override
@@ -165,8 +207,10 @@ class ZegoLiveStreamingOutgoingPKBattleRequestTimeoutEvent {
     required this.fromHost,
   });
 
-  /// The ID of the current PK session
+  /// The ID of the current PK session.
   final String requestID;
+
+  /// The host whose request timed out.
   final ZegoUIKitUser fromHost;
 
   @override
@@ -186,17 +230,19 @@ class ZegoLiveStreamingPKBattleEndedEvent {
     required this.code,
   });
 
-  /// The ID of the current PK session
+  /// The ID of the current PK session.
   final String requestID;
+
+  /// The host who ended the PK battle.
   final ZegoUIKitUser fromHost;
 
-  /// end tie
+  /// End time (timestamp).
   final int time;
 
-  /// end reason
+  /// End reason code.
   final int code;
 
-  /// request may be from remote or local
+  /// Request may be from remote or local.
   final bool isRequestFromLocal;
 
   @override
@@ -216,8 +262,10 @@ class ZegoLiveStreamingPKBattleUserOfflineEvent {
     required this.fromHost,
   });
 
-  /// The ID of the current PK session
+  /// The ID of the current PK session.
   final String requestID;
+
+  /// The host who went offline.
   final ZegoUIKitUser fromHost;
 
   @override
@@ -234,8 +282,10 @@ class ZegoLiveStreamingPKBattleUserQuitEvent {
     required this.fromHost,
   });
 
-  /// The ID of the current PK session
+  /// The ID of the current PK session.
   final String requestID;
+
+  /// The host who quit the PK battle.
   final ZegoUIKitUser fromHost;
 
   @override
