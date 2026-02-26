@@ -303,7 +303,6 @@ class _ZegoUIKitLiveStreamingHallListState
     String roomID,
   ) {
     final roomConfigs = widget.configsQuery.call(roomID);
-    widget.hallStyle.item;
 
     return ZegoLiveStreamingHallForeground(
       user: user,

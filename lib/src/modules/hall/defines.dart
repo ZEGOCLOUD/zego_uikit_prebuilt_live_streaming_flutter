@@ -35,7 +35,7 @@ typedef ZegoLiveStreamingHallListSlideContext
 /// This class provides styling configuration for the live streaming hall list,
 /// which displays a list of available live streaming rooms.
 class ZegoLiveStreamingHallListStyle {
-  /// Loading builder, return [Container()] if you want hide it.
+  /// Loading builder, return `Container()` if you want hide it.
   final Widget? Function(BuildContext context)? loadingBuilder;
 
   /// Item style for the hall list.
