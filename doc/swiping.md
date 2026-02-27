@@ -5,13 +5,14 @@ This feature allows viewers to browse through different live streaming rooms by 
 ---
 
 - [Usage Scenarios](#usage-scenarios)
-- [ZegoLiveStreamingSwipingConfig](#zegolivstreamingswipingconfig)
-- [ZegoLiveStreamingSwipingStyle](#zegolivstreamingswipingstyle)
-- [ZegoLiveStreamingSwipingModel](#zegolivstreamingswipingmodel)
-- [ZegoLiveStreamingSwipingHost](#zegolivstreamingswipinghost)
-- [ZegoLiveStreamingSwipingModelDelegate](#zegolivstreamingswipingmodeldelegate)
-- [ZegoLiveStreamingSwipingSlideContext](#zegolivstreamingswipingslidecontext)
-- [ZegoLiveStreamingStreamMode](#zegolivstreamingstreammode)
+  - [Live Stream Browsing](#live-stream-browsing)
+- [ZegoLiveStreamingSwipingConfig](#zegolivestreamingswipingconfig)
+- [ZegoLiveStreamingSwipingStyle](#zegolivestreamingswipingstyle)
+- [ZegoLiveStreamingSwipingModel](#zegolivestreamingswipingmodel)
+- [ZegoLiveStreamingSwipingHost](#zegolivestreamingswipinghost)
+- [ZegoLiveStreamingSwipingModelDelegate](#zegolivestreamingswipingmodeldelegate)
+- [ZegoLiveStreamingSwipingSlideContext](#zegolivestreamingswipingslidecontext)
+- [ZegoLiveStreamingStreamMode](#zegolivestreamingstreammode)
 
 ## Usage Scenarios
 

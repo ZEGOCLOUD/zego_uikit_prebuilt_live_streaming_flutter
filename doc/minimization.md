@@ -1,9 +1,13 @@
 # Minimization
 
-- [ZegoLiveStreamingMiniOverlayPageState](#zegolivstreamingminioverlaypagestate)
-- [ZegoLiveStreamingControllerMinimizing](#zegolivstreamingcontrollerminimizing)
-
----
+- [ZegoLiveStreamingMiniOverlayPageState](#zegolivestreamingminioverlaypagestate)
+- [ZegoLiveStreamingControllerMinimizing](#zegolivestreamingcontrollerminimizing)
+  - [state](#state)
+  - [isMinimizing](#isminimizing)
+  - [isMinimizingNotifier](#isminimizingnotifier)
+  - [restore](#restore)
+  - [minimize](#minimize-1)
+  - [hide](#hide)
 
 ## ZegoLiveStreamingMiniOverlayPageState
 

@@ -1,14 +1,17 @@
 # Defines
 
-- [ZegoLiveStreamingState](#zegolivestreamingstate)
-- [ZegoLiveStreamingRole](#zegolivestreamingrole)
-- [ZegoLiveStreamingMenuBarButtonName](#zegolivestreamingmenubarbuttonname)
-- [ZegoLiveStreamingAudienceConnectState](#zegolivestreamingaudienceconnectstate)
-- [ZegoLiveStreamingDialogInfo](#zegolivestreamingdialoginfo)
-- [ZegoLiveStreamingEndEvent](#zegolivestreamingendevent)
+- [ZegoLiveStreamingState](#zegolivstreamingstate)
+- [ZegoLiveStreamingRole](#zegolivstreamingrole)
+- [ZegoLiveStreamingMenuBarButtonName](#zegolivstreamingmenubarbuttonname)
+- [ZegoLiveStreamingAudienceConnectState](#zegolivstreamingaudienceconnectstate)
+- [ZegoLiveStreamingEndReason](#zegolivstreamingendreason)
+- [ZegoLiveStreamingDialogInfo](#zegolivstreamingdialoginfo)
+- [ZegoLiveStreamingEndEvent](#zegolivstreamingendevent)
 - [ZegoLiveStreamingLeaveConfirmationEvent](#zegolivstreamingleaveconfirmationevent)
 - [ZegoLiveStreamingRoomLoginFailedEvent](#zegolivstreamingroomloginfailedevent)
 - [ZegoUIKitPrebuiltLiveStreamingInnerText](#zegouikitprebuiltlivestreaminginnertext)
+- [ZegoLiveStreamingMenuBarExtendButton](#zegolivstreamingmenubarextendbutton)
+- [ZegoLiveStreamingBottomMenuBarButtonStyle](#zegolivstreamingbottommenubarbuttonstyle)
 
 ---
 
@@ -255,3 +258,51 @@ Inner text configuration for the live streaming.
 | pkBattleRequestTargetRejectError | PK battle request target reject error. | `String` | `'Target rejected'` |
 | pkBattleRequestTargetTimeoutError | PK battle request target timeout error. | `String` | `'Target timeout'` |
 | pkBattleRequestUnknownError | PK battle request unknown error. | `String` | `'Unknown error'` |
+
+---
+
+## ZegoLiveStreamingMenuBarExtendButton
+
+Extension buttons for the bottom toolbar.
+
+- **Properties**
+
+| Name | Description | Type | Default Value |
+| :--- | :--- | :--- | :--- |
+| index | Index of buttons within the entire bottom toolbar. | `int` | `-1` |
+| child | Button widget. | `Widget` | |
+
+---
+
+## ZegoLiveStreamingBottomMenuBarButtonStyle
+
+Button style for the bottom toolbar.
+
+- **Properties**
+
+| Name | Description | Type | Default Value |
+| :--- | :--- | :--- | :--- |
+| chatEnabledButtonIcon | Icon for enabling chat. | `Widget?` | `null` |
+| chatDisabledButtonIcon | Icon for disabling chat. | `Widget?` | `null` |
+| toggleMicrophoneOnButtonIcon | Icon for toggling microphone on. | `Widget?` | `null` |
+| toggleMicrophoneOffButtonIcon | Icon for toggling microphone off. | `Widget?` | `null` |
+| toggleCameraOnButtonIcon | Icon for toggling camera on. | `Widget?` | `null` |
+| toggleCameraOffButtonIcon | Icon for toggling camera off. | `Widget?` | `null` |
+| switchCameraButtonIcon | Icon for switching camera. | `Widget?` | `null` |
+| switchAudioOutputToSpeakerButtonIcon | Icon for switching audio output to speaker. | `Widget?` | `null` |
+| switchAudioOutputToHeadphoneButtonIcon | Icon for switching audio output to headphone. | `Widget?` | `null` |
+| switchAudioOutputToBluetoothButtonIcon | Icon for switching audio output to Bluetooth. | `Widget?` | `null` |
+| leaveButtonIcon | Icon for leaving the room. | `Widget?` | `null` |
+| requestCoHostButtonIcon | Icon for requesting co-host status. | `Widget?` | `null` |
+| requestCoHostButtonText | Text for requesting co-host status button. | `String?` | `null` |
+| cancelRequestCoHostButtonIcon | Icon for canceling co-host request. | `Widget?` | `null` |
+| cancelRequestCoHostButtonText | Text for canceling co-host request button. | `String?` | `null` |
+| endCoHostButtonIcon | Icon for ending co-host status. | `Widget?` | `null` |
+| endCoHostButtonText | Text for ending co-host status button. | `String?` | `null` |
+| beautyEffectButtonIcon | Icon for beauty effect. | `Widget?` | `null` |
+| soundEffectButtonIcon | Icon for sound effect. | `Widget?` | `null` |
+| enableChatButtonIcon | Icon for enabling chat. | `Widget?` | `null` |
+| disableChatButtonIcon | Icon for disabling chat. | `Widget?` | `null` |
+| toggleScreenSharingOnButtonIcon | Icon for toggling screen sharing on. | `Widget?` | `null` |
+| toggleScreenSharingOffButtonIcon | Icon for toggling screen sharing off. | `Widget?` | `null` |
+

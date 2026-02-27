@@ -6,17 +6,18 @@ This feature provides a visual gallery where viewers can browse and discover liv
 ---
 
 - [Usage Scenarios](#usage-scenarios)
+  - [Live Stream Discovery](#live-stream-discovery)
 - [ZegoUIKitLiveStreamingHallList](#zegouikitlivestreaminghalllist)
-- [ZegoLiveStreamingHallListStyle](#zegolivstreaminghallliststyle)
-- [ZegoLiveStreamingHallListForegroundStyle](#zegolivstreaminghalllistforegroundstyle)
-- [ZegoLiveStreamingHallListConfig](#zegolivstreaminghalllistconfig)
-- [ZegoLiveStreamingHallConfig](#zegolivstreaminghallconfig)
-- [ZegoLiveStreamingHallListItemStyle](#zegolivstreaminghalllistitemstyle)
-- [ZegoLiveStreamingHallListModel](#zegolivstreaminghalllistmodel)
-- [ZegoLiveStreamingHallListModelDelegate](#zegolivstreaminghalllistmodeldelegate)
-- [ZegoLiveStreamingHallHost](#zegolivstreaminghallhost)
-- [ZegoLiveStreamingHallListSlideContext](#zegolivesstreaminghalllistslidecontext)
-
+- [ZegoLiveStreamingHallListStyle](#zegolivestreaminghallliststyle)
+- [ZegoLiveStreamingHallListForegroundStyle](#zegolivestreaminghalllistforegroundstyle)
+- [ZegoLiveStreamingHallListConfig](#zegolivestreaminghalllistconfig)
+- [ZegoLiveStreamingHallConfig](#zegolivestreaminghallconfig)
+- [ZegoLiveStreamingHallListItemStyle](#zegolivestreaminghalllistitemstyle)
+- [ZegoLiveStreamingHallListModel](#zegolivestreaminghalllistmodel)
+- [ZegoLiveStreamingHallListModelDelegate](#zegolivestreaminghalllistmodeldelegate)
+  - [Custom Data Management with hallModelDelegate](#custom-data-management-with-hallmodeldelegate)
+- [ZegoLiveStreamingHallHost](#zegolivestreaminghallhost)
+- [ZegoLiveStreamingHallListSlideContext](#zegolivestreaminghalllistslidecontext)
 
 ## Usage Scenarios
 
@@ -33,7 +34,10 @@ This feature provides a visual gallery where viewers can browse and discover liv
   - `hallConfig`: Video quality and stream mode settings
   - `hallStyle`: Visual styling for the hall list items
   - `configsQuery`: Callback to customize each room's configuration when joining
-  - `hallModelDelegate`: Delegate to handle hall list interactions
+  - `hallModelDelegate`: Delegate to handle user interactions with the hall list, Use when you need to **dynamically** fetch room data (e.g., from server on-demand)
+    - `activeRoom`: The currently active room
+    - `activeContext`: Adjacent room context (previous/next)
+    - `delegate`: Callback triggered when swiping to fetch new adjacent rooms
   - `eventsQuery`: Callback to handle events for each room
 
 - **Complete Example**:
@@ -470,9 +474,166 @@ Delegate for managing hall room data yourself.
 | delegate      | Callback triggered when swiping to fetch new adjacent rooms                     | `Function(bool toNext)?`                 |
 
 - **Parameters**
-  - `delegate(toNext)`: 
+  - `delegate(toNext)`:
     - `toNext`: `true` means swipe to next room, `false` means swipe to previous room
     - Returns: `ZegoLiveStreamingHallListSlideContext` containing the new adjacent rooms
+
+### Custom Data Management with hallModelDelegate
+
+If you need to dynamically manage room data yourself (e.g., fetching from your server in real-time), use `hallModelDelegate` instead of `hallModel`.
+
+- **Scenario**: Dynamic room list from server, custom caching, or real-time data updates
+- **Implementation**:
+  - Set `hallModel` to `null`
+  - Provide `hallModelDelegate` with initial data and a delegate callback
+
+- **Example**:
+
+  ```dart
+  // Entry point - using hallModelDelegate for custom data management
+  void showHallListWithDelegate() {
+    final user = getCurrentUser();
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => hallList(
+          context.locale,
+          null,  // hallListModel - not used when using delegate
+          null,  // hallListModelDelegate - initial load
+        ),
+      ),
+    );
+  }
+
+  // Reusable method to build the hall list widget with delegate
+  Widget hallList(
+    Locale locale,
+    ZegoLiveStreamingHallListModel? hallListModel,
+    ZegoLiveStreamingHallListModelDelegate? hallListModelDelegate,
+  ) {
+    final user = getCurrentUser();
+
+    return ZegoUIKitLiveStreamingHallList(
+      appID: appID,
+      userID: user.id,
+      userName: user.name,
+      appSign: appSign,
+      token: token,
+
+      // Required: Provide config for each room when user joins
+      configsQuery: (String liveID) {
+        return ZegoUIKitPrebuiltLiveStreamingConfig(
+          appID: appID,
+          userID: user.id,
+          userName: user.name,
+          liveID: liveID,
+          role: ZegoLiveStreamingRole.audience,
+        );
+      },
+
+      // Required: Handle events for each room
+      // Note: hall.onPagePushReplace is REQUIRED to handle navigation when users leave a live streaming page
+      eventsQuery: (String liveID) {
+        return ZegoUIKitPrebuiltLiveStreamingEvents(
+          // Handle navigation back to hall when user leaves the live streaming
+          hall: ZegoLiveStreamingHallEvents(
+            onPagePushReplace: (BuildContext context, String fromLiveID, ZegoLiveStreamingHallListModel? hallListModel, ZegoLiveStreamingHallListModelDelegate? hallListModelDelegate) {
+              // Navigate back to the hall list page
+              // Reuse the hallList method to build the hall list widget
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => hallList(
+                    context.locale,
+                    hallListModel,
+                    hallListModelDelegate,  // Pass delegate to restore the delegate state
+                  ),
+                ),
+              );
+            },
+          ),
+        );
+      },
+
+      // Use hallModelDelegate to manage data yourself
+      hallModel: null, // Don't set 'hallModel', set 'hallModelDelegate' instead
+      hallModelDelegate: hallListModelDelegate ?? ZegoLiveStreamingHallListModelDelegate(
+        // Initial active room (current room being viewed)
+        activeRoom: ZegoLiveStreamingHallHost(
+          user: ZegoUIKitUser(
+            id: 'host_001',
+            name: 'Host 1',
+            isAnotherRoomUser: true,
+          ),
+          roomID: 'live_001',
+        ),
+
+        // Initial adjacent room context
+        activeContext: ZegoLiveStreamingHallListSlideContext(
+          previous: ZegoLiveStreamingHallHost(
+            user: ZegoUIKitUser(
+              id: 'host_000',
+              name: 'Host 0',
+              isAnotherRoomUser: true,
+            ),
+            roomID: 'live_000',
+          ),
+          next: ZegoLiveStreamingHallHost(
+            user: ZegoUIKitUser(
+              id: 'host_002',
+              name: 'Host 2',
+              isAnotherRoomUser: true,
+            ),
+            roomID: 'live_002',
+          ),
+        ),
+
+        // Delegate callback - called when user swipes to fetch new rooms
+        delegate: (bool toNext) {
+          // toNext: true means swipe to next room, false means swipe to previous room
+          // Implement your own logic to fetch adjacent rooms
+          // This could be from your server, local cache, etc.
+
+          // Example: Fetch from your server
+          final newContext = fetchAdjacentRooms(
+            currentLiveID: toNext ? 'live_002' : 'live_000',
+            direction: toNext ? 'next' : 'previous',
+          );
+
+          return newContext;
+        },
+      ),
+    );
+  }
+
+  // Example: Custom fetch function (implement your own logic)
+  ZegoLiveStreamingHallListSlideContext fetchAdjacentRooms({
+    required String currentLiveID,
+    required String direction,
+  }) {
+    // TODO: Replace with your actual server API call
+    // This is just a placeholder demonstrating the return type
+    return ZegoLiveStreamingHallListSlideContext(
+      previous: ZegoLiveStreamingHallHost(
+        user: ZegoUIKitUser(
+          id: 'host_prev',
+          name: 'Previous Host',
+          isAnotherRoomUser: true,
+        ),
+        roomID: 'live_prev',
+      ),
+      next: ZegoLiveStreamingHallHost(
+        user: ZegoUIKitUser(
+          id: 'host_next',
+          name: 'Next Host',
+          isAnotherRoomUser: true,
+        ),
+        roomID: 'live_next',
+      ),
+    );
+  }
+  ```
 
 ---
 

@@ -1,18 +1,103 @@
 # APIs
 
 - [ZegoUIKitPrebuiltLiveStreamingController](#zegouikitprebuiltlivestreamingcontroller)
-  - [leave](#leave)
+  - [version](#version)
   - [liveState](#livestate)
+  - [leave](#leave)
   - [isLeaveRequestingNotifier](#isleaverequestingnotifier)
   - [AudioVideo](#audiovideo)
+    - [microphone](#microphone)
+      - [localState](#localstate)
+      - [localStateNotifier](#localstatenotifier)
+      - [state](#state)
+      - [stateNotifier](#statenotifier)
+      - [turnOn](#turnon)
+      - [switchState](#switchstate)
+    - [camera](#camera)
+      - [localState](#localstate-1)
+      - [localStateNotifier](#localstatenotifier-1)
+      - [state](#state-1)
+      - [stateNotifier](#statenotifier-1)
+      - [turnOn](#turnon-1)
+      - [switchState](#switchstate-1)
+      - [switchFrontFacing](#switchfrontfacing)
+      - [switchVideoMirroring](#switchvideomirroring)
+    - [audioOutput](#audiooutput)
+      - [localNotifier](#localnotifier)
+      - [notifier](#notifier)
+      - [switchToSpeaker](#switchtospeaker)
   - [Message](#message)
+    - [send](#send)
+    - [list](#list)
   - [PIP](#pip)
+    - [stream](#stream)
+    - [delete](#delete)
+    - [status](#status)
+    - [available](#available)
+    - [enable](#enable)
+    - [enableWhenBackground](#enablewhenbackground)
+    - [cancelBackground](#cancelbackground)
   - [Room](#room)
+    - [leave](#leave-1)
+    - [queryProperties](#queryproperties)
+    - [sendCommand](#sendcommand)
+    - [commandReceivedStream](#commandreceivedstream)
+    - [propertiesStream](#propertiesstream)
+    - [renewToken](#renewtoken)
+    - [updateProperty](#updateproperty)
+    - [updateProperties](#updateproperties)
+    - [deleteProperties](#deleteproperties)
   - [User](#user)
+    - [countNotifier](#countnotifier)
+    - [stream](#stream-1)
+    - [remove](#remove)
+    - [addFakeUser](#addfakeuser)
+    - [removeFakeUser](#removefakeuser)
   - [Screen](#screen)
+    - [viewController](#viewcontroller)
+    - [showViewInFullscreenMode](#showviewinfullscreenmode)
+    - [start](#start)
+    - [stop](#stop-1)
   - [CoHost](#cohost)
+    - [audienceLocalConnectStateNotifier](#audiencelocalconnectstatenotifier)
+    - [hostNotifier](#hostnotifier)
+    - [requestCoHostUsersNotifier](#requestcohostusersnotifier)
+    - [coHostCountNotifier](#cohostcountnotifier)
+    - [hostSendCoHostInvitationToAudience](#hostsendscohostinvitationtoaudience)
+    - [audienceAgreeCoHostInvitation](#audienceagreecohostinvitation)
+    - [audienceRejectCoHostInvitation](#audiencerejectcohostinvitation)
+    - [audienceSendCoHostRequest](#audiencesendcohostrequest)
+    - [audienceCancelCoHostRequest](#audiencecancelcohostrequest)
+    - [startCoHost](#startcohost)
+    - [stopCoHost](#stopcohost)
+    - [hostAgreeCoHostRequest](#hostagreecohostrequest)
+    - [hostRejectCoHostRequest](#hostrejectcohostrequest)
+    - [removeCoHost](#removecohost)
   - [Log](#log)
+    - [exportLogs](#exportlogs)
   - [Media](#media)
+    - [defaultPlayer](#defaultplayer)
+    - [volume](#volume)
+    - [totalDuration](#totalduration)
+    - [currentProgress](#currentprogress)
+    - [type](#type-1)
+    - [volumeNotifier](#volumenotifier)
+    - [currentProgressNotifier](#currentprogressnotifier)
+    - [playStateNotifier](#playstatenotifier)
+    - [typeNotifier](#typenotifier)
+    - [muteNotifier](#mutenotifier)
+    - [info](#info)
+    - [play](#play)
+    - [destroy](#destroy)
+    - [pickPureAudioFile](#pickpureaudiofile)
+    - [pickVideoFile](#pickvideofile)
+    - [pickFile](#pickfile-1)
+    - [stop](#stop-2)
+    - [pause](#pause)
+    - [resume](#resume)
+    - [seekTo](#seekto)
+    - [setVolume](#setvolume)
+    - [muteLocal](#mutelocal)
 
 ---
 
@@ -106,7 +191,8 @@ Used to control the live streaming functionality.
 
 **ZegoLiveStreamingControllerAudioVideoMicrophoneImpl**
 
-- **localState**
+
+#### localState
   - **Description**
     - Microphone state of local user.
   - **Prototype**
@@ -114,7 +200,8 @@ Used to control the live streaming functionality.
     bool get localState;
     ```
 
-- **localStateNotifier**
+
+#### localStateNotifier
   - **Description**
     - Microphone state notifier of local user.
   - **Prototype**
@@ -122,7 +209,8 @@ Used to control the live streaming functionality.
     ValueNotifier<bool> get localStateNotifier;
     ```
 
-- **state**
+
+#### state
   - **Description**
     - Microphone state of `userID`.
   - **Prototype**
@@ -130,7 +218,8 @@ Used to control the live streaming functionality.
     bool state(String userID);
     ```
 
-- **stateNotifier**
+
+#### stateNotifier
   - **Description**
     - Microphone state notifier of `userID`.
   - **Prototype**
@@ -138,7 +227,8 @@ Used to control the live streaming functionality.
     ValueNotifier<bool> stateNotifier(String userID);
     ```
 
-- **turnOn**
+
+#### turnOn
   - **Description**
     - Turn on/off `userID` microphone, if `userID` is empty, then it refers to local user.
   - **Prototype**
@@ -150,7 +240,8 @@ Used to control the live streaming functionality.
     ZegoUIKitPrebuiltLiveStreamingController().audioVideo.microphone.turnOn(true);
     ```
 
-- **switchState**
+
+#### switchState
   - **Description**
     - Switch `userID` microphone state, if `userID` is empty, then it refers to local user.
   - **Prototype**
@@ -162,7 +253,8 @@ Used to control the live streaming functionality.
 
 **ZegoLiveStreamingControllerAudioVideoCameraImpl**
 
-- **localState**
+
+#### localState
   - **Description**
     - Camera state of local user.
   - **Prototype**
@@ -170,7 +262,8 @@ Used to control the live streaming functionality.
     bool get localState;
     ```
 
-- **localStateNotifier**
+
+#### localStateNotifier
   - **Description**
     - Camera state notifier of local user.
   - **Prototype**
@@ -178,7 +271,8 @@ Used to control the live streaming functionality.
     ValueNotifier<bool> get localStateNotifier;
     ```
 
-- **state**
+
+#### state
   - **Description**
     - Camera state of `userID`.
   - **Prototype**
@@ -186,7 +280,8 @@ Used to control the live streaming functionality.
     bool state(String userID);
     ```
 
-- **stateNotifier**
+
+#### stateNotifier
   - **Description**
     - Camera state notifier of `userID`.
   - **Prototype**
@@ -194,7 +289,8 @@ Used to control the live streaming functionality.
     ValueNotifier<bool> stateNotifier(String userID);
     ```
 
-- **turnOn**
+
+#### turnOn
   - **Description**
     - Turn on/off `userID` camera, if `userID` is empty, then it refers to local user.
   - **Prototype**
@@ -206,7 +302,8 @@ Used to control the live streaming functionality.
     ZegoUIKitPrebuiltLiveStreamingController().audioVideo.camera.turnOn(true);
     ```
 
-- **switchState**
+
+#### switchState
   - **Description**
     - Switch `userID` camera state, if `userID` is empty, then it refers to local user.
   - **Prototype**
@@ -214,7 +311,8 @@ Used to control the live streaming functionality.
     void switchState({String? userID});
     ```
 
-- **switchFrontFacing**
+
+#### switchFrontFacing
   - **Description**
     - Local use front facing camera.
   - **Prototype**
@@ -222,7 +320,8 @@ Used to control the live streaming functionality.
     void switchFrontFacing(bool isFrontFacing);
     ```
 
-- **switchVideoMirroring**
+
+#### switchVideoMirroring
   - **Description**
     - Set video mirror mode.
   - **Prototype**
@@ -234,7 +333,8 @@ Used to control the live streaming functionality.
 
 **ZegoLiveStreamingControllerAudioVideoAudioOutputImpl**
 
-- **localNotifier**
+
+#### localNotifier
   - **Description**
     - Local audio output device notifier.
   - **Prototype**
@@ -242,7 +342,8 @@ Used to control the live streaming functionality.
     ValueNotifier<ZegoUIKitAudioRoute> get localNotifier;
     ```
 
-- **notifier**
+
+#### notifier
   - **Description**
     - Get audio output device notifier.
   - **Prototype**
@@ -250,7 +351,8 @@ Used to control the live streaming functionality.
     ValueNotifier<ZegoUIKitAudioRoute> notifier(String userID);
     ```
 
-- **switchToSpeaker**
+
+#### switchToSpeaker
   - **Description**
     - Set audio output to speaker or earpiece(telephone receiver).
   - **Prototype**
@@ -264,7 +366,8 @@ Used to control the live streaming functionality.
 
 **ZegoLiveStreamingControllerMessage**
 
-- **send**
+
+#### send
   - **Description**
     - Send message.
   - **Prototype**
@@ -292,7 +395,8 @@ Used to control the live streaming functionality.
     | type | Unknown | `ZegoInRoomMessageType` | `ZegoInRoomMessageType.broadcastMessage` |
 
 
-- **list**
+
+#### list
   - **Description**
     - Get message list.
   - **Prototype**
@@ -311,7 +415,8 @@ Used to control the live streaming functionality.
     ZegoUIKitPrebuiltLiveStreamingController().message.list();
     ```
 
-- **stream**
+
+#### stream
   - **Description**
     - Get message stream.
   - **Prototype**
@@ -328,7 +433,8 @@ Used to control the live streaming functionality.
     | type | Message type | `ZegoInRoomMessageType` | `ZegoInRoomMessageType.broadcastMessage` |
 
 
-- **delete**
+
+#### delete
   - **Description**
     - Delete message.
   - **Prototype**
@@ -362,7 +468,8 @@ Used to control the live streaming functionality.
 
 **ZegoLiveStreamingControllerPIP**
 
-- **status**
+
+#### status
   - **Description**
     - Get current PIP status.
   - **Prototype**
@@ -370,7 +477,8 @@ Used to control the live streaming functionality.
     Future<ZegoPiPStatus> get status
     ```
 
-- **available**
+
+#### available
   - **Description**
     - Check if PIP is available.
   - **Prototype**
@@ -378,7 +486,8 @@ Used to control the live streaming functionality.
     Future<bool> get available
     ```
 
-- **enable**
+
+#### enable
   - **Description**
     - Enable Picture-in-Picture.
   - **Prototype**
@@ -406,7 +515,8 @@ Used to control the live streaming functionality.
     | aspectHeight | Unknown | `int` | `16` |
 
 
-- **enableWhenBackground**
+
+#### enableWhenBackground
   - **Description**
     - Enable Picture-in-Picture when app goes to background.
   - **Prototype**
@@ -434,7 +544,8 @@ Used to control the live streaming functionality.
     | aspectHeight | Unknown | `int` | `16` |
 
 
-- **cancelBackground**
+
+#### cancelBackground
   - **Description**
     - Cancel background Picture-in-Picture.
   - **Prototype**
@@ -468,7 +579,8 @@ Used to control the live streaming functionality.
 
 **ZegoLiveStreamingControllerRoom**
 
-- **leave**
+
+#### leave
   - **Description**
     - Leave the room.
   - **Prototype**
@@ -478,7 +590,8 @@ Used to control the live streaming functionality.
   - **Note**
     - This method is available in `ZegoUIKitPrebuiltLiveStreamingController`, not in Room controller.
 
-- **queryProperties**
+
+#### queryProperties
   - **Description**
     - Query room properties.
   - **Prototype**
@@ -486,7 +599,8 @@ Used to control the live streaming functionality.
     Future<Map<String, String>> queryProperties({required String roomID})
     ```
 
-- **sendCommand**
+
+#### sendCommand
   - **Description**
     - Send room command.
   - **Prototype**
@@ -494,7 +608,8 @@ Used to control the live streaming functionality.
     Future<bool> sendCommand({required String roomID, required Uint8List command})
     ```
 
-- **commandReceivedStream**
+
+#### commandReceivedStream
   - **Description**
     - Room command stream notify.
   - **Prototype**
@@ -502,7 +617,8 @@ Used to control the live streaming functionality.
     Stream<ZegoSignalingPluginInRoomCommandMessageReceivedEvent> commandReceivedStream()
     ```
 
-- **propertiesStream**
+
+#### propertiesStream
   - **Description**
     - Room properties stream notify.
   - **Prototype**
@@ -510,7 +626,8 @@ Used to control the live streaming functionality.
     Stream<ZegoSignalingPluginRoomPropertiesUpdatedEvent> propertiesStream()
     ```
 
-- **renewToken**
+
+#### renewToken
   - **Description**
     - Renew room token.
   - **Prototype**
@@ -525,7 +642,8 @@ Used to control the live streaming functionality.
     | token | The new token | `String` | `Required` |
 
 
-- **updateProperty**
+
+#### updateProperty
   - **Description**
     - Update a room property.
   - **Prototype**
@@ -553,7 +671,8 @@ Used to control the live streaming functionality.
     | showConfirmation | Unknown | `bool` | `false` |
 
 
-- **updateProperties**
+
+#### updateProperties
   - **Description**
     - Update multiple room properties.
   - **Prototype**
@@ -581,7 +700,8 @@ Used to control the live streaming functionality.
     | showConfirmation | Unknown | `bool` | `false` |
 
 
-- **deleteProperties**
+
+#### deleteProperties
   - **Description**
     - Delete room properties.
   - **Prototype**
@@ -609,7 +729,8 @@ Used to control the live streaming functionality.
     | showConfirmation | Unknown | `bool` | `false` |
 
 
-- **renewToken**
+
+#### renewToken
   - **Description**
     - Renew room token.
   - **Prototype**
@@ -631,7 +752,8 @@ Used to control the live streaming functionality.
 
 **ZegoLiveStreamingControllerUser**
 
-- **countNotifier**
+
+#### countNotifier
   - **Description**
     - Get user count notifier.
   - **Prototype**
@@ -643,7 +765,8 @@ Used to control the live streaming functionality.
     ZegoUIKitPrebuiltLiveStreamingController().user.countNotifier.addListener(() {});
     ```
 
-- **stream**
+
+#### stream
   - **Description**
     - Get user list stream.
   - **Prototype**
@@ -655,7 +778,8 @@ Used to control the live streaming functionality.
     ZegoUIKitPrebuiltLiveStreamingController().user.stream().listen((users) {});
     ```
 
-- **remove**
+
+#### remove
   - **Description**
     - Remove users from the room (kick out).
   - **Prototype**
@@ -667,7 +791,8 @@ Used to control the live streaming functionality.
     ZegoUIKitPrebuiltLiveStreamingController().user.remove(`"user1"`);
     ```
 
-- **addFakeUser**
+
+#### addFakeUser
   - **Description**
     - Add a fake user (for testing/simulation).
   - **Prototype**
@@ -679,7 +804,8 @@ Used to control the live streaming functionality.
     ZegoUIKitPrebuiltLiveStreamingController().user.addFakeUser(ZegoUIKitUser(id: "fake", name: "Fake"));
     ```
 
-- **removeFakeUser**
+
+#### removeFakeUser
   - **Description**
     - Remove a fake user.
   - **Prototype**
@@ -697,7 +823,8 @@ Used to control the live streaming functionality.
 
 **ZegoLiveStreamingControllerScreen**
 
-- **viewController**
+
+#### viewController
   - **Description**
     - Get screen sharing view controller.
   - **Prototype**
@@ -709,7 +836,8 @@ Used to control the live streaming functionality.
     var vc = ZegoUIKitPrebuiltLiveStreamingController().screenSharing.viewController;
     ```
 
-- **showViewInFullscreenMode**
+
+#### showViewInFullscreenMode
   - **Description**
     - Show screen sharing view in fullscreen mode.
   - **Prototype**
@@ -721,7 +849,8 @@ Used to control the live streaming functionality.
     ZegoUIKitPrebuiltLiveStreamingController().screenSharing.showViewInFullscreenMode("user1", true);
     ```
 
-- **start**
+
+#### start
   - **Description**
     - Start screen sharing.
   - **Prototype**
@@ -729,7 +858,8 @@ Used to control the live streaming functionality.
     Future<void> start({bool isUseSurfaceView = false})
     ```
 
-- **stop**
+
+#### stop
   - **Description**
     - Stop screen sharing.
   - **Prototype**
@@ -743,7 +873,8 @@ Used to control the live streaming functionality.
 
 **ZegoLiveStreamingControllerCoHostImpl**
 
-- **audienceLocalConnectStateNotifier**
+
+#### audienceLocalConnectStateNotifier
   - **Description**
     - For audience: current audience connection state, audience or co-host(connected).
   - **Prototype**
@@ -751,7 +882,8 @@ Used to control the live streaming functionality.
     ValueNotifier<ZegoLiveStreamingAudienceConnectState> get audienceLocalConnectStateNotifier
     ```
 
-- **hostNotifier**
+
+#### hostNotifier
   - **Description**
     - Host notifier.
   - **Prototype**
@@ -759,7 +891,8 @@ Used to control the live streaming functionality.
     ValueNotifier<ZegoUIKitUser?> get hostNotifier
     ```
 
-- **requestCoHostUsersNotifier**
+
+#### requestCoHostUsersNotifier
   - **Description**
     - For host: current requesting co-host's audiences.
   - **Prototype**
@@ -767,7 +900,8 @@ Used to control the live streaming functionality.
     ValueNotifier<List<ZegoUIKitUser>> get requestCoHostUsersNotifier
     ```
 
-- **coHostCountNotifier**
+
+#### coHostCountNotifier
   - **Description**
     - Current co-host total count.
   - **Prototype**
@@ -775,7 +909,8 @@ Used to control the live streaming functionality.
     ValueNotifier<int> get coHostCountNotifier
     ```
 
-- **hostSendCoHostInvitationToAudience**
+
+#### hostSendCoHostInvitationToAudience
   - **Description**
     - Host invite `audience` to be a co-host.
   - **Prototype**
@@ -792,7 +927,8 @@ Used to control the live streaming functionality.
     ZegoUIKitPrebuiltLiveStreamingController().coHost.hostSendCoHostInvitationToAudience(user);
     ```
 
-- **audienceAgreeCoHostInvitation**
+
+#### audienceAgreeCoHostInvitation
   - **Description**
     - Audience agrees to co-host invitation.
   - **Prototype**
@@ -804,7 +940,8 @@ Used to control the live streaming functionality.
     ZegoUIKitPrebuiltLiveStreamingController().coHost.audienceAgreeCoHostInvitation();
     ```
 
-- **audienceRejectCoHostInvitation**
+
+#### audienceRejectCoHostInvitation
   - **Description**
     - Audience rejects co-host invitation.
   - **Prototype**
@@ -816,7 +953,8 @@ Used to control the live streaming functionality.
     ZegoUIKitPrebuiltLiveStreamingController().coHost.audienceRejectCoHostInvitation();
     ```
 
-- **audienceSendCoHostRequest**
+
+#### audienceSendCoHostRequest
   - **Description**
     - Audience requests to become a co-host by sending a request to the host.
   - **Prototype**
@@ -828,7 +966,8 @@ Used to control the live streaming functionality.
     ZegoUIKitPrebuiltLiveStreamingController().coHost.audienceSendCoHostRequest();
     ```
 
-- **audienceCancelCoHostRequest**
+
+#### audienceCancelCoHostRequest
   - **Description**
     - Audience cancels the co-host request.
   - **Prototype**
@@ -840,7 +979,8 @@ Used to control the live streaming functionality.
     ZegoUIKitPrebuiltLiveStreamingController().coHost.audienceCancelCoHostRequest();
     ```
 
-- **startCoHost**
+
+#### startCoHost
   - **Description**
     - Audience switches to be a co-host directly, without request to host.
   - **Prototype**
@@ -852,7 +992,8 @@ Used to control the live streaming functionality.
     ZegoUIKitPrebuiltLiveStreamingController().coHost.startCoHost();
     ```
 
-- **stopCoHost**
+
+#### stopCoHost
   - **Description**
     - Co-host ends the connection and switches to the audience role voluntarily.
   - **Prototype**
@@ -864,7 +1005,8 @@ Used to control the live streaming functionality.
     ZegoUIKitPrebuiltLiveStreamingController().coHost.stopCoHost();
     ```
 
-- **hostAgreeCoHostRequest**
+
+#### hostAgreeCoHostRequest
   - **Description**
     - Host approve the co-host request made by `audience`.
   - **Prototype**
@@ -876,7 +1018,8 @@ Used to control the live streaming functionality.
     ZegoUIKitPrebuiltLiveStreamingController().coHost.hostAgreeCoHostRequest(audience);
     ```
 
-- **hostRejectCoHostRequest**
+
+#### hostRejectCoHostRequest
   - **Description**
     - Host reject the co-host request made by `audience`.
   - **Prototype**
@@ -888,7 +1031,8 @@ Used to control the live streaming functionality.
     ZegoUIKitPrebuiltLiveStreamingController().coHost.hostRejectCoHostRequest(audience);
     ```
 
-- **removeCoHost**
+
+#### removeCoHost
   - **Description**
     - Host remove the co-host, make `coHost` to be an audience.
   - **Prototype**
@@ -906,7 +1050,8 @@ Used to control the live streaming functionality.
 
 **ZegoLiveStreamingControllerLog**
 
-- **exportLogs**
+
+#### exportLogs
   - **Description**
     - Export logs.
   - **Prototype**
@@ -948,7 +1093,8 @@ Used to control the live streaming functionality.
 
 **ZegoLiveStreamingControllerMedia**
 
-- **defaultPlayer**
+
+#### defaultPlayer
   - **Description**
     - Default player controller.
   - **Prototype**
@@ -956,7 +1102,8 @@ Used to control the live streaming functionality.
     ZegoLiveStreamingControllerMediaDefaultPlayer get defaultPlayer
     ```
 
-- **volume**
+
+#### volume
   - **Description**
     - Volume of current media.
   - **Prototype**
@@ -964,7 +1111,8 @@ Used to control the live streaming functionality.
     int get volume
     ```
 
-- **totalDuration**
+
+#### totalDuration
   - **Description**
     - The total progress (millisecond) of current media resources.
   - **Prototype**
@@ -972,7 +1120,8 @@ Used to control the live streaming functionality.
     int get totalDuration
     ```
 
-- **currentProgress**
+
+#### currentProgress
   - **Description**
     - Current playing progress of current media.
   - **Prototype**
@@ -980,7 +1129,8 @@ Used to control the live streaming functionality.
     int get currentProgress
     ```
 
-- **type**
+
+#### type
   - **Description**
     - Media type of current media.
   - **Prototype**
@@ -988,7 +1138,8 @@ Used to control the live streaming functionality.
     ZegoUIKitMediaType get type
     ```
 
-- **volumeNotifier**
+
+#### volumeNotifier
   - **Description**
     - Volume notifier of current media.
   - **Prototype**
@@ -996,7 +1147,8 @@ Used to control the live streaming functionality.
     ValueNotifier<int> get volumeNotifier
     ```
 
-- **currentProgressNotifier**
+
+#### currentProgressNotifier
   - **Description**
     - Current progress notifier of current media.
   - **Prototype**
@@ -1004,7 +1156,8 @@ Used to control the live streaming functionality.
     ValueNotifier<int> get currentProgressNotifier
     ```
 
-- **playStateNotifier**
+
+#### playStateNotifier
   - **Description**
     - Play state notifier of current media.
   - **Prototype**
@@ -1012,7 +1165,8 @@ Used to control the live streaming functionality.
     ValueNotifier<ZegoUIKitMediaPlayState> get playStateNotifier
     ```
 
-- **typeNotifier**
+
+#### typeNotifier
   - **Description**
     - Type notifier of current media.
   - **Prototype**
@@ -1020,7 +1174,8 @@ Used to control the live streaming functionality.
     ValueNotifier<ZegoUIKitMediaType> get typeNotifier
     ```
 
-- **muteNotifier**
+
+#### muteNotifier
   - **Description**
     - Mute state notifier of current media.
   - **Prototype**
@@ -1028,7 +1183,8 @@ Used to control the live streaming functionality.
     ValueNotifier<bool> get muteNotifier
     ```
 
-- **info**
+
+#### info
   - **Description**
     - Info of current media.
   - **Prototype**
@@ -1036,7 +1192,8 @@ Used to control the live streaming functionality.
     ZegoUIKitMediaInfo get info
     ```
 
-- **play**
+
+#### play
   - **Description**
     - Start play media.
   - **Prototype**
@@ -1066,7 +1223,8 @@ Used to control the live streaming functionality.
     | autoStart | Unknown | `bool` | `true` |
 
 
-- **destroy**
+
+#### destroy
   - **Description**
     - Destroy current media.
   - **Prototype**
@@ -1074,7 +1232,8 @@ Used to control the live streaming functionality.
     Future<void> destroy()
     ```
 
-- **pickPureAudioFile**
+
+#### pickPureAudioFile
   - **Description**
     - Pick pure audio media file.
   - **Prototype**
@@ -1082,7 +1241,8 @@ Used to control the live streaming functionality.
     Future<List<ZegoUIKitPlatformFile>> pickPureAudioFile()
     ```
 
-- **pickVideoFile**
+
+#### pickVideoFile
   - **Description**
     - Pick video media file.
   - **Prototype**
@@ -1090,7 +1250,8 @@ Used to control the live streaming functionality.
     Future<List<ZegoUIKitPlatformFile>> pickVideoFile()
     ```
 
-- **pickFile**
+
+#### pickFile
   - **Description**
     - Pick media file.
   - **Prototype**
@@ -1099,7 +1260,8 @@ Used to control the live streaming functionality.
     ```
 
 
-- **stop**
+
+#### stop
   - **Description**
     - Stop play media.
   - **Prototype**
@@ -1129,7 +1291,8 @@ Used to control the live streaming functionality.
     | autoStart | Unknown | `bool` | `true` |
 
 
-- **pause**
+
+#### pause
   - **Description**
     - Pause media.
   - **Prototype**
@@ -1159,7 +1322,8 @@ Used to control the live streaming functionality.
     | autoStart | Unknown | `bool` | `true` |
 
 
-- **resume**
+
+#### resume
   - **Description**
     - Resume media.
   - **Prototype**
@@ -1189,7 +1353,8 @@ Used to control the live streaming functionality.
     | autoStart | Unknown | `bool` | `true` |
 
 
-- **seekTo**
+
+#### seekTo
   - **Description**
     - Seek to specified position.
   - **Prototype**
@@ -1219,7 +1384,8 @@ Used to control the live streaming functionality.
     | autoStart | Unknown | `bool` | `true` |
 
 
-- **setVolume**
+
+#### setVolume
   - **Description**
     - Set media volume.
   - **Prototype**
@@ -1249,7 +1415,8 @@ Used to control the live streaming functionality.
     | autoStart | Unknown | `bool` | `true` |
 
 
-- **muteLocal**
+
+#### muteLocal
   - **Description**
     - Mute local playback.
   - **Prototype**
@@ -1279,7 +1446,8 @@ Used to control the live streaming functionality.
     | autoStart | Unknown | `bool` | `true` |
 
 
-- **pickFile**
+
+#### pickFile
   - **Description**
     - Pick media file.
   - **Prototype**
