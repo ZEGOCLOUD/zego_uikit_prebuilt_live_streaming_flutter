@@ -1284,6 +1284,10 @@ class ZegoLiveStreamingPKBattleConfig {
   }
 }
 
+/// Internal configuration for PK battle.
+///
+/// This class is used for internal PK battle configuration.
+/// It is not recommended for external use.
 class ZegoLiveStreamingPKBattleInternalConfig {
   /// Whether the live streaming is in PK mode when entering the room.
   ///
@@ -1393,7 +1397,11 @@ class ZegoLiveStreamingPreviewConfig {
   }
 }
 
+/// Configuration options for the preview page top bar.
+///
+/// This class is used for the [ZegoLiveStreamingPreviewConfig.topBar] property.
 class ZegoLiveStreamingPreviewTopBarConfig {
+  /// Whether to show the top bar on the preview page.
   bool isVisible;
 
   ZegoLiveStreamingPreviewTopBarConfig({
@@ -1408,8 +1416,14 @@ class ZegoLiveStreamingPreviewTopBarConfig {
   }
 }
 
+/// Configuration options for the preview page bottom bar.
+///
+/// This class is used for the [ZegoLiveStreamingPreviewConfig.bottomBar] property.
 class ZegoLiveStreamingPreviewBottomBarConfig {
+  /// Whether to show the bottom bar on the preview page.
   bool isVisible;
+
+  /// Whether to show the beauty effect button on the bottom bar.
   bool showBeautyEffectButton;
 
   ZegoLiveStreamingPreviewBottomBarConfig({
@@ -1502,8 +1516,14 @@ class ZegoLiveStreamingDurationConfig {
   }
 }
 
+/// Configuration for the signaling plugin.
+///
+/// This class is used for the [ZegoUIKitPrebuiltLiveStreamingConfig.signalingPlugin] property.
 class ZegoLiveStreamingSignalingPluginConfig {
+  /// Whether to leave the room when the signaling plugin is disposed.
   bool leaveRoomOnDispose;
+
+  /// Whether to uninitialize the signaling plugin when disposed.
   bool uninitOnDispose;
 
   ZegoLiveStreamingSignalingPluginConfig({

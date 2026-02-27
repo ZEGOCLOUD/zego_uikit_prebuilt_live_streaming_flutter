@@ -17,6 +17,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/layout/layout.
 import 'audience/view.dart';
 import 'host_view.dart';
 
+/// @nodoc
 class ZegoLiveStreamingPKV2View extends StatefulWidget {
   const ZegoLiveStreamingPKV2View({
     super.key,

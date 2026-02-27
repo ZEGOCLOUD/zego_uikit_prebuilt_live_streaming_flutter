@@ -11,6 +11,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/core/defines.d
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/layout/layout.dart';
 import 'common.dart';
 
+/// @nodoc
 class ZegoLiveStreamingPKHostView extends StatefulWidget {
   const ZegoLiveStreamingPKHostView({
     super.key,
@@ -37,6 +38,7 @@ class ZegoLiveStreamingPKHostView extends StatefulWidget {
       ZegoLiveStreamingPKHostViewState();
 }
 
+/// @nodoc
 class ZegoLiveStreamingPKHostViewState
     extends State<ZegoLiveStreamingPKHostView> {
   @override

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
 
+/// @nodoc
 class ZegoLiveStreamingPKAudienceContent extends StatelessWidget {
   const ZegoLiveStreamingPKAudienceContent({
     super.key,

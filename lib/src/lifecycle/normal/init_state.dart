@@ -20,6 +20,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/events.defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/lifecycle.dart';
 
+/// @nodoc
 class ZegoLiveStreamingPageLifeCycleInitState {
   String liveID = '';
   bool isPrebuiltFromHall = false;

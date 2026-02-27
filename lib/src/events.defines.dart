@@ -39,6 +39,9 @@ enum ZegoLiveStreamingEndReason {
   kickOut,
 }
 
+/// Event data for leave confirmation.
+///
+/// This class is used in the [ZegoUIKitPrebuiltLiveStreamingEvents.onLeaveConfirmation] callback.
 class ZegoLiveStreamingLeaveConfirmationEvent {
   BuildContext context;
 
@@ -54,6 +57,9 @@ class ZegoLiveStreamingLeaveConfirmationEvent {
   }
 }
 
+/// Event data for room login failure.
+///
+/// This class is used in the [ZegoUIKitPrebuiltLiveStreamingEvents.room.onLoginFailed] callback.
 class ZegoLiveStreamingRoomLoginFailedEvent {
   int errorCode;
   String message;
@@ -72,6 +78,9 @@ class ZegoLiveStreamingRoomLoginFailedEvent {
   }
 }
 
+/// Event data for live streaming ended.
+///
+/// This class is used in the [ZegoUIKitPrebuiltLiveStreamingEvents.onEnded] callback.
 class ZegoLiveStreamingEndEvent {
   /// the user ID of who kick you out
   String? kickerUserID;
@@ -105,6 +114,9 @@ class ZegoLiveStreamingEndEvent {
   }
 }
 
+/// Data for co-host request received event (host side).
+///
+/// This class is used in the [ZegoLiveStreamingCoHostHostEvents.onRequestReceived] callback.
 class ZegoLiveStreamingCoHostHostEventRequestReceivedData {
   ZegoLiveStreamingCoHostHostEventRequestReceivedData({
     required this.audience,
@@ -123,6 +135,9 @@ class ZegoLiveStreamingCoHostHostEventRequestReceivedData {
   }
 }
 
+/// Data for co-host request canceled event (host side).
+///
+/// This class is used in the [ZegoLiveStreamingCoHostHostEvents.onRequestCanceled] callback.
 class ZegoLiveStreamingCoHostHostEventRequestCanceledData {
   ZegoLiveStreamingCoHostHostEventRequestCanceledData({
     required this.audience,
@@ -141,6 +156,9 @@ class ZegoLiveStreamingCoHostHostEventRequestCanceledData {
   }
 }
 
+/// Data for co-host request timeout event (host side).
+///
+/// This class is used in the [ZegoLiveStreamingCoHostHostEvents.onRequestTimeout] callback.
 class ZegoLiveStreamingCoHostHostEventRequestTimeoutData {
   ZegoLiveStreamingCoHostHostEventRequestTimeoutData({
     required this.audience,
@@ -156,6 +174,9 @@ class ZegoLiveStreamingCoHostHostEventRequestTimeoutData {
   }
 }
 
+/// Data for co-host invitation sent event (host side).
+///
+/// This class is used in the [ZegoLiveStreamingCoHostHostEvents.onInvitationSent] callback.
 class ZegoLiveStreamingCoHostHostEventInvitationSentData {
   ZegoLiveStreamingCoHostHostEventInvitationSentData({
     required this.audience,
@@ -171,6 +192,9 @@ class ZegoLiveStreamingCoHostHostEventInvitationSentData {
   }
 }
 
+/// Data for co-host invitation timeout event (host side).
+///
+/// This class is used in the [ZegoLiveStreamingCoHostHostEvents.onInvitationTimeout] callback.
 class ZegoLiveStreamingCoHostHostEventInvitationTimeoutData {
   ZegoLiveStreamingCoHostHostEventInvitationTimeoutData({
     required this.audience,
@@ -186,6 +210,9 @@ class ZegoLiveStreamingCoHostHostEventInvitationTimeoutData {
   }
 }
 
+/// Data for co-host invitation accepted event (host side).
+///
+/// This class is used in the [ZegoLiveStreamingCoHostHostEvents.onInvitationAccepted] callback.
 class ZegoLiveStreamingCoHostHostEventInvitationAcceptedData {
   ZegoLiveStreamingCoHostHostEventInvitationAcceptedData({
     required this.audience,
@@ -204,6 +231,9 @@ class ZegoLiveStreamingCoHostHostEventInvitationAcceptedData {
   }
 }
 
+/// Data for co-host invitation refused event (host side).
+///
+/// This class is used in the [ZegoLiveStreamingCoHostHostEvents.onInvitationRefused] callback.
 class ZegoLiveStreamingCoHostHostEventInvitationRefusedData {
   ZegoLiveStreamingCoHostHostEventInvitationRefusedData({
     required this.audience,
@@ -222,6 +252,9 @@ class ZegoLiveStreamingCoHostHostEventInvitationRefusedData {
   }
 }
 
+/// Data for co-host request accepted event (audience side).
+///
+/// This class is used in the [ZegoLiveStreamingCoHostAudienceEvents.onRequestAccepted] callback.
 class ZegoLiveStreamingCoHostAudienceEventRequestAcceptedData {
   ZegoLiveStreamingCoHostAudienceEventRequestAcceptedData({
     required this.customData,
@@ -237,6 +270,9 @@ class ZegoLiveStreamingCoHostAudienceEventRequestAcceptedData {
   }
 }
 
+/// Data for co-host request refused event (audience side).
+///
+/// This class is used in the [ZegoLiveStreamingCoHostAudienceEvents.onRequestRefused] callback.
 class ZegoLiveStreamingCoHostAudienceEventRequestRefusedData {
   ZegoLiveStreamingCoHostAudienceEventRequestRefusedData({
     required this.customData,
@@ -252,6 +288,9 @@ class ZegoLiveStreamingCoHostAudienceEventRequestRefusedData {
   }
 }
 
+/// Data for co-host invitation received event (audience side).
+///
+/// This class is used in the [ZegoLiveStreamingCoHostAudienceEvents.onInvitationReceived] callback.
 class ZegoLiveStreamingCoHostAudienceEventRequestReceivedData {
   ZegoLiveStreamingCoHostAudienceEventRequestReceivedData({
     required this.host,

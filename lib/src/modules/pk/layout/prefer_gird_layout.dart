@@ -8,6 +8,9 @@ import 'package:zego_uikit/zego_uikit.dart';
 // Project imports:
 import 'layout.dart';
 
+/// Preferred grid layout for PK battles.
+///
+/// This layout provides a grid-based arrangement for multiple hosts in a PK battle.
 class ZegoLiveStreamingPKPreferGridMixerLayout
     extends ZegoLiveStreamingPKMixerLayout {
   @override

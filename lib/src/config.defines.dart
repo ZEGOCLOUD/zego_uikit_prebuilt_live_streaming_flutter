@@ -250,6 +250,9 @@ class ZegoLiveStreamingBottomMenuBarButtonStyle {
   }
 }
 
+/// Configuration for co-hosting feature.
+///
+/// This class is used for the [ZegoUIKitPrebuiltLiveStreamingConfig.coHost] property.
 class ZegoLiveStreamingCoHostConfig {
   static const defaultMaxCoHostCount = 12;
 

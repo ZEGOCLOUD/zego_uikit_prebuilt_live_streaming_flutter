@@ -5,6 +5,9 @@ import 'package:flutter/services.dart';
 // Project imports:
 import 'layout.dart';
 
+/// Grid layout for PK battles (v2).
+///
+/// This layout provides a grid-based arrangement for PK battles.
 class ZegoPKV2GridMixerLayout extends ZegoLiveStreamingPKMixerLayout {
   final widthFactor = 160.0;
   final heightFactor = 180.0;

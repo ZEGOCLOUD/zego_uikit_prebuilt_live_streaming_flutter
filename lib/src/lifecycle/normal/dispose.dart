@@ -9,6 +9,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/lifecycle.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/minimization/overlay_machine.dart';
 
+/// @nodoc
 class ZegoLiveStreamingPageLifeCycleDispose {
   Future<void> run({
     required String targetLiveID,

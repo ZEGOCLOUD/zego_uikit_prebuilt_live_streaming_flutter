@@ -7,6 +7,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/defines.dart';
 import 'stream_context.dart';
 
+/// @nodoc
 class ZegoLiveStreamingSwipingLifeCycle {
   String currentLiveID = '';
   String hallRoomID = '';

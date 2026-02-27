@@ -8,6 +8,7 @@ import 'package:zego_uikit/zego_uikit.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/core/event/defines.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/core/service/defines.dart';
 
+/// @nodoc
 class ZegoLiveStreamingPKBattleStateCombineNotifier {
   final state = ValueNotifier<bool>(false);
   ValueNotifier<ZegoLiveStreamingPKBattleState>? _v2StateNotifier;

@@ -8,6 +8,7 @@ enum ZegoLiveStreamingPageLifeCycleEventType {
   contextInit,
 }
 
+/// @nodoc
 class ZegoLiveStreamingPageLifeCycleEventData {
   String liveID;
   ZegoLiveStreamingPageLifeCycleEventType eventType;
@@ -25,6 +26,7 @@ class ZegoLiveStreamingPageLifeCycleEventData {
   }
 }
 
+/// @nodoc
 class ZegoLiveStreamingPageLifeCycleContextData {
   /// You can create a project and obtain an appID from the [ZEGOCLOUD Admin Console](https://console.zegocloud.com).
   final int appID;

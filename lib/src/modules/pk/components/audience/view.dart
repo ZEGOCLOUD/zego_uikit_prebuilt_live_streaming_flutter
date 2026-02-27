@@ -44,6 +44,7 @@ class ZegoLiveStreamingPKAudienceView extends StatefulWidget {
       ZegoLiveStreamingPKAudienceViewState();
 }
 
+/// @nodoc
 class ZegoLiveStreamingPKAudienceViewState
     extends State<ZegoLiveStreamingPKAudienceView> {
   @override

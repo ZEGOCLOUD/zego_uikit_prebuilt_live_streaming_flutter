@@ -14,6 +14,7 @@ import 'package:zego_uikit_prebuilt_live_streaming/src/lifecycle/lifecycle.dart'
 import 'package:zego_uikit_prebuilt_live_streaming/src/modules/pk/layout/layout.dart';
 import 'defines.dart';
 
+/// @nodoc
 class ZegoUIKitPrebuiltLiveStreamingPKServiceMixer {
   bool _init = false;
 

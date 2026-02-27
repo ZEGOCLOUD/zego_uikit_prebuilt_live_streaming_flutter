@@ -13,6 +13,7 @@ import 'defines.dart';
 import 'event/defines.dart';
 import 'service/services.dart';
 
+/// @nodoc
 class ZegoUIKitPrebuiltLiveStreamingPK
     with ZegoUIKitPrebuiltLiveStreamingPKServices {
   ZegoUIKitPrebuiltLiveStreamingPK({

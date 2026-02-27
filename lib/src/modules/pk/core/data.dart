@@ -21,6 +21,7 @@ extension ZegoUIKitPrebuiltLiveStreamingPKUserList
   }
 }
 
+/// @nodoc
 class ZegoUIKitPrebuiltLiveStreamingPKData
     with
         ZegoUIKitPrebuiltLiveStreamingPKExternalData,

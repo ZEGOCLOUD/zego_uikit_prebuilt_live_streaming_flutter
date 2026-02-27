@@ -1,6 +1,7 @@
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
 
+/// @nodoc
 class PKServiceRequestData {
   const PKServiceRequestData({
     required this.inviter,
@@ -37,6 +38,7 @@ class PKServiceRequestData {
   }
 }
 
+/// @nodoc
 class PKServiceAcceptData {
   const PKServiceAcceptData({
     required this.name,
@@ -62,6 +64,7 @@ class PKServiceAcceptData {
   }
 }
 
+/// @nodoc
 class PKServiceRejectData {
   const PKServiceRejectData({
     required this.code,
