@@ -3,7 +3,7 @@ import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_streaming/src/controller.dart';
-import 'package:zego_uikit_prebuilt_live_streaming/src/deprecated/deprecated_352.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/src/deprecated/v3/352.dart';
 
 const deprecatedTipsV350 = ', '
     'deprecated since 3.5.0, '

@@ -11,7 +11,7 @@ import 'package:zego_uikit/zego_uikit.dart';
 // Project imports:
 import 'config.defines.dart';
 import 'defines.dart';
-import 'deprecated/deprecated.dart';
+import 'deprecated/v3/v3.dart';
 import 'inner_text.dart';
 import 'modules/pk/layout/layout.dart';
 import 'modules/swiping/defines.dart';
