@@ -647,7 +647,7 @@ class _ZegoLiveStreamingLivePageState extends State<ZegoLiveStreamingLivePage>
       subTag: 'live page',
     );
 
-    if (ZegoUIKit().getLocalUser().microphone.value) {
+    if (ZegoUIKit().getLocalUser().camera.value) {
       ZegoLoggerService.logInfo(
         'camera is open now, not need request',
         tag: 'live-streaming',
